@@ -1,0 +1,48 @@
+{
+  "examCode": "DP-600",
+  "examName": "Implementing Analytics Solutions Using Microsoft Fabric",
+  "note": "Domain weights are approximate and based on Microsoft's publicly published skills-measured outline. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "plan-implement-manage",
+      "name": "Plan, implement, and manage a solution for data analytics",
+      "weight": "10-15%",
+      "subtopics": [
+        "Plan a data analytics environment (capacities, SKUs, workspace planning)",
+        "Implement and manage a data analytics environment (workspaces, domains, OneLake)",
+        "Manage the analytics development lifecycle (Git integration, deployment pipelines, ALM)"
+      ]
+    },
+    {
+      "id": "prepare-serve-data",
+      "name": "Prepare and serve data",
+      "weight": "40-45%",
+      "subtopics": [
+        "Design and implement loading of data (Dataflows Gen2, pipelines, notebooks)",
+        "Design and implement a data warehouse (Warehouse item, T-SQL, schemas)",
+        "Ingest and transform data with Lakehouses, shortcuts, and mirroring",
+        "Optimize performance of data storage and access (partitioning, V-Order, caching)"
+      ]
+    },
+    {
+      "id": "semantic-models",
+      "name": "Implement and manage semantic models",
+      "weight": "20-25%",
+      "subtopics": [
+        "Design and build semantic models (star schema, relationships, DAX measures)",
+        "Manage the semantic model lifecycle (XMLA endpoints, deployment, source control)",
+        "Optimize enterprise-scale semantic models (aggregations, incremental refresh, query performance)"
+      ]
+    },
+    {
+      "id": "explore-analyze",
+      "name": "Explore and analyze data",
+      "weight": "20-25%",
+      "subtopics": [
+        "Perform exploratory analytics (notebooks, Spark, DAX queries)",
+        "Query data using SQL and KQL (Warehouse, Real-Time Intelligence)",
+        "Visualize data (Power BI reports, Real-Time dashboards, paginated reports)"
+      ]
+    }
+  ]
+}
