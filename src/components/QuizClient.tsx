@@ -2,16 +2,22 @@
 
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { outline, getQuestionsByDomain, getDomainName } from "@/lib/content";
+import {
+  getExamContent,
+  getQuestionsByDomain,
+  getDomainName,
+} from "@/lib/content";
 import { shuffle } from "@/lib/shuffle";
 import { saveQuizAttempt } from "@/lib/storage";
 import type { Question, QuizResultEntry } from "@/lib/types";
 
 const COUNT_OPTIONS = [5, 10, 20, "all"] as const;
+const FEEDBACK_EMAIL = "qcseak@gmail.com";
 
 type Phase = "setup" | "active" | "finished";
 
-export default function QuizClient() {
+export default function QuizClient({ examCode }: { examCode: string }) {
+  const content = getExamContent(examCode);
   const searchParams = useSearchParams();
   const initialDomain = searchParams.get("domain") ?? "all";
 
@@ -25,10 +31,23 @@ export default function QuizClient() {
   const [selected, setSelected] = useState<number | null>(null);
   const [results, setResults] = useState<QuizResultEntry[]>([]);
 
-  const availableCount = getQuestionsByDomain(domainFilter).length;
+  const correctCount = useMemo(
+    () => results.filter((r) => r.correct).length,
+    [results],
+  );
+
+  if (!content) {
+    return (
+      <p className="text-sm text-[var(--foreground-muted)]">
+        No practice content is available for this exam yet.
+      </p>
+    );
+  }
+
+  const availableCount = getQuestionsByDomain(examCode, domainFilter).length;
 
   function startQuiz() {
-    const pool = shuffle(getQuestionsByDomain(domainFilter));
+    const pool = shuffle(getQuestionsByDomain(examCode, domainFilter));
     const n = countChoice === "all" ? pool.length : Math.min(countChoice, pool.length);
     setActiveQuestions(pool.slice(0, n));
     setIndex(0);
@@ -64,6 +83,7 @@ export default function QuizClient() {
     const correctCount = results.filter((r) => r.correct).length;
     saveQuizAttempt({
       id: `${Date.now()}`,
+      examCode,
       timestamp: Date.now(),
       domainFilter,
       numQuestions: activeQuestions.length,
@@ -73,17 +93,12 @@ export default function QuizClient() {
     setPhase("finished");
   }
 
-  const correctCount = useMemo(
-    () => results.filter((r) => r.correct).length,
-    [results],
-  );
-
   if (phase === "setup") {
     return (
       <div className="flex flex-col gap-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Practice quiz</h1>
-          <p className="mt-2 max-w-xl text-sm text-black/70 dark:text-white/70">
+          <h1 className="font-pixel text-xl">Practice quiz</h1>
+          <p className="mt-3 max-w-xl text-sm text-[var(--foreground-muted)]">
             Pick a skills area and a question count, then work through each
             question one at a time. You&apos;ll see the correct answer and an
             explanation immediately after each pick.
@@ -95,10 +110,10 @@ export default function QuizClient() {
           <select
             value={domainFilter}
             onChange={(e) => setDomainFilter(e.target.value)}
-            className="w-full max-w-sm rounded-md border border-black/15 bg-transparent px-3 py-2 text-sm dark:border-white/20"
+            className="w-full max-w-sm rounded-md border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-sm"
           >
             <option value="all">All domains</option>
-            {outline.domains.map((d) => (
+            {content.outline.domains.map((d) => (
               <option key={d.id} value={d.id}>
                 {d.name}
               </option>
@@ -115,8 +130,8 @@ export default function QuizClient() {
                 onClick={() => setCountChoice(c)}
                 className={`rounded-md border px-3 py-1.5 text-sm ${
                   countChoice === c
-                    ? "border-indigo-600 bg-indigo-600 text-white"
-                    : "border-black/15 hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+                    ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)]"
+                    : "border-[var(--border)] hover:bg-black/5 dark:hover:bg-white/10"
                 }`}
               >
                 {c === "all" ? `All (${availableCount})` : c}
@@ -128,7 +143,7 @@ export default function QuizClient() {
         <button
           onClick={startQuiz}
           disabled={availableCount === 0}
-          className="w-fit rounded-md bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+          className="pixel-button w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)] disabled:opacity-50"
         >
           Start quiz
         </button>
@@ -138,13 +153,19 @@ export default function QuizClient() {
 
   if (phase === "active") {
     const q = activeQuestions[index];
+    const mailtoHref = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(
+      `ExamReady question flag: ${q.id}`,
+    )}&body=${encodeURIComponent(
+      `Question (${q.id}): ${q.question}\n\nWhat's wrong with this question?\n`,
+    )}`;
+
     return (
       <div className="flex flex-col gap-6">
-        <div className="flex items-center justify-between text-sm text-black/60 dark:text-white/60">
+        <div className="flex items-center justify-between text-sm text-[var(--foreground-muted)]">
           <span>
             Question {index + 1} of {activeQuestions.length}
           </span>
-          <span>{getDomainName(q.domain)}</span>
+          <span>{getDomainName(examCode, q.domain)}</span>
         </div>
 
         <h2 className="text-xl font-medium leading-relaxed">{q.question}</h2>
@@ -154,7 +175,7 @@ export default function QuizClient() {
             const isCorrect = i === q.correctIndex;
             const isSelected = i === selected;
             let style =
-              "border-black/15 hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10";
+              "border-[var(--border)] hover:bg-black/5 dark:hover:bg-white/10";
             if (selected !== null) {
               if (isCorrect) {
                 style =
@@ -179,24 +200,30 @@ export default function QuizClient() {
         </div>
 
         {selected !== null && (
-          <div className="rounded-md bg-black/5 p-4 text-sm dark:bg-white/10">
+          <div className="pixel-panel p-4 text-sm">
             <p className="font-medium">
               {selected === q.correctIndex ? "Correct." : "Not quite."}
             </p>
-            <p className="mt-1 text-black/80 dark:text-white/80">
+            <p className="mt-1 text-[var(--foreground-muted)]">
               {q.explanation}
             </p>
+            <a
+              href={mailtoHref}
+              className="mt-2 inline-block text-xs underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
+            >
+              Report an issue with this question
+            </a>
           </div>
         )}
 
         <div className="flex justify-between">
-          <span className="text-sm text-black/60 dark:text-white/60">
+          <span className="text-sm text-[var(--foreground-muted)]">
             Score so far: {correctCount}/{results.length}
           </span>
           <button
             onClick={next}
             disabled={selected === null}
-            className="rounded-md bg-indigo-600 px-5 py-2 text-sm font-medium text-white hover:bg-indigo-500 disabled:opacity-50"
+            className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2 text-sm font-medium text-[var(--accent-foreground)] disabled:opacity-50"
           >
             {index + 1 < activeQuestions.length ? "Next question" : "See results"}
           </button>
@@ -206,18 +233,16 @@ export default function QuizClient() {
   }
 
   // finished
-  const missed = activeQuestions.filter(
-    (q, i) => !results[i]?.correct,
-  );
+  const missed = activeQuestions.filter((q, i) => !results[i]?.correct);
   const pct = Math.round((correctCount / activeQuestions.length) * 100);
 
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Quiz complete</h1>
-        <p className="mt-2 text-lg">
+        <h1 className="font-pixel text-xl">Quiz complete</h1>
+        <p className="mt-3 text-lg">
           You scored{" "}
-          <span className="font-semibold text-indigo-600">
+          <span className="font-semibold text-[var(--accent)]">
             {correctCount}/{activeQuestions.length}
           </span>{" "}
           ({pct}%)
@@ -228,15 +253,12 @@ export default function QuizClient() {
         <div className="flex flex-col gap-4">
           <h2 className="text-lg font-medium">Review missed questions</h2>
           {missed.map((q) => (
-            <div
-              key={q.id}
-              className="rounded-md border border-black/10 p-4 text-sm dark:border-white/10"
-            >
+            <div key={q.id} className="pixel-panel p-4 text-sm">
               <p className="font-medium">{q.question}</p>
               <p className="mt-2 text-emerald-700 dark:text-emerald-400">
                 Correct answer: {q.options[q.correctIndex]}
               </p>
-              <p className="mt-1 text-black/70 dark:text-white/70">
+              <p className="mt-1 text-[var(--foreground-muted)]">
                 {q.explanation}
               </p>
             </div>
@@ -247,13 +269,13 @@ export default function QuizClient() {
       <div className="flex flex-wrap gap-3">
         <button
           onClick={startQuiz}
-          className="rounded-md bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500"
+          className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)]"
         >
           Retake this quiz
         </button>
         <button
           onClick={() => setPhase("setup")}
-          className="rounded-md border border-black/15 px-5 py-2.5 text-sm font-medium hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+          className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-sm font-medium"
         >
           Change settings
         </button>

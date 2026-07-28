@@ -1,8 +1,30 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Bright theme (default) — daylight town palette */
+:root,
+:root[data-theme="bright"] {
+  --background: #f4f1e8;
+  --panel: #ffffff;
+  --foreground: #1c1a12;
+  --foreground-muted: #5b5642;
+  --border: #1c1a12;
+  --accent: #1d6f42;
+  --accent-foreground: #ffffff;
+  --danger: #a6222c;
+  --warning: #9a6a00;
+}
+
+/* Dark theme — cave/night palette */
+:root[data-theme="dark"] {
+  --background: #14121b;
+  --panel: #1f1c2b;
+  --foreground: #efeadd;
+  --foreground-muted: #b3ac97;
+  --border: #efeadd;
+  --accent: #57c785;
+  --accent-foreground: #0c1a12;
+  --danger: #ff8a8a;
+  --warning: #ffcc66;
 }
 
 @theme inline {
@@ -10,17 +32,78 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-pixel: var(--font-press-start);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Headings/UI chrome use the pixel display font by default; readable-font
+   mode swaps it for the body sans-serif so long text is never set in a
+   pixel font, which is a genuine accessibility failure. */
+:root {
+  --font-display: var(--font-pixel);
+}
+html[data-readable-font="true"] {
+  --font-display: var(--font-sans);
+}
+
+html[data-text-scale="sm"] {
+  font-size: 15px;
+}
+html[data-text-scale="md"] {
+  font-size: 16px;
+}
+html[data-text-scale="lg"] {
+  font-size: 19px;
+}
+
+:root[data-contrast="high"] {
+  --foreground-muted: var(--foreground);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+.font-pixel {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.pixelated {
+  image-rendering: pixelated;
+}
+
+.pixel-panel {
+  background: var(--panel);
+  border: 3px solid var(--border);
+  box-shadow: 4px 4px 0 var(--border);
+}
+
+.pixel-button {
+  border: 3px solid var(--border);
+  box-shadow: 3px 3px 0 var(--border);
+  transition: transform 80ms steps(1), box-shadow 80ms steps(1);
+}
+.pixel-button:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+html[data-reduced-motion="true"] *,
+html[data-reduced-motion="true"] *::before,
+html[data-reduced-motion="true"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
 }

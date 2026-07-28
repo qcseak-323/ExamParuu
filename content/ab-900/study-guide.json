@@ -1,0 +1,80 @@
+[
+  {
+    "domainId": "core-features",
+    "sections": [
+      {
+        "heading": "Core objects across the admin centers",
+        "paragraphs": [
+          "Microsoft 365 splits administration across several purpose-built admin centers. The Microsoft 365 admin center handles tenant-wide settings like domain names and organization configuration, plus license assignment. The Exchange admin center manages mail objects such as mailboxes and distribution groups. The SharePoint admin center manages sites, libraries, folders, and the roles and permissions that control who can view versus edit content. The Teams admin center manages teams, channels, and policies, including external and guest access.",
+          "A license assigned (or not assigned) to a user directly controls which features they can use — for example, a user without a Copilot license keeps normal access to standard Microsoft 365 apps but cannot use Copilot-specific features."
+        ]
+      },
+      {
+        "heading": "Zero Trust and authentication",
+        "paragraphs": [
+          "Zero Trust is built on the principle of never trust, always verify: every access request is explicitly validated using signals like identity, device health, and location, rather than being trusted simply because it originates inside the corporate network.",
+          "Authentication and authorization are distinct concepts worth separating clearly: authentication confirms who a user is (for example, via a password or MFA), while authorization determines what that verified identity is allowed to do or access. A user can authenticate successfully and still be denied access to a specific resource because they lack authorization."
+        ]
+      },
+      {
+        "heading": "Microsoft Entra ID security features",
+        "paragraphs": [
+          "Conditional access policies apply access controls — such as requiring multifactor authentication — based on real-time signals like sign-in location, device compliance, or calculated risk level, rather than applying the same rule to every sign-in.",
+          "Identity Secure Score gives administrators a measurable score reflecting how closely their identity security configuration matches Microsoft's recommended practices, making it easy to track improvement over time. Privileged Identity Management (PIM) supports just-in-time activation of privileged roles, so administrators hold elevated permissions only for a limited window rather than permanently — reducing the standing attack surface. App registrations represent an application's identity in Entra ID, while Enterprise apps represent instances of applications (including third-party ones) consuming that identity within the tenant."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "data-protection-governance",
+    "sections": [
+      {
+        "heading": "Microsoft Purview at a glance",
+        "paragraphs": [
+          "Microsoft Purview brings together several related but distinct governance capabilities. Information Protection covers sensitivity labels and data classification, letting organizations mark and protect content (for example, encrypting a 'Confidential' document or restricting forwarding). Data Loss Prevention (DLP) detects sensitive information types in content and can block or restrict risky actions, such as emailing a document containing credit card numbers outside the organization.",
+          "Insider Risk Management analyzes signals across the organization to surface potentially risky user behavior, such as data exfiltration ahead of a planned departure. Communication Compliance scans internal communications for policy violations, including harassment or improper sharing of confidential information. Data Lifecycle Management governs retention and deletion — for example, automatically deleting emails older than a regulatory threshold while preserving specific items under legal hold."
+        ]
+      },
+      {
+        "heading": "Data protection implications of Copilot",
+        "paragraphs": [
+          "A frequently tested concept: when a user asks Copilot to summarize or generate content, Copilot uses Microsoft Graph to ground its responses, but it only surfaces content the requesting user already has permission to access under existing Microsoft 365 permissions. Copilot does not grant new access — it inherits and respects the access a user already has, which is why oversharing in the underlying content (for example, an overly permissive SharePoint site) becomes a data protection concern once Copilot is introduced.",
+          "This is where DSPM for AI (Data Security Posture Management for AI) comes in: it gives administrators visibility into AI-related activity across the organization, including unsanctioned AI app usage and sensitive data flowing into AI prompts, helping them manage the new risk surface AI tools introduce."
+        ]
+      },
+      {
+        "heading": "Identifying and responding to risk",
+        "paragraphs": [
+          "Several tools help identify data protection and governance risk: Compliance Manager surfaces compliance risks and improvement recommendations; Purview Data Explorer helps identify where sensitive information lives; Insider Risk Management and DLP generate alerts on risky activity; Communication Compliance flags policy violations; and Content search within eDiscovery lets legal teams locate relevant emails and documents across the organization for investigations or legal holds.",
+          "Oversharing in SharePoint is a distinct, commonly tested risk area. Administrators can run a data access governance report to identify sites or files with unexpectedly broad access, and SharePoint Advanced Management (including restricted access control) provides additional tools to tighten sharing scope."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "copilot-agent-admin",
+    "sections": [
+      {
+        "heading": "Copilot capabilities and licensing",
+        "paragraphs": [
+          "Microsoft 365 Copilot ships with built-in agents, including Researcher (for in-depth, multi-step research across the web and organizational data) and Analyst (for exploring and answering data-driven questions). Organizations can also build custom agents scoped to a specific team's content and processes when a general-purpose agent isn't specific enough.",
+          "Copilot can be licensed either as a fixed monthly per-user license or through pay-as-you-go billing, where cost is based on actual consumption rather than a fixed commitment — useful for organizations that want to control cost while usage patterns are still being established."
+        ]
+      },
+      {
+        "heading": "Administering Copilot",
+        "paragraphs": [
+          "Administrators assign Copilot licenses through the Microsoft 365 admin center, the same place other Microsoft 365 licenses are managed. Copilot Analytics, also in the Microsoft 365 admin center, reports on organization-wide adoption and usage trends, which is useful evidence when justifying additional license purchases.",
+          "Copilot also supports managing prompts — saving, sharing, scheduling, and deleting them — so an effective prompt discovered by one person can be reused across a team rather than being reinvented each time."
+        ]
+      },
+      {
+        "heading": "Administering agents",
+        "paragraphs": [
+          "Before a newly built agent can be used broadly, it typically goes through an approval process, giving administrators oversight of what becomes available organization-wide. Administrators also configure which users can access a given agent.",
+          "Ongoing agent monitoring — usage, operational insights, and lifecycle — spans two admin surfaces: the Microsoft 365 admin center and the Power Platform admin center, since agents built in Copilot Studio are governed through Power Platform administration as well as Microsoft 365."
+        ]
+      }
+    ]
+  }
+]

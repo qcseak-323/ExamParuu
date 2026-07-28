@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Press_Start_2P } from "next/font/google";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import PreferencesEffect from "@/components/PreferencesEffect";
+import { PREFERENCES_INIT_SCRIPT } from "@/lib/preferencesScript";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,10 +16,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const pressStart = Press_Start_2P({
+  variable: "--font-press-start",
+  weight: "400",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "ExamReady — DP-600 Practice & Study Hub",
+  title: "ExamReady — Microsoft Certification Practice",
   description:
-    "Free practice questions, study guides, and flashcards to help you pass the Microsoft DP-600 (Implementing Analytics Solutions Using Microsoft Fabric) exam.",
+    "Free, retro-styled practice questions, study guides, and flashcards to help you pass Microsoft certification exams — starting with DP-600 and AB-900.",
 };
 
 export default function RootLayout({
@@ -28,9 +36,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${pressStart.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: PREFERENCES_INIT_SCRIPT }} />
+      </head>
       <body className="min-h-full flex flex-col">
+        <PreferencesEffect />
         <Nav />
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
           {children}

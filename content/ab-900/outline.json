@@ -1,0 +1,41 @@
+{
+  "examCode": "AB-900",
+  "examName": "Microsoft 365 Copilot and Agent Administration Fundamentals",
+  "note": "Domain weights reflect the skills-measured outline published on Microsoft Learn as of 2026-07-22. This exam is currently in beta; always check learn.microsoft.com for the current official breakdown before your exam, since beta exams can change quickly.",
+  "domains": [
+    {
+      "id": "core-features",
+      "name": "Identify the core features and objects of Microsoft 365 services",
+      "weight": "30-35%",
+      "subtopics": [
+        "Core objects across the Microsoft 365, Exchange, SharePoint, and Teams admin centers",
+        "How license assignment affects feature access for users and groups",
+        "Zero Trust principles, authentication methods, and threat protection with Microsoft Defender XDR",
+        "Microsoft Entra ID features: conditional access, SSO, Identity Secure Score, audit logs, and Privileged Identity Management (PIM)"
+      ]
+    },
+    {
+      "id": "data-protection-governance",
+      "name": "Understand data protection and governance tasks for Microsoft 365 and Copilot",
+      "weight": "35-40%",
+      "subtopics": [
+        "Microsoft Purview capabilities: Information Protection, DLP, Insider Risk Management, Communication Compliance, DSPM for AI, Data Lifecycle Management",
+        "Sensitivity labels, data classification, and retention",
+        "How Copilot accesses data through Microsoft Graph and the permission model that protects against oversharing",
+        "Identifying and responding to data protection and governance risks (Compliance Manager, Data Explorer, DLP alerts, eDiscovery)",
+        "Detecting and remediating oversharing in SharePoint, including SharePoint Advanced Management"
+      ]
+    },
+    {
+      "id": "copilot-agent-admin",
+      "name": "Perform basic administrative tasks for Copilot and agents",
+      "weight": "25-30%",
+      "subtopics": [
+        "Built-in Copilot and agent capabilities, including Researcher and Analyst",
+        "Copilot licensing models: monthly per-user versus pay-as-you-go",
+        "Assigning licenses, monitoring usage and adoption, and managing prompts",
+        "Configuring agent access, creating agents, the approval process, and monitoring agent lifecycle"
+      ]
+    }
+  ]
+}

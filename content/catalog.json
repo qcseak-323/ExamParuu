@@ -1,0 +1,28 @@
+[
+  {
+    "code": "dp-600",
+    "title": "Implementing Analytics Solutions Using Microsoft Fabric",
+    "family": "Data (Fabric / Power BI)",
+    "msLevel": "Associate",
+    "status": "GA",
+    "durationMinutes": null,
+    "passingScore": 700,
+    "summary": "Design, build, and manage Lakehouses, Warehouses, semantic models, and real-time analytics in Microsoft Fabric.",
+    "hasContent": true,
+    "catalogVerifiedAt": null,
+    "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/exams/dp-600/"
+  },
+  {
+    "code": "ab-900",
+    "title": "Microsoft 365 Copilot and Agent Administration Fundamentals",
+    "family": "AB (AI Business)",
+    "msLevel": "Fundamentals",
+    "status": "beta",
+    "durationMinutes": 45,
+    "passingScore": 700,
+    "summary": "Support, secure, and govern an AI-enabled Microsoft 365 environment, including Copilot and agent administration.",
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-07-28",
+    "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ab-900"
+  }
+]

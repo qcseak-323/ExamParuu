@@ -1,0 +1,245 @@
+[
+  {
+    "id": "ab900-cf-01",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "A user in your tenant has not been assigned a Microsoft 365 Copilot license, but does have a standard Microsoft 365 license. Which statement best describes the effect?",
+    "options": ["They lose access to all Microsoft 365 apps immediately", "They can continue using standard Microsoft 365 apps but cannot access Copilot features", "They can use Copilot features only inside Microsoft Teams", "Their existing files become read-only"],
+    "correctIndex": 1,
+    "explanation": "License assignment controls feature access. Without a Copilot license, a user keeps normal access to the Microsoft 365 apps they're already licensed for, but Copilot-specific features remain unavailable to them."
+  },
+  {
+    "id": "ab900-cf-02",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "An administrator needs to create a distribution group so that one email address reaches an entire department. Which admin center is the appropriate place to configure this?",
+    "options": ["SharePoint admin center", "Teams admin center", "Exchange admin center", "Microsoft Purview compliance portal"],
+    "correctIndex": 2,
+    "explanation": "Mailboxes and distribution groups are configured through the Exchange admin center, which manages mail-related objects across the tenant."
+  },
+  {
+    "id": "ab900-cf-03",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "A SharePoint site owner wants some team members to only view documents while others can edit them. Which concept governs this distinction?",
+    "options": ["Sensitivity labels", "Site roles and permissions (Owner/Member/Visitor)", "Conditional access policies", "Data loss prevention policies"],
+    "correctIndex": 1,
+    "explanation": "SharePoint controls who can view versus edit content through site roles and permissions, which are configured and managed via the SharePoint admin center."
+  },
+  {
+    "id": "ab900-cf-04",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "An organization wants to prevent external users from being added to certain Teams channels. Where should an administrator configure this restriction?",
+    "options": ["Exchange admin center", "Microsoft Entra Privileged Identity Management", "Teams admin center policies", "Purview eDiscovery"],
+    "correctIndex": 2,
+    "explanation": "Teams-specific policies, including guest and external access controls for channels, are configured in the Teams admin center."
+  },
+  {
+    "id": "ab900-cf-05",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "Which principle is central to the Zero Trust security model?",
+    "options": ["Trust all requests that originate from inside the corporate network", "Never trust, always verify — explicitly validate every access request regardless of location", "Rely solely on perimeter firewalls to block threats", "Grant broad access by default and restrict only after an incident"],
+    "correctIndex": 1,
+    "explanation": "Zero Trust assumes no request should be implicitly trusted based on network location alone; every access request is explicitly verified using signals like identity, device, and location."
+  },
+  {
+    "id": "ab900-cf-06",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "A user signs in successfully with a correct username and password but is then denied access to a specific SharePoint site. Which concept explains this outcome?",
+    "options": ["Authentication failure", "Multifactor authentication is disabled", "Authorization (the user lacks the required permission)", "The Identity Secure Score is too low"],
+    "correctIndex": 2,
+    "explanation": "Authentication confirms who the user is; authorization separately determines what that verified identity is permitted to access. A successful sign-in can still be blocked by insufficient authorization."
+  },
+  {
+    "id": "ab900-cf-07",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "An organization wants to require multifactor authentication only when a sign-in attempt comes from an unfamiliar location. Which feature should they configure?",
+    "options": ["A conditional access policy", "A Purview DLP policy", "A sensitivity label", "An Insider Risk Management policy"],
+    "correctIndex": 0,
+    "explanation": "Conditional access policies apply access controls, such as requiring MFA, based on signals like sign-in location, device compliance, or risk level."
+  },
+  {
+    "id": "ab900-cf-08",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "Which Microsoft Entra ID feature gives administrators a measurable score reflecting how closely their security configuration matches Microsoft's recommendations?",
+    "options": ["Copilot Analytics", "Identity Secure Score", "DSPM for AI", "Compliance Manager score"],
+    "correctIndex": 1,
+    "explanation": "Identity Secure Score evaluates an organization's identity security configuration against Microsoft's recommended practices and produces a comparable score."
+  },
+  {
+    "id": "ab900-cf-09",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "An organization wants administrators to hold elevated roles only for a limited, just-in-time window rather than permanently. Which feature supports this?",
+    "options": ["Single sign-on (SSO)", "App registrations", "Privileged Identity Management (PIM)", "Conditional access"],
+    "correctIndex": 2,
+    "explanation": "Privileged Identity Management (PIM) enables just-in-time, time-bound activation of privileged roles instead of standing, permanent access."
+  },
+  {
+    "id": "ab900-dp-01",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "A company wants documents marked 'Confidential' to automatically be encrypted and blocked from being forwarded outside the organization. What should they apply?",
+    "options": ["A retention policy", "A sensitivity label with protection settings", "A DLP policy with no label", "An Insider Risk Management policy"],
+    "correctIndex": 1,
+    "explanation": "Sensitivity labels can both classify content and apply protection actions such as encryption and restrictions on forwarding or copying."
+  },
+  {
+    "id": "ab900-dp-02",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "Which Microsoft Purview capability is designed to detect and prevent sensitive information, such as credit card numbers, from being emailed outside the organization?",
+    "options": ["Communication Compliance", "Insider Risk Management", "Data Loss Prevention (DLP)", "DSPM for AI"],
+    "correctIndex": 2,
+    "explanation": "DLP policies detect sensitive information types in content and can block or restrict actions like sending that content outside the organization."
+  },
+  {
+    "id": "ab900-dp-03",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "An organization is concerned about employees who may be planning to leave and could exfiltrate sensitive files beforehand. Which Purview capability is designed to surface this kind of risk?",
+    "options": ["Insider Risk Management", "Communication Compliance", "Data Lifecycle Management", "Data Loss Prevention"],
+    "correctIndex": 0,
+    "explanation": "Insider Risk Management analyzes signals across the organization to identify potentially risky user activity, such as data exfiltration ahead of departure."
+  },
+  {
+    "id": "ab900-dp-04",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "Which Purview capability helps detect potential policy violations in internal communications, such as harassment or inappropriate sharing of confidential information in chat?",
+    "options": ["Insider Risk Management", "Communication Compliance", "DSPM for AI", "Content search"],
+    "correctIndex": 1,
+    "explanation": "Communication Compliance scans internal communications for policy violations, including harassment, confidentiality breaches, and regulatory concerns."
+  },
+  {
+    "id": "ab900-dp-05",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "Which Purview capability is specifically designed to discover and govern AI-related activity, such as unsanctioned AI app usage or sensitive data flowing into AI prompts?",
+    "options": ["Compliance Manager", "Data Lifecycle Management", "Data Security Posture Management (DSPM) for AI", "Insider Risk Management"],
+    "correctIndex": 2,
+    "explanation": "DSPM for AI is purpose-built to give visibility into AI usage across an organization and to help identify data security risks introduced by AI tools."
+  },
+  {
+    "id": "ab900-dp-06",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "When a user asks Microsoft 365 Copilot to summarize a document, which statement correctly describes how Copilot determines what content it can access?",
+    "options": ["Copilot has access to all tenant content regardless of permissions", "Copilot only surfaces content the requesting user already has permission to access", "Copilot requires a separate permission grant for every document it reads", "Copilot only works with content stored in OneDrive"],
+    "correctIndex": 1,
+    "explanation": "Copilot uses Microsoft Graph and respects existing Microsoft 365 permissions, so it only surfaces content the signed-in user is already authorized to see."
+  },
+  {
+    "id": "ab900-dp-07",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "An administrator suspects a SharePoint site has broader sharing permissions than intended. Which action helps identify the scope of the problem?",
+    "options": ["Enable a sensitivity label on the site", "Run a data access governance report in SharePoint", "Configure a conditional access policy", "Enable PIM for the site owner role"],
+    "correctIndex": 1,
+    "explanation": "Data access governance reports in SharePoint help administrators identify oversharing, such as sites or files with unexpectedly broad access."
+  },
+  {
+    "id": "ab900-dp-08",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "Legal has received a request to locate all emails and documents related to a specific investigation across the organization. Which Purview capability should they use?",
+    "options": ["Identity Secure Score", "DSPM for AI", "Content search in eDiscovery", "Insider Risk Management"],
+    "correctIndex": 2,
+    "explanation": "Content search within Purview eDiscovery is designed to locate relevant emails and documents across the organization for legal and investigative purposes."
+  },
+  {
+    "id": "ab900-dp-09",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "A company must automatically delete emails older than seven years to meet a regulation, while preserving certain legal-hold items indefinitely. Which capability should they configure?",
+    "options": ["A DLP policy", "A sensitivity label", "A Microsoft Purview Data Lifecycle Management retention policy", "Communication Compliance"],
+    "correctIndex": 2,
+    "explanation": "Data Lifecycle Management retention policies control how long content is kept and when it is deleted, while still allowing holds for specific items."
+  },
+  {
+    "id": "ab900-ca-01",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "question": "A company wants to pay for Copilot usage based on consumption rather than committing to a fixed number of monthly per-user licenses. Which licensing model should they consider?",
+    "options": ["Monthly per-user license only", "Pay-as-you-go", "An Enterprise Agreement only", "A trial license"],
+    "correctIndex": 1,
+    "explanation": "Pay-as-you-go billing lets organizations pay based on actual Copilot consumption instead of committing to fixed monthly per-user licenses."
+  },
+  {
+    "id": "ab900-ca-02",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "question": "Which built-in Copilot agent is designed to help users conduct in-depth, multi-step research across the web and organizational data?",
+    "options": ["Analyst", "Researcher", "A custom agent", "The SharePoint admin center"],
+    "correctIndex": 1,
+    "explanation": "Researcher is the built-in Copilot agent designed for deep, multi-step research tasks that draw on both web and organizational content."
+  },
+  {
+    "id": "ab900-ca-03",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "question": "Which built-in Copilot agent is designed to help users analyze data and answer data-driven questions?",
+    "options": ["Researcher", "Analyst", "A Purview DLP policy", "Identity Secure Score"],
+    "correctIndex": 1,
+    "explanation": "Analyst is the built-in Copilot agent focused on data analysis, helping users explore and answer questions about their data."
+  },
+  {
+    "id": "ab900-ca-04",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "question": "A department wants an AI agent that answers questions using only their team's specific SharePoint documents and processes. What should they build?",
+    "options": ["Enable Researcher tenant-wide", "Enable Analyst tenant-wide", "A custom agent scoped to their content", "A new conditional access policy"],
+    "correctIndex": 2,
+    "explanation": "Custom agents can be scoped to specific content and processes, making them appropriate when a team needs answers grounded only in their own data."
+  },
+  {
+    "id": "ab900-ca-05",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "question": "Where would an administrator go to assign Microsoft 365 Copilot licenses to specific users?",
+    "options": ["The Power Platform admin center", "The Microsoft 365 admin center", "The Purview compliance portal", "Microsoft Entra Privileged Identity Management"],
+    "correctIndex": 1,
+    "explanation": "License assignment for Microsoft 365 Copilot, like other Microsoft 365 licenses, is performed in the Microsoft 365 admin center."
+  },
+  {
+    "id": "ab900-ca-06",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "question": "An administrator wants to see organization-wide trends in Copilot usage to justify purchasing additional licenses. Which tool should they use?",
+    "options": ["Identity Secure Score", "DSPM for AI", "Copilot Analytics in the Microsoft 365 admin center", "Content search"],
+    "correctIndex": 2,
+    "explanation": "Copilot Analytics, available through the Microsoft 365 admin center, reports on organization-wide adoption and usage trends for Copilot."
+  },
+  {
+    "id": "ab900-ca-07",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "question": "A team lead wants to make an effective Copilot prompt available to their whole team on a recurring schedule. Which Copilot capability supports this?",
+    "options": ["Sensitivity labels", "Managing prompts, including saving, sharing, and scheduling", "Conditional access policies", "Insider Risk Management"],
+    "correctIndex": 1,
+    "explanation": "Copilot supports managing prompts — including saving, sharing, scheduling, and deleting them — which lets useful prompts be reused and distributed across a team."
+  },
+  {
+    "id": "ab900-ca-08",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "question": "Before a newly built agent can be used broadly across the organization, which process typically governs whether it can be published?",
+    "options": ["A DLP policy review", "A retention policy review", "An approval process for agents", "An Identity Secure Score review"],
+    "correctIndex": 2,
+    "explanation": "Agents generally go through an approval process before broad publication, giving administrators oversight of what agents become available organization-wide."
+  },
+  {
+    "id": "ab900-ca-09",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "question": "An administrator wants to monitor how many users are actively using a specific custom agent and understand its usage patterns over time. Which admin surfaces would they check?",
+    "options": ["Only the Exchange admin center", "Only Microsoft Entra ID", "The Microsoft 365 admin center and the Power Platform admin center", "Only Purview eDiscovery"],
+    "correctIndex": 2,
+    "explanation": "Agent usage, operational insights, and lifecycle can be monitored through both the Microsoft 365 admin center and the Power Platform admin center."
+  }
+]

@@ -1,321 +1,561 @@
 [
   {
     "id": "pim-01",
+    "examCode": "dp-600",
     "domain": "plan-implement-manage",
     "question": "Your organization wants a single item type that all Fabric workloads (Lakehouse, Warehouse, Power BI, Data Factory, Real-Time Intelligence) can read and write to without copying data. Which underlying Fabric component provides this?",
-    "options": ["OneLake", "Azure Data Lake Storage Gen1", "A Power BI dataset", "A Dataflow Gen2 staging area"],
+    "options": [
+      "OneLake",
+      "Azure Data Lake Storage Gen1",
+      "A Power BI dataset",
+      "A Dataflow Gen2 staging area"
+    ],
     "correctIndex": 0,
     "explanation": "OneLake is the single, tenant-wide data lake built into Fabric. Every workspace and workload stores its data in OneLake in Delta/Parquet format, so items can share data without duplication."
   },
   {
     "id": "pim-02",
+    "examCode": "dp-600",
     "domain": "plan-implement-manage",
     "question": "You need to group related workspaces so you can apply consistent data classification, ownership, and discoverability policies across them. Which Fabric feature should you use?",
-    "options": ["Deployment pipelines", "Domains", "Capacities", "Workspace roles"],
+    "options": [
+      "Deployment pipelines",
+      "Domains",
+      "Capacities",
+      "Workspace roles"
+    ],
     "correctIndex": 1,
     "explanation": "Domains let admins group workspaces by business area, assign domain admins, and apply consistent governance and certification policies across all workspaces in the domain."
   },
   {
     "id": "pim-03",
+    "examCode": "dp-600",
     "domain": "plan-implement-manage",
     "question": "A team wants to promote a Lakehouse, semantic model, and set of reports from a Development workspace to Test and then Production, keeping each stage in sync with minimal manual rework. What should they use?",
-    "options": ["Workspace export/import as .pbix files", "Deployment pipelines", "OneLake shortcuts", "Manual copy-paste between workspaces"],
+    "options": [
+      "Workspace export/import as .pbix files",
+      "Deployment pipelines",
+      "OneLake shortcuts",
+      "Manual copy-paste between workspaces"
+    ],
     "correctIndex": 1,
     "explanation": "Deployment pipelines let you assign workspaces to Development, Test, and Production stages and push content between them, comparing differences and deploying changes in a controlled way."
   },
   {
     "id": "pim-04",
+    "examCode": "dp-600",
     "domain": "plan-implement-manage",
     "question": "Which Fabric capacity SKU family is purchased and billed through Azure as pay-as-you-go or reserved compute, distinct from a Microsoft 365-based Power BI license?",
-    "options": ["P SKUs (Power BI Premium)", "F SKUs (Fabric capacity)", "A SKUs (Power BI embedded, legacy)", "E SKUs (Enterprise agreement)"],
+    "options": [
+      "P SKUs (Power BI Premium)",
+      "F SKUs (Fabric capacity)",
+      "A SKUs (Power BI embedded, legacy)",
+      "E SKUs (Enterprise agreement)"
+    ],
     "correctIndex": 1,
     "explanation": "F SKUs are Azure-billed Fabric capacities that can be scaled, paused, and resumed independently, and they support all Fabric workloads, not just Power BI."
   },
   {
     "id": "pim-05",
+    "examCode": "dp-600",
     "domain": "plan-implement-manage",
     "question": "A developer wants their notebook and pipeline changes in a workspace to be tracked with full version history and reviewed via pull requests before merging. What should you configure for the workspace?",
-    "options": ["Sensitivity labels", "Git integration", "Usage metrics report", "A capacity metrics app"],
+    "options": [
+      "Sensitivity labels",
+      "Git integration",
+      "Usage metrics report",
+      "A capacity metrics app"
+    ],
     "correctIndex": 1,
     "explanation": "Fabric's Git integration connects a workspace to a branch in Azure DevOps or GitHub, enabling source control, commit history, and pull-request based review workflows for workspace items."
   },
   {
     "id": "pim-06",
+    "examCode": "dp-600",
     "domain": "plan-implement-manage",
     "question": "To reduce cost during nights and weekends when nobody is using a Fabric capacity, what is the most appropriate action?",
-    "options": ["Delete the capacity and recreate it every morning", "Pause the capacity and resume it when needed", "Lower every item's refresh frequency to zero", "Move all workspaces to Pro license mode"],
+    "options": [
+      "Delete the capacity and recreate it every morning",
+      "Pause the capacity and resume it when needed",
+      "Lower every item's refresh frequency to zero",
+      "Move all workspaces to Pro license mode"
+    ],
     "correctIndex": 1,
     "explanation": "F SKU capacities can be paused and resumed on demand (or via automation/schedule), which stops billing for compute while paused without losing any content."
   },
   {
     "id": "pim-07",
+    "examCode": "dp-600",
     "domain": "plan-implement-manage",
     "question": "As a Fabric administrator, where would you go to see which capacities are approaching their compute limits and experiencing throttling?",
-    "options": ["The Monitoring hub", "The Microsoft Fabric Capacity Metrics app", "The OneLake file explorer", "The Data Activator reflex designer"],
+    "options": [
+      "The Monitoring hub",
+      "The Microsoft Fabric Capacity Metrics app",
+      "The OneLake file explorer",
+      "The Data Activator reflex designer"
+    ],
     "correctIndex": 1,
     "explanation": "The Fabric Capacity Metrics app (installed from AppSource) visualizes CU utilization, throttling, and smoothing for each capacity over time."
   },
   {
     "id": "pim-08",
+    "examCode": "dp-600",
     "domain": "plan-implement-manage",
     "question": "You want a single place to track the status of all pipeline runs, dataflow refreshes, and notebook jobs that you personally triggered or own, across multiple workspaces. Which tool should you use?",
-    "options": ["The Monitoring hub", "The admin portal tenant settings", "A deployment pipeline", "OneLake data hub"],
+    "options": [
+      "The Monitoring hub",
+      "The admin portal tenant settings",
+      "A deployment pipeline",
+      "OneLake data hub"
+    ],
     "correctIndex": 0,
     "explanation": "The Monitoring hub gives a centralized, cross-workspace view of activities such as pipeline runs, refreshes, and jobs, including their status and duration."
   },
   {
     "id": "pim-09",
+    "examCode": "dp-600",
     "domain": "plan-implement-manage",
     "question": "Which workspace role would you assign to a business analyst who should be able to view and interact with reports and build their own reports on existing datasets, but must NOT be able to change security settings or delete items owned by others?",
-    "options": ["Admin", "Member", "Contributor", "Viewer"],
+    "options": [
+      "Admin",
+      "Member",
+      "Contributor",
+      "Viewer"
+    ],
     "correctIndex": 2,
     "explanation": "Contributor can create and edit content (including building new reports) but cannot manage workspace access or perform admin-level actions, which are reserved for Admin and, to a lesser extent, Member."
   },
   {
     "id": "pim-10",
+    "examCode": "dp-600",
     "domain": "plan-implement-manage",
     "question": "A tenant admin wants to allow Fabric trial capacities for a specific security group only, rather than the whole organization. Where is this configured?",
-    "options": ["Power BI Desktop options", "Fabric admin portal tenant settings", "Individual workspace settings", "A Dataflow Gen2 connection"],
+    "options": [
+      "Power BI Desktop options",
+      "Fabric admin portal tenant settings",
+      "Individual workspace settings",
+      "A Dataflow Gen2 connection"
+    ],
     "correctIndex": 1,
     "explanation": "Tenant-wide switches, including which security groups can create trial capacities or use specific Fabric features, are controlled in the Fabric admin portal's tenant settings."
   },
   {
     "id": "psd-01",
+    "examCode": "dp-600",
     "domain": "prepare-serve-data",
     "question": "You need a low-code, visual way to combine and cleanse data from multiple sources and land the result as a Delta table, with a Power Query-like authoring experience. Which Fabric item is the best fit?",
-    "options": ["Dataflow Gen2", "A Warehouse stored procedure", "A KQL queryset", "A Power BI report"],
+    "options": [
+      "Dataflow Gen2",
+      "A Warehouse stored procedure",
+      "A KQL queryset",
+      "A Power BI report"
+    ],
     "correctIndex": 0,
     "explanation": "Dataflow Gen2 provides a Power Query-based, low-code ETL experience for ingesting and transforming data, and can output directly to a Lakehouse or Warehouse."
   },
   {
     "id": "psd-02",
+    "examCode": "dp-600",
     "domain": "prepare-serve-data",
     "question": "Your team is comfortable writing T-SQL and wants full relational database semantics (multi-table transactions, stored procedures, views) over their analytical data. Which Fabric item should they choose?",
-    "options": ["Lakehouse", "Warehouse", "Eventhouse", "KQL database"],
+    "options": [
+      "Lakehouse",
+      "Warehouse",
+      "Eventhouse",
+      "KQL database"
+    ],
     "correctIndex": 1,
     "explanation": "The Fabric Warehouse provides a full T-SQL engine with transactional support, stored procedures, and views, whereas a Lakehouse is primarily managed through Spark and a read-only SQL analytics endpoint."
   },
   {
     "id": "psd-03",
+    "examCode": "dp-600",
     "domain": "prepare-serve-data",
     "question": "You want to make an existing Azure Data Lake Storage Gen2 folder appear inside your Fabric Lakehouse without physically copying the files. What should you create?",
-    "options": ["A OneLake shortcut", "A Dataflow Gen2", "A mirrored database", "A semantic model"],
+    "options": [
+      "A OneLake shortcut",
+      "A Dataflow Gen2",
+      "A mirrored database",
+      "A semantic model"
+    ],
     "correctIndex": 0,
     "explanation": "Shortcuts create a reference from OneLake to data in another location (ADLS Gen2, S3, another Fabric item, etc.) so it can be read in place without duplicating storage."
   },
   {
     "id": "psd-04",
+    "examCode": "dp-600",
     "domain": "prepare-serve-data",
     "question": "Which Fabric capability continuously replicates data from an external operational database (such as Azure SQL Database or Cosmos DB) into OneLake in near real time, with minimal setup and no pipeline authoring?",
-    "options": ["Dataflow Gen2", "Database mirroring", "A notebook with a scheduled trigger", "A paginated report"],
+    "options": [
+      "Dataflow Gen2",
+      "Database mirroring",
+      "A notebook with a scheduled trigger",
+      "A paginated report"
+    ],
     "correctIndex": 1,
     "explanation": "Mirroring continuously and automatically replicates changes from supported source databases into Delta tables in OneLake, enabling near real-time analytics without building custom pipelines."
   },
   {
     "id": "psd-05",
+    "examCode": "dp-600",
     "domain": "prepare-serve-data",
     "question": "A large Delta table used for reporting has many small files after frequent incremental loads, which is slowing down queries. Which optimization technique addresses this directly?",
-    "options": ["Enabling Copilot", "Running OPTIMIZE (compaction) with V-Order", "Adding a new workspace role", "Converting the table to a CSV file"],
+    "options": [
+      "Enabling Copilot",
+      "Running OPTIMIZE (compaction) with V-Order",
+      "Adding a new workspace role",
+      "Converting the table to a CSV file"
+    ],
     "correctIndex": 1,
     "explanation": "OPTIMIZE compacts small files into larger ones, and V-Order applies additional sorting and encoding tuned for fast reads in Power BI and SQL engines, both improving query performance."
   },
   {
     "id": "psd-06",
+    "examCode": "dp-600",
     "domain": "prepare-serve-data",
     "question": "You have a fact table with billions of rows loaded daily. To improve query and maintenance performance, you want the engine to skip reading files outside the relevant date range. What should you implement?",
-    "options": ["Partitioning the table by date", "Renaming the table", "Disabling the SQL analytics endpoint", "Converting the table to a semantic model"],
+    "options": [
+      "Partitioning the table by date",
+      "Renaming the table",
+      "Disabling the SQL analytics endpoint",
+      "Converting the table to a semantic model"
+    ],
     "correctIndex": 0,
     "explanation": "Partitioning a large table (commonly by date) allows engines to prune irrelevant partitions during query execution, reducing the amount of data scanned."
   },
   {
     "id": "psd-07",
+    "examCode": "dp-600",
     "domain": "prepare-serve-data",
     "question": "Your data engineers prefer writing PySpark and Spark SQL to perform complex, code-first transformations on large datasets before landing curated tables. Which Fabric item should they primarily use?",
-    "options": ["A notebook", "A paginated report", "A KQL queryset", "A Power BI dashboard"],
+    "options": [
+      "A notebook",
+      "A paginated report",
+      "A KQL queryset",
+      "A Power BI dashboard"
+    ],
     "correctIndex": 0,
     "explanation": "Fabric notebooks run on Spark compute and support PySpark, Spark SQL, Scala, and R, making them the right tool for code-first, large-scale data transformation."
   },
   {
     "id": "psd-08",
+    "examCode": "dp-600",
     "domain": "prepare-serve-data",
     "question": "In a medallion architecture implemented in Fabric, which statement best describes the Silver layer?",
-    "options": ["Raw, unvalidated data copied as-is from source systems", "Cleansed, conformed, and validated data joined across sources but not yet aggregated for a specific business need", "Highly aggregated, business-ready tables optimized for direct reporting", "A temporary staging area that is deleted after each pipeline run"],
+    "options": [
+      "Raw, unvalidated data copied as-is from source systems",
+      "Cleansed, conformed, and validated data joined across sources but not yet aggregated for a specific business need",
+      "Highly aggregated, business-ready tables optimized for direct reporting",
+      "A temporary staging area that is deleted after each pipeline run"
+    ],
     "correctIndex": 1,
     "explanation": "Bronze holds raw source data, Silver holds cleansed and conformed data with quality rules applied, and Gold holds business-level aggregates optimized for consumption and reporting."
   },
   {
     "id": "psd-09",
+    "examCode": "dp-600",
     "domain": "prepare-serve-data",
     "question": "Which of the following can directly write its transformation output into a Fabric Warehouse table using T-SQL, without requiring Spark?",
-    "options": ["A Warehouse stored procedure using INSERT...SELECT", "A KQL update policy", "A Power BI report visual", "The OneLake file explorer"],
+    "options": [
+      "A Warehouse stored procedure using INSERT...SELECT",
+      "A KQL update policy",
+      "A Power BI report visual",
+      "The OneLake file explorer"
+    ],
     "correctIndex": 0,
     "explanation": "Because a Warehouse is a full T-SQL engine, you can use standard T-SQL statements such as stored procedures and INSERT...SELECT to transform and load data entirely within the Warehouse."
   },
   {
     "id": "psd-10",
+    "examCode": "dp-600",
     "domain": "prepare-serve-data",
     "question": "You need to periodically remove old, unreferenced data files left behind after repeated OPTIMIZE operations on a Delta table, to reduce storage costs. Which operation should you run?",
-    "options": ["VACUUM", "TRUNCATE TABLE", "DROP TABLE", "MERGE"],
+    "options": [
+      "VACUUM",
+      "TRUNCATE TABLE",
+      "DROP TABLE",
+      "MERGE"
+    ],
     "correctIndex": 0,
     "explanation": "VACUUM removes data files that are no longer referenced by the Delta table's transaction log and are older than the configured retention threshold, reclaiming storage space."
   },
   {
     "id": "sm-01",
+    "examCode": "dp-600",
     "domain": "semantic-models",
     "question": "When designing a semantic model for a sales reporting solution, which schema design is generally recommended for performance and usability in Power BI?",
-    "options": ["A single flat denormalized table with every column", "A star schema with a central fact table and surrounding dimension tables", "A snowflake of only dimension tables with no fact table", "A schema with no relationships defined at all"],
+    "options": [
+      "A single flat denormalized table with every column",
+      "A star schema with a central fact table and surrounding dimension tables",
+      "A snowflake of only dimension tables with no fact table",
+      "A schema with no relationships defined at all"
+    ],
     "correctIndex": 1,
     "explanation": "A star schema, with fact tables containing measures and dimension tables containing descriptive attributes, is the recommended design for performance, simplicity, and compatibility with DAX time-intelligence functions."
   },
   {
     "id": "sm-02",
+    "examCode": "dp-600",
     "domain": "semantic-models",
     "question": "A dimension table has one row per customer, and the fact table has many rows per customer. When you create a relationship between them, what should the cardinality be?",
-    "options": ["Many-to-many", "One-to-many (one on the dimension side)", "Many-to-one (many on the dimension side)", "One-to-one"],
+    "options": [
+      "Many-to-many",
+      "One-to-many (one on the dimension side)",
+      "Many-to-one (many on the dimension side)",
+      "One-to-one"
+    ],
     "correctIndex": 1,
     "explanation": "This is the standard one-to-many relationship: one row in the dimension (the 'one' side) relates to many rows in the fact table (the 'many' side)."
   },
   {
     "id": "sm-03",
+    "examCode": "dp-600",
     "domain": "semantic-models",
     "question": "You need a value that recalculates dynamically based on filters and slicers applied in a report, such as Total Sales for whatever context is currently selected. Should you create a calculated column or a measure?",
-    "options": ["A calculated column, because it is stored in the model", "A measure, because it evaluates in the current filter context at query time", "Either one produces identical results and performance", "Neither; this requires a Power Query custom column"],
+    "options": [
+      "A calculated column, because it is stored in the model",
+      "A measure, because it evaluates in the current filter context at query time",
+      "Either one produces identical results and performance",
+      "Neither; this requires a Power Query custom column"
+    ],
     "correctIndex": 1,
     "explanation": "Measures are evaluated dynamically based on the current filter context, making them appropriate for aggregations like Total Sales that must respond to slicers and filters. Calculated columns are computed once at refresh time and stored per row."
   },
   {
     "id": "sm-04",
+    "examCode": "dp-600",
     "domain": "semantic-models",
     "question": "You want report visuals to query a Warehouse's data directly at query time without importing a copy into the semantic model, accepting some latency and performance trade-offs. Which storage mode should you use?",
-    "options": ["Import", "DirectQuery", "Dual", "Direct Lake"],
+    "options": [
+      "Import",
+      "DirectQuery",
+      "Dual",
+      "Direct Lake"
+    ],
     "correctIndex": 1,
     "explanation": "DirectQuery sends queries to the source system at report run time rather than caching data in the model, trading some performance for always-current results and no duplicated storage."
   },
   {
     "id": "sm-05",
+    "examCode": "dp-600",
     "domain": "semantic-models",
     "question": "Which Fabric semantic model storage mode reads Delta Parquet files directly from OneLake, combining near-Import-level query performance with data that reflects the underlying Lakehouse or Warehouse without a separate refresh?",
-    "options": ["Import", "DirectQuery", "Direct Lake", "Live Connection"],
+    "options": [
+      "Import",
+      "DirectQuery",
+      "Direct Lake",
+      "Live Connection"
+    ],
     "correctIndex": 2,
     "explanation": "Direct Lake mode loads data directly from Delta tables in OneLake into memory on demand, avoiding a traditional import refresh while delivering performance close to Import mode."
   },
   {
     "id": "sm-06",
+    "examCode": "dp-600",
     "domain": "semantic-models",
     "question": "You want external tools like Tableau or a custom application to query a published semantic model, or you want to script deployment of model objects using tools like Tabular Editor. What must be enabled?",
-    "options": ["Row-level security", "The XMLA endpoint", "Q&A visual", "Certified endorsement"],
+    "options": [
+      "Row-level security",
+      "The XMLA endpoint",
+      "Q&A visual",
+      "Certified endorsement"
+    ],
     "correctIndex": 1,
     "explanation": "The XMLA endpoint exposes the semantic model over the standard analytical protocol used by third-party tools and external client applications, enabling both read and, if configured, write operations."
   },
   {
     "id": "sm-07",
+    "examCode": "dp-600",
     "domain": "semantic-models",
     "question": "A fact table has 5 years of history, but only the last 30 days change regularly. You want to avoid reprocessing the entire table on every refresh. What should you configure?",
-    "options": ["Row-level security", "An incremental refresh policy", "A calculated table", "A many-to-many relationship"],
+    "options": [
+      "Row-level security",
+      "An incremental refresh policy",
+      "A calculated table",
+      "A many-to-many relationship"
+    ],
     "correctIndex": 1,
     "explanation": "Incremental refresh policies partition the table by date range and only reprocess the recent, changing partitions, leaving historical partitions untouched, which greatly reduces refresh time."
   },
   {
     "id": "sm-08",
+    "examCode": "dp-600",
     "domain": "semantic-models",
     "question": "You need to restrict a sales manager so that they only see rows for their own region when viewing a shared report, based on their signed-in identity. What should you implement?",
-    "options": ["Object-level security only", "Row-level security (RLS) with a DAX filter tied to USERPRINCIPALNAME()", "A separate workspace per region with manual copies of the report", "Perspectives"],
+    "options": [
+      "Object-level security only",
+      "Row-level security (RLS) with a DAX filter tied to USERPRINCIPALNAME()",
+      "A separate workspace per region with manual copies of the report",
+      "Perspectives"
+    ],
     "correctIndex": 1,
     "explanation": "Row-level security defines roles with DAX filter expressions, commonly using USERPRINCIPALNAME() or USERNAME(), so each user only sees rows permitted for their identity when the role is applied."
   },
   {
     "id": "sm-09",
+    "examCode": "dp-600",
     "domain": "semantic-models",
     "question": "Your team wants to develop a semantic model's tables, relationships, and measures as source-controlled text files that can be diffed and reviewed in pull requests, rather than as a single binary file. Which authoring approach supports this?",
-    "options": ["Publishing only .pbix files", "The Power BI Project (.pbip) format with TMDL", "Exporting to PDF", "Using only the web-based Q&A feature"],
+    "options": [
+      "Publishing only .pbix files",
+      "The Power BI Project (.pbip) format with TMDL",
+      "Exporting to PDF",
+      "Using only the web-based Q&A feature"
+    ],
     "correctIndex": 1,
     "explanation": "The .pbip project format saves the report and semantic model as human-readable folders and files (including TMDL for the model), which are well-suited to Git-based source control and code review."
   },
   {
     "id": "sm-10",
+    "examCode": "dp-600",
     "domain": "semantic-models",
     "question": "Users report that a specific report page is slow. Which tool would you use inside Power BI Desktop to identify which visuals and DAX queries are consuming the most time?",
-    "options": ["Performance Analyzer", "The Data view", "The Format pane", "The Q&A explorer"],
+    "options": [
+      "Performance Analyzer",
+      "The Data view",
+      "The Format pane",
+      "The Q&A explorer"
+    ],
     "correctIndex": 0,
     "explanation": "Performance Analyzer records and breaks down the time each visual takes for DAX query execution, visual rendering, and other operations, helping you pinpoint the source of slow performance."
   },
   {
     "id": "ea-01",
+    "examCode": "dp-600",
     "domain": "explore-analyze",
     "question": "You need to interactively explore high-volume, time-stamped event data (such as IoT telemetry) stored in an Eventhouse. Which query language should you use?",
-    "options": ["DAX", "KQL (Kusto Query Language)", "MDX", "Power Query M"],
+    "options": [
+      "DAX",
+      "KQL (Kusto Query Language)",
+      "MDX",
+      "Power Query M"
+    ],
     "correctIndex": 1,
     "explanation": "KQL is the query language used against KQL databases in an Eventhouse, and it is optimized for fast, ad hoc exploration of large volumes of time-series and log-like event data."
   },
   {
     "id": "ea-02",
+    "examCode": "dp-600",
     "domain": "explore-analyze",
     "question": "In a KQL query, which operator would you use to group rows and calculate aggregates such as counts or averages per group, similar to GROUP BY in SQL?",
-    "options": ["project", "where", "summarize", "extend"],
+    "options": [
+      "project",
+      "where",
+      "summarize",
+      "extend"
+    ],
     "correctIndex": 2,
     "explanation": "The summarize operator groups rows by one or more columns and computes aggregate values, analogous to GROUP BY combined with aggregate functions in T-SQL."
   },
   {
     "id": "ea-03",
+    "examCode": "dp-600",
     "domain": "explore-analyze",
     "question": "A data scientist wants to quickly explore a Lakehouse table's contents, run summary statistics, and prototype feature engineering in Python before building a model. What is the most appropriate Fabric tool?",
-    "options": ["A paginated report", "A notebook", "A KQL dashboard", "A Dataflow Gen2"],
+    "options": [
+      "A paginated report",
+      "A notebook",
+      "A KQL dashboard",
+      "A Dataflow Gen2"
+    ],
     "correctIndex": 1,
     "explanation": "Notebooks support interactive, code-first exploration using PySpark, pandas, and visualization libraries, making them well suited for exploratory data analysis and prototyping."
   },
   {
     "id": "ea-04",
+    "examCode": "dp-600",
     "domain": "explore-analyze",
     "question": "You want to run an ad hoc T-SQL SELECT statement with joins and aggregations against tables in a Lakehouse without writing Spark code. Which feature enables this?",
-    "options": ["The SQL analytics endpoint", "The notebook Spark session", "The Data Activator reflex", "The Power BI Q&A visual"],
+    "options": [
+      "The SQL analytics endpoint",
+      "The notebook Spark session",
+      "The Data Activator reflex",
+      "The Power BI Q&A visual"
+    ],
     "correctIndex": 0,
     "explanation": "Every Lakehouse automatically exposes a read-only SQL analytics endpoint, allowing you to query Delta tables using standard T-SQL without needing to write Spark code."
   },
   {
     "id": "ea-05",
+    "examCode": "dp-600",
     "domain": "explore-analyze",
     "question": "Which Fabric experience is purpose-built for pixel-perfect, highly formatted documents such as invoices or regulatory forms that need precise layout control and print fidelity?",
-    "options": ["Power BI reports", "Real-Time dashboards", "Paginated reports", "KQL querysets"],
+    "options": [
+      "Power BI reports",
+      "Real-Time dashboards",
+      "Paginated reports",
+      "KQL querysets"
+    ],
     "correctIndex": 2,
     "explanation": "Paginated reports (based on RDL) are designed for pixel-perfect, print-ready layouts such as invoices and operational documents, unlike interactive Power BI reports which prioritize exploration."
   },
   {
     "id": "ea-06",
+    "examCode": "dp-600",
     "domain": "explore-analyze",
     "question": "You want a live-updating visual view of streaming event data (for example, from an Eventstream into an Eventhouse) that refreshes continuously without manual refresh actions. Which item should you build?",
-    "options": ["A Power BI report using Import mode", "A Real-Time dashboard", "A paginated report", "A calculated table"],
+    "options": [
+      "A Power BI report using Import mode",
+      "A Real-Time dashboard",
+      "A paginated report",
+      "A calculated table"
+    ],
     "correctIndex": 1,
     "explanation": "Real-Time dashboards, built from KQL querysets over Eventhouse data, are designed to visualize streaming data with automatic, low-latency updates."
   },
   {
     "id": "ea-07",
+    "examCode": "dp-600",
     "domain": "explore-analyze",
     "question": "You want to explore measures and tables in a published semantic model by writing DAX directly and viewing tabular results, without building a full report. Which feature should you use?",
-    "options": ["DAX query view in Power BI Desktop", "Paginated report designer", "OneLake file explorer", "Data Activator"],
+    "options": [
+      "DAX query view in Power BI Desktop",
+      "Paginated report designer",
+      "OneLake file explorer",
+      "Data Activator"
+    ],
     "correctIndex": 0,
     "explanation": "DAX query view lets you write and run DAX queries against the model and see results in a table, which is useful for testing measures and exploring data without building visuals."
   },
   {
     "id": "ea-08",
+    "examCode": "dp-600",
     "domain": "explore-analyze",
     "question": "In KQL, which operator combines rows from two tables based on a matching key, similar to a SQL JOIN?",
-    "options": ["union", "join", "sort", "take"],
+    "options": [
+      "union",
+      "join",
+      "sort",
+      "take"
+    ],
     "correctIndex": 1,
     "explanation": "The join operator merges rows from two tabular expressions based on matching values in specified columns, similar to a SQL JOIN, while union simply stacks rows from multiple tables."
   },
   {
     "id": "ea-09",
+    "examCode": "dp-600",
     "domain": "explore-analyze",
     "question": "Business users want to describe an in-Fabric task in natural language (for example, 'summarize this notebook's logic' or 'generate a KQL query for the last 24 hours of errors') and receive AI-generated assistance inside the relevant Fabric item. Which capability provides this?",
-    "options": ["Copilot in Fabric", "Row-level security", "A deployment pipeline", "A OneLake shortcut"],
+    "options": [
+      "Copilot in Fabric",
+      "Row-level security",
+      "A deployment pipeline",
+      "A OneLake shortcut"
+    ],
     "correctIndex": 0,
     "explanation": "Copilot in Fabric is integrated across items such as notebooks, Data Factory, Power BI, and Real-Time Intelligence to generate code, queries, summaries, and reports from natural-language prompts."
   },
   {
     "id": "ea-10",
+    "examCode": "dp-600",
     "domain": "explore-analyze",
     "question": "You want to automatically trigger a Teams alert whenever a specific metric in a streaming dataset crosses a threshold, without building a full Power BI report to monitor it visually. Which Fabric capability is designed for this?",
-    "options": ["Data Activator", "Paginated reports", "DAX query view", "Deployment pipelines"],
+    "options": [
+      "Data Activator",
+      "Paginated reports",
+      "DAX query view",
+      "Deployment pipelines"
+    ],
     "correctIndex": 0,
     "explanation": "Data Activator monitors data (including streaming data) for conditions you define and automatically triggers actions such as Teams or email alerts when thresholds are met, without requiring a dashboard to be watched manually."
   }

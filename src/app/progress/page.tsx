@@ -1,70 +1,49 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo } from "react";
-import { outline, getDomainName, getFlashcardsByDomain } from "@/lib/content";
+import { catalog } from "@/lib/content";
 import {
   useQuizAttempts,
   useFlashcardProgress,
+  useActivityDates,
   resetAllProgress,
 } from "@/lib/storage";
-
-function Bar({ pct }: { pct: number }) {
-  return (
-    <div className="h-2 w-full overflow-hidden rounded-full bg-black/10 dark:bg-white/10">
-      <div
-        className="h-full rounded-full bg-indigo-600"
-        style={{ width: `${Math.max(0, Math.min(100, pct))}%` }}
-      />
-    </div>
-  );
-}
+import { computeXp, computeLevel, computeStreak } from "@/lib/gamification";
 
 export default function ProgressPage() {
   const attempts = useQuizAttempts();
   const flashcardProgress = useFlashcardProgress();
+  const activityDates = useActivityDates();
 
-  const domainAccuracy = useMemo(() => {
-    const totals: Record<string, { correct: number; total: number }> = {};
-    for (const attempt of attempts) {
-      for (const r of attempt.results) {
-        totals[r.domain] ??= { correct: 0, total: 0 };
-        totals[r.domain].total += 1;
-        if (r.correct) totals[r.domain].correct += 1;
-      }
-    }
-    return totals;
-  }, [attempts]);
+  const xp = computeXp(attempts, flashcardProgress);
+  const { level, xpIntoLevel, xpForNextLevel } = computeLevel(xp);
+  const streak = computeStreak(activityDates);
 
-  const overall = useMemo(() => {
-    const totalQuestions = attempts.reduce((s, a) => s + a.numQuestions, 0);
-    const totalCorrect = attempts.reduce((s, a) => s + a.correctCount, 0);
-    const avg =
-      attempts.length === 0
-        ? 0
-        : Math.round(
-            (attempts.reduce(
-              (s, a) => s + a.correctCount / a.numQuestions,
-              0,
-            ) /
-              attempts.length) *
-              100,
-          );
-    const best =
-      attempts.length === 0
-        ? 0
-        : Math.round(
-            Math.max(
-              ...attempts.map((a) => (a.correctCount / a.numQuestions) * 100),
-            ),
-          );
-    return { totalQuestions, totalCorrect, avg, best };
-  }, [attempts]);
+  const examStats = useMemo(
+    () =>
+      catalog
+        .filter((exam) => exam.hasContent)
+        .map((exam) => {
+          const examAttempts = attempts.filter((a) => a.examCode === exam.code);
+          const avg =
+            examAttempts.length === 0
+              ? null
+              : Math.round(
+                  (examAttempts.reduce((s, a) => s + a.correctCount / a.numQuestions, 0) /
+                    examAttempts.length) *
+                    100,
+                );
+          return { exam, attemptCount: examAttempts.length, avg };
+        }),
+    [attempts],
+  );
 
   function handleReset() {
     if (
       typeof window !== "undefined" &&
       window.confirm(
-        "This will clear all saved quiz history and flashcard mastery on this device. Continue?",
+        "This will clear all saved quiz history, flashcard mastery, and streak data on this device. Continue?",
       )
     ) {
       resetAllProgress();
@@ -74,115 +53,58 @@ export default function ProgressPage() {
   return (
     <div className="flex flex-col gap-10">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Your progress</h1>
-        <p className="mt-2 text-sm text-black/70 dark:text-white/70">
+        <h1 className="font-pixel text-xl">Trainer card</h1>
+        <p className="mt-3 text-sm text-[var(--foreground-muted)]">
           Stored locally in this browser only — nothing is sent anywhere.
         </p>
       </div>
 
-      {attempts.length === 0 ? (
-        <p className="text-sm text-black/60 dark:text-white/60">
-          You haven&apos;t taken a quiz yet. Head to the practice quiz to get
-          started.
-        </p>
-      ) : (
-        <section className="grid gap-4 sm:grid-cols-3">
-          <div className="rounded-lg border border-black/10 p-5 dark:border-white/10">
-            <p className="text-xs text-black/60 dark:text-white/60">
-              Quizzes taken
-            </p>
-            <p className="mt-1 text-2xl font-semibold">{attempts.length}</p>
+      <section className="pixel-panel flex flex-wrap items-center gap-6 p-6">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-[var(--border)] bg-[var(--accent)] font-pixel text-sm text-[var(--accent-foreground)]">
+          Lv{level}
+        </div>
+        <div className="min-w-[200px] flex-1">
+          <div className="flex justify-between text-xs text-[var(--foreground-muted)]">
+            <span>{xp} XP total</span>
+            <span>
+              {xpIntoLevel}/{xpForNextLevel} to next level
+            </span>
           </div>
-          <div className="rounded-lg border border-black/10 p-5 dark:border-white/10">
-            <p className="text-xs text-black/60 dark:text-white/60">
-              Average score
-            </p>
-            <p className="mt-1 text-2xl font-semibold">{overall.avg}%</p>
+          <div className="mt-1 h-3 w-full overflow-hidden rounded-full border-2 border-[var(--border)] bg-black/10 dark:bg-white/10">
+            <div
+              className="h-full bg-[var(--accent)]"
+              style={{ width: `${(xpIntoLevel / xpForNextLevel) * 100}%` }}
+            />
           </div>
-          <div className="rounded-lg border border-black/10 p-5 dark:border-white/10">
-            <p className="text-xs text-black/60 dark:text-white/60">
-              Best score
-            </p>
-            <p className="mt-1 text-2xl font-semibold">{overall.best}%</p>
-          </div>
-        </section>
-      )}
-
-      <section>
-        <h2 className="mb-4 text-lg font-medium">Accuracy by skills area</h2>
-        <div className="flex flex-col gap-4">
-          {outline.domains.map((d) => {
-            const stat = domainAccuracy[d.id];
-            const pct = stat && stat.total > 0
-              ? Math.round((stat.correct / stat.total) * 100)
-              : null;
-            return (
-              <div key={d.id}>
-                <div className="mb-1 flex justify-between text-sm">
-                  <span>{d.name}</span>
-                  <span className="text-black/60 dark:text-white/60">
-                    {pct === null ? "No attempts yet" : `${pct}% (${stat.correct}/${stat.total})`}
-                  </span>
-                </div>
-                <Bar pct={pct ?? 0} />
-              </div>
-            );
-          })}
+        </div>
+        <div className="text-center">
+          <p className="font-pixel text-lg">{streak}</p>
+          <p className="text-xs text-[var(--foreground-muted)]">day streak</p>
         </div>
       </section>
 
       <section>
-        <h2 className="mb-4 text-lg font-medium">Flashcard mastery</h2>
-        <div className="flex flex-col gap-4">
-          {outline.domains.map((d) => {
-            const cards = getFlashcardsByDomain(d.id);
-            const known = cards.filter(
-              (c) => flashcardProgress[c.id] === "known",
-            ).length;
-            const pct =
-              cards.length === 0 ? 0 : Math.round((known / cards.length) * 100);
-            return (
-              <div key={d.id}>
-                <div className="mb-1 flex justify-between text-sm">
-                  <span>{d.name}</span>
-                  <span className="text-black/60 dark:text-white/60">
-                    {known}/{cards.length} known
-                  </span>
-                </div>
-                <Bar pct={pct} />
-              </div>
-            );
-          })}
+        <h2 className="mb-4 font-pixel text-sm">Your routes</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {examStats.map(({ exam, attemptCount, avg }) => (
+            <Link
+              key={exam.code}
+              href={`/exams/${exam.code}/progress`}
+              className="pixel-panel flex flex-col gap-2 p-5 hover:-translate-y-0.5 transition-transform"
+            >
+              <span className="font-pixel text-xs text-[var(--accent)]">
+                {exam.code.toUpperCase()}
+              </span>
+              <p className="text-sm font-medium">{exam.title}</p>
+              <p className="text-xs text-[var(--foreground-muted)]">
+                {attemptCount === 0
+                  ? "No attempts yet"
+                  : `${attemptCount} quiz${attemptCount === 1 ? "" : "zes"} · ${avg}% average`}
+              </p>
+            </Link>
+          ))}
         </div>
       </section>
-
-      {attempts.length > 0 && (
-        <section>
-          <h2 className="mb-4 text-lg font-medium">Recent quizzes</h2>
-          <div className="flex flex-col divide-y divide-black/10 dark:divide-white/10">
-            {[...attempts]
-              .reverse()
-              .slice(0, 10)
-              .map((a) => (
-                <div
-                  key={a.id}
-                  className="flex items-center justify-between py-2 text-sm"
-                >
-                  <span>
-                    {new Date(a.timestamp).toLocaleDateString()} ·{" "}
-                    {a.domainFilter === "all"
-                      ? "All domains"
-                      : getDomainName(a.domainFilter)}
-                  </span>
-                  <span className="font-medium">
-                    {a.correctCount}/{a.numQuestions} (
-                    {Math.round((a.correctCount / a.numQuestions) * 100)}%)
-                  </span>
-                </div>
-              ))}
-          </div>
-        </section>
-      )}
 
       <button
         onClick={handleReset}

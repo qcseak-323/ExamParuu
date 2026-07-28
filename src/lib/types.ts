@@ -1,3 +1,5 @@
+import type { MsLevel } from "./levels";
+
 export type Domain = {
   id: string;
   name: string;
@@ -14,6 +16,7 @@ export type Outline = {
 
 export type Question = {
   id: string;
+  examCode: string;
   domain: string;
   question: string;
   options: string[];
@@ -23,6 +26,7 @@ export type Question = {
 
 export type Flashcard = {
   id: string;
+  examCode: string;
   domain: string;
   front: string;
   back: string;
@@ -46,6 +50,7 @@ export type QuizResultEntry = {
 
 export type QuizAttempt = {
   id: string;
+  examCode: string;
   timestamp: number;
   domainFilter: string;
   numQuestions: number;
@@ -54,3 +59,19 @@ export type QuizAttempt = {
 };
 
 export type FlashcardStatus = "known" | "learning";
+
+export type CatalogStatus = "GA" | "beta" | "retiring";
+
+export type CatalogEntry = {
+  code: string;
+  title: string;
+  family: string;
+  msLevel: MsLevel;
+  status: CatalogStatus;
+  durationMinutes: number | null;
+  passingScore: number | null;
+  summary: string;
+  hasContent: boolean;
+  catalogVerifiedAt: string | null;
+  sourceUrl: string | null;
+};

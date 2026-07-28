@@ -1,90 +1,104 @@
 import Link from "next/link";
-import { outline, questions, flashcards } from "@/lib/content";
+import { catalog, getExamContent } from "@/lib/content";
+import { getDisplayTier, getRetroLabel } from "@/lib/levels";
 
 export default function Home() {
+  const totalQuestions = catalog.reduce(
+    (sum, exam) => sum + (getExamContent(exam.code)?.questions.length ?? 0),
+    0,
+  );
+  const totalFlashcards = catalog.reduce(
+    (sum, exam) => sum + (getExamContent(exam.code)?.flashcards.length ?? 0),
+    0,
+  );
+
   return (
-    <div className="flex flex-col gap-14">
-      <section className="flex flex-col items-start gap-4">
-        <span className="rounded-full bg-indigo-600/10 px-3 py-1 text-xs font-medium text-indigo-600">
-          {outline.examCode} · {outline.examName}
+    <div className="flex flex-col gap-16">
+      <section className="pixel-panel flex flex-col items-start gap-4 p-8">
+        <span className="font-pixel text-[10px] text-[var(--accent)]">
+          A trainer&apos;s journey through Microsoft certification
         </span>
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-          Pass the DP-600 exam with focused practice.
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+          Train your way to a passing score.
         </h1>
-        <p className="max-w-2xl text-base text-black/70 dark:text-white/70">
-          ExamReady gives you a free study guide, {questions.length} original
-          practice questions with explanations, {flashcards.length} flashcards,
-          and progress tracking — all organized around the official DP-600
-          skills areas. No account required, no paywall.
+        <p className="max-w-2xl text-base text-[var(--foreground-muted)]">
+          ExamReady is a free, retro-styled practice platform for Microsoft
+          certification exams. {totalQuestions} original practice questions,
+          {" "}{totalFlashcards} flashcards, full study guides, and progress
+          tracking — no account required, no paywall.
         </p>
         <div className="flex flex-wrap gap-3 pt-2">
           <Link
-            href="/quiz"
-            className="rounded-md bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500"
+            href="/catalog"
+            className="pixel-button rounded-md bg-[var(--accent)] px-6 py-3 text-sm font-medium text-[var(--accent-foreground)]"
           >
-            Start a practice quiz
+            PRESS START ▶
           </Link>
           <Link
-            href="/study"
-            className="rounded-md border border-black/15 px-5 py-2.5 text-sm font-medium hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+            href={`/exams/${catalog[0]?.code}/quiz`}
+            className="pixel-button rounded-md bg-[var(--panel)] px-6 py-3 text-sm font-medium"
           >
-            Read the study guide
+            Try a demo quiz
           </Link>
         </div>
       </section>
 
       <section>
-        <h2 className="mb-4 text-xl font-semibold">Exam skills areas</h2>
+        <h2 className="mb-4 font-pixel text-sm">Choose your route</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          {outline.domains.map((domain) => (
-            <div
-              key={domain.id}
-              className="rounded-lg border border-black/10 p-5 dark:border-white/10"
+          {catalog.map((exam) => (
+            <Link
+              key={exam.code}
+              href={`/exams/${exam.code}`}
+              className="pixel-panel flex flex-col gap-2 p-5 hover:-translate-y-0.5 transition-transform"
             >
-              <div className="flex items-center justify-between gap-2">
-                <h3 className="font-medium">{domain.name}</h3>
-                <span className="shrink-0 rounded bg-black/5 px-2 py-0.5 text-xs text-black/60 dark:bg-white/10 dark:text-white/60">
-                  {domain.weight}
-                </span>
-              </div>
-              <ul className="mt-3 list-disc space-y-1 pl-4 text-sm text-black/70 dark:text-white/70">
-                {domain.subtopics.map((topic) => (
-                  <li key={topic}>{topic}</li>
-                ))}
-              </ul>
-            </div>
+              <span className="font-pixel text-xs text-[var(--accent)]">
+                {exam.code.toUpperCase()}
+              </span>
+              <p className="text-sm font-medium">{exam.title}</p>
+              <p className="text-xs text-[var(--foreground-muted)]">
+                {getRetroLabel(exam.msLevel)} · {getDisplayTier(exam.msLevel)}
+              </p>
+            </Link>
           ))}
         </div>
-        <p className="mt-3 text-xs text-black/50 dark:text-white/50">
-          {outline.note}
-        </p>
       </section>
 
       <section>
-        <h2 className="mb-4 text-xl font-semibold">How to use this site</h2>
+        <h2 className="mb-4 font-pixel text-sm">How it works</h2>
         <div className="grid gap-4 sm:grid-cols-3">
-          <div className="rounded-lg border border-black/10 p-5 dark:border-white/10">
+          <div className="pixel-panel p-5">
             <h3 className="font-medium">1. Study</h3>
-            <p className="mt-2 text-sm text-black/70 dark:text-white/70">
-              Read the guide for each skills area to build a mental model of
-              Fabric before you drill questions.
+            <p className="mt-2 text-sm text-[var(--foreground-muted)]">
+              Read the guide for each skills area to build a mental model
+              before you drill questions.
             </p>
           </div>
-          <div className="rounded-lg border border-black/10 p-5 dark:border-white/10">
+          <div className="pixel-panel p-5">
             <h3 className="font-medium">2. Practice</h3>
-            <p className="mt-2 text-sm text-black/70 dark:text-white/70">
+            <p className="mt-2 text-sm text-[var(--foreground-muted)]">
               Take quizzes filtered by domain, get instant explanations, and
               use flashcards to lock in terminology.
             </p>
           </div>
-          <div className="rounded-lg border border-black/10 p-5 dark:border-white/10">
+          <div className="pixel-panel p-5">
             <h3 className="font-medium">3. Track</h3>
-            <p className="mt-2 text-sm text-black/70 dark:text-white/70">
-              Your quiz scores and flashcard mastery are saved on your device
-              so you can see which domains need more work.
+            <p className="mt-2 text-sm text-[var(--foreground-muted)]">
+              Earn XP, gym badges, and a daily streak while your quiz scores
+              and flashcard mastery are saved on your device.
             </p>
           </div>
         </div>
+      </section>
+
+      <section className="pixel-panel p-6 text-sm">
+        <h2 className="mb-2 font-pixel text-xs">Not affiliated with Microsoft</h2>
+        <p className="text-[var(--foreground-muted)]">
+          ExamReady is an independent, unofficial study resource. All
+          practice content is original, written from Microsoft&apos;s
+          publicly published skills-measured outlines — never from real,
+          NDA-protected exam questions.
+        </p>
       </section>
     </div>
   );

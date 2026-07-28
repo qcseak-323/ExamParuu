@@ -2,7 +2,11 @@
 
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { outline, getFlashcardsByDomain, getDomainName } from "@/lib/content";
+import {
+  getExamContent,
+  getFlashcardsByDomain,
+  getDomainName,
+} from "@/lib/content";
 import { shuffle } from "@/lib/shuffle";
 import {
   getFlashcardProgress,
@@ -11,7 +15,8 @@ import {
 } from "@/lib/storage";
 import type { FlashcardStatus } from "@/lib/types";
 
-export default function FlashcardsClient() {
+export default function FlashcardsClient({ examCode }: { examCode: string }) {
+  const content = getExamContent(examCode);
   const searchParams = useSearchParams();
   const initialDomain = searchParams.get("domain") ?? "all";
 
@@ -24,7 +29,7 @@ export default function FlashcardsClient() {
   const progress = useFlashcardProgress();
 
   const deck = useMemo(() => {
-    let pool = getFlashcardsByDomain(domainFilter);
+    let pool = getFlashcardsByDomain(examCode, domainFilter);
     if (onlyLearning) {
       const snapshot = getFlashcardProgress();
       pool = pool.filter((c) => snapshot[c.id] !== "known");
@@ -32,16 +37,16 @@ export default function FlashcardsClient() {
     return shuffle(pool);
     // shuffleSeed is a nonce used only to force a fresh shuffle on demand
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [domainFilter, onlyLearning, shuffleSeed]);
+  }, [examCode, domainFilter, onlyLearning, shuffleSeed]);
 
   const card = deck[position];
 
   const knownCount = useMemo(() => {
-    const all = getFlashcardsByDomain(domainFilter);
+    const all = getFlashcardsByDomain(examCode, domainFilter);
     return all.filter((c) => progress[c.id] === "known").length;
-  }, [domainFilter, progress]);
+  }, [examCode, domainFilter, progress]);
 
-  const totalInDomain = getFlashcardsByDomain(domainFilter).length;
+  const totalInDomain = getFlashcardsByDomain(examCode, domainFilter).length;
 
   function resetDeckPosition() {
     setPosition(0);
@@ -70,11 +75,19 @@ export default function FlashcardsClient() {
     setPosition((p) => p + 1);
   }
 
+  if (!content) {
+    return (
+      <p className="text-sm text-[var(--foreground-muted)]">
+        No flashcards are available for this exam yet.
+      </p>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Flashcards</h1>
-        <p className="mt-2 max-w-xl text-sm text-black/70 dark:text-white/70">
+        <h1 className="font-pixel text-xl">Flashcards</h1>
+        <p className="mt-3 max-w-xl text-sm text-[var(--foreground-muted)]">
           Click a card to flip it, then mark whether you knew it. Mastery is
           saved on this device so you can focus on what you don&apos;t know yet.
         </p>
@@ -86,10 +99,10 @@ export default function FlashcardsClient() {
           <select
             value={domainFilter}
             onChange={(e) => handleDomainChange(e.target.value)}
-            className="w-full max-w-sm rounded-md border border-black/15 bg-transparent px-3 py-2 text-sm dark:border-white/20"
+            className="w-full max-w-sm rounded-md border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-sm"
           >
             <option value="all">All domains</option>
-            {outline.domains.map((d) => (
+            {content.outline.domains.map((d) => (
               <option key={d.id} value={d.id}>
                 {d.name}
               </option>
@@ -108,35 +121,36 @@ export default function FlashcardsClient() {
 
         <button
           onClick={handleShuffle}
-          className="mb-0.5 rounded-md border border-black/15 px-3 py-1.5 text-sm hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+          className="pixel-button mb-0.5 rounded-md bg-[var(--panel)] px-3 py-1.5 text-sm"
         >
           Shuffle
         </button>
 
-        <span className="pb-2 text-sm text-black/60 dark:text-white/60">
+        <span className="pb-2 text-sm text-[var(--foreground-muted)]">
           Known: {knownCount}/{totalInDomain}
         </span>
       </div>
 
       {deck.length === 0 && (
-        <p className="text-sm text-black/60 dark:text-white/60">
+        <p className="text-sm text-[var(--foreground-muted)]">
           No cards match this filter.
         </p>
       )}
 
       {deck.length > 0 && position < deck.length && card && (
         <div className="flex flex-col items-center gap-4">
-          <span className="text-sm text-black/60 dark:text-white/60">
-            Card {position + 1} of {deck.length} · {getDomainName(card.domain)}
+          <span className="text-sm text-[var(--foreground-muted)]">
+            Card {position + 1} of {deck.length} ·{" "}
+            {getDomainName(examCode, card.domain)}
           </span>
 
           <button
             onClick={() => setFlipped((f) => !f)}
-            className="flex min-h-56 w-full max-w-xl items-center justify-center rounded-xl border border-black/15 p-8 text-center text-lg shadow-sm hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10"
+            className="pixel-panel flex min-h-56 w-full max-w-xl items-center justify-center p-8 text-center text-lg hover:-translate-y-0.5 transition-transform"
           >
             {flipped ? card.back : card.front}
           </button>
-          <p className="text-xs text-black/50 dark:text-white/50">
+          <p className="text-xs text-[var(--foreground-muted)]">
             Click the card to {flipped ? "hide" : "reveal"} the answer
           </p>
 
@@ -164,7 +178,7 @@ export default function FlashcardsClient() {
           </p>
           <button
             onClick={handleShuffle}
-            className="rounded-md bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500"
+            className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)]"
           >
             Go again
           </button>

@@ -2,25 +2,29 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useQuizAttempts, useFlashcardProgress } from "@/lib/storage";
+import { computeXp, computeLevel } from "@/lib/gamification";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/study", label: "Study Guide" },
-  { href: "/quiz", label: "Practice Quiz" },
-  { href: "/flashcards", label: "Flashcards" },
+  { href: "/catalog", label: "Catalog" },
   { href: "/progress", label: "Progress" },
+  { href: "/preferences", label: "Preferences" },
 ];
 
 export default function Nav() {
   const pathname = usePathname();
+  const attempts = useQuizAttempts();
+  const flashcardProgress = useFlashcardProgress();
+  const { level } = computeLevel(computeXp(attempts, flashcardProgress));
 
   return (
-    <header className="border-b border-black/10 dark:border-white/10">
+    <header className="border-b-4 border-[var(--border)]">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-4">
-        <Link href="/" className="flex items-baseline gap-2 font-semibold">
-          <span className="text-lg">ExamReady</span>
-          <span className="rounded bg-indigo-600 px-1.5 py-0.5 text-xs font-medium text-white">
-            DP-600
+        <Link href="/" className="flex items-center gap-2">
+          <span className="font-pixel text-sm">ExamReady</span>
+          <span className="rounded bg-[var(--accent)] px-1.5 py-1 text-[10px] font-medium text-[var(--accent-foreground)]">
+            Lv.{level}
           </span>
         </Link>
         <nav className="flex flex-wrap gap-1 text-sm">
@@ -35,8 +39,8 @@ export default function Nav() {
                 href={link.href}
                 className={`rounded-md px-3 py-1.5 transition-colors ${
                   active
-                    ? "bg-indigo-600 text-white"
-                    : "text-black/70 hover:bg-black/5 dark:text-white/70 dark:hover:bg-white/10"
+                    ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
+                    : "text-[var(--foreground-muted)] hover:bg-black/5 dark:hover:bg-white/10"
                 }`}
               >
                 {link.label}
