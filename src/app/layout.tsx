@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Press_Start_2P } from "next/font/google";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import PreferencesEffect from "@/components/PreferencesEffect";
+import AuthProvider from "@/components/AuthProvider";
 import { PREFERENCES_INIT_SCRIPT } from "@/lib/preferencesScript";
 import "./globals.css";
 
@@ -43,12 +44,14 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: PREFERENCES_INIT_SCRIPT }} />
       </head>
       <body className="min-h-full flex flex-col">
-        <PreferencesEffect />
-        <Nav />
-        <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
-          {children}
-        </main>
-        <Footer />
+        <AuthProvider>
+          <PreferencesEffect />
+          <Nav />
+          <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
+            {children}
+          </main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import { useQuizAttempts, useFlashcardProgress } from "@/lib/storage";
 import { computeXp, computeLevel } from "@/lib/gamification";
 
@@ -14,6 +15,7 @@ const links = [
 
 export default function Nav() {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
   const attempts = useQuizAttempts();
   const flashcardProgress = useFlashcardProgress();
   const { level } = computeLevel(computeXp(attempts, flashcardProgress));
@@ -27,7 +29,7 @@ export default function Nav() {
             Lv.{level}
           </span>
         </Link>
-        <nav className="flex flex-wrap gap-1 text-sm">
+        <nav className="flex flex-wrap items-center gap-1 text-sm">
           {links.map((link) => {
             const active =
               link.href === "/"
@@ -47,6 +49,31 @@ export default function Nav() {
               </Link>
             );
           })}
+
+          {status === "authenticated" && session?.user ? (
+            <>
+              <span className="px-2 text-xs text-[var(--foreground-muted)]">
+                {session.user.email}
+              </span>
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="rounded-md px-3 py-1.5 text-[var(--foreground-muted)] hover:bg-black/5 dark:hover:bg-white/10"
+              >
+                Log out
+              </button>
+            </>
+          ) : (
+            <Link
+              href="/login"
+              className={`rounded-md px-3 py-1.5 transition-colors ${
+                pathname.startsWith("/login")
+                  ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
+                  : "text-[var(--foreground-muted)] hover:bg-black/5 dark:hover:bg-white/10"
+              }`}
+            >
+              Log in
+            </Link>
+          )}
         </nav>
       </div>
     </header>

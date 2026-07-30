@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   getExamContent,
   getFlashcardsByDomain,
@@ -13,11 +14,13 @@ import {
   setFlashcardStatus,
   useFlashcardProgress,
 } from "@/lib/storage";
+import { saveFlashcardStatusToDb } from "@/lib/actions";
 import type { FlashcardStatus } from "@/lib/types";
 
 export default function FlashcardsClient({ examCode }: { examCode: string }) {
   const content = getExamContent(examCode);
   const searchParams = useSearchParams();
+  const { status: sessionStatus } = useSession();
   const initialDomain = searchParams.get("domain") ?? "all";
 
   const [domainFilter, setDomainFilter] = useState(initialDomain);
@@ -71,6 +74,11 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
   function mark(status: FlashcardStatus) {
     if (!card) return;
     setFlashcardStatus(card.id, status);
+    if (sessionStatus === "authenticated") {
+      saveFlashcardStatusToDb(examCode, card.id, status).catch((err) =>
+        console.error("Failed to sync flashcard progress to account", err),
+      );
+    }
     setFlipped(false);
     setPosition((p) => p + 1);
   }

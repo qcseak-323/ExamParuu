@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   getExamContent,
   getQuestionsByDomain,
@@ -9,6 +10,7 @@ import {
 } from "@/lib/content";
 import { shuffle } from "@/lib/shuffle";
 import { saveQuizAttempt } from "@/lib/storage";
+import { saveQuizAttemptToDb } from "@/lib/actions";
 import type { Question, QuizResultEntry } from "@/lib/types";
 
 const COUNT_OPTIONS = [5, 10, 20, "all"] as const;
@@ -19,6 +21,7 @@ type Phase = "setup" | "active" | "finished";
 export default function QuizClient({ examCode }: { examCode: string }) {
   const content = getExamContent(examCode);
   const searchParams = useSearchParams();
+  const { status: sessionStatus } = useSession();
   const initialDomain = searchParams.get("domain") ?? "all";
 
   const [phase, setPhase] = useState<Phase>("setup");
@@ -81,7 +84,7 @@ export default function QuizClient({ examCode }: { examCode: string }) {
 
   function finish() {
     const correctCount = results.filter((r) => r.correct).length;
-    saveQuizAttempt({
+    const attempt = {
       id: `${Date.now()}`,
       examCode,
       timestamp: Date.now(),
@@ -89,7 +92,13 @@ export default function QuizClient({ examCode }: { examCode: string }) {
       numQuestions: activeQuestions.length,
       correctCount,
       results,
-    });
+    };
+    saveQuizAttempt(attempt);
+    if (sessionStatus === "authenticated") {
+      saveQuizAttemptToDb(attempt).catch((err) =>
+        console.error("Failed to sync quiz attempt to account", err),
+      );
+    }
     setPhase("finished");
   }
 
