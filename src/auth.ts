@@ -17,6 +17,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: { strategy: "database" },
   pages: {
     verifyRequest: "/login/check-email",
+    // Auth.js's own built-in error page (/api/auth/error) 500s in this
+    // Next.js/Auth.js beta combination, so send errors to our own login
+    // page instead, which reads ?error= and shows a friendly message.
+    error: "/login",
   },
   callbacks: {
     session({ session, user }) {

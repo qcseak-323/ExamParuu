@@ -1,8 +1,26 @@
+import { AuthError } from "next-auth";
+import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
 
 export const metadata = { title: "Log in — ExamReady" };
 
-export default function LoginPage() {
+const ERROR_MESSAGES: Record<string, string> = {
+  EmailSignin:
+    "We couldn't send that sign-in link. If email login is still in test mode, it may only be able to send to the account owner's own address.",
+  Configuration:
+    "Something's misconfigured on our end and the sign-in link couldn't be sent. Try again shortly.",
+};
+
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
+  const errorMessage = error
+    ? (ERROR_MESSAGES[error] ?? "Something went wrong sending the sign-in link.")
+    : null;
+
   return (
     <div className="mx-auto flex max-w-sm flex-col gap-6">
       <div>
@@ -14,10 +32,23 @@ export default function LoginPage() {
         </p>
       </div>
 
+      {errorMessage && (
+        <div className="rounded-md border border-red-600 bg-red-600/10 px-4 py-3 text-sm text-red-700 dark:text-red-300">
+          {errorMessage}
+        </div>
+      )}
+
       <form
         action={async (formData) => {
           "use server";
-          await signIn("resend", formData);
+          try {
+            await signIn("resend", formData);
+          } catch (err) {
+            if (err instanceof AuthError) {
+              redirect(`/login?error=${err.type}`);
+            }
+            throw err;
+          }
         }}
         className="flex flex-col gap-3"
       >
