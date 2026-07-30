@@ -8,10 +8,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Resend({
       apiKey: process.env.RESEND_API_KEY,
-      // Resend's shared test domain works without verifying your own
-      // domain, but can only deliver to the email on your Resend account
-      // until you verify a domain. Swap this once you do.
-      from: "ExamReady <onboarding@resend.dev>",
+      // Sent from a verified subdomain (SPF/DKIM configured in Resend),
+      // separate from prolymax.com's main mail flow.
+      from: "ExamReady <sign-in@mail.prolymax.com>",
     }),
   ],
   session: { strategy: "database" },
