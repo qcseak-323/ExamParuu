@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { catalog, getCatalogEntry, getExamContent } from "@/lib/content";
+import { getCatalogEntry, getExamContent } from "@/lib/content";
 import { getDisplayTier, getRetroLabel } from "@/lib/levels";
+import { requireTrainer } from "@/lib/session";
 
-export function generateStaticParams() {
-  return catalog.map((exam) => ({ examCode: exam.code }));
-}
+// No generateStaticParams: these routes are behind a session check now, so
+// they render per request and can't be prerendered at build time.
 
 export async function generateMetadata({
   params,
@@ -23,6 +23,8 @@ export default async function ExamOverviewPage({
   params: Promise<{ examCode: string }>;
 }) {
   const { examCode } = await params;
+  await requireTrainer(`/exams/${examCode}`);
+
   const exam = getCatalogEntry(examCode);
   if (!exam) notFound();
 

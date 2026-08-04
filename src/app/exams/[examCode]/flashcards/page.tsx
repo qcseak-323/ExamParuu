@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import FlashcardsClient from "@/components/FlashcardsClient";
-import { catalog, getCatalogEntry } from "@/lib/content";
+import { getCatalogEntry } from "@/lib/content";
+import { requireTrainer } from "@/lib/session";
 
-export function generateStaticParams() {
-  return catalog.map((exam) => ({ examCode: exam.code }));
-}
+// No generateStaticParams: gated behind a session check, so this renders
+// per request rather than at build time.
 
 export default async function FlashcardsPage({
   params,
@@ -13,6 +13,7 @@ export default async function FlashcardsPage({
   params: Promise<{ examCode: string }>;
 }) {
   const { examCode } = await params;
+  await requireTrainer(`/exams/${examCode}/flashcards`);
   if (!getCatalogEntry(examCode)) notFound();
 
   return (

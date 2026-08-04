@@ -10,23 +10,24 @@ export default function PrivacyPage() {
         before adding accounts, a database, or analytics.
       </p>
 
-      <h2 className="font-medium">If you are not logged in</h2>
+      <h2 className="font-medium">Before you log in</h2>
       <p>
-        Everything stays on your own device. Quiz attempt history, flashcard
-        mastery, theme and accessibility preferences, and the activity dates
-        behind the streak counter are all kept in your browser&apos;s local
-        storage. None of it is transmitted to us, and the site operator
-        cannot see it. No account is required to use any of the study
-        material.
+        The landing page is the only part of the site you can see without an
+        account, and it collects nothing. Your theme and accessibility
+        preferences are kept in your browser&apos;s local storage and are
+        never transmitted to us.
       </p>
 
-      <h2 className="font-medium">If you log in</h2>
+      <h2 className="font-medium">When you log in</h2>
       <p>
-        Logging in is optional. If you do, we store your email address and a
-        session record so we can recognise you, and we save a copy of your
-        quiz attempts and flashcard progress to your account so it is
-        available on your other devices. Your local copy is kept in sync with
-        it. We do not use this data for advertising and we do not sell it.
+        An account is required to reach the study material, quizzes,
+        flashcards, and progress tracking. We store your email address and a
+        session record so we can recognise you, the starter ExamPal you chose
+        and any nickname you gave it, and a copy of your quiz attempts and
+        flashcard progress so it is available on your other devices. A copy is
+        also kept in your browser&apos;s local storage so the site works
+        offline, and the two are kept in sync. We do not use this data for
+        advertising and we do not sell it.
       </p>
       <p>
         Data is processed by a small number of service providers on our
@@ -38,9 +39,10 @@ export default function PrivacyPage() {
 
       <h2 className="font-medium">Clearing your data</h2>
       <p>
-        You can clear locally stored progress at any time from the{" "}
-        <span className="font-medium">Progress</span> page, or by clearing
-        your browser&apos;s site data for this domain. To delete an account
+        You can clear your progress at any time from the{" "}
+        <span className="font-medium">Trainer</span> page, which deletes both
+        the copy on your account and the one in this browser. To delete an
+        account
         and the progress attached to it, email{" "}
         <span className="font-medium">qcseak@gmail.com</span> — self-service
         account deletion and data export are not built yet.
@@ -50,7 +52,7 @@ export default function PrivacyPage() {
       <p>
         There is no analytics tracking, no advertising, and no third-party
         tracking cookies on this site. The only cookie set is the one that
-        keeps you logged in, and it is only set if you choose to log in.
+        keeps you logged in.
       </p>
     </div>
   );

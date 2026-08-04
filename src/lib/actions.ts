@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { findFlashcardExamCode } from "@/lib/content";
+import { isPalType, type PalType } from "@/lib/pals";
 import type {
   QuizAttempt,
   QuizResultEntry,
@@ -14,6 +15,59 @@ import type {
 // truth for them, and every action below no-ops without a session. For signed
 // -in users the database is the durable copy, mirrored into local storage so
 // the rest of the app can keep reading from one place.
+
+const MAX_NICKNAME_LENGTH = 14;
+
+/**
+ * Records the trainer's starter. Refuses to overwrite an existing choice —
+ * the starter-select screen is a one-time event, and letting a stray call
+ * swap someone's pal out from under them would be worse than a no-op.
+ *
+ * Returns an error string rather than throwing so the client can show it
+ * inside the dialogue box instead of blowing up the screen.
+ */
+export async function chooseExamPal(
+  type: PalType,
+  nickname: string | null,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return { ok: false, error: "You need to be signed in." };
+
+  // Never trust the client for this: it decides what the rest of the app
+  // renders, and an unrecognised value would break every sprite lookup.
+  if (!isPalType(type)) {
+    return { ok: false, error: "That isn't one of the three starters." };
+  }
+
+  const trimmed = nickname?.trim() ?? "";
+  if (trimmed.length > MAX_NICKNAME_LENGTH) {
+    return {
+      ok: false,
+      error: `Nicknames are up to ${MAX_NICKNAME_LENGTH} characters.`,
+    };
+  }
+
+  // Conditional update: only writes where no starter has been chosen yet, so
+  // a double-submit or a replayed request can't reassign an existing pal.
+  const result = await prisma.user.updateMany({
+    where: { id: userId, examPal: null },
+    data: { examPal: type, examPalName: trimmed || null },
+  });
+
+  if (result.count === 0) {
+    const existing = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { examPal: true },
+    });
+    // Already had one: treat as success so a duplicate submit still lands the
+    // trainer in the app rather than on an error screen.
+    if (existing?.examPal) return { ok: true };
+    return { ok: false, error: "Couldn't save your choice. Try again." };
+  }
+
+  return { ok: true };
+}
 
 export async function saveQuizAttemptToDb(attempt: QuizAttempt): Promise<void> {
   const session = await auth();

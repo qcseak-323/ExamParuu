@@ -35,13 +35,13 @@ export default function TermsPage() {
         official skills outline on Microsoft Learn before your exam.
       </p>
 
-      <h2 className="font-medium">Local data</h2>
+      <h2 className="font-medium">Accounts and data</h2>
       <p>
-        You can use the whole site without an account, in which case quiz
-        history, flashcard progress, and preferences stay in your
-        browser&apos;s local storage on this device. If you choose to log in,
-        your email and a copy of your progress are stored on our servers so
-        they carry across devices. See the{" "}
+        An account is required to use the study material, quizzes, flashcards,
+        and progress tracking; only the landing page is available without one.
+        Your email and a copy of your progress are stored on our servers so
+        they carry across devices, and a copy is kept in your browser&apos;s
+        local storage so the site works offline. See the{" "}
         <a href="/legal/privacy" className="underline hover:text-[var(--accent)]">
           privacy page
         </a>{" "}
