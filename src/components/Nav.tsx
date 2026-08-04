@@ -30,7 +30,10 @@ export default function Nav() {
   return (
     <header className="border-b-4 border-[var(--border)]">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-4">
-        <Link href={signedIn ? "/catalog" : "/"} className="flex items-center gap-2">
+        {/* Always home, signed in or not. The logo used to point signed-in
+            trainers at /catalog, which left them no way back to the landing
+            page from inside the app. */}
+        <Link href="/" className="flex items-center gap-2">
           {species && stage && (
             <PixelSprite
               sprite={stage.sprite}
