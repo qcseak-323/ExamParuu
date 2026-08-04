@@ -19,6 +19,14 @@ model User {
   emailVerified DateTime?
   image         String?
 
+  // The starter chosen on first sign-in: "fire" | "water" | "wood".
+  // Null means the trainer hasn't picked yet, which is what routes them to
+  // the starter-select screen. Deliberately not an enum: adding a fourth
+  // element later shouldn't need a migration on a shared production database.
+  examPal       String?
+  // Optional trainer nickname for the pal, shown in battle dialogue.
+  examPalName   String?
+
   accounts           Account[]
   sessions           Session[]
   quizAttempts       QuizAttempt[]

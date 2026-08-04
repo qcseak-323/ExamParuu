@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { catalog, getCatalogEntry, getExamContent } from "@/lib/content";
+import { getCatalogEntry, getExamContent } from "@/lib/content";
+import { requireTrainer } from "@/lib/session";
 
-export function generateStaticParams() {
-  return catalog.map((exam) => ({ examCode: exam.code }));
-}
+// No generateStaticParams: gated behind a session check, so this renders
+// per request rather than at build time.
 
 export default async function StudyPage({
   params,
@@ -12,6 +12,8 @@ export default async function StudyPage({
   params: Promise<{ examCode: string }>;
 }) {
   const { examCode } = await params;
+  await requireTrainer(`/exams/${examCode}/study`);
+
   const exam = getCatalogEntry(examCode);
   const content = getExamContent(examCode);
   if (!exam || !content) notFound();

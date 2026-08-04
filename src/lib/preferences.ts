@@ -9,6 +9,12 @@ export type Preferences = {
   reducedMotion: boolean;
   highContrast: boolean;
   textScale: TextScale;
+  /** Background music. On by default — see AudioProvider for why that can't
+   *  mean "playing before the visitor touches the page". */
+  bgmEnabled: boolean;
+  sfxEnabled: boolean;
+  /** Skips the letter-by-letter dialogue effect. */
+  instantText: boolean;
 };
 
 export const DEFAULT_PREFERENCES: Preferences = {
@@ -17,6 +23,9 @@ export const DEFAULT_PREFERENCES: Preferences = {
   reducedMotion: false,
   highContrast: false,
   textScale: "md",
+  bgmEnabled: true,
+  sfxEnabled: true,
+  instantText: false,
 };
 
 const PREFS_KEY = "examready-preferences";

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { catalog } from "@/lib/content";
 import { getDisplayTier, getRetroLabel } from "@/lib/levels";
+import { requireTrainer } from "@/lib/session";
 
 export const metadata = {
   title: "Exam Catalog — ExamReady",
@@ -12,7 +13,9 @@ const STATUS_LABEL: Record<string, string> = {
   retiring: "Retiring",
 };
 
-export default function CatalogPage() {
+export default async function CatalogPage() {
+  await requireTrainer("/catalog");
+
   return (
     <div className="flex flex-col gap-6">
       <div>

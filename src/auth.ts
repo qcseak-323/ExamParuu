@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Resend from "next-auth/providers/resend";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
+import { isPalType } from "@/lib/pals";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -24,6 +25,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     session({ session, user }) {
       session.user.id = user.id;
+      // The adapter loads the whole User row for database sessions, so the
+      // starter comes along for free here. Auth.js's AdapterUser type only
+      // describes the columns it owns, hence the narrowing cast.
+      const record = user as typeof user & {
+        examPal?: string | null;
+        examPalName?: string | null;
+      };
+      session.user.examPal = isPalType(record.examPal) ? record.examPal : null;
+      session.user.examPalName = record.examPalName ?? null;
       return session;
     },
   },

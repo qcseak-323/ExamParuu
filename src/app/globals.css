@@ -18,6 +18,11 @@
   --accent-foreground: #ffffff;
   --danger: #a6222c;
   --warning: #9a6a00;
+  /* Creature sprites use literal colours, but their outline has to follow the
+     theme or it disappears against the background. */
+  --sprite-outline: #1c1a12;
+  --battle-sky: #cfe6f5;
+  --battle-ground: #d8e8b0;
 }
 
 /* Dark theme — cave/night palette */
@@ -31,6 +36,9 @@
   --accent-foreground: #0c1a12;
   --danger: #ff8a8a;
   --warning: #ffcc66;
+  --sprite-outline: #efeadd;
+  --battle-sky: #232042;
+  --battle-ground: #2c3a2c;
 }
 
 @theme inline {
@@ -94,6 +102,147 @@ body {
 .pixel-button:active {
   transform: translate(3px, 3px);
   box-shadow: 0 0 0 var(--border);
+}
+
+/* --- Retro UI kit -------------------------------------------------------- */
+
+/* The era's text window: a heavy outer border with a thin inner rule, and a
+   hard offset shadow instead of a soft one. */
+.dialogue-frame {
+  background: var(--panel);
+  border: 4px solid var(--border);
+  box-shadow: 4px 4px 0 var(--border);
+  padding: 4px;
+}
+.dialogue-frame-inner {
+  border: 1px solid var(--border);
+  padding: 0.85rem 1rem;
+}
+
+/* The "press to continue" marker. Sized in em so it tracks the text scale. */
+.dialogue-arrow {
+  display: inline-block;
+  margin-left: 0.35em;
+  vertical-align: baseline;
+  width: 0;
+  height: 0;
+  border-left: 0.32em solid transparent;
+  border-right: 0.32em solid transparent;
+  border-top: 0.38em solid var(--foreground);
+  animation: dialogue-blink 900ms steps(1, end) infinite;
+}
+
+@keyframes dialogue-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.menu-item {
+  background: var(--panel);
+  border: 3px solid var(--border);
+  /* steps() rather than a smooth ease — nothing in a 90s handheld UI eased. */
+  transition: transform 60ms steps(1), box-shadow 60ms steps(1);
+}
+.menu-item:hover:not(:disabled),
+.menu-item:focus-visible {
+  outline: none;
+  transform: translate(-2px, -2px);
+  box-shadow: 2px 2px 0 var(--border);
+}
+.menu-item:active:not(:disabled) {
+  transform: translate(0, 0);
+  box-shadow: none;
+}
+
+/* Idle bob, so a pal on screen looks alive rather than pasted on. */
+.pal-idle {
+  animation: pal-bob 1.8s steps(2, end) infinite;
+}
+@keyframes pal-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Battle backdrop: a flat sky over a flat field, the way a two-layer
+   background looked on hardware that couldn't afford gradients. */
+.battle-scene {
+  background: linear-gradient(
+    var(--battle-sky) 0%,
+    var(--battle-sky) 62%,
+    var(--battle-ground) 62%,
+    var(--battle-ground) 100%
+  );
+  border: 4px solid var(--border);
+  box-shadow: 4px 4px 0 var(--border);
+}
+
+.hp-track {
+  background: rgba(0, 0, 0, 0.25);
+  border: 2px solid var(--border);
+  height: 0.7rem;
+  overflow: hidden;
+}
+.hp-fill {
+  height: 100%;
+  transition: width 420ms steps(12, end);
+}
+
+/* Damage feedback: the sprite flickers, the frame jolts. */
+.sprite-hit {
+  animation: sprite-flicker 420ms steps(1, end);
+}
+@keyframes sprite-flicker {
+  0%,
+  40%,
+  80% {
+    opacity: 1;
+  }
+  20%,
+  60%,
+  100% {
+    opacity: 0.15;
+  }
+}
+
+.scene-shake {
+  animation: scene-shake 320ms steps(2, end);
+}
+@keyframes scene-shake {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-4px, 2px);
+  }
+  50% {
+    transform: translate(4px, -2px);
+  }
+  75% {
+    transform: translate(-2px, -2px);
+  }
+}
+
+/* A fainted pal slides off the bottom of the frame. */
+.sprite-faint {
+  animation: sprite-faint 700ms steps(8, end) forwards;
+}
+@keyframes sprite-faint {
+  to {
+    transform: translateY(70px);
+    opacity: 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
