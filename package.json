@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_OPTIONS=--use-system-ca next dev",
-    "build": "next build",
+    "build": "prisma migrate deploy && next build",
+    "build:app": "next build",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate"
