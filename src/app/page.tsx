@@ -1,152 +1,89 @@
-import Link from "next/link";
-import { catalog, getExamContent } from "@/lib/content";
-import { getDisplayTier, getRetroLabel } from "@/lib/levels";
 import { PAL_SPECIES, PAL_TYPES } from "@/lib/pals";
 import PixelSprite from "@/components/PixelSprite";
+import HeroScene from "@/components/HeroScene";
+import StartPrompt from "@/components/StartPrompt";
 
 /**
- * The one page a signed-out visitor can reach. Everything it links to is
- * gated, so its job is to explain the app and sell the account rather than
- * to hand out entry points that will just bounce to /login.
+ * The only page a signed-out visitor can reach.
+ *
+ * Built around a single action. Everything it could link to is gated, so
+ * extra entry points would just bounce to /login — the job here is to say
+ * what this is in one line and get the visitor to press START.
  */
 export default function Home() {
-  const totalQuestions = catalog.reduce(
-    (sum, exam) => sum + (getExamContent(exam.code)?.questions.length ?? 0),
-    0,
-  );
-  const totalFlashcards = catalog.reduce(
-    (sum, exam) => sum + (getExamContent(exam.code)?.flashcards.length ?? 0),
-    0,
-  );
-
   return (
-    <div className="flex flex-col gap-16">
-      <section className="pixel-panel flex flex-col items-start gap-4 p-8">
-        <span className="font-pixel text-[10px] text-[var(--accent)]">
-          A trainer&apos;s journey through Microsoft certification
-        </span>
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-          Train your way to a passing score.
-        </h1>
-        <p className="max-w-2xl text-base text-[var(--foreground-muted)]">
-          ExamReady turns Microsoft certification prep into a turn-based
-          adventure. Pick a starter ExamPal, battle wild exam topics with{" "}
-          {totalQuestions} original practice questions and {totalFlashcards}{" "}
-          flashcards, and level up as you go. Free, no paywall — just an email
-          address to keep your progress.
-        </p>
-        <div className="flex flex-wrap gap-3 pt-2">
-          <Link
-            href="/login"
-            className="pixel-button rounded-md bg-[var(--accent)] px-6 py-3 text-sm font-medium text-[var(--accent-foreground)]"
-          >
-            PRESS START ▶
-          </Link>
+    <div className="flex flex-col gap-12">
+      {/* Hero: the scene fills the frame, the button sits on top of it. */}
+      <section className="relative">
+        <HeroScene />
+
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-4 text-center">
+          <div className="hero-copy rounded-md px-5 py-3">
+            <h1 className="font-pixel text-lg leading-relaxed sm:text-2xl">
+              Pass exams while gaming
+            </h1>
+            <p className="mt-2 text-sm sm:text-base">
+              Microsoft certification practice, played like a 90s adventure.
+            </p>
+          </div>
+
+          <StartPrompt />
         </div>
-        <p className="text-xs text-[var(--foreground-muted)]">
-          Sign in with a magic link — no password to remember.
-        </p>
       </section>
 
+      {/* The hook: three creatures, three words each. */}
       <section>
-        <h2 className="mb-2 font-pixel text-sm">Choose your first partner</h2>
-        <p className="mb-4 max-w-2xl text-sm text-[var(--foreground-muted)]">
-          Every trainer starts by picking one of three ExamPals. Yours appears
-          at your side in every battle and evolves as you level up.
-        </p>
-        <div className="grid gap-4 sm:grid-cols-3">
+        <h2 className="mb-4 text-center font-pixel text-sm">
+          Pick a partner. Battle the exam.
+        </h2>
+        <div className="grid grid-cols-3 gap-3 sm:gap-4">
           {PAL_TYPES.map((type) => {
             const species = PAL_SPECIES[type];
             const [starter] = species.stages;
             return (
               <div
                 key={type}
-                className="pixel-panel flex flex-col items-center gap-2 p-5 text-center"
+                className="pixel-panel flex flex-col items-center gap-2 p-4 text-center"
               >
                 <div className="pal-idle">
                   <PixelSprite
                     sprite={starter.sprite}
                     palette={species.palette}
-                    size={72}
+                    size={64}
                     title={`${starter.name}, the ${species.label}-type starter`}
                   />
                 </div>
                 <p className="font-pixel text-[10px]">{starter.name}</p>
                 <p className="text-xs text-[var(--accent)]">{species.label}</p>
-                <p className="text-xs text-[var(--foreground-muted)]">
-                  {species.tagline}
-                </p>
               </div>
             );
           })}
         </div>
       </section>
 
-      <section>
-        <h2 className="mb-4 font-pixel text-sm">Routes you can train on</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {catalog.map((exam) => (
-            <div key={exam.code} className="pixel-panel flex flex-col gap-2 p-5">
-              <span className="font-pixel text-xs text-[var(--accent)]">
-                {exam.code.toUpperCase()}
-              </span>
-              <p className="text-sm font-medium">{exam.title}</p>
-              <p className="text-xs text-[var(--foreground-muted)]">
-                {getRetroLabel(exam.msLevel)} · {getDisplayTier(exam.msLevel)}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="mb-4 font-pixel text-sm">How it works</h2>
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div className="pixel-panel p-5">
-            <h3 className="font-medium">1. Study</h3>
+      {/* How it works, in three lines rather than three paragraphs. */}
+      <section className="grid gap-3 sm:grid-cols-3">
+        {[
+          ["1. Choose", "Pick a starter ExamPal and a certification route."],
+          ["2. Battle", "Answer to attack. Miss and you take the hit."],
+          ["3. Level up", "Earn XP, badges, and streaks. Your pal evolves."],
+        ].map(([title, body]) => (
+          <div key={title} className="pixel-panel p-4">
+            <h3 className="font-pixel text-[10px] text-[var(--accent)]">
+              {title}
+            </h3>
             <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-              Read the guide for each skills area to build a mental model
-              before you drill questions.
+              {body}
             </p>
           </div>
-          <div className="pixel-panel p-5">
-            <h3 className="font-medium">2. Battle</h3>
-            <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-              Face a wild topic in a turn-based battle. Right answers land a
-              hit; wrong ones cost your ExamPal health — and you always get the
-              explanation.
-            </p>
-          </div>
-          <div className="pixel-panel p-5">
-            <h3 className="font-medium">3. Level up</h3>
-            <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-              Earn XP, gym badges, and a daily streak. Hit the right level and
-              your ExamPal evolves.
-            </p>
-          </div>
-        </div>
+        ))}
       </section>
 
-      <section className="pixel-panel p-6 text-sm">
-        <h2 className="mb-2 font-pixel text-xs">Why an account?</h2>
-        <p className="text-[var(--foreground-muted)]">
-          Your ExamPal, XP, badges, and streak are tied to your trainer
-          profile so they follow you between devices. Signing in takes one
-          click from an emailed link — there is no password and nothing to pay.
-        </p>
-      </section>
-
-      <section className="pixel-panel p-6 text-sm">
-        <h2 className="mb-2 font-pixel text-xs">
-          Not affiliated with Microsoft
-        </h2>
-        <p className="text-[var(--foreground-muted)]">
-          ExamReady is an independent, unofficial study resource. All practice
-          content is original, written from Microsoft&apos;s publicly published
-          skills-measured outlines — never from real, NDA-protected exam
-          questions.
-        </p>
-      </section>
+      <p className="text-center text-xs text-[var(--foreground-muted)]">
+        Free, no paywall. Independent and not affiliated with Microsoft — all
+        practice content is original, written from publicly published skills
+        outlines.
+      </p>
     </div>
   );
 }

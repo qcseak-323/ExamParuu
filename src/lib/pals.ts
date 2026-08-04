@@ -6,10 +6,16 @@
  * matters because the obvious inspiration for this feature is under very
  * active copyright.
  *
- * Sprites are authored as character matrices rather than image files. That
- * keeps them in the bundle with no asset pipeline, lets them re-colour per
- * theme, and makes them scale to any size without blurring.
+ * Sprite plumbing lives in sprite.ts — the landing-page runner needs the same
+ * machinery and has nothing to do with pals.
  */
+
+import {
+  sprite,
+  compose,
+  type SpriteMatrix,
+  type SpritePalette,
+} from "./sprite";
 
 export type PalType = "fire" | "water" | "wood";
 
@@ -18,71 +24,6 @@ export const PAL_TYPES: PalType[] = ["fire", "water", "wood"];
 export function isPalType(value: unknown): value is PalType {
   return (
     typeof value === "string" && PAL_TYPES.includes(value as PalType)
-  );
-}
-
-// --- Sprite plumbing -------------------------------------------------------
-
-export const SPRITE_SIZE = 16;
-
-/**
- * Character → palette slot. Space is transparent. `K` is the outline, which
- * is the one colour that has to follow the theme: a near-black outline
- * vanishes against the dark theme's background, so it resolves to a CSS
- * variable instead of a literal.
- */
-export type SpriteMatrix = readonly string[];
-
-export type PalPalette = {
-  /** Dark body shade, used for shading under the chin and limbs. */
-  a: string;
-  /** Main body colour. */
-  b: string;
-  /** Light body highlight. */
-  c: string;
-  /** Belly / underside. */
-  d: string;
-  /** Crest, flame, fin, or leaf. */
-  e: string;
-};
-
-/**
- * Fails loudly on a miscounted row. These matrices are hand-authored, and a
- * row that is 15 or 17 characters long renders as a subtly sheared sprite
- * that is genuinely hard to spot by eye — much easier to catch here.
- */
-function sprite(name: string, rows: readonly string[]): SpriteMatrix {
-  if (process.env.NODE_ENV !== "production") {
-    if (rows.length !== SPRITE_SIZE) {
-      throw new Error(
-        `Sprite "${name}" has ${rows.length} rows, expected ${SPRITE_SIZE}`,
-      );
-    }
-    rows.forEach((row, i) => {
-      if (row.length !== SPRITE_SIZE) {
-        throw new Error(
-          `Sprite "${name}" row ${i} is ${row.length} chars, expected ${SPRITE_SIZE}`,
-        );
-      }
-    });
-  }
-  return rows;
-}
-
-/**
- * Lays `overlay` on top of `base`, ignoring the overlay's transparent cells.
- * Evolved forms share a body silhouette and differ by the crest they wear,
- * so the crest is authored once per element rather than once per form.
- */
-function compose(base: SpriteMatrix, overlay: SpriteMatrix): SpriteMatrix {
-  return base.map((row, y) =>
-    row
-      .split("")
-      .map((char, x) => {
-        const over = overlay[y]?.[x];
-        return over && over !== " " ? over : char;
-      })
-      .join(""),
   );
 }
 
@@ -327,7 +268,7 @@ export const GLITCHLING = sprite("glitchling", [
   "                ",
 ]);
 
-export const GLITCHLING_PALETTE: PalPalette = {
+export const GLITCHLING_PALETTE: SpritePalette = {
   a: "#3d2a52",
   b: "#7a5aa8",
   c: "#b79ce0",
@@ -355,7 +296,7 @@ export type PalSpecies = {
   description: string;
   /** The attack named in battle dialogue when an answer lands. */
   move: string;
-  palette: PalPalette;
+  palette: SpritePalette;
   stages: [PalStage, PalStage, PalStage];
 };
 
