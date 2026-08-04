@@ -10,30 +10,47 @@ export default function PrivacyPage() {
         before adding accounts, a database, or analytics.
       </p>
 
-      <h2 className="font-medium">What this site currently stores</h2>
+      <h2 className="font-medium">If you are not logged in</h2>
       <p>
-        ExamReady does not yet have user accounts, a server-side database,
-        or analytics tracking. The only data saved is stored in your
-        browser&apos;s local storage on your own device: quiz attempt
-        history, flashcard mastery, theme/accessibility preferences, and
-        activity dates used for the streak counter. This data never leaves
-        your device and is not visible to the site operator.
+        Everything stays on your own device. Quiz attempt history, flashcard
+        mastery, theme and accessibility preferences, and the activity dates
+        behind the streak counter are all kept in your browser&apos;s local
+        storage. None of it is transmitted to us, and the site operator
+        cannot see it. No account is required to use any of the study
+        material.
+      </p>
+
+      <h2 className="font-medium">If you log in</h2>
+      <p>
+        Logging in is optional. If you do, we store your email address and a
+        session record so we can recognise you, and we save a copy of your
+        quiz attempts and flashcard progress to your account so it is
+        available on your other devices. Your local copy is kept in sync with
+        it. We do not use this data for advertising and we do not sell it.
+      </p>
+      <p>
+        Data is processed by a small number of service providers on our
+        behalf: <span className="font-medium">Supabase</span> (database
+        hosting), <span className="font-medium">Vercel</span> (application
+        hosting), and <span className="font-medium">Resend</span> (sending
+        your sign-in email). Their servers may be located outside Malaysia.
       </p>
 
       <h2 className="font-medium">Clearing your data</h2>
       <p>
-        You can clear all locally stored progress at any time from the{" "}
+        You can clear locally stored progress at any time from the{" "}
         <span className="font-medium">Progress</span> page, or by clearing
-        your browser&apos;s site data for this domain.
+        your browser&apos;s site data for this domain. To delete an account
+        and the progress attached to it, email{" "}
+        <span className="font-medium">qcseak@gmail.com</span> — self-service
+        account deletion and data export are not built yet.
       </p>
 
-      <h2 className="font-medium">Future changes</h2>
+      <h2 className="font-medium">What we do not do</h2>
       <p>
-        If accounts, a database, email, or analytics are added later, this
-        page will be replaced with a full privacy policy covering what is
-        collected, why, how long it is retained, and how to request deletion
-        or export — in line with Malaysia&apos;s PDPA 2010 and, for EU
-        visitors, GDPR.
+        There is no analytics tracking, no advertising, and no third-party
+        tracking cookies on this site. The only cookie set is the one that
+        keeps you logged in, and it is only set if you choose to log in.
       </p>
     </div>
   );

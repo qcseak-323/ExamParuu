@@ -4,6 +4,7 @@ import { use, useMemo } from "react";
 import { getCatalogEntry, getExamContent, getFlashcardsByDomain } from "@/lib/content";
 import { useQuizAttempts, useFlashcardProgress } from "@/lib/storage";
 import { computeBadges } from "@/lib/gamification";
+import StorageNotice from "@/components/StorageNotice";
 
 function Bar({ pct }: { pct: number }) {
   return (
@@ -78,9 +79,7 @@ export default function ExamProgressPage({
     <div className="flex flex-col gap-10">
       <div>
         <h1 className="font-pixel text-xl">{exam.code.toUpperCase()} progress</h1>
-        <p className="mt-3 text-sm text-[var(--foreground-muted)]">
-          Stored locally in this browser only — nothing is sent anywhere.
-        </p>
+        <StorageNotice />
       </div>
 
       {attempts.length === 0 ? (

@@ -4,6 +4,7 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import PreferencesEffect from "@/components/PreferencesEffect";
 import AuthProvider from "@/components/AuthProvider";
+import ProgressSync from "@/components/ProgressSync";
 import { PREFERENCES_INIT_SCRIPT } from "@/lib/preferencesScript";
 import "./globals.css";
 
@@ -40,12 +41,20 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${pressStart.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+      {/* Deliberately a raw <script> in <head>, not next/script. It has to run
+          synchronously during HTML parsing to set the theme before first paint;
+          `strategy="beforeInteractive"` defers it into Next's __next_s queue,
+          which only runs once the client bundle loads — i.e. after paint, which
+          reintroduces a flash of the wrong palette on every page load.
+          React 19 logs a dev-only warning about this; it is stripped in
+          production builds and does not affect users. */}
       <head>
         <script dangerouslySetInnerHTML={{ __html: PREFERENCES_INIT_SCRIPT }} />
       </head>
       <body className="min-h-full flex flex-col">
         <AuthProvider>
           <PreferencesEffect />
+          <ProgressSync />
           <Nav />
           <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
             {children}

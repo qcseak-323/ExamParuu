@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { useSession } from "next-auth/react";
 import { catalog } from "@/lib/content";
 import {
   useQuizAttempts,
@@ -9,9 +10,13 @@ import {
   useActivityDates,
   resetAllProgress,
 } from "@/lib/storage";
+import { clearProgressInDb } from "@/lib/actions";
 import { computeXp, computeLevel, computeStreak } from "@/lib/gamification";
+import StorageNotice from "@/components/StorageNotice";
 
 export default function ProgressPage() {
+  const { status } = useSession();
+  const [resetting, setResetting] = useState(false);
   const attempts = useQuizAttempts();
   const flashcardProgress = useFlashcardProgress();
   const activityDates = useActivityDates();
@@ -39,24 +44,38 @@ export default function ProgressPage() {
     [attempts],
   );
 
-  function handleReset() {
-    if (
-      typeof window !== "undefined" &&
-      window.confirm(
-        "This will clear all saved quiz history, flashcard mastery, and streak data on this device. Continue?",
-      )
-    ) {
-      resetAllProgress();
+  async function handleReset() {
+    const signedIn = status === "authenticated";
+    const scope = signedIn
+      ? "This will permanently delete your quiz history, flashcard mastery, and streak data from your account and every device. Continue?"
+      : "This will clear all saved quiz history, flashcard mastery, and streak data in this browser. Continue?";
+
+    if (typeof window === "undefined" || !window.confirm(scope)) return;
+
+    // Order matters: clear the account copy first, otherwise the next sync
+    // pulls everything straight back and the reset looks like it failed.
+    if (signedIn) {
+      setResetting(true);
+      try {
+        await clearProgressInDb();
+      } catch (err) {
+        setResetting(false);
+        console.error("Could not clear account progress", err);
+        window.alert(
+          "Couldn't reach your account to delete the saved copy, so nothing was reset. Check your connection and try again.",
+        );
+        return;
+      }
+      setResetting(false);
     }
+    resetAllProgress();
   }
 
   return (
     <div className="flex flex-col gap-10">
       <div>
         <h1 className="font-pixel text-xl">Trainer card</h1>
-        <p className="mt-3 text-sm text-[var(--foreground-muted)]">
-          Stored locally in this browser only — nothing is sent anywhere.
-        </p>
+        <StorageNotice />
       </div>
 
       <section className="pixel-panel flex flex-wrap items-center gap-6 p-6">
@@ -108,9 +127,10 @@ export default function ProgressPage() {
 
       <button
         onClick={handleReset}
-        className="w-fit rounded-md border border-red-600 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-600/10"
+        disabled={resetting}
+        className="w-fit rounded-md border border-red-600 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-600/10 disabled:opacity-50"
       >
-        Reset all progress
+        {resetting ? "Resetting…" : "Reset all progress"}
       </button>
     </div>
   );

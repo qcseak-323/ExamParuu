@@ -19,11 +19,23 @@ function readJSON<T>(key: string, fallback: T): T {
 
 function writeJSON<T>(key: string, value: T): void {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(key, JSON.stringify(value));
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Private browsing and quota-exceeded both throw here. Progress for this
+    // session stays in the in-memory cache; losing persistence is far better
+    // than throwing out of the click handler that finishes a quiz.
+  }
 }
 
+// Local calendar date, not UTC. toISOString() would roll the day over at
+// 08:00 for a UTC+8 user, splitting a single evening of study across two
+// "days" and corrupting the streak count.
 function todayIso(): string {
-  return new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const month = `${now.getMonth() + 1}`.padStart(2, "0");
+  const day = `${now.getDate()}`.padStart(2, "0");
+  return `${now.getFullYear()}-${month}-${day}`;
 }
 
 const listeners = new Set<() => void>();
@@ -93,10 +105,14 @@ export function useActivityDates(): string[] {
   );
 }
 
-// Non-reactive snapshot reader, for use inside computations (e.g. useMemo)
-// that should not re-run every time progress changes elsewhere.
+// Non-reactive snapshot readers, for use inside computations (e.g. useMemo)
+// and one-off sync calls that should not re-run every time progress changes.
 export function getFlashcardProgress(): FlashcardProgress {
   return getFlashcardProgressSnapshot();
+}
+
+export function getQuizAttemptsForSync(): QuizAttempt[] {
+  return getQuizAttemptsSnapshot();
 }
 
 export function recordActivity(): void {
@@ -122,6 +138,47 @@ export function setFlashcardStatus(id: string, status: FlashcardStatus): void {
   flashcardProgressCache = progress;
   writeJSON(FLASHCARD_KEY, progress);
   recordActivity();
+  emitChange();
+}
+
+/**
+ * Folds account-backed progress into the local store, so every existing view
+ * keeps reading from one place regardless of whether the user is signed in.
+ * Attempts dedupe on id; flashcards resolve conflicts in favour of "known"
+ * so syncing can never take away mastery earned on another device.
+ */
+export function mergeRemoteProgress(remote: {
+  attempts: QuizAttempt[];
+  flashcards: FlashcardProgress;
+}): void {
+  const byId = new Map<string, QuizAttempt>();
+  for (const a of getQuizAttemptsSnapshot()) byId.set(a.id, a);
+  for (const a of remote.attempts) byId.set(a.id, a);
+  const mergedAttempts = [...byId.values()].sort(
+    (a, b) => a.timestamp - b.timestamp,
+  );
+
+  const mergedCards: FlashcardProgress = { ...getFlashcardProgressSnapshot() };
+  for (const [cardId, status] of Object.entries(remote.flashcards)) {
+    if (mergedCards[cardId] === "known") continue;
+    mergedCards[cardId] = status;
+  }
+
+  const mergedDates = new Set(getActivityDatesSnapshot());
+  for (const a of remote.attempts) {
+    const d = new Date(a.timestamp);
+    const month = `${d.getMonth() + 1}`.padStart(2, "0");
+    const day = `${d.getDate()}`.padStart(2, "0");
+    mergedDates.add(`${d.getFullYear()}-${month}-${day}`);
+  }
+
+  quizAttemptsCache = mergedAttempts;
+  flashcardProgressCache = mergedCards;
+  activityDatesCache = [...mergedDates].sort();
+
+  writeJSON(QUIZ_KEY, quizAttemptsCache);
+  writeJSON(FLASHCARD_KEY, flashcardProgressCache);
+  writeJSON(ACTIVITY_KEY, activityDatesCache);
   emitChange();
 }
 

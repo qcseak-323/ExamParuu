@@ -60,6 +60,12 @@ export type QuizAttempt = {
 
 export type FlashcardStatus = "known" | "learning";
 
+/** Account-backed progress, as returned by the sync server actions. */
+export type RemoteProgress = {
+  attempts: QuizAttempt[];
+  flashcards: Record<string, FlashcardStatus>;
+};
+
 export type CatalogStatus = "GA" | "beta" | "retiring";
 
 export type CatalogEntry = {

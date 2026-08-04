@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+/* Bind Tailwind's `dark:` variant to our own theme attribute. Without this
+   it defaults to `prefers-color-scheme`, which silently decouples every
+   `dark:` utility from the in-app theme toggle: picking "dark" on a
+   light-OS machine left black overlays and dark-on-dark text everywhere. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /* Bright theme (default) — daylight town palette */
 :root,
 :root[data-theme="bright"] {

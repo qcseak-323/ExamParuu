@@ -66,15 +66,21 @@ model VerificationToken {
 model QuizAttempt {
   id           String   @id @default(cuid())
   userId       String
+  // Id generated on the client when the attempt was taken. Lets the same
+  // attempt be reconciled between localStorage and the database without
+  // creating duplicates when a device syncs more than once.
+  clientId     String
   examCode     String
   domainFilter String
   numQuestions Int
   correctCount Int
   results      Json
+  takenAt      DateTime
   createdAt    DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, clientId])
   @@index([userId, examCode])
 }
 

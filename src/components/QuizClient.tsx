@@ -280,7 +280,7 @@ export default function QuizClient({ examCode }: { examCode: string }) {
           onClick={startQuiz}
           className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)]"
         >
-          Retake this quiz
+          Practise again
         </button>
         <button
           onClick={() => setPhase("setup")}

@@ -79,6 +79,14 @@ export function getFlashcardsByDomain(
   return flashcards.filter((f) => f.domain === domainId);
 }
 
+/** Which exam a flashcard belongs to, given only its id. */
+export function findFlashcardExamCode(cardId: string): string | undefined {
+  for (const [examCode, content] of Object.entries(examRegistry)) {
+    if (content.flashcards.some((f) => f.id === cardId)) return examCode;
+  }
+  return undefined;
+}
+
 export function getStudyGuideForDomain(
   examCode: string,
   domainId: string,

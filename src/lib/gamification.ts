@@ -30,21 +30,28 @@ export function computeLevel(xp: number): {
   return { level, xpIntoLevel, xpForNextLevel: XP_PER_LEVEL };
 }
 
+// Local calendar date, matching how activity dates are recorded in storage.ts.
+// Using toISOString() here would compare UTC days against locally-recorded
+// ones and under-count the streak for any timezone east of UTC.
+function localIso(date: Date): string {
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const day = `${date.getDate()}`.padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
 export function computeStreak(activityDates: string[]): number {
   if (activityDates.length === 0) return 0;
   const dateSet = new Set(activityDates);
-  const today = new Date();
-  const cursor = new Date(today);
+  const cursor = new Date();
 
   // If there's no activity today, the streak can still count as "current"
   // through yesterday; otherwise it's broken.
-  const todayIso = cursor.toISOString().slice(0, 10);
-  if (!dateSet.has(todayIso)) {
+  if (!dateSet.has(localIso(cursor))) {
     cursor.setDate(cursor.getDate() - 1);
   }
 
   let streak = 0;
-  while (dateSet.has(cursor.toISOString().slice(0, 10))) {
+  while (dateSet.has(localIso(cursor))) {
     streak += 1;
     cursor.setDate(cursor.getDate() - 1);
   }

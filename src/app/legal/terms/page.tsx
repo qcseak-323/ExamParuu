@@ -37,9 +37,15 @@ export default function TermsPage() {
 
       <h2 className="font-medium">Local data</h2>
       <p>
-        Quiz history, flashcard progress, and preferences are currently
-        stored only in your browser&apos;s local storage on this device. No
-        account exists yet, and no personal data is transmitted to a server.
+        You can use the whole site without an account, in which case quiz
+        history, flashcard progress, and preferences stay in your
+        browser&apos;s local storage on this device. If you choose to log in,
+        your email and a copy of your progress are stored on our servers so
+        they carry across devices. See the{" "}
+        <a href="/legal/privacy" className="underline hover:text-[var(--accent)]">
+          privacy page
+        </a>{" "}
+        for the detail.
       </p>
 
       <h2 className="font-medium">Changes</h2>
