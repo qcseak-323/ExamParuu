@@ -37,9 +37,13 @@ const AudioCtx = createContext<AudioContextValue | null>(null);
 /** Which loop plays where, absent an explicit override from a component. */
 function defaultTrackForPath(pathname: string): TrackName | null {
   if (pathname === "/choose-pal") return "starter";
-  // The landing page is the one thing a signed-out visitor sees; leave it
-  // silent so a first impression is never an unexpected noise.
-  if (pathname === "/" || pathname.startsWith("/login")) return null;
+  // The landing page plays the overworld theme: it sets the tone before the
+  // visitor commits to anything. It cannot literally sound on load — see the
+  // note on the unlock gesture above — but it starts the moment they move.
+  if (pathname === "/") return "town";
+  // Sign-in stays quiet. Music while someone is typing an email address is
+  // noise, and they have usually just heard it on the landing page anyway.
+  if (pathname.startsWith("/login")) return null;
   return "town";
 }
 

@@ -1,5 +1,5 @@
-import type { PalPalette, SpriteMatrix } from "@/lib/pals";
-import { SPRITE_SIZE } from "@/lib/pals";
+import type { SpritePalette, SpriteMatrix } from "@/lib/sprite";
+import { SPRITE_SIZE } from "@/lib/sprite";
 
 /**
  * Renders a character-matrix sprite as SVG.
@@ -11,7 +11,7 @@ import { SPRITE_SIZE } from "@/lib/pals";
 
 type Props = {
   sprite: SpriteMatrix;
-  palette: PalPalette;
+  palette: SpritePalette;
   /** Rendered size in px. The sprite scales without blurring. */
   size?: number;
   /** Mirrors the sprite, so a pal can face its opponent across a battle. */
@@ -21,7 +21,7 @@ type Props = {
   title?: string;
 };
 
-function colorFor(char: string, palette: PalPalette): string | null {
+function colorFor(char: string, palette: SpritePalette): string | null {
   switch (char) {
     case " ":
       return null;
@@ -50,7 +50,7 @@ function colorFor(char: string, palette: PalPalette): string | null {
 
 type Run = { x: number; y: number; width: number; fill: string };
 
-function runsFor(sprite: SpriteMatrix, palette: PalPalette): Run[] {
+function runsFor(sprite: SpriteMatrix, palette: SpritePalette): Run[] {
   const runs: Run[] = [];
 
   sprite.forEach((row, y) => {

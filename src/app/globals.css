@@ -245,6 +245,182 @@ body {
   }
 }
 
+/* --- START button and sign-in prompt -------------------------------------- */
+
+/* The one control the landing page is built around, so it gets a heavier
+   border and a slow pulse to pull the eye. */
+.start-button {
+  border-width: 4px;
+  box-shadow: 5px 5px 0 var(--border);
+  animation: start-pulse 2.4s ease-in-out infinite;
+}
+.start-button:active {
+  transform: translate(5px, 5px);
+  box-shadow: 0 0 0 var(--border);
+}
+@keyframes start-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.035);
+  }
+}
+
+/* The hero text sits on the sky, which is the same blue in both themes, so it
+   sets its own colours rather than inheriting theme ones — `--foreground` is
+   near-white in dark mode and would vanish against it. */
+.hero-copy {
+  background: rgba(244, 241, 232, 0.92);
+  color: #1c1a12;
+  border: 3px solid #1c1a12;
+  box-shadow: 3px 3px 0 #1c1a12;
+  max-width: 34rem;
+}
+
+.start-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* --- Landing hero scene --------------------------------------------------- */
+
+/* Flat colour bands rather than a photo: no asset to load, and it matches the
+   sprite art. The sky stays blue in both themes — it is a daytime road, and
+   re-tinting it for dark mode made it read as dusk rather than as the same
+   place. Contrast for the text over it is handled by the panel it sits in. */
+.hero-scene {
+  position: relative;
+  overflow: hidden;
+  height: 260px;
+  border: 4px solid var(--border);
+  box-shadow: 4px 4px 0 var(--border);
+  background: linear-gradient(#7fc8f0 0%, #a9dcf5 55%, #cfeaf7 70%);
+
+  /* This scene is daylight in both themes, so pin the outline colour dark
+     for everything inside it. The variable is otherwise theme-flipped, which
+     would give the runner, the sun, and the road edge a cream outline in dark
+     mode — washed out against a sky that stayed blue. Scoping it here reaches
+     the sprite too, since PixelSprite resolves its outline from this same
+     variable. */
+  --sprite-outline: #1c1a12;
+}
+
+@media (min-width: 640px) {
+  .hero-scene {
+    height: 320px;
+  }
+}
+
+.hero-sun {
+  position: absolute;
+  top: 24px;
+  right: 40px;
+  width: 44px;
+  height: 44px;
+  background: #ffe66d;
+  border: 3px solid var(--sprite-outline);
+  border-radius: 50%;
+}
+
+/* Three puffs built from radial gradients, tiled so the drift can loop
+   seamlessly by translating exactly one tile width. */
+.hero-clouds {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 200%;
+  height: 55%;
+  background-image:
+    radial-gradient(circle at 10% 40%, #ffffff 0 18px, transparent 19px),
+    radial-gradient(circle at 15% 55%, #ffffff 0 22px, transparent 23px),
+    radial-gradient(circle at 21% 45%, #ffffff 0 16px, transparent 17px),
+    radial-gradient(circle at 38% 30%, #ffffff 0 14px, transparent 15px),
+    radial-gradient(circle at 43% 40%, #ffffff 0 19px, transparent 20px);
+  background-size: 50% 100%;
+  background-repeat: repeat-x;
+}
+.hero-clouds-drift {
+  animation: hero-clouds 38s linear infinite;
+}
+@keyframes hero-clouds {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* A rolling green horizon behind the road. */
+.hero-hills {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 78px;
+  height: 70px;
+  background:
+    radial-gradient(ellipse 140px 60px at 18% 100%, #6fbf5f 0 100%, transparent 101%),
+    radial-gradient(ellipse 180px 74px at 52% 100%, #5faf50 0 100%, transparent 101%),
+    radial-gradient(ellipse 150px 58px at 86% 100%, #6fbf5f 0 100%, transparent 101%),
+    linear-gradient(transparent 60%, #7ecb6a 60%);
+}
+
+.hero-road {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 78px;
+  background: #6b6f76;
+  border-top: 4px solid var(--sprite-outline);
+}
+
+/* Centre markings. The dashes are a repeating gradient, so scrolling is one
+   transform rather than a row of elements. */
+.hero-road-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 200%;
+  height: 8px;
+  margin-top: -4px;
+  background: repeating-linear-gradient(
+    to right,
+    #f4f1e8 0 34px,
+    transparent 34px 74px
+  );
+}
+.hero-road-scroll {
+  animation: hero-road 900ms linear infinite;
+}
+@keyframes hero-road {
+  to {
+    transform: translateX(-74px);
+  }
+}
+
+.hero-runner {
+  position: absolute;
+  left: 12%;
+  bottom: 46px;
+}
+.hero-runner-bob {
+  animation: hero-bob 280ms steps(2, end) infinite;
+}
+@keyframes hero-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

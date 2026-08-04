@@ -1,6 +1,6 @@
-import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
-import { signIn, auth } from "@/auth";
+import { auth } from "@/auth";
+import { sendSignInLink } from "@/lib/authActions";
 
 export const metadata = { title: "Log in — ExamReady" };
 
@@ -57,20 +57,7 @@ export default async function LoginPage({
         </div>
       )}
 
-      <form
-        action={async (formData) => {
-          "use server";
-          try {
-            await signIn("resend", formData);
-          } catch (err) {
-            if (err instanceof AuthError) {
-              redirect(`/login?error=${err.type}`);
-            }
-            throw err;
-          }
-        }}
-        className="flex flex-col gap-3"
-      >
+      <form action={sendSignInLink} className="flex flex-col gap-3">
         <input type="hidden" name="redirectTo" value={returnTo} />
         <input
           type="email"
