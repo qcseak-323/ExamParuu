@@ -55,7 +55,7 @@ export default function StartPrompt() {
 
     // Authenticated, or still resolving. Navigating is right either way: the
     // page's own guard is authoritative, sending a signed-in trainer onward,
-    // one without a starter to /choose-pal, and a signed-out visitor to the
+    // one still needing setup to /setup, and a signed-out visitor to the
     // login page. That last case only happens if someone clicks inside the
     // few hundred ms before the session resolves, and a working login page is
     // a fine outcome for it — better than showing a signed-in trainer a
@@ -123,7 +123,7 @@ export default function StartPrompt() {
 
               <form action={sendSignInLink} className="mt-4 flex flex-col gap-3">
                 {/* One canonical destination: the catalog guard forwards a
-                    brand-new trainer to /choose-pal on its own, so this works
+                    brand-new trainer to /setup on its own, so this works
                     for first-time and returning visitors alike. */}
                 <input type="hidden" name="redirectTo" value={CONTINUE_TO} />
                 <label htmlFor={emailId} className="sr-only">

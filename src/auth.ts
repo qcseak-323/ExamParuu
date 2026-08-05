@@ -31,9 +31,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const record = user as typeof user & {
         examPal?: string | null;
         examPalName?: string | null;
+        expertise?: string | null;
+        priorityExam?: string | null;
       };
       session.user.examPal = isPalType(record.examPal) ? record.examPal : null;
       session.user.examPalName = record.examPalName ?? null;
+      session.user.expertise = record.expertise ?? null;
+      session.user.priorityExam = record.priorityExam ?? null;
       return session;
     },
   },

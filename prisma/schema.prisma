@@ -26,11 +26,18 @@ model User {
   examPal       String?
   // Optional trainer nickname for the pal, shown in battle dialogue.
   examPalName   String?
+  // Self-reported experience with Microsoft certification exams:
+  // "new" | "some" | "certified". Used to pitch guidance, not to gate content.
+  expertise     String?
+  // Exam code the trainer wants to focus on first, e.g. "dp-600". Not a
+  // relation: exams live in content files, not the database.
+  priorityExam  String?
 
   accounts           Account[]
   sessions           Session[]
   quizAttempts       QuizAttempt[]
   flashcardProgress  FlashcardProgress[]
+  learningEvents     LearningEvent[]
 }
 
 model Account {
@@ -85,6 +92,28 @@ model QuizAttempt {
   results      Json
   takenAt      DateTime
   createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, clientId])
+  @@index([userId, examCode])
+}
+
+/// Append-only log of learning actions (lessons read, cards reviewed).
+/// Mirrors QuizAttempt's shape deliberately: a client-generated id plus a
+/// per-user uniqueness constraint, so repeat syncs collapse instead of
+/// duplicating. A new table rather than new columns keeps this migration
+/// additive against the shared production database.
+model LearningEvent {
+  id       String   @id @default(cuid())
+  userId   String
+  /// Deterministic id from the client: "kind:examCode:refId:day".
+  clientId String
+  examCode String
+  kind     String
+  /// Section id for a lesson, card id for a review.
+  refId    String
+  at       DateTime
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

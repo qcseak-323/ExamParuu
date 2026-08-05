@@ -7,10 +7,16 @@ import {
   useQuizAttempts,
   useFlashcardProgress,
   useActivityDates,
+  useLearningEvents,
   resetAllProgress,
 } from "@/lib/storage";
 import { clearProgressInDb } from "@/lib/actions";
-import { computeXp, computeLevel, computeStreak } from "@/lib/gamification";
+import {
+  computeXp,
+  computeLevel,
+  computeStreak,
+  computeRedemptionXp,
+} from "@/lib/gamification";
 import { PAL_SPECIES, stageForLevel, nextStage } from "@/lib/pals";
 import type { PalType } from "@/lib/pals";
 import PixelSprite from "@/components/PixelSprite";
@@ -27,10 +33,14 @@ export default function ProgressClient({
   const attempts = useQuizAttempts();
   const flashcardProgress = useFlashcardProgress();
   const activityDates = useActivityDates();
+  const events = useLearningEvents();
 
-  const xp = computeXp(attempts, flashcardProgress);
+  const xp = computeXp(attempts, flashcardProgress, events, activityDates);
   const { level, xpIntoLevel, xpForNextLevel } = computeLevel(xp);
   const streak = computeStreak(activityDates);
+  // Worth showing on its own: it's the number that says "you closed a gap",
+  // which is the thing the whole review loop is trying to produce.
+  const redeemed = computeRedemptionXp(attempts) / 25;
 
   const species = PAL_SPECIES[palType];
   const stage = stageForLevel(palType, level);
@@ -128,6 +138,13 @@ export default function ProgressClient({
         <div className="text-center">
           <p className="font-pixel text-lg">{streak}</p>
           <p className="text-xs text-[var(--foreground-muted)]">day streak</p>
+        </div>
+
+        <div className="text-center">
+          <p className="font-pixel text-lg">{redeemed}</p>
+          <p className="text-xs text-[var(--foreground-muted)]">
+            gaps closed
+          </p>
         </div>
       </section>
 

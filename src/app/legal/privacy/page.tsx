@@ -41,11 +41,17 @@ export default function PrivacyPage() {
       <p>
         You can clear your progress at any time from the{" "}
         <span className="font-medium">Trainer</span> page, which deletes both
-        the copy on your account and the one in this browser. To delete an
-        account
-        and the progress attached to it, email{" "}
-        <span className="font-medium">qcseak@gmail.com</span> — self-service
-        account deletion and data export are not built yet.
+        the copy on your account and the one in this browser.
+      </p>
+      <p>
+        On the <span className="font-medium">Options</span> page you can
+        download everything we hold about you as a JSON file, or permanently
+        delete your account. Deletion removes your profile, your ExamPal, and
+        all of your progress from our servers and from this browser
+        immediately — there is no grace period and no backup we can restore
+        from, so export first if you want a copy. If any of that fails, you can
+        still reach us at{" "}
+        <span className="font-medium">qcseak@gmail.com</span>.
       </p>
 
       <h2 className="font-medium">What we do not do</h2>

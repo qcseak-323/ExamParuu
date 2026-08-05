@@ -11,7 +11,8 @@
       "A Dataflow Gen2 staging area"
     ],
     "correctIndex": 0,
-    "explanation": "OneLake is the single, tenant-wide data lake built into Fabric. Every workspace and workload stores its data in OneLake in Delta/Parquet format, so items can share data without duplication."
+    "explanation": "OneLake is the single, tenant-wide data lake built into Fabric. Every workspace and workload stores its data in OneLake in Delta/Parquet format, so items can share data without duplication.",
+    "teaches": "onelake-and-workspaces"
   },
   {
     "id": "pim-02",
@@ -25,7 +26,8 @@
       "Workspace roles"
     ],
     "correctIndex": 1,
-    "explanation": "Domains let admins group workspaces by business area, assign domain admins, and apply consistent governance and certification policies across all workspaces in the domain."
+    "explanation": "Domains let admins group workspaces by business area, assign domain admins, and apply consistent governance and certification policies across all workspaces in the domain.",
+    "teaches": "domains-and-governance"
   },
   {
     "id": "pim-03",
@@ -39,7 +41,8 @@
       "Manual copy-paste between workspaces"
     ],
     "correctIndex": 1,
-    "explanation": "Deployment pipelines let you assign workspaces to Development, Test, and Production stages and push content between them, comparing differences and deploying changes in a controlled way."
+    "explanation": "Deployment pipelines let you assign workspaces to Development, Test, and Production stages and push content between them, comparing differences and deploying changes in a controlled way.",
+    "teaches": "application-lifecycle-management"
   },
   {
     "id": "pim-04",
@@ -53,7 +56,8 @@
       "E SKUs (Enterprise agreement)"
     ],
     "correctIndex": 1,
-    "explanation": "F SKUs are Azure-billed Fabric capacities that can be scaled, paused, and resumed independently, and they support all Fabric workloads, not just Power BI."
+    "explanation": "F SKUs are Azure-billed Fabric capacities that can be scaled, paused, and resumed independently, and they support all Fabric workloads, not just Power BI.",
+    "teaches": "fabric-capacities-and-licensing"
   },
   {
     "id": "pim-05",
@@ -67,7 +71,8 @@
       "A capacity metrics app"
     ],
     "correctIndex": 1,
-    "explanation": "Fabric's Git integration connects a workspace to a branch in Azure DevOps or GitHub, enabling source control, commit history, and pull-request based review workflows for workspace items."
+    "explanation": "Fabric's Git integration connects a workspace to a branch in Azure DevOps or GitHub, enabling source control, commit history, and pull-request based review workflows for workspace items.",
+    "teaches": "application-lifecycle-management"
   },
   {
     "id": "pim-06",
@@ -81,7 +86,8 @@
       "Move all workspaces to Pro license mode"
     ],
     "correctIndex": 1,
-    "explanation": "F SKU capacities can be paused and resumed on demand (or via automation/schedule), which stops billing for compute while paused without losing any content."
+    "explanation": "F SKU capacities can be paused and resumed on demand (or via automation/schedule), which stops billing for compute while paused without losing any content.",
+    "teaches": "fabric-capacities-and-licensing"
   },
   {
     "id": "pim-07",
@@ -95,7 +101,8 @@
       "The Data Activator reflex designer"
     ],
     "correctIndex": 1,
-    "explanation": "The Fabric Capacity Metrics app (installed from AppSource) visualizes CU utilization, throttling, and smoothing for each capacity over time."
+    "explanation": "The Fabric Capacity Metrics app (installed from AppSource) visualizes CU utilization, throttling, and smoothing for each capacity over time.",
+    "teaches": "monitoring-and-administration"
   },
   {
     "id": "pim-08",
@@ -109,7 +116,8 @@
       "OneLake data hub"
     ],
     "correctIndex": 0,
-    "explanation": "The Monitoring hub gives a centralized, cross-workspace view of activities such as pipeline runs, refreshes, and jobs, including their status and duration."
+    "explanation": "The Monitoring hub gives a centralized, cross-workspace view of activities such as pipeline runs, refreshes, and jobs, including their status and duration.",
+    "teaches": "monitoring-and-administration"
   },
   {
     "id": "pim-09",
@@ -123,7 +131,8 @@
       "Viewer"
     ],
     "correctIndex": 2,
-    "explanation": "Contributor can create and edit content (including building new reports) but cannot manage workspace access or perform admin-level actions, which are reserved for Admin and, to a lesser extent, Member."
+    "explanation": "Contributor can create and edit content (including building new reports) but cannot manage workspace access or perform admin-level actions, which are reserved for Admin and, to a lesser extent, Member.",
+    "teaches": "onelake-and-workspaces"
   },
   {
     "id": "pim-10",
@@ -137,7 +146,8 @@
       "A Dataflow Gen2 connection"
     ],
     "correctIndex": 1,
-    "explanation": "Tenant-wide switches, including which security groups can create trial capacities or use specific Fabric features, are controlled in the Fabric admin portal's tenant settings."
+    "explanation": "Tenant-wide switches, including which security groups can create trial capacities or use specific Fabric features, are controlled in the Fabric admin portal's tenant settings.",
+    "teaches": "monitoring-and-administration"
   },
   {
     "id": "psd-01",
@@ -151,7 +161,8 @@
       "A Power BI report"
     ],
     "correctIndex": 0,
-    "explanation": "Dataflow Gen2 provides a Power Query-based, low-code ETL experience for ingesting and transforming data, and can output directly to a Lakehouse or Warehouse."
+    "explanation": "Dataflow Gen2 provides a Power Query-based, low-code ETL experience for ingesting and transforming data, and can output directly to a Lakehouse or Warehouse.",
+    "teaches": "ingesting-data-pipelines-dataflows-gen2-and-notebooks"
   },
   {
     "id": "psd-02",
@@ -165,7 +176,8 @@
       "KQL database"
     ],
     "correctIndex": 1,
-    "explanation": "The Fabric Warehouse provides a full T-SQL engine with transactional support, stored procedures, and views, whereas a Lakehouse is primarily managed through Spark and a read-only SQL analytics endpoint."
+    "explanation": "The Fabric Warehouse provides a full T-SQL engine with transactional support, stored procedures, and views, whereas a Lakehouse is primarily managed through Spark and a read-only SQL analytics endpoint.",
+    "teaches": "choosing-the-right-storage-item-lakehouse-vs-warehouse"
   },
   {
     "id": "psd-03",
@@ -179,7 +191,8 @@
       "A semantic model"
     ],
     "correctIndex": 0,
-    "explanation": "Shortcuts create a reference from OneLake to data in another location (ADLS Gen2, S3, another Fabric item, etc.) so it can be read in place without duplicating storage."
+    "explanation": "Shortcuts create a reference from OneLake to data in another location (ADLS Gen2, S3, another Fabric item, etc.) so it can be read in place without duplicating storage.",
+    "teaches": "ingesting-data-pipelines-dataflows-gen2-and-notebooks"
   },
   {
     "id": "psd-04",
@@ -193,7 +206,8 @@
       "A paginated report"
     ],
     "correctIndex": 1,
-    "explanation": "Mirroring continuously and automatically replicates changes from supported source databases into Delta tables in OneLake, enabling near real-time analytics without building custom pipelines."
+    "explanation": "Mirroring continuously and automatically replicates changes from supported source databases into Delta tables in OneLake, enabling near real-time analytics without building custom pipelines.",
+    "teaches": "ingesting-data-pipelines-dataflows-gen2-and-notebooks"
   },
   {
     "id": "psd-05",
@@ -207,7 +221,8 @@
       "Converting the table to a CSV file"
     ],
     "correctIndex": 1,
-    "explanation": "OPTIMIZE compacts small files into larger ones, and V-Order applies additional sorting and encoding tuned for fast reads in Power BI and SQL engines, both improving query performance."
+    "explanation": "OPTIMIZE compacts small files into larger ones, and V-Order applies additional sorting and encoding tuned for fast reads in Power BI and SQL engines, both improving query performance.",
+    "teaches": "performance-and-storage-optimization"
   },
   {
     "id": "psd-06",
@@ -221,7 +236,8 @@
       "Converting the table to a semantic model"
     ],
     "correctIndex": 0,
-    "explanation": "Partitioning a large table (commonly by date) allows engines to prune irrelevant partitions during query execution, reducing the amount of data scanned."
+    "explanation": "Partitioning a large table (commonly by date) allows engines to prune irrelevant partitions during query execution, reducing the amount of data scanned.",
+    "teaches": "performance-and-storage-optimization"
   },
   {
     "id": "psd-07",
@@ -235,7 +251,8 @@
       "A Power BI dashboard"
     ],
     "correctIndex": 0,
-    "explanation": "Fabric notebooks run on Spark compute and support PySpark, Spark SQL, Scala, and R, making them the right tool for code-first, large-scale data transformation."
+    "explanation": "Fabric notebooks run on Spark compute and support PySpark, Spark SQL, Scala, and R, making them the right tool for code-first, large-scale data transformation.",
+    "teaches": "ingesting-data-pipelines-dataflows-gen2-and-notebooks"
   },
   {
     "id": "psd-08",
@@ -249,7 +266,8 @@
       "A temporary staging area that is deleted after each pipeline run"
     ],
     "correctIndex": 1,
-    "explanation": "Bronze holds raw source data, Silver holds cleansed and conformed data with quality rules applied, and Gold holds business-level aggregates optimized for consumption and reporting."
+    "explanation": "Bronze holds raw source data, Silver holds cleansed and conformed data with quality rules applied, and Gold holds business-level aggregates optimized for consumption and reporting.",
+    "teaches": "medallion-architecture"
   },
   {
     "id": "psd-09",
@@ -263,7 +281,8 @@
       "The OneLake file explorer"
     ],
     "correctIndex": 0,
-    "explanation": "Because a Warehouse is a full T-SQL engine, you can use standard T-SQL statements such as stored procedures and INSERT...SELECT to transform and load data entirely within the Warehouse."
+    "explanation": "Because a Warehouse is a full T-SQL engine, you can use standard T-SQL statements such as stored procedures and INSERT...SELECT to transform and load data entirely within the Warehouse.",
+    "teaches": "choosing-the-right-storage-item-lakehouse-vs-warehouse"
   },
   {
     "id": "psd-10",
@@ -277,7 +296,8 @@
       "MERGE"
     ],
     "correctIndex": 0,
-    "explanation": "VACUUM removes data files that are no longer referenced by the Delta table's transaction log and are older than the configured retention threshold, reclaiming storage space."
+    "explanation": "VACUUM removes data files that are no longer referenced by the Delta table's transaction log and are older than the configured retention threshold, reclaiming storage space.",
+    "teaches": "performance-and-storage-optimization"
   },
   {
     "id": "sm-01",
@@ -291,7 +311,8 @@
       "A schema with no relationships defined at all"
     ],
     "correctIndex": 1,
-    "explanation": "A star schema, with fact tables containing measures and dimension tables containing descriptive attributes, is the recommended design for performance, simplicity, and compatibility with DAX time-intelligence functions."
+    "explanation": "A star schema, with fact tables containing measures and dimension tables containing descriptive attributes, is the recommended design for performance, simplicity, and compatibility with DAX time-intelligence functions.",
+    "teaches": "designing-semantic-models"
   },
   {
     "id": "sm-02",
@@ -305,7 +326,8 @@
       "One-to-one"
     ],
     "correctIndex": 1,
-    "explanation": "This is the standard one-to-many relationship: one row in the dimension (the 'one' side) relates to many rows in the fact table (the 'many' side)."
+    "explanation": "This is the standard one-to-many relationship: one row in the dimension (the 'one' side) relates to many rows in the fact table (the 'many' side).",
+    "teaches": "designing-semantic-models"
   },
   {
     "id": "sm-03",
@@ -319,7 +341,8 @@
       "Neither; this requires a Power Query custom column"
     ],
     "correctIndex": 1,
-    "explanation": "Measures are evaluated dynamically based on the current filter context, making them appropriate for aggregations like Total Sales that must respond to slicers and filters. Calculated columns are computed once at refresh time and stored per row."
+    "explanation": "Measures are evaluated dynamically based on the current filter context, making them appropriate for aggregations like Total Sales that must respond to slicers and filters. Calculated columns are computed once at refresh time and stored per row.",
+    "teaches": "designing-semantic-models"
   },
   {
     "id": "sm-04",
@@ -333,7 +356,8 @@
       "Direct Lake"
     ],
     "correctIndex": 1,
-    "explanation": "DirectQuery sends queries to the source system at report run time rather than caching data in the model, trading some performance for always-current results and no duplicated storage."
+    "explanation": "DirectQuery sends queries to the source system at report run time rather than caching data in the model, trading some performance for always-current results and no duplicated storage.",
+    "teaches": "storage-modes"
   },
   {
     "id": "sm-05",
@@ -347,7 +371,8 @@
       "Live Connection"
     ],
     "correctIndex": 2,
-    "explanation": "Direct Lake mode loads data directly from Delta tables in OneLake into memory on demand, avoiding a traditional import refresh while delivering performance close to Import mode."
+    "explanation": "Direct Lake mode loads data directly from Delta tables in OneLake into memory on demand, avoiding a traditional import refresh while delivering performance close to Import mode.",
+    "teaches": "storage-modes"
   },
   {
     "id": "sm-06",
@@ -361,7 +386,8 @@
       "Certified endorsement"
     ],
     "correctIndex": 1,
-    "explanation": "The XMLA endpoint exposes the semantic model over the standard analytical protocol used by third-party tools and external client applications, enabling both read and, if configured, write operations."
+    "explanation": "The XMLA endpoint exposes the semantic model over the standard analytical protocol used by third-party tools and external client applications, enabling both read and, if configured, write operations.",
+    "teaches": "securing-and-governing-models"
   },
   {
     "id": "sm-07",
@@ -375,7 +401,8 @@
       "A many-to-many relationship"
     ],
     "correctIndex": 1,
-    "explanation": "Incremental refresh policies partition the table by date range and only reprocess the recent, changing partitions, leaving historical partitions untouched, which greatly reduces refresh time."
+    "explanation": "Incremental refresh policies partition the table by date range and only reprocess the recent, changing partitions, leaving historical partitions untouched, which greatly reduces refresh time.",
+    "teaches": "lifecycle-and-performance"
   },
   {
     "id": "sm-08",
@@ -389,7 +416,8 @@
       "Perspectives"
     ],
     "correctIndex": 1,
-    "explanation": "Row-level security defines roles with DAX filter expressions, commonly using USERPRINCIPALNAME() or USERNAME(), so each user only sees rows permitted for their identity when the role is applied."
+    "explanation": "Row-level security defines roles with DAX filter expressions, commonly using USERPRINCIPALNAME() or USERNAME(), so each user only sees rows permitted for their identity when the role is applied.",
+    "teaches": "securing-and-governing-models"
   },
   {
     "id": "sm-09",
@@ -403,7 +431,8 @@
       "Using only the web-based Q&A feature"
     ],
     "correctIndex": 1,
-    "explanation": "The .pbip project format saves the report and semantic model as human-readable folders and files (including TMDL for the model), which are well-suited to Git-based source control and code review."
+    "explanation": "The .pbip project format saves the report and semantic model as human-readable folders and files (including TMDL for the model), which are well-suited to Git-based source control and code review.",
+    "teaches": "lifecycle-and-performance"
   },
   {
     "id": "sm-10",
@@ -417,7 +446,8 @@
       "The Q&A explorer"
     ],
     "correctIndex": 0,
-    "explanation": "Performance Analyzer records and breaks down the time each visual takes for DAX query execution, visual rendering, and other operations, helping you pinpoint the source of slow performance."
+    "explanation": "Performance Analyzer records and breaks down the time each visual takes for DAX query execution, visual rendering, and other operations, helping you pinpoint the source of slow performance.",
+    "teaches": "lifecycle-and-performance"
   },
   {
     "id": "ea-01",
@@ -431,7 +461,8 @@
       "Power Query M"
     ],
     "correctIndex": 1,
-    "explanation": "KQL is the query language used against KQL databases in an Eventhouse, and it is optimized for fast, ad hoc exploration of large volumes of time-series and log-like event data."
+    "explanation": "KQL is the query language used against KQL databases in an Eventhouse, and it is optimized for fast, ad hoc exploration of large volumes of time-series and log-like event data.",
+    "teaches": "real-time-intelligence-and-kql"
   },
   {
     "id": "ea-02",
@@ -445,7 +476,8 @@
       "extend"
     ],
     "correctIndex": 2,
-    "explanation": "The summarize operator groups rows by one or more columns and computes aggregate values, analogous to GROUP BY combined with aggregate functions in T-SQL."
+    "explanation": "The summarize operator groups rows by one or more columns and computes aggregate values, analogous to GROUP BY combined with aggregate functions in T-SQL.",
+    "teaches": "real-time-intelligence-and-kql"
   },
   {
     "id": "ea-03",
@@ -459,7 +491,8 @@
       "A Dataflow Gen2"
     ],
     "correctIndex": 1,
-    "explanation": "Notebooks support interactive, code-first exploration using PySpark, pandas, and visualization libraries, making them well suited for exploratory data analysis and prototyping."
+    "explanation": "Notebooks support interactive, code-first exploration using PySpark, pandas, and visualization libraries, making them well suited for exploratory data analysis and prototyping.",
+    "teaches": "exploratory-analytics-with-notebooks-and-sql"
   },
   {
     "id": "ea-04",
@@ -473,7 +506,8 @@
       "The Power BI Q&A visual"
     ],
     "correctIndex": 0,
-    "explanation": "Every Lakehouse automatically exposes a read-only SQL analytics endpoint, allowing you to query Delta tables using standard T-SQL without needing to write Spark code."
+    "explanation": "Every Lakehouse automatically exposes a read-only SQL analytics endpoint, allowing you to query Delta tables using standard T-SQL without needing to write Spark code.",
+    "teaches": "exploratory-analytics-with-notebooks-and-sql"
   },
   {
     "id": "ea-05",
@@ -487,7 +521,8 @@
       "KQL querysets"
     ],
     "correctIndex": 2,
-    "explanation": "Paginated reports (based on RDL) are designed for pixel-perfect, print-ready layouts such as invoices and operational documents, unlike interactive Power BI reports which prioritize exploration."
+    "explanation": "Paginated reports (based on RDL) are designed for pixel-perfect, print-ready layouts such as invoices and operational documents, unlike interactive Power BI reports which prioritize exploration.",
+    "teaches": "visualizing-and-delivering-insights"
   },
   {
     "id": "ea-06",
@@ -501,7 +536,8 @@
       "A calculated table"
     ],
     "correctIndex": 1,
-    "explanation": "Real-Time dashboards, built from KQL querysets over Eventhouse data, are designed to visualize streaming data with automatic, low-latency updates."
+    "explanation": "Real-Time dashboards, built from KQL querysets over Eventhouse data, are designed to visualize streaming data with automatic, low-latency updates.",
+    "teaches": "real-time-intelligence-and-kql"
   },
   {
     "id": "ea-07",
@@ -515,7 +551,8 @@
       "Data Activator"
     ],
     "correctIndex": 0,
-    "explanation": "DAX query view lets you write and run DAX queries against the model and see results in a table, which is useful for testing measures and exploring data without building visuals."
+    "explanation": "DAX query view lets you write and run DAX queries against the model and see results in a table, which is useful for testing measures and exploring data without building visuals.",
+    "teaches": "exploratory-analytics-with-notebooks-and-sql"
   },
   {
     "id": "ea-08",
@@ -529,7 +566,8 @@
       "take"
     ],
     "correctIndex": 1,
-    "explanation": "The join operator merges rows from two tabular expressions based on matching values in specified columns, similar to a SQL JOIN, while union simply stacks rows from multiple tables."
+    "explanation": "The join operator merges rows from two tabular expressions based on matching values in specified columns, similar to a SQL JOIN, while union simply stacks rows from multiple tables.",
+    "teaches": "real-time-intelligence-and-kql"
   },
   {
     "id": "ea-09",
@@ -543,7 +581,8 @@
       "A OneLake shortcut"
     ],
     "correctIndex": 0,
-    "explanation": "Copilot in Fabric is integrated across items such as notebooks, Data Factory, Power BI, and Real-Time Intelligence to generate code, queries, summaries, and reports from natural-language prompts."
+    "explanation": "Copilot in Fabric is integrated across items such as notebooks, Data Factory, Power BI, and Real-Time Intelligence to generate code, queries, summaries, and reports from natural-language prompts.",
+    "teaches": "ai-assisted-analysis-and-automated-alerting"
   },
   {
     "id": "ea-10",
@@ -557,6 +596,7 @@
       "Deployment pipelines"
     ],
     "correctIndex": 0,
-    "explanation": "Data Activator monitors data (including streaming data) for conditions you define and automatically triggers actions such as Teams or email alerts when thresholds are met, without requiring a dashboard to be watched manually."
+    "explanation": "Data Activator monitors data (including streaming data) for conditions you define and automatically triggers actions such as Teams or email alerts when thresholds are met, without requiring a dashboard to be watched manually.",
+    "teaches": "ai-assisted-analysis-and-automated-alerting"
   }
 ]

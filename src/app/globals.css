@@ -6,39 +6,87 @@
    light-OS machine left black overlays and dark-on-dark text everywhere. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* Bright theme (default) — daylight town palette */
+/* Palette notes
+   ─────────────
+   This targets the look of a 16-bit handheld RPG rather than the 8-bit one
+   the app started with: deeper colour, gradients instead of flat fills, and
+   window chrome that is bevelled rather than a single hard rule.
+   Those are era conventions and generic to the genre. The specific colour
+   values here are our own — nothing is sampled from another game — and every
+   sprite, name, and piece of music in this project remains original. */
+
+/* Bright theme — daylight, verdant */
 :root,
 :root[data-theme="bright"] {
-  --background: #f4f1e8;
+  --background: #eef3ec;
   --panel: #ffffff;
-  --foreground: #1c1a12;
-  --foreground-muted: #5b5642;
-  --border: #1c1a12;
-  --accent: #1d6f42;
+  --foreground: #172438;
+  --foreground-muted: #56657a;
+  --border: #21354f;
+  --accent: #1f8a63;
   --accent-foreground: #ffffff;
-  --danger: #a6222c;
-  --warning: #9a6a00;
+  --danger: #c0392f;
+  --warning: #b07908;
+
+  /* Window chrome: an outer edge, a light bevel catching the top-left, and a
+     dark bevel on the bottom-right. Three tones is what separates a 16-bit
+     window from an 8-bit box drawn with one line weight. */
+  --window-top: #ffffff;
+  --window-bottom: #dde6ef;
+  --window-bevel-light: #ffffff;
+  --window-bevel-dark: #93a6bd;
+  --window-edge: #21354f;
+
   /* Creature sprites use literal colours, but their outline has to follow the
      theme or it disappears against the background. */
-  --sprite-outline: #1c1a12;
-  --battle-sky: #cfe6f5;
-  --battle-ground: #d8e8b0;
+  --sprite-outline: #21354f;
+
+  --battle-sky-top: #63b7e8;
+  --battle-sky-bottom: #bfe6f7;
+  --battle-ground: #9ccf6b;
+  --battle-ground-dark: #6fae4c;
+  --battle-platform: #c8a86a;
+  --battle-platform-dark: #a4854c;
+
+  --map-water: #4d9fd6;
+  --map-land: #a9d98a;
+  --map-forest: #6fb45c;
+  --map-route: #d8c08a;
+  --map-route-dash: #8a7346;
 }
 
-/* Dark theme — cave/night palette */
+/* Dark theme — dusk */
 :root[data-theme="dark"] {
-  --background: #14121b;
-  --panel: #1f1c2b;
-  --foreground: #efeadd;
-  --foreground-muted: #b3ac97;
-  --border: #efeadd;
-  --accent: #57c785;
-  --accent-foreground: #0c1a12;
-  --danger: #ff8a8a;
-  --warning: #ffcc66;
-  --sprite-outline: #efeadd;
-  --battle-sky: #232042;
-  --battle-ground: #2c3a2c;
+  --background: #101725;
+  --panel: #1e2740;
+  --foreground: #e8eef7;
+  --foreground-muted: #9aabc4;
+  --border: #c6d4e8;
+  --accent: #45d3a0;
+  --accent-foreground: #06231a;
+  --danger: #ff8c80;
+  --warning: #ffcf6b;
+
+  --window-top: #2b3856;
+  --window-bottom: #1a2238;
+  --window-bevel-light: #4d5f88;
+  --window-bevel-dark: #0c111d;
+  --window-edge: #c6d4e8;
+
+  --sprite-outline: #e8eef7;
+
+  --battle-sky-top: #2a3866;
+  --battle-sky-bottom: #4a5590;
+  --battle-ground: #3c5c3a;
+  --battle-ground-dark: #29401f;
+  --battle-platform: #6b5a3c;
+  --battle-platform-dark: #4a3d28;
+
+  --map-water: #1d3a5c;
+  --map-land: #3e6b46;
+  --map-forest: #2c5237;
+  --map-route: #7a6844;
+  --map-route-dash: #cbb684;
 }
 
 @theme inline {
@@ -88,34 +136,57 @@ body {
   image-rendering: pixelated;
 }
 
+/* The window treatment the whole UI is built from.
+   An outer edge, then a light bevel on the top-left and a dark one on the
+   bottom-right, over a soft vertical gradient. That inset-bevel-plus-gradient
+   is what reads as 16-bit rather than 8-bit — the previous single 3px rule
+   and hard offset shadow read as a generation earlier. */
 .pixel-panel {
-  background: var(--panel);
-  border: 3px solid var(--border);
-  box-shadow: 4px 4px 0 var(--border);
+  background: linear-gradient(var(--window-top), var(--window-bottom));
+  border: 2px solid var(--window-edge);
+  border-radius: 8px;
+  box-shadow:
+    inset 1px 1px 0 var(--window-bevel-light),
+    inset -1px -1px 0 var(--window-bevel-dark),
+    0 2px 0 var(--window-bevel-dark);
 }
 
 .pixel-button {
-  border: 3px solid var(--border);
-  box-shadow: 3px 3px 0 var(--border);
-  transition: transform 80ms steps(1), box-shadow 80ms steps(1);
+  border: 2px solid var(--window-edge);
+  border-radius: 7px;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.45),
+    inset -1px -2px 0 rgba(0, 0, 0, 0.28),
+    0 3px 0 var(--window-bevel-dark);
+  transition:
+    transform 70ms steps(1),
+    box-shadow 70ms steps(1);
 }
 .pixel-button:active {
-  transform: translate(3px, 3px);
-  box-shadow: 0 0 0 var(--border);
+  transform: translateY(3px);
+  box-shadow:
+    inset 1px 1px 0 rgba(0, 0, 0, 0.2),
+    0 0 0 var(--window-bevel-dark);
 }
 
 /* --- Retro UI kit -------------------------------------------------------- */
 
-/* The era's text window: a heavy outer border with a thin inner rule, and a
-   hard offset shadow instead of a soft one. */
+/* The text window. Rounded, bevelled, and double-framed: an outer shell with
+   a thin inset rule floating inside it. The inner rule is what makes these
+   windows read as a "frame" rather than a plain box. */
 .dialogue-frame {
-  background: var(--panel);
-  border: 4px solid var(--border);
-  box-shadow: 4px 4px 0 var(--border);
-  padding: 4px;
+  background: linear-gradient(var(--window-top), var(--window-bottom));
+  border: 2px solid var(--window-edge);
+  border-radius: 10px;
+  box-shadow:
+    inset 1px 1px 0 var(--window-bevel-light),
+    inset -1px -1px 0 var(--window-bevel-dark),
+    0 3px 0 var(--window-bevel-dark);
+  padding: 5px;
 }
 .dialogue-frame-inner {
-  border: 1px solid var(--border);
+  border: 2px solid var(--window-bevel-dark);
+  border-radius: 6px;
   padding: 0.85rem 1rem;
 }
 
@@ -144,20 +215,34 @@ body {
 }
 
 .menu-item {
-  background: var(--panel);
-  border: 3px solid var(--border);
-  /* steps() rather than a smooth ease — nothing in a 90s handheld UI eased. */
-  transition: transform 60ms steps(1), box-shadow 60ms steps(1);
+  background: linear-gradient(var(--window-top), var(--window-bottom));
+  border: 2px solid var(--window-edge);
+  border-radius: 7px;
+  box-shadow:
+    inset 1px 1px 0 var(--window-bevel-light),
+    inset -1px -1px 0 var(--window-bevel-dark);
+  /* steps() rather than a smooth ease — nothing on this hardware eased. */
+  transition:
+    transform 60ms steps(1),
+    box-shadow 60ms steps(1);
 }
+/* The selected row lifts and takes an accent rim, which is how these menus
+   showed a cursor position beyond the arrow itself. */
 .menu-item:hover:not(:disabled),
 .menu-item:focus-visible {
   outline: none;
-  transform: translate(-2px, -2px);
-  box-shadow: 2px 2px 0 var(--border);
+  transform: translateY(-2px);
+  box-shadow:
+    inset 1px 1px 0 var(--window-bevel-light),
+    inset -1px -1px 0 var(--window-bevel-dark),
+    0 0 0 2px var(--accent),
+    0 3px 0 var(--window-bevel-dark);
 }
 .menu-item:active:not(:disabled) {
-  transform: translate(0, 0);
-  box-shadow: none;
+  transform: translateY(0);
+  box-shadow:
+    inset 1px 1px 0 rgba(0, 0, 0, 0.18),
+    0 0 0 2px var(--accent);
 }
 
 /* Idle bob, so a pal on screen looks alive rather than pasted on. */
@@ -174,27 +259,84 @@ body {
   }
 }
 
-/* Battle backdrop: a flat sky over a flat field, the way a two-layer
-   background looked on hardware that couldn't afford gradients. */
+/* Battle backdrop. A graded sky, a treeline, then the field — three depth
+   layers instead of the two flat bands it had before, which is the main thing
+   separating a 16-bit encounter screen from an 8-bit one. */
 .battle-scene {
-  background: linear-gradient(
-    var(--battle-sky) 0%,
-    var(--battle-sky) 62%,
-    var(--battle-ground) 62%,
-    var(--battle-ground) 100%
-  );
-  border: 4px solid var(--border);
-  box-shadow: 4px 4px 0 var(--border);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--window-edge);
+  border-radius: 10px;
+  box-shadow:
+    inset 1px 1px 0 var(--window-bevel-light),
+    0 3px 0 var(--window-bevel-dark);
+  background:
+    /* field */
+    linear-gradient(transparent 64%, var(--battle-ground) 64%),
+    /* treeline sitting on the horizon */
+    radial-gradient(
+        ellipse 90px 34px at 12% 64%,
+        var(--battle-ground-dark) 0 100%,
+        transparent 101%
+      ),
+    radial-gradient(
+        ellipse 120px 42px at 44% 64%,
+        var(--battle-ground-dark) 0 100%,
+        transparent 101%
+      ),
+    radial-gradient(
+        ellipse 100px 36px at 78% 64%,
+        var(--battle-ground-dark) 0 100%,
+        transparent 101%
+      ),
+    /* sky */ linear-gradient(var(--battle-sky-top), var(--battle-sky-bottom));
 }
 
+/* The raised ground each combatant stands on. Genre furniture — it gives the
+   sprites somewhere to be rather than floating on the field. */
+.battle-platform {
+  position: relative;
+  display: inline-block;
+}
+/* Drawn as ::before and left in normal stacking order, with the sprite lifted
+   above it. A negative z-index would drop it behind the scene's own
+   background and disappear entirely. */
+.battle-platform::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 112%;
+  height: 22px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 50% 35%,
+    var(--battle-platform) 0 60%,
+    var(--battle-platform-dark) 61% 100%
+  );
+  border: 2px solid var(--window-edge);
+}
+.battle-platform > svg {
+  position: relative;
+  z-index: 1;
+}
+
+/* Rounded, glossy meter with a highlight along the top — the flat bordered
+   bar it replaced belonged to the previous generation. */
 .hp-track {
-  background: rgba(0, 0, 0, 0.25);
-  border: 2px solid var(--border);
-  height: 0.7rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 2px solid var(--window-edge);
+  border-radius: 999px;
+  height: 0.75rem;
   overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45);
 }
 .hp-fill {
   height: 100%;
+  border-radius: 999px;
+  /* The inset white line is the gloss; without it the bar reads as flat. */
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.45);
   transition: width 420ms steps(12, end);
 }
 
@@ -245,18 +387,134 @@ body {
   }
 }
 
+/* --- Region map ----------------------------------------------------------- */
+
+.gym-map {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  border: 2px solid var(--window-edge);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow:
+    inset 1px 1px 0 var(--window-bevel-light),
+    0 3px 0 var(--window-bevel-dark);
+  /* Terrain: water at the edges, landmass in the middle, with a couple of
+     wooded patches. All gradients — no tiles to load. */
+  background:
+    radial-gradient(
+        ellipse 30% 26% at 22% 22%,
+        var(--map-forest) 0 100%,
+        transparent 101%
+      ),
+    radial-gradient(
+        ellipse 26% 22% at 74% 78%,
+        var(--map-forest) 0 100%,
+        transparent 101%
+      ),
+    radial-gradient(
+        ellipse 78% 68% at 50% 50%,
+        var(--map-land) 0 100%,
+        transparent 101%
+      ),
+    var(--map-water);
+}
+
+@media (min-width: 640px) {
+  .gym-map {
+    height: 480px;
+  }
+}
+
+.gym-map-route {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.gym-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.gym-marker-hit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--foreground);
+  transition:
+    transform 70ms steps(1),
+    box-shadow 70ms steps(1);
+}
+a.gym-marker-hit:hover,
+a.gym-marker-hit:focus-visible {
+  outline: none;
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.gym-marker-locked {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.gym-marker-label {
+  text-align: center;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: linear-gradient(var(--window-top), var(--window-bottom));
+  border: 2px solid var(--window-edge);
+  white-space: nowrap;
+}
+
+/* The pinned route and the cleared route both need to read at a glance, so
+   they are badges on the marker rather than a colour change. */
+.gym-flag,
+.gym-clear {
+  position: absolute;
+  top: -2px;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  line-height: 1;
+  border-radius: 50%;
+  border: 2px solid var(--window-edge);
+}
+.gym-flag {
+  right: -4px;
+  background: var(--warning);
+  color: #2a1c00;
+}
+.gym-clear {
+  left: -4px;
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
 /* --- START button and sign-in prompt -------------------------------------- */
 
 /* The one control the landing page is built around, so it gets a heavier
    border and a slow pulse to pull the eye. */
 .start-button {
-  border-width: 4px;
-  box-shadow: 5px 5px 0 var(--border);
+  border-width: 2px;
+  box-shadow:
+    inset 1px 2px 0 rgba(255, 255, 255, 0.5),
+    inset -1px -3px 0 rgba(0, 0, 0, 0.3),
+    0 5px 0 var(--window-bevel-dark),
+    0 7px 10px rgba(0, 0, 0, 0.3);
   animation: start-pulse 2.4s ease-in-out infinite;
 }
 .start-button:active {
-  transform: translate(5px, 5px);
-  box-shadow: 0 0 0 var(--border);
+  transform: translateY(5px);
+  box-shadow:
+    inset 1px 1px 0 rgba(0, 0, 0, 0.25),
+    0 0 0 var(--window-bevel-dark);
 }
 @keyframes start-pulse {
   0%,
@@ -272,10 +530,17 @@ body {
    sets its own colours rather than inheriting theme ones — `--foreground` is
    near-white in dark mode and would vanish against it. */
 .hero-copy {
-  background: rgba(244, 241, 232, 0.92);
-  color: #1c1a12;
-  border: 3px solid #1c1a12;
-  box-shadow: 3px 3px 0 #1c1a12;
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.95),
+    rgba(223, 234, 245, 0.95)
+  );
+  color: #172438;
+  border: 2px solid #21354f;
+  border-radius: 10px;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.9),
+    inset -1px -1px 0 rgba(120, 140, 165, 0.7),
+    0 3px 0 rgba(33, 53, 79, 0.55);
   max-width: 34rem;
 }
 
@@ -300,17 +565,27 @@ body {
   position: relative;
   overflow: hidden;
   height: 260px;
-  border: 4px solid var(--border);
-  box-shadow: 4px 4px 0 var(--border);
-  background: linear-gradient(#7fc8f0 0%, #a9dcf5 55%, #cfeaf7 70%);
+  border: 2px solid var(--window-edge);
+  border-radius: 10px;
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.5),
+    0 3px 0 var(--window-bevel-dark);
+  /* A four-stop sky rather than two: deep at the top fading to haze at the
+     horizon, which is what gives the scene depth. */
+  background: linear-gradient(
+    #3f9fd8 0%,
+    #63b7e8 34%,
+    #a5d9f2 68%,
+    #d8eefb 100%
+  );
 
   /* This scene is daylight in both themes, so pin the outline colour dark
      for everything inside it. The variable is otherwise theme-flipped, which
-     would give the runner, the sun, and the road edge a cream outline in dark
+     would give the runner, the sun, and the road edge a light outline in dark
      mode — washed out against a sky that stayed blue. Scoping it here reaches
      the sprite too, since PixelSprite resolves its outline from this same
      variable. */
-  --sprite-outline: #1c1a12;
+  --sprite-outline: #21354f;
 }
 
 @media (min-width: 640px) {
@@ -356,27 +631,35 @@ body {
 }
 
 /* A rolling green horizon behind the road. */
+/* Two ranges at different tones so the horizon has depth rather than reading
+   as one cut-out silhouette. */
 .hero-hills {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 78px;
-  height: 70px;
+  height: 90px;
   background:
-    radial-gradient(ellipse 140px 60px at 18% 100%, #6fbf5f 0 100%, transparent 101%),
-    radial-gradient(ellipse 180px 74px at 52% 100%, #5faf50 0 100%, transparent 101%),
-    radial-gradient(ellipse 150px 58px at 86% 100%, #6fbf5f 0 100%, transparent 101%),
-    linear-gradient(transparent 60%, #7ecb6a 60%);
+    radial-gradient(ellipse 170px 54px at 30% 100%, #4f8f6a 0 100%, transparent 101%),
+    radial-gradient(ellipse 200px 62px at 72% 100%, #4f8f6a 0 100%, transparent 101%),
+    radial-gradient(ellipse 140px 60px at 18% 100%, #77c95f 0 100%, transparent 101%),
+    radial-gradient(ellipse 180px 74px at 52% 100%, #64b84e 0 100%, transparent 101%),
+    radial-gradient(ellipse 150px 58px at 86% 100%, #77c95f 0 100%, transparent 101%),
+    linear-gradient(transparent 66%, #86d16d 66%);
 }
 
+/* A verge strip between the grass and the tarmac, then the road itself with a
+   lit top edge — the flat grey slab it replaced had no depth at all. */
 .hero-road {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
   height: 78px;
-  background: #6b6f76;
-  border-top: 4px solid var(--sprite-outline);
+  background:
+    linear-gradient(#caa46a 0 6px, transparent 6px),
+    linear-gradient(#7c828c 0%, #5f656e 40%, #4d525a 100%);
+  border-top: 2px solid var(--sprite-outline);
 }
 
 /* Centre markings. The dashes are a repeating gradient, so scrolling is one

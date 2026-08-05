@@ -13,8 +13,16 @@ import {
   getFlashcardProgress,
   setFlashcardStatus,
   useFlashcardProgress,
+  useLearningEvents,
+  recordLearningEvent,
 } from "@/lib/storage";
-import { saveFlashcardStatusToDb } from "@/lib/actions";
+import {
+  buildEvent,
+  buildCardSchedules,
+  orderDeckBySchedule,
+  countDueCards,
+} from "@/lib/learning";
+import { saveFlashcardStatusToDb, saveLearningEventToDb } from "@/lib/actions";
 import type { FlashcardStatus } from "@/lib/types";
 
 export default function FlashcardsClient({ examCode }: { examCode: string }) {
@@ -30,17 +38,37 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
   const [flipped, setFlipped] = useState(false);
 
   const progress = useFlashcardProgress();
+  const events = useLearningEvents();
 
+  const schedules = useMemo(
+    () => buildCardSchedules(events, progress, examCode),
+    [events, progress, examCode],
+  );
+
+  /**
+   * Shuffle first, then order by schedule — so due cards lead, unseen cards
+   * follow, and rested cards trail, but the order within each group still
+   * varies run to run.
+   *
+   * Cards that aren't due are kept rather than filtered out. Running out of
+   * deck entirely is a worse experience than an easy review, especially on a
+   * bank this size.
+   */
   const deck = useMemo(() => {
     let pool = getFlashcardsByDomain(examCode, domainFilter);
     if (onlyLearning) {
       const snapshot = getFlashcardProgress();
       pool = pool.filter((c) => snapshot[c.id] !== "known");
     }
-    return shuffle(pool);
+    return orderDeckBySchedule(shuffle(pool), schedules);
     // shuffleSeed is a nonce used only to force a fresh shuffle on demand
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [examCode, domainFilter, onlyLearning, shuffleSeed]);
+  }, [examCode, domainFilter, onlyLearning, shuffleSeed, schedules]);
+
+  const dueCount = useMemo(
+    () => countDueCards(getFlashcardsByDomain(examCode, domainFilter), schedules),
+    [examCode, domainFilter, schedules],
+  );
 
   const card = deck[position];
 
@@ -74,11 +102,26 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
   function mark(status: FlashcardStatus) {
     if (!card) return;
     setFlashcardStatus(card.id, status);
+
+    // Recorded as an event, not as a third status. `mergeRemoteProgress`
+    // resolves flashcard conflicts as "known wins", so a demotion written to
+    // the status map would be silently swallowed on the next sync. The log
+    // sidesteps that rule rather than fighting it, and unlike the map it can
+    // count repeat reviews — which is what makes them worth XP at all.
+    const event = buildEvent("cardReview", examCode, card.id);
+    const isNew = recordLearningEvent(event);
+
     if (sessionStatus === "authenticated") {
       saveFlashcardStatusToDb(examCode, card.id, status).catch((err) =>
         console.error("Failed to sync flashcard progress to account", err),
       );
+      if (isNew) {
+        saveLearningEventToDb(event).catch((err) =>
+          console.error("Failed to sync review event to account", err),
+        );
+      }
     }
+
     setFlipped(false);
     setPosition((p) => p + 1);
   }
@@ -136,6 +179,11 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
 
         <span className="pb-2 text-sm text-[var(--foreground-muted)]">
           Known: {knownCount}/{totalInDomain}
+          {dueCount > 0 && (
+            <span className="ml-2 text-[var(--accent)]">
+              · {dueCount} due
+            </span>
+          )}
         </span>
       </div>
 

@@ -3,13 +3,13 @@
  *
  * Sprites are authored as character matrices rather than image files: no
  * asset pipeline, they re-colour per theme, and they scale to any size
- * without blurring. This module holds the plumbing; the actual creatures
- * live in `pals.ts` and the landing-page runner in `heroSprites.ts`.
+ * without blurring. This module holds the plumbing; the creatures live in
+ * `pals.ts` and the trainer and map pieces in `heroSprites.ts`.
  */
 
-export const SPRITE_SIZE = 16;
-
 export type SpriteMatrix = readonly string[];
+
+export type SpriteSize = { width: number; height: number };
 
 export type SpritePalette = {
   /** Dark shade, used for shading and undersides. */
@@ -22,29 +22,39 @@ export type SpritePalette = {
   d: string;
   /** Crest, flame, fin, leaf, or other accent. */
   e: string;
+  /** Extra accent — straps, trim, roof tiles. */
+  f?: string;
+  /** Extra light — shoes, windows, highlights. */
+  g?: string;
 };
 
 /**
- * Fails loudly on a miscounted row. These matrices are hand-authored, and a
- * row that is 15 or 17 characters long renders as a subtly sheared sprite
- * that is genuinely hard to spot by eye — much easier to catch here.
+ * Fails loudly on a ragged matrix. These are hand-authored, and a row one
+ * character short renders as a subtly sheared sprite that is genuinely hard
+ * to spot by eye — much easier to catch here.
+ *
+ * Dimensions come from the data rather than a fixed constant, so a 24x24
+ * trainer and a 16x16 creature can coexist.
  */
 export function sprite(name: string, rows: readonly string[]): SpriteMatrix {
   if (process.env.NODE_ENV !== "production") {
-    if (rows.length !== SPRITE_SIZE) {
-      throw new Error(
-        `Sprite "${name}" has ${rows.length} rows, expected ${SPRITE_SIZE}`,
-      );
+    if (rows.length === 0) {
+      throw new Error(`Sprite "${name}" has no rows`);
     }
+    const width = rows[0].length;
     rows.forEach((row, i) => {
-      if (row.length !== SPRITE_SIZE) {
+      if (row.length !== width) {
         throw new Error(
-          `Sprite "${name}" row ${i} is ${row.length} chars, expected ${SPRITE_SIZE}`,
+          `Sprite "${name}" row ${i} is ${row.length} chars, expected ${width} (row 0's width)`,
         );
       }
     });
   }
   return rows;
+}
+
+export function spriteSize(matrix: SpriteMatrix): SpriteSize {
+  return { width: matrix[0]?.length ?? 0, height: matrix.length };
 }
 
 /**

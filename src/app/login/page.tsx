@@ -33,7 +33,7 @@ export default async function LoginPage({
   // Already signed in? There's nothing to do here.
   const session = await auth();
   if (session?.user?.id) {
-    redirect(session.user.examPal ? returnTo : "/choose-pal");
+    redirect(session.user.examPal ? returnTo : "/setup");
   }
 
   const errorMessage = error

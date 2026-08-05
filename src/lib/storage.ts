@@ -1,9 +1,10 @@
 import { useSyncExternalStore } from "react";
-import type { QuizAttempt, FlashcardStatus } from "./types";
+import type { QuizAttempt, FlashcardStatus, LearningEvent } from "./types";
 
 const QUIZ_KEY = "examready-quiz-attempts";
 const FLASHCARD_KEY = "examready-flashcard-progress";
 const ACTIVITY_KEY = "examready-activity-dates";
+const LEARNING_KEY = "examready-learning-events";
 
 type FlashcardProgress = Record<string, FlashcardStatus>;
 
@@ -81,6 +82,19 @@ function getActivityDatesServerSnapshot(): string[] {
   return EMPTY_ACTIVITY_DATES;
 }
 
+const EMPTY_LEARNING_EVENTS: LearningEvent[] = [];
+let learningEventsCache: LearningEvent[] | null = null;
+function getLearningEventsSnapshot(): LearningEvent[] {
+  learningEventsCache ??= readJSON<LearningEvent[]>(
+    LEARNING_KEY,
+    EMPTY_LEARNING_EVENTS,
+  );
+  return learningEventsCache;
+}
+function getLearningEventsServerSnapshot(): LearningEvent[] {
+  return EMPTY_LEARNING_EVENTS;
+}
+
 export function useQuizAttempts(): QuizAttempt[] {
   return useSyncExternalStore(
     subscribe,
@@ -105,10 +119,42 @@ export function useActivityDates(): string[] {
   );
 }
 
+export function useLearningEvents(): LearningEvent[] {
+  return useSyncExternalStore(
+    subscribe,
+    getLearningEventsSnapshot,
+    getLearningEventsServerSnapshot,
+  );
+}
+
 // Non-reactive snapshot readers, for use inside computations (e.g. useMemo)
 // and one-off sync calls that should not re-run every time progress changes.
 export function getFlashcardProgress(): FlashcardProgress {
   return getFlashcardProgressSnapshot();
+}
+
+export function getLearningEventsForSync(): LearningEvent[] {
+  return getLearningEventsSnapshot();
+}
+
+/**
+ * Appends a learning event, ignoring one whose id has already been seen.
+ *
+ * Ids are deterministic and day-scoped, so this is both the idempotency guard
+ * and the anti-farm rule: finishing the same lesson twice in one day records
+ * once. Returns whether anything was actually written, so callers can decide
+ * whether to also fire a server sync.
+ */
+export function recordLearningEvent(event: LearningEvent): boolean {
+  const existing = getLearningEventsSnapshot();
+  if (existing.some((e) => e.id === event.id)) return false;
+
+  const updated = [...existing, event];
+  learningEventsCache = updated;
+  writeJSON(LEARNING_KEY, updated);
+  recordActivity();
+  emitChange();
+  return true;
 }
 
 export function getQuizAttemptsForSync(): QuizAttempt[] {
@@ -150,6 +196,7 @@ export function setFlashcardStatus(id: string, status: FlashcardStatus): void {
 export function mergeRemoteProgress(remote: {
   attempts: QuizAttempt[];
   flashcards: FlashcardProgress;
+  events?: LearningEvent[];
 }): void {
   const byId = new Map<string, QuizAttempt>();
   for (const a of getQuizAttemptsSnapshot()) byId.set(a.id, a);
@@ -172,13 +219,30 @@ export function mergeRemoteProgress(remote: {
     mergedDates.add(`${d.getFullYear()}-${month}-${day}`);
   }
 
+  // Learning events dedupe on their deterministic id, exactly like attempts.
+  // `remote.events` is optional so a stale server payload can't crash the
+  // merge for a client that has already shipped this field.
+  const byEventId = new Map<string, LearningEvent>();
+  for (const e of getLearningEventsSnapshot()) byEventId.set(e.id, e);
+  for (const e of remote.events ?? []) byEventId.set(e.id, e);
+  const mergedEvents = [...byEventId.values()].sort((a, b) => a.at - b.at);
+
+  for (const e of mergedEvents) {
+    const d = new Date(e.at);
+    const month = `${d.getMonth() + 1}`.padStart(2, "0");
+    const day = `${d.getDate()}`.padStart(2, "0");
+    mergedDates.add(`${d.getFullYear()}-${month}-${day}`);
+  }
+
   quizAttemptsCache = mergedAttempts;
   flashcardProgressCache = mergedCards;
   activityDatesCache = [...mergedDates].sort();
+  learningEventsCache = mergedEvents;
 
   writeJSON(QUIZ_KEY, quizAttemptsCache);
   writeJSON(FLASHCARD_KEY, flashcardProgressCache);
   writeJSON(ACTIVITY_KEY, activityDatesCache);
+  writeJSON(LEARNING_KEY, learningEventsCache);
   emitChange();
 }
 
@@ -186,10 +250,14 @@ export function resetAllProgress(): void {
   quizAttemptsCache = [];
   flashcardProgressCache = {};
   activityDatesCache = [];
+  // Miss this one and "reset" leaves lesson history behind, which the next
+  // sync then pushes back up — the reset silently undoes itself.
+  learningEventsCache = [];
   if (typeof window !== "undefined") {
     window.localStorage.removeItem(QUIZ_KEY);
     window.localStorage.removeItem(FLASHCARD_KEY);
     window.localStorage.removeItem(ACTIVITY_KEY);
+    window.localStorage.removeItem(LEARNING_KEY);
   }
   emitChange();
 }
