@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getCatalogEntry, getExamContent } from "@/lib/content";
 import { getDisplayTier, getRetroLabel } from "@/lib/levels";
 import { requireTrainer } from "@/lib/session";
+import ReviewCallout from "@/components/ReviewCallout";
 
 // No generateStaticParams: these routes are behind a session check now, so
 // they render per request and can't be prerendered at build time.
@@ -87,6 +88,8 @@ export default async function ExamOverviewPage({
 
       {exam.hasContent && content && (
         <>
+          <ReviewCallout examCode={exam.code} />
+
           <section>
             <h2 className="mb-4 font-pixel text-sm">Skills areas</h2>
             <div className="grid gap-3 sm:grid-cols-2">
@@ -98,6 +101,18 @@ export default async function ExamOverviewPage({
                       {domain.weight}
                     </span>
                   </div>
+                  {/* subtopics have been authored in every outline file since
+                      the start and rendered nowhere until now. */}
+                  {domain.subtopics.length > 0 && (
+                    <ul className="mt-2 flex flex-col gap-1 text-xs text-[var(--foreground-muted)]">
+                      {domain.subtopics.map((subtopic) => (
+                        <li key={subtopic} className="flex gap-2">
+                          <span aria-hidden="true">·</span>
+                          <span>{subtopic}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               ))}
             </div>
@@ -124,6 +139,12 @@ export default async function ExamOverviewPage({
               className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-sm font-medium"
             >
               Review flashcards
+            </Link>
+            <Link
+              href={`/exams/${exam.code}/gym`}
+              className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-sm font-medium"
+            >
+              Challenge the gym
             </Link>
             <Link
               href={`/exams/${exam.code}/progress`}

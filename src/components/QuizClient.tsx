@@ -1,13 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   getExamContent,
   getQuestionsByDomain,
   getDomainName,
+  studyHrefForQuestion,
+  teachingLabelForQuestion,
 } from "@/lib/content";
 import { shuffle } from "@/lib/shuffle";
+import { selectReviewQuestions, getReviewSummary } from "@/lib/review";
 import { saveQuizAttempt } from "@/lib/storage";
 import { saveQuizAttemptToDb } from "@/lib/actions";
 import {
@@ -22,12 +26,19 @@ import { computeXp, computeLevel } from "@/lib/gamification";
 import { usePreferences } from "@/lib/preferences";
 import PixelSprite from "@/components/PixelSprite";
 import MenuList, { type MenuOption } from "@/components/MenuList";
-import { DialogueFrame } from "@/components/DialogueBox";
+import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
 import type { Question, QuizResultEntry } from "@/lib/types";
 
 const COUNT_OPTIONS = [5, 10, 20, "all"] as const;
 const FEEDBACK_EMAIL = "qcseak@gmail.com";
+
+/**
+ * Sentinel stored in `QuizAttempt.domainFilter` for a review run. Safe because
+ * nothing reads that field back — it is written for the record and never
+ * branched on.
+ */
+const REVIEW_FILTER = "review";
 
 /**
  * Battle maths.
@@ -122,7 +133,17 @@ export default function QuizClient({
   const stage = stageForLevel(palType, level);
   const palName = palNickname ?? stage.name;
 
-  const initialDomain = searchParams.get("domain") ?? "all";
+  // `?mode=review` deep-links straight into the review deck, matching the
+  // existing `?domain=` seam used by the study guide's practice links.
+  const initialDomain =
+    searchParams.get("mode") === "review"
+      ? REVIEW_FILTER
+      : (searchParams.get("domain") ?? "all");
+
+  const reviewSummary = useMemo(
+    () => getReviewSummary(examCode, allAttempts),
+    [examCode, allAttempts],
+  );
 
   const [phase, setPhase] = useState<Phase>("setup");
   const [domainFilter, setDomainFilter] = useState<string>(initialDomain);
@@ -161,16 +182,31 @@ export default function QuizClient({
     return () => clearTimeout(id);
   }, [hitTarget]);
 
-  const availableCount = getQuestionsByDomain(examCode, domainFilter).length;
+  const availableCount =
+    domainFilter === REVIEW_FILTER
+      ? reviewSummary.dueCount
+      : getQuestionsByDomain(examCode, domainFilter).length;
 
   // Not memoized: it is only ever called from a click handler, and wrapping it
   // opted the whole component out of the React Compiler's optimization.
-  function startBattle() {
-    const pool = shuffle(getQuestionsByDomain(examCode, domainFilter));
-    const n =
-      countChoice === "all"
-        ? pool.length
-        : Math.min(countChoice, pool.length);
+  //
+  // `only` runs a battle against a specific set — used by the redemption round,
+  // which re-fights exactly the questions just missed.
+  function startBattle(only?: Question[]) {
+    const wanted =
+      countChoice === "all" ? Number.MAX_SAFE_INTEGER : countChoice;
+
+    let pool: Question[];
+    if (only) {
+      pool = shuffle(only);
+    } else if (domainFilter === REVIEW_FILTER) {
+      // Weighted by what the trainer keeps getting wrong, not by chance.
+      pool = selectReviewQuestions(examCode, allAttempts, wanted);
+    } else {
+      pool = shuffle(getQuestionsByDomain(examCode, domainFilter));
+    }
+
+    const n = only ? pool.length : Math.min(wanted, pool.length);
 
     setActiveQuestions(pool.slice(0, n));
     setIndex(0);
@@ -225,6 +261,8 @@ export default function QuizClient({
         questionId: question.id,
         domain: question.domain,
         correct: isCorrect,
+        chosenIndex: optionIndex,
+        at: Date.now(),
       },
     ];
 
@@ -248,6 +286,8 @@ export default function QuizClient({
     setTurn("resolved");
     setHitTarget(isCorrect ? "foe" : "pal");
     playSfx(isCorrect ? "correct" : "wrong");
+    // A miss costs health, so it should land like one.
+    if (!isCorrect) playSfx("damage");
   }
 
   function advance() {
@@ -269,14 +309,32 @@ export default function QuizClient({
   }
 
   const foeName =
-    domainFilter === "all"
-      ? `WILD ${examCode.toUpperCase()}`
-      : `WILD ${getDomainName(examCode, domainFilter).toUpperCase()}`;
+    domainFilter === REVIEW_FILTER
+      ? "YOUR WEAK SPOTS"
+      : domainFilter === "all"
+        ? `WILD ${examCode.toUpperCase()}`
+        : `WILD ${getDomainName(examCode, domainFilter).toUpperCase()}`;
 
   // --- Setup ---------------------------------------------------------------
 
   if (phase === "setup") {
     const domainOptions: MenuOption[] = [
+      // Pinned above everything else: if there is work waiting, that is the
+      // route worth taking.
+      {
+        id: REVIEW_FILTER,
+        label:
+          reviewSummary.dueCount > 0
+            ? `⚠ Review — ${reviewSummary.dueCount} question${reviewSummary.dueCount === 1 ? "" : "s"} due`
+            : "Review — nothing due yet",
+        hint:
+          domainFilter === REVIEW_FILTER
+            ? "◀ selected"
+            : reviewSummary.dueCount === 0
+              ? "Battle a route first"
+              : undefined,
+        disabled: reviewSummary.dueCount === 0,
+      },
       {
         id: "all",
         label: "All skills areas",
@@ -332,7 +390,7 @@ export default function QuizClient({
         </section>
 
         <button
-          onClick={startBattle}
+          onClick={() => startBattle()}
           disabled={availableCount === 0}
           className="pixel-button w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)] disabled:opacity-50"
         >
@@ -347,6 +405,10 @@ export default function QuizClient({
   if (phase === "battle") {
     const question = activeQuestions[index];
     const isCorrect = selected === question.correctIndex;
+
+    // Opens in a new tab on purpose: reading mid-battle should not cost the run.
+    const studyHref = studyHrefForQuestion(question);
+    const teachingLabel = teachingLabelForQuestion(question);
 
     const mailtoHref = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(
       `ExamReady question flag: ${question.id}`,
@@ -364,14 +426,26 @@ export default function QuizClient({
       return { id: String(i), label: option, tone };
     });
 
-    let message: string;
-    if (turn === "asking") {
-      message = question.question;
-    } else if (isCorrect) {
-      message = `${palName} used ${species.move}! It's super effective!`;
-    } else {
-      message = `${palName}'s answer missed! ${foeName} struck back!`;
-    }
+    /**
+     * The teaching beat.
+     *
+     * On a miss this walks: what happened → why the right answer is right →
+     * why the one you picked isn't. Spoken by your pal rather than narrated
+     * at you, because being corrected by a companion lands differently from
+     * being marked by a grader.
+     */
+    const resolvedLines: string[] = isCorrect
+      ? [
+          `${palName} used ${species.move}! It's super effective!`,
+          question.explanation,
+        ]
+      : [
+          `${palName}'s answer missed! ${foeName} struck back!`,
+          `The move that lands here is "${question.options[question.correctIndex]}". ${question.explanation}`,
+          selected !== null
+            ? `"${question.options[selected]}" looked right, but it isn't what the question was asking for. Worth remembering — this one catches people out.`
+            : "Take a moment with that one before pressing on.",
+        ];
 
     return (
       <div className="flex flex-col gap-4">
@@ -392,9 +466,9 @@ export default function QuizClient({
           <div className="flex items-start justify-between gap-4">
             <HpBar label={foeName} current={foeHp} max={foeMaxHp} />
             <div
-              className={
+              className={`battle-platform ${
                 hitTarget === "foe" && !prefs.reducedMotion ? "sprite-hit" : ""
-              }
+              }`}
             >
               <PixelSprite
                 sprite={GLITCHLING}
@@ -408,13 +482,13 @@ export default function QuizClient({
           {/* Yours: sprite left facing the opponent, bar right */}
           <div className="flex items-end justify-between gap-4">
             <div
-              className={
+              className={`battle-platform ${
                 hitTarget === "pal" && !prefs.reducedMotion
                   ? "sprite-hit"
                   : prefs.reducedMotion
                     ? ""
                     : "pal-idle"
-              }
+              }`}
             >
               <PixelSprite
                 sprite={stage.sprite}
@@ -433,27 +507,51 @@ export default function QuizClient({
           </div>
         </div>
 
-        {/* The question, or what just happened */}
-        <DialogueFrame>
-          <p className="text-sm leading-relaxed" aria-live="polite">
-            {message}
-          </p>
-          {turn === "resolved" && (
-            <p className="mt-2 text-sm text-[var(--foreground-muted)]">
-              {question.explanation}
-            </p>
-          )}
-        </DialogueFrame>
-
         {turn === "asking" ? (
-          <MenuList
-            ariaLabel="Choose your answer"
-            columns={2}
-            options={answerOptions}
-            onSelect={(id) => answer(Number(id))}
-          />
+          <>
+            <DialogueFrame>
+              <p className="text-sm leading-relaxed" aria-live="polite">
+                {question.question}
+              </p>
+            </DialogueFrame>
+
+            <MenuList
+              ariaLabel="Choose your answer"
+              columns={2}
+              options={answerOptions}
+              onSelect={(id) => answer(Number(id))}
+            />
+          </>
         ) : (
           <>
+            {/* The advance controls are the DialogueBox's `footer`, which it
+                renders only once the final line has been read. That is what
+                makes this a teaching beat rather than a footnote: there is no
+                "Next" to press until the explanation has actually been seen. */}
+            <DialogueBox
+              key={question.id}
+              speaker={palName.toUpperCase()}
+              lines={resolvedLines}
+              footer={
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <a
+                    href={studyHref}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
+                  >
+                    Read “{teachingLabel}” ↗
+                  </a>
+                  <button
+                    onClick={advance}
+                    className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2 text-sm font-medium text-[var(--accent-foreground)]"
+                  >
+                    {outcome ? "See results ▶" : "Next ▶"}
+                  </button>
+                </div>
+              }
+            />
+
             <MenuList
               ariaLabel="Answer review"
               columns={2}
@@ -461,21 +559,13 @@ export default function QuizClient({
               onSelect={() => {}}
               disabled
             />
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <a
-                href={mailtoHref}
-                className="text-xs underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
-              >
-                Report an issue with this question
-              </a>
-              <button
-                onClick={advance}
-                autoFocus
-                className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2 text-sm font-medium text-[var(--accent-foreground)]"
-              >
-                {outcome ? "See results ▶" : "Next ▶"}
-              </button>
-            </div>
+
+            <a
+              href={mailtoHref}
+              className="text-xs underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
+            >
+              Report an issue with this question
+            </a>
           </>
         )}
 
@@ -489,9 +579,13 @@ export default function QuizClient({
   // --- Results -------------------------------------------------------------
 
   const answered = results.length;
-  const missed = activeQuestions
-    .slice(0, answered)
-    .filter((_, i) => !results[i]?.correct);
+  // Keyed on questionId rather than array position. The two agree today, but
+  // pairing a question with someone's score by index is the kind of thing that
+  // silently mismatches the moment anything reorders.
+  const missedIds = new Set(
+    results.filter((r) => !r.correct).map((r) => r.questionId),
+  );
+  const missed = activeQuestions.filter((q) => missedIds.has(q.id));
   const pct = answered === 0 ? 0 : Math.round((correctCount / answered) * 100);
 
   const HEADLINE: Record<Outcome, string> = {
@@ -536,6 +630,25 @@ export default function QuizClient({
       {missed.length > 0 && (
         <div className="flex flex-col gap-4">
           <h2 className="font-pixel text-sm">Review missed questions</h2>
+
+          {/* The whole point of the results screen: turn a list of failures
+              into somewhere to go. Previously this block rendered no links at
+              all, so a missed question was simply a dead end. */}
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => startBattle(missed)}
+              className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)]"
+            >
+              Redemption round ({missed.length}) ▶
+            </button>
+            <Link
+              href={`/exams/${examCode}/study`}
+              className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-sm font-medium"
+            >
+              Study these topics
+            </Link>
+          </div>
+
           {missed.map((q) => (
             <div key={q.id} className="pixel-panel p-4 text-sm">
               <p className="font-medium">{q.question}</p>
@@ -545,6 +658,12 @@ export default function QuizClient({
               <p className="mt-1 text-[var(--foreground-muted)]">
                 {q.explanation}
               </p>
+              <Link
+                href={studyHrefForQuestion(q)}
+                className="mt-2 inline-block text-xs underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
+              >
+                Read “{teachingLabelForQuestion(q)}” →
+              </Link>
             </div>
           ))}
         </div>
@@ -552,7 +671,7 @@ export default function QuizClient({
 
       <div className="flex flex-wrap gap-3">
         <button
-          onClick={startBattle}
+          onClick={() => startBattle()}
           className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)]"
         >
           Battle again

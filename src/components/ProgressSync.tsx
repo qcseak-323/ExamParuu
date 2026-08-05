@@ -7,6 +7,7 @@ import {
   mergeRemoteProgress,
   getQuizAttemptsForSync,
   getFlashcardProgress,
+  getLearningEventsForSync,
 } from "@/lib/storage";
 
 /**
@@ -25,7 +26,11 @@ export default function ProgressSync() {
     syncedFor.current = userId;
 
     let cancelled = false;
-    syncProgressWithDb(getQuizAttemptsForSync(), getFlashcardProgress())
+    syncProgressWithDb(
+      getQuizAttemptsForSync(),
+      getFlashcardProgress(),
+      getLearningEventsForSync(),
+    )
       .then((remote) => {
         if (!cancelled) mergeRemoteProgress(remote);
       })

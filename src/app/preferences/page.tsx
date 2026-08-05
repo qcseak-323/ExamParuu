@@ -6,7 +6,7 @@ export const metadata = { title: "Preferences — ExamReady" };
 export default async function PreferencesPage() {
   // requireUser, not requireTrainer: a trainer who hasn't picked a starter yet
   // should still be able to reach accessibility and sound settings.
-  await requireUser("/preferences");
+  const user = await requireUser("/preferences");
 
-  return <PreferencesClient />;
+  return <PreferencesClient email={user.email} />;
 }

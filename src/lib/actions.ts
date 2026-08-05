@@ -2,12 +2,14 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { findFlashcardExamCode } from "@/lib/content";
+import { findFlashcardExamCode, getCatalogEntry } from "@/lib/content";
 import { isPalType, type PalType } from "@/lib/pals";
+import { isExpertiseLevel } from "@/lib/profile";
 import type {
   QuizAttempt,
   QuizResultEntry,
   FlashcardStatus,
+  LearningEvent,
   RemoteProgress,
 } from "./types";
 
@@ -18,29 +20,45 @@ import type {
 
 const MAX_NICKNAME_LENGTH = 14;
 
+export type ProfileSetupInput = {
+  palType: PalType;
+  nickname: string | null;
+  expertise: string;
+  priorityExam: string;
+};
+
 /**
- * Records the trainer's starter. Refuses to overwrite an existing choice —
- * the starter-select screen is a one-time event, and letting a stray call
- * swap someone's pal out from under them would be worse than a no-op.
+ * Writes the answers from first-run setup.
  *
- * Returns an error string rather than throwing so the client can show it
- * inside the dialogue box instead of blowing up the screen.
+ * Everything lands in one update at the end of the flow rather than per step.
+ * A trainer who abandons setup halfway therefore has no profile at all and
+ * gets the whole flow again next time, instead of being let into the app with
+ * a starter but no route — which the guard would read as "already set up".
+ *
+ * Returns an error string rather than throwing so the client can show it in
+ * the dialogue box instead of blowing up the screen.
  */
-export async function chooseExamPal(
-  type: PalType,
-  nickname: string | null,
+export async function completeProfileSetup(
+  input: ProfileSetupInput,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) return { ok: false, error: "You need to be signed in." };
 
-  // Never trust the client for this: it decides what the rest of the app
-  // renders, and an unrecognised value would break every sprite lookup.
-  if (!isPalType(type)) {
+  // Never trust the client for these: the pal decides what every sprite
+  // lookup renders, and an unrecognised exam code would point the whole
+  // profile at content that doesn't exist.
+  if (!isPalType(input.palType)) {
     return { ok: false, error: "That isn't one of the three starters." };
   }
+  if (!isExpertiseLevel(input.expertise)) {
+    return { ok: false, error: "Pick one of the experience levels." };
+  }
+  if (!getCatalogEntry(input.priorityExam)) {
+    return { ok: false, error: "That isn't an exam we cover." };
+  }
 
-  const trimmed = nickname?.trim() ?? "";
+  const trimmed = input.nickname?.trim() ?? "";
   if (trimmed.length > MAX_NICKNAME_LENGTH) {
     return {
       ok: false,
@@ -48,11 +66,16 @@ export async function chooseExamPal(
     };
   }
 
-  // Conditional update: only writes where no starter has been chosen yet, so
-  // a double-submit or a replayed request can't reassign an existing pal.
+  // Conditional update: only writes where setup hasn't happened yet, so a
+  // double-submit or replayed request can't reassign an existing profile.
   const result = await prisma.user.updateMany({
     where: { id: userId, examPal: null },
-    data: { examPal: type, examPalName: trimmed || null },
+    data: {
+      examPal: input.palType,
+      examPalName: trimmed || null,
+      expertise: input.expertise,
+      priorityExam: input.priorityExam,
+    },
   });
 
   if (result.count === 0) {
@@ -60,10 +83,10 @@ export async function chooseExamPal(
       where: { id: userId },
       select: { examPal: true },
     });
-    // Already had one: treat as success so a duplicate submit still lands the
+    // Already set up: treat as success so a duplicate submit still lands the
     // trainer in the app rather than on an error screen.
     if (existing?.examPal) return { ok: true };
-    return { ok: false, error: "Couldn't save your choice. Try again." };
+    return { ok: false, error: "Couldn't save your profile. Try again." };
   }
 
   return { ok: true };
@@ -115,10 +138,27 @@ export async function saveFlashcardStatusToDb(
 export async function syncProgressWithDb(
   localAttempts: QuizAttempt[],
   localFlashcards: Record<string, FlashcardStatus>,
+  localEvents: LearningEvent[] = [],
 ): Promise<RemoteProgress> {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { attempts: [], flashcards: {} };
+  if (!userId) return { attempts: [], flashcards: {}, events: [] };
+
+  if (localEvents.length > 0) {
+    // Deterministic client ids plus the unique constraint make this safe to
+    // replay: duplicates are dropped rather than stacking up.
+    await prisma.learningEvent.createMany({
+      data: localEvents.map((e) => ({
+        userId,
+        clientId: e.id,
+        examCode: e.examCode,
+        kind: e.kind,
+        refId: e.refId,
+        at: new Date(e.at),
+      })),
+      skipDuplicates: true,
+    });
+  }
 
   if (localAttempts.length > 0) {
     await prisma.quizAttempt.createMany({
@@ -180,20 +220,27 @@ export async function clearProgressInDb(): Promise<void> {
   await prisma.$transaction([
     prisma.quizAttempt.deleteMany({ where: { userId } }),
     prisma.flashcardProgress.deleteMany({ where: { userId } }),
+    // Lesson history has to go too, or the next sync pulls it back and the
+    // reset quietly undoes itself.
+    prisma.learningEvent.deleteMany({ where: { userId } }),
   ]);
 }
 
 export async function loadProgressFromDb(): Promise<RemoteProgress> {
   const session = await auth();
   const userId = session?.user?.id;
-  if (!userId) return { attempts: [], flashcards: {} };
+  if (!userId) return { attempts: [], flashcards: {}, events: [] };
 
-  const [rows, cards] = await Promise.all([
+  const [rows, cards, events] = await Promise.all([
     prisma.quizAttempt.findMany({
       where: { userId },
       orderBy: { takenAt: "asc" },
     }),
     prisma.flashcardProgress.findMany({ where: { userId } }),
+    prisma.learningEvent.findMany({
+      where: { userId },
+      orderBy: { at: "asc" },
+    }),
   ]);
 
   return {
@@ -209,5 +256,34 @@ export async function loadProgressFromDb(): Promise<RemoteProgress> {
     flashcards: Object.fromEntries(
       cards.map((c) => [c.cardId, c.status as FlashcardStatus]),
     ),
+    events: events.map((e) => ({
+      id: e.clientId,
+      examCode: e.examCode,
+      kind: e.kind as LearningEvent["kind"],
+      refId: e.refId,
+      at: e.at.getTime(),
+    })),
   };
+}
+
+/** Mirrors a single learning event up as it happens. */
+export async function saveLearningEventToDb(
+  event: LearningEvent,
+): Promise<void> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return;
+
+  await prisma.learningEvent.upsert({
+    where: { userId_clientId: { userId, clientId: event.id } },
+    update: {},
+    create: {
+      userId,
+      clientId: event.id,
+      examCode: event.examCode,
+      kind: event.kind,
+      refId: event.refId,
+      at: new Date(event.at),
+    },
+  });
 }

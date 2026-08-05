@@ -1,0 +1,102 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import type { Domain, StudyGuideDomain } from "@/lib/types";
+import { estimateMinutes, hasCompletedLesson } from "@/lib/learning";
+import { useLearningEvents } from "@/lib/storage";
+import MenuList from "@/components/MenuList";
+
+/**
+ * The lesson index for one exam.
+ *
+ * Client-side because the ✓ ticks come from the learning log in local
+ * storage. The prose itself still lives on the server-rendered page below —
+ * this is navigation, not content.
+ */
+export default function StudyRouteClient({
+  examCode,
+  domains,
+  guide,
+}: {
+  examCode: string;
+  domains: Domain[];
+  guide: StudyGuideDomain[];
+}) {
+  const router = useRouter();
+  const events = useLearningEvents();
+
+  const total = guide.reduce((sum, d) => sum + d.sections.length, 0);
+  const done = guide.reduce(
+    (sum, d) =>
+      sum +
+      d.sections.filter((s) => hasCompletedLesson(events, examCode, s.id))
+        .length,
+    0,
+  );
+
+  return (
+    <div className="flex flex-col gap-8">
+      <div className="pixel-panel p-5">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="font-pixel text-xs">Lessons read</h2>
+          <span className="text-sm text-[var(--foreground-muted)]">
+            {done}/{total}
+          </span>
+        </div>
+        <div className="hp-track mt-2">
+          <div
+            className="hp-fill"
+            style={{
+              width: `${total === 0 ? 0 : (done / total) * 100}%`,
+              background: "var(--accent)",
+            }}
+          />
+        </div>
+      </div>
+
+      {domains.map((domain) => {
+        const sections =
+          guide.find((g) => g.domainId === domain.id)?.sections ?? [];
+        if (sections.length === 0) return null;
+
+        return (
+          <section key={domain.id} className="flex flex-col gap-3">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 className="font-pixel text-xs">{domain.name}</h2>
+              <span className="text-xs text-[var(--foreground-muted)]">
+                {domain.weight} of exam
+              </span>
+            </div>
+
+            {/* subtopics as a "what you'll learn" preamble — authored in the
+                outline since the start, shown nowhere until now. */}
+            {domain.subtopics.length > 0 && (
+              <ul className="flex flex-col gap-1 text-xs text-[var(--foreground-muted)]">
+                {domain.subtopics.map((subtopic) => (
+                  <li key={subtopic} className="flex gap-2">
+                    <span aria-hidden="true">·</span>
+                    <span>{subtopic}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <MenuList
+              ariaLabel={`Lessons in ${domain.name}`}
+              options={sections.map((section) => ({
+                id: section.id,
+                label: section.heading,
+                hint: hasCompletedLesson(events, examCode, section.id)
+                  ? "✓ read"
+                  : `~${estimateMinutes(section.paragraphs)} min`,
+              }))}
+              onSelect={(sectionId) =>
+                router.push(`/exams/${examCode}/study/${sectionId}`)
+              }
+            />
+          </section>
+        );
+      })}
+    </div>
+  );
+}

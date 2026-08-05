@@ -1,5 +1,5 @@
 import type { SpritePalette, SpriteMatrix } from "@/lib/sprite";
-import { SPRITE_SIZE } from "@/lib/sprite";
+import { spriteSize } from "@/lib/sprite";
 
 /**
  * Renders a character-matrix sprite as SVG.
@@ -43,6 +43,10 @@ function colorFor(char: string, palette: SpritePalette): string | null {
       return palette.d;
     case "e":
       return palette.e;
+    case "f":
+      return palette.f ?? null;
+    case "g":
+      return palette.g ?? null;
     default:
       return null;
   }
@@ -91,12 +95,16 @@ export default function PixelSprite({
   title,
 }: Props) {
   const runs = runsFor(sprite, palette);
+  // Dimensions come from the matrix, so a 24-wide trainer and a 16-wide
+  // creature can be rendered by the same component at the same box size.
+  const { width, height } = spriteSize(sprite);
+  const displayHeight = width === 0 ? size : Math.round((size * height) / width);
 
   return (
     <svg
       width={size}
-      height={size}
-      viewBox={`0 0 ${SPRITE_SIZE} ${SPRITE_SIZE}`}
+      height={displayHeight}
+      viewBox={`0 0 ${width} ${height}`}
       shapeRendering="crispEdges"
       className={className}
       style={flip ? { transform: "scaleX(-1)" } : undefined}

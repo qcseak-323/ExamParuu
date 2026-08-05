@@ -36,7 +36,7 @@ const AudioCtx = createContext<AudioContextValue | null>(null);
 
 /** Which loop plays where, absent an explicit override from a component. */
 function defaultTrackForPath(pathname: string): TrackName | null {
-  if (pathname === "/choose-pal") return "starter";
+  if (pathname === "/setup") return "starter";
   // The landing page plays the overworld theme: it sets the tone before the
   // visitor commits to anything. It cannot literally sound on load — see the
   // note on the unlock gesture above — but it starts the moment they move.

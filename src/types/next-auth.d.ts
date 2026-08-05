@@ -13,6 +13,9 @@ declare module "next-auth" {
        */
       examPal: PalType | null;
       examPalName: string | null;
+      expertise: string | null;
+      /** Exam code the trainer chose to focus on first. */
+      priorityExam: string | null;
     } & DefaultSession["user"];
   }
 }

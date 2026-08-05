@@ -115,10 +115,13 @@ export default function ExamProgressClient({
       )}
 
       <section>
-        <h2 className="mb-4 font-pixel text-sm">Gym badges</h2>
+        {/* Renamed from "gym badges" so "Gym Badge" can mean the one thing it
+            should: passing the mock exam. These are per-domain accuracy
+            awards, which is a different achievement. */}
+        <h2 className="mb-4 font-pixel text-sm">Route ribbons</h2>
         <p className="mb-4 text-xs text-[var(--foreground-muted)]">
           Earned at 85%+ accuracy across at least 8 answered questions in a
-          domain.
+          skills area. Collect them, then challenge the gym.
         </p>
         <div className="grid gap-3 sm:grid-cols-2">
           {badges.map((badge) => (

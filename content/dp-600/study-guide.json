@@ -7,35 +7,40 @@
         "paragraphs": [
           "Microsoft Fabric runs on capacities, which are pools of compute (measured in Capacity Units, or CUs) shared by every workload in the workspaces assigned to them. Capacities are purchased as F SKUs, billed through Azure either pay-as-you-go or via reservation, and they can be scaled up or down, paused, and resumed independently of any Power BI Pro or Premium Per User license.",
           "Because F SKU capacities can be paused, a common cost-optimization pattern is to pause non-production capacities outside business hours and resume them on a schedule using automation (for example, an Azure Automation runbook or a Fabric REST API call). Trial capacities let individuals or teams evaluate Fabric without a paid SKU, and tenant admins control who can create them."
-        ]
+        ],
+        "id": "fabric-capacities-and-licensing"
       },
       {
         "heading": "OneLake and workspaces",
         "paragraphs": [
           "OneLake is the single, tenant-wide data lake that underlies every Fabric workload. It is automatically provisioned for every tenant and organized by workspace, with each workspace getting its own folder structure inside OneLake. Because every Fabric item stores its data in OneLake using open formats (primarily Delta Parquet), data created by one workload (say, a Lakehouse) can be consumed directly by another (say, a Warehouse or a semantic model in Direct Lake mode) without copying it.",
           "A workspace is the primary unit of collaboration and access control in Fabric. Workspace roles — Admin, Member, Contributor, and Viewer — determine what a given user can do: Admins manage access and settings, Members and Contributors can create and modify content (with Contributors unable to manage workspace-level access), and Viewers can only consume content."
-        ]
+        ],
+        "id": "onelake-and-workspaces"
       },
       {
         "heading": "Domains and governance",
         "paragraphs": [
           "Domains let administrators group related workspaces by business area (for example, 'Finance' or 'Sales') so that governance policies, certification standards, and ownership can be applied consistently across all of them. Domain admins can be delegated so that business units manage their own domain without needing tenant-wide admin rights.",
           "Sensitivity labels and endorsement (Promoted / Certified) also play into governance: labels control who can access sensitive data, while endorsement signals to consumers which items are trustworthy and maintained."
-        ]
+        ],
+        "id": "domains-and-governance"
       },
       {
         "heading": "Application lifecycle management (ALM)",
         "paragraphs": [
           "Fabric supports two complementary ALM mechanisms. Git integration connects a workspace to a branch in Azure DevOps or GitHub, giving you commit history, diffs, and pull-request based review for supported item types. Deployment pipelines let you model a Development → Test → Production flow across three (or more) workspaces, compare the content of each stage, and deploy changes forward in a controlled, auditable way.",
           "These two mechanisms are often used together: developers work in a Git-connected Development workspace, and once changes are reviewed and merged, a deployment pipeline promotes the resulting items to Test and Production workspaces."
-        ]
+        ],
+        "id": "application-lifecycle-management"
       },
       {
         "heading": "Monitoring and administration",
         "paragraphs": [
           "The Monitoring hub gives every user a cross-workspace view of activities they have permission to see — pipeline runs, dataflow refreshes, notebook jobs — including status, duration, and links to drill into failures.",
           "The Microsoft Fabric Capacity Metrics app, installed from AppSource by a capacity admin, visualizes CU consumption, throttling events, and the 'smoothing' Fabric applies to background operations, which is essential for diagnosing performance or cost issues at the capacity level. The Fabric admin portal is where tenant-wide settings, such as which security groups can create workspaces, use specific features, or share externally, are configured."
-        ]
+        ],
+        "id": "monitoring-and-administration"
       }
     ]
   },
@@ -47,27 +52,31 @@
         "paragraphs": [
           "A Lakehouse combines file-based storage with a relational layer: data lands as Delta tables in OneLake and is primarily managed through Spark notebooks or Spark job definitions, while a read-only SQL analytics endpoint automatically exposes those tables for T-SQL querying. A Warehouse, by contrast, is a full transactional T-SQL engine — it supports multi-statement transactions, stored procedures, views, and DDL/DML the way a traditional relational database does, and its tables are also stored as Delta Parquet in OneLake under the hood.",
           "As a rule of thumb: choose a Lakehouse when your team works primarily in Spark/Python and needs flexibility with semi-structured data; choose a Warehouse when your team is SQL-first and needs full relational engine behavior."
-        ]
+        ],
+        "id": "choosing-the-right-storage-item-lakehouse-vs-warehouse"
       },
       {
         "heading": "Ingesting data: pipelines, Dataflows Gen2, and notebooks",
         "paragraphs": [
           "Data pipelines (similar to Azure Data Factory pipelines) orchestrate movement and transformation activities — copying data, calling notebooks or stored procedures, and controlling flow with conditions and loops. Dataflow Gen2 provides a low-code, Power Query-based transformation experience and can write its output directly into a Lakehouse or Warehouse, making it a good fit for business analysts and citizen integrators. Notebooks give data engineers a code-first option using PySpark, Spark SQL, Scala, or R for complex, large-scale transformations that go beyond what Power Query or T-SQL can conveniently express.",
           "Shortcuts let you reference data that lives outside a Lakehouse (Azure Data Lake Storage Gen2, Amazon S3, Google Cloud Storage, or another Fabric item) as if it were local, avoiding duplication. Mirroring goes a step further for supported operational databases (such as Azure SQL Database, Azure Cosmos DB, or Snowflake) by continuously replicating changes into OneLake in near real time with almost no pipeline authoring required."
-        ]
+        ],
+        "id": "ingesting-data-pipelines-dataflows-gen2-and-notebooks"
       },
       {
         "heading": "Medallion architecture",
         "paragraphs": [
           "A common pattern for organizing data as it moves through a Lakehouse or Warehouse is the medallion (Bronze/Silver/Gold) architecture. Bronze holds raw data as ingested from source systems, largely unmodified. Silver holds data that has been cleansed, deduplicated, conformed to standard types, and joined across sources, but is not yet shaped for a specific reporting need. Gold holds business-level, aggregated tables — often already shaped into a star schema — that are optimized for direct consumption by reports and semantic models."
-        ]
+        ],
+        "id": "medallion-architecture"
       },
       {
         "heading": "Performance and storage optimization",
         "paragraphs": [
           "Delta tables can accumulate many small files after frequent incremental writes, which hurts read performance. Running OPTIMIZE compacts these into fewer, larger files, and applying V-Order during writes adds sorting and encoding specifically tuned for fast reads by Power BI's Direct Lake mode and SQL engines. VACUUM complements this by physically deleting data files that are no longer referenced by the Delta transaction log and are past the retention window, reclaiming storage.",
           "For very large fact tables, partitioning (commonly by a date column) lets query engines skip entire partitions that fall outside a query's filters, reducing the amount of data scanned and improving both query and maintenance performance."
-        ]
+        ],
+        "id": "performance-and-storage-optimization"
       }
     ]
   },
@@ -79,28 +88,32 @@
         "paragraphs": [
           "A well-designed semantic model generally follows a star schema: one or more fact tables holding measures and foreign keys, surrounded by dimension tables holding descriptive attributes. This design keeps relationships simple (typically one-to-many, with the 'one' side on the dimension), performs well because engines can efficiently filter dimensions and propagate that filtering to facts, and works naturally with DAX time-intelligence functions when a proper date dimension is present.",
           "Measures should be preferred over calculated columns whenever a value depends on the report's current filter context (for example, a running total or a ratio that changes with slicers), because measures are evaluated dynamically at query time. Calculated columns are computed once per row at refresh/processing time and are better suited for static, row-level classifications."
-        ]
+        ],
+        "id": "designing-semantic-models"
       },
       {
         "heading": "Storage modes",
         "paragraphs": [
           "Import mode loads a full or partial copy of the source data into the model's in-memory engine and refreshes it on a schedule; it delivers the fastest query performance but can serve slightly stale data between refreshes. DirectQuery sends each report query back to the source system live, which keeps results current but makes report performance dependent on the source system. Direct Lake mode, unique to Fabric, reads Delta Parquet files directly from OneLake on demand, avoiding a traditional import/refresh cycle while achieving performance close to Import mode — making it the preferred mode for large models built on Lakehouse or Warehouse data.",
           "Dual storage mode allows a table to behave as either Import or DirectQuery depending on the query context, which is useful for shared dimension tables in composite models."
-        ]
+        ],
+        "id": "storage-modes"
       },
       {
         "heading": "Securing and governing models",
         "paragraphs": [
           "Row-level security (RLS) restricts the rows a user can see by defining roles with DAX filter expressions, commonly based on the signed-in user's identity via USERPRINCIPALNAME() or USERNAME(), and mapping users or groups to those roles. Object-level security (OLS) goes further by hiding entire tables or columns from specific roles.",
           "The XMLA endpoint exposes a published semantic model over the standard analytical protocol, allowing external tools such as Tabular Editor, ALM Toolkit, or DAX Studio to connect for advanced authoring, scripted deployment, and performance tuning — and, when write access is enabled, to modify the model outside the Power BI web UI."
-        ]
+        ],
+        "id": "securing-and-governing-models"
       },
       {
         "heading": "Lifecycle and performance",
         "paragraphs": [
           "Semantic models can be authored as Power BI Projects (.pbip), which save the report and model as human-readable folders and files, including TMDL (Tabular Model Definition Language) for the model layer. This format is well suited to Git-based source control, code review, and CI/CD pipelines, complementing the workspace-level Git integration and deployment pipelines described earlier.",
           "For very large fact tables, incremental refresh policies partition data by date range so that only recent, changing partitions are reprocessed on each refresh, dramatically reducing refresh time compared to reprocessing the whole table. Aggregation tables (pre-summarized versions of a detailed fact table) can be configured so that queries hit the smaller, faster aggregate whenever possible and only fall back to the detailed table when necessary. Performance Analyzer, in Power BI Desktop, is the primary tool for diagnosing slow report visuals by breaking down time spent on DAX query execution versus visual rendering."
-        ]
+        ],
+        "id": "lifecycle-and-performance"
       }
     ]
   },
@@ -112,28 +125,32 @@
         "paragraphs": [
           "Notebooks are the primary code-first tool for exploratory analysis in Fabric, running on Spark and supporting PySpark, Spark SQL, Scala, and R. They are well suited to iterative work: profiling a dataset, prototyping transformations, and visualizing intermediate results with libraries like matplotlib or displayHTML before productionizing the logic in a pipeline.",
           "For SQL-first exploration, every Lakehouse automatically exposes a read-only SQL analytics endpoint, so analysts can run standard T-SQL SELECT statements — including joins and aggregations — over Delta tables without writing any Spark code. A Warehouse supports the same ad hoc querying, plus full read/write T-SQL. In a semantic model, DAX query view lets you write and execute DAX queries directly and see tabular output, which is useful for validating measures before building visuals."
-        ]
+        ],
+        "id": "exploratory-analytics-with-notebooks-and-sql"
       },
       {
         "heading": "Real-Time Intelligence and KQL",
         "paragraphs": [
           "Real-Time Intelligence in Fabric centers on Eventstreams (for capturing and routing streaming data), Eventhouses (which contain one or more KQL databases optimized for high-volume, time-stamped event data), and KQL querysets for interactive analysis. KQL (Kusto Query Language) is purpose-built for this kind of data: a typical query pipes a table through operators such as where (filter rows), project (select/compute columns), extend (add computed columns), summarize (group and aggregate, similar to SQL's GROUP BY), and join (combine two tables on a key).",
           "Real-Time dashboards are built on top of KQL querysets and refresh automatically to reflect new streaming data with low latency, making them the right choice for live operational monitoring — as opposed to a standard Power BI report in Import mode, which only reflects data as of its last scheduled refresh."
-        ]
+        ],
+        "id": "real-time-intelligence-and-kql"
       },
       {
         "heading": "Visualizing and delivering insights",
         "paragraphs": [
           "Power BI reports remain the primary tool for interactive, exploratory data visualization, letting users filter, drill down, and cross-highlight across visuals. Paginated reports, based on the RDL standard, serve a different need: pixel-perfect, print-ready, and often parameterized documents such as invoices, packing slips, or regulatory filings, where exact layout and pagination matter more than interactivity.",
           "Choosing the right delivery mechanism matters for the exam: use a Power BI report for interactive business analysis, a Real-Time dashboard for live streaming metrics, and a paginated report for operational documents that need precise, consistent formatting."
-        ]
+        ],
+        "id": "visualizing-and-delivering-insights"
       },
       {
         "heading": "AI-assisted analysis and automated alerting",
         "paragraphs": [
           "Copilot in Fabric is integrated across multiple experiences — including notebooks, Data Factory, Power BI, and Real-Time Intelligence — to generate code, DAX or KQL queries, summaries, and even full report pages from natural-language prompts, accelerating both exploration and report authoring.",
           "Data Activator complements dashboards by continuously monitoring data (including streaming data from Eventstreams) for conditions you define, and automatically triggering actions such as a Teams message or email when a threshold is crossed — removing the need for someone to be actively watching a dashboard to catch an important change."
-        ]
+        ],
+        "id": "ai-assisted-analysis-and-automated-alerting"
       }
     ]
   }

@@ -18,6 +18,9 @@ export type Trainer = {
   email: string | null;
   examPal: PalType;
   examPalName: string | null;
+  expertise: string | null;
+  /** Exam code the trainer chose to focus on first. */
+  priorityExam: string | null;
 };
 
 export type SignedInUser = {
@@ -25,6 +28,8 @@ export type SignedInUser = {
   email: string | null;
   examPal: PalType | null;
   examPalName: string | null;
+  expertise: string | null;
+  priorityExam: string | null;
 };
 
 /**
@@ -45,18 +50,20 @@ export async function requireUser(returnTo?: string): Promise<SignedInUser> {
     email: session.user.email ?? null,
     examPal: session.user.examPal,
     examPalName: session.user.examPalName,
+    expertise: session.user.expertise,
+    priorityExam: session.user.priorityExam,
   };
 }
 
 /**
- * Requires a signed-in account that has been through starter select. Use this
+ * Requires a signed-in account that has completed first-run setup. Use this
  * for anything that renders the trainer's pal; `requireUser` is only right for
- * the starter-select screen itself, which by definition has no pal yet.
+ * the setup screen itself, which by definition has no profile yet.
  */
 export async function requireTrainer(returnTo?: string): Promise<Trainer> {
   const user = await requireUser(returnTo);
   if (!user.examPal) {
-    redirect("/choose-pal");
+    redirect("/setup");
   }
 
   return {
@@ -64,5 +71,7 @@ export async function requireTrainer(returnTo?: string): Promise<Trainer> {
     email: user.email,
     examPal: user.examPal,
     examPalName: user.examPalName,
+    expertise: user.expertise,
+    priorityExam: user.priorityExam,
   };
 }

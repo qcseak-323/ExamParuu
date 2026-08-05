@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCatalogEntry, getExamContent } from "@/lib/content";
 import { requireTrainer } from "@/lib/session";
+import StudyRouteClient from "@/components/StudyRouteClient";
 
 // No generateStaticParams: gated behind a session check, so this renders
 // per request rather than at build time.
@@ -23,26 +24,31 @@ export default async function StudyPage({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="font-pixel text-xl">Study guide</h1>
+        <h1 className="font-pixel text-xl">Lessons</h1>
         <p className="mt-3 max-w-2xl text-sm text-[var(--foreground-muted)]">
           A concept-level walkthrough of each {exam.code.toUpperCase()}{" "}
-          skills area. This isn&apos;t a replacement for hands-on time in the
-          real product, but it should refresh the vocabulary and decision
-          points the exam likes to test.
+          skills area. Take them one at a time — each is a couple of minutes,
+          and finishing one counts toward your streak. This isn&apos;t a
+          replacement for hands-on time in the real product, but it should
+          refresh the vocabulary and decision points the exam likes to test.
         </p>
       </div>
 
-      <nav className="flex flex-wrap gap-2 py-2 text-sm">
-        {outline.domains.map((domain) => (
-          <a
-            key={domain.id}
-            href={`#${domain.id}`}
-            className="rounded-full border border-[var(--border)] px-3 py-1 hover:bg-black/5 dark:hover:bg-white/10"
-          >
-            {domain.name}
-          </a>
-        ))}
-      </nav>
+      <StudyRouteClient
+        examCode={exam.code}
+        domains={outline.domains}
+        guide={studyGuide}
+      />
+
+      {/* The full prose stays below the index. It is what the section anchors
+          point at, so a "read up on this" link from a missed question lands on
+          real text rather than on a menu of things to click next. */}
+      <div className="mt-8 border-t-4 border-[var(--border)] pt-8">
+        <h2 className="font-pixel text-sm">Everything in one page</h2>
+        <p className="mt-2 text-sm text-[var(--foreground-muted)]">
+          The same material, unbroken, for skimming or searching.
+        </p>
+      </div>
 
       <div className="flex flex-col gap-12">
         {outline.domains.map((domain) => {
@@ -62,7 +68,10 @@ export default async function StudyPage({
 
               <div className="mt-6 flex flex-col gap-8">
                 {guide?.sections.map((section) => (
-                  <div key={section.heading}>
+                  // Section-level anchor, so a missed question can link to the
+                  // exact passage rather than dumping the reader at the top of
+                  // a domain that may run to four sections.
+                  <div key={section.id} id={section.id} className="scroll-mt-20">
                     <h3 className="text-lg font-medium">{section.heading}</h3>
                     <div className="mt-2 flex flex-col gap-3 text-sm leading-relaxed text-[var(--foreground)]/90">
                       {section.paragraphs.map((p, i) => (

@@ -5,9 +5,10 @@ import { usePathname } from "next/navigation";
 
 const SECTIONS = [
   { segment: "", label: "Overview" },
-  { segment: "study", label: "Study guide" },
-  { segment: "quiz", label: "Quiz" },
+  { segment: "study", label: "Lessons" },
+  { segment: "quiz", label: "Battle" },
   { segment: "flashcards", label: "Flashcards" },
+  { segment: "gym", label: "Gym" },
   { segment: "progress", label: "Progress" },
 ];
 

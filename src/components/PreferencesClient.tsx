@@ -2,6 +2,7 @@
 
 import { usePreferences, setPreference } from "@/lib/preferences";
 import type { Theme, TextScale } from "@/lib/preferences";
+import AccountDataSection from "@/components/AccountDataSection";
 
 function ToggleRow({
   label,
@@ -32,7 +33,11 @@ function ToggleRow({
   );
 }
 
-export default function PreferencesClient() {
+export default function PreferencesClient({
+  email,
+}: {
+  email: string | null;
+}) {
   const prefs = usePreferences();
 
   return (
@@ -126,6 +131,8 @@ export default function PreferencesClient() {
           onChange={(v) => setPreference("highContrast", v)}
         />
       </section>
+
+      <AccountDataSection email={email} />
     </div>
   );
 }
