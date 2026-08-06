@@ -18,8 +18,8 @@ function ToggleRow({
   return (
     <label className="pixel-panel flex items-start justify-between gap-4 p-4">
       <div>
-        <p className="text-sm font-medium">{label}</p>
-        <p className="mt-1 text-xs text-[var(--foreground-muted)]">
+        <p className="text-body font-medium">{label}</p>
+        <p className="mt-1 text-caption text-[var(--foreground-muted)]">
           {description}
         </p>
       </div>
@@ -43,21 +43,21 @@ export default function PreferencesClient({
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="font-pixel text-xl">Preferences</h1>
-        <p className="mt-3 max-w-xl text-sm text-[var(--foreground-muted)]">
+        <h1 className="font-pixel text-display">Preferences</h1>
+        <p className="mt-3 max-w-xl text-body text-[var(--foreground-muted)]">
           These settings apply everywhere, including inside battles, and are
           saved on this device.
         </p>
       </div>
 
       <section>
-        <h2 className="mb-3 font-pixel text-xs">Theme</h2>
+        <h2 className="mb-3 font-pixel text-title">Theme</h2>
         <div className="flex gap-3">
           {(["bright", "dark"] as Theme[]).map((theme) => (
             <button
               key={theme}
               onClick={() => setPreference("theme", theme)}
-              className={`pixel-button rounded-md px-4 py-2 text-sm capitalize ${
+              className={`pixel-button rounded-md px-4 py-2 text-body capitalize ${
                 prefs.theme === theme
                   ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
                   : "bg-[var(--panel)]"
@@ -70,7 +70,7 @@ export default function PreferencesClient({
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="font-pixel text-xs">Sound</h2>
+        <h2 className="font-pixel text-title">Sound</h2>
         <ToggleRow
           label="Background music"
           description="Original chiptune themes that change between the map, battles, and victory. Generated in the browser — nothing is downloaded."
@@ -86,13 +86,13 @@ export default function PreferencesClient({
       </section>
 
       <section>
-        <h2 className="mb-3 font-pixel text-xs">Text size</h2>
+        <h2 className="mb-3 font-pixel text-title">Text size</h2>
         <div className="flex gap-3">
           {(["sm", "md", "lg"] as TextScale[]).map((scale) => (
             <button
               key={scale}
               onClick={() => setPreference("textScale", scale)}
-              className={`pixel-button rounded-md px-4 py-2 text-sm uppercase ${
+              className={`pixel-button rounded-md px-4 py-2 text-body uppercase ${
                 prefs.textScale === scale
                   ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
                   : "bg-[var(--panel)]"
@@ -105,7 +105,7 @@ export default function PreferencesClient({
       </section>
 
       <section className="flex flex-col gap-3">
-        <h2 className="font-pixel text-xs">Accessibility</h2>
+        <h2 className="font-pixel text-title">Accessibility</h2>
         <ToggleRow
           label="Readable font everywhere"
           description="Replaces the pixel display font in headings and navigation with the regular sans-serif font."

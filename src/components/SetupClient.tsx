@@ -94,9 +94,9 @@ export default function SetupClient({ email }: { email: string | null }) {
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
       <div className="flex items-baseline justify-between">
-        <h1 className="font-pixel text-sm">Trainer setup</h1>
+        <h1 className="font-pixel text-display">Trainer setup</h1>
         {step !== "intro" && (
-          <p className="text-xs text-[var(--foreground-muted)]">
+          <p className="text-caption text-[var(--foreground-muted)]">
             Step {stepNumber(step)} of {STEP_ORDER.length}
           </p>
         )}
@@ -127,8 +127,8 @@ export default function SetupClient({ email }: { email: string | null }) {
                     title={`${first.name}, the ${candidate.label}-type starter`}
                   />
                 </div>
-                <p className="font-pixel text-[10px]">{first.name}</p>
-                <p className="text-xs text-[var(--accent)]">
+                <p className="font-pixel text-label">{first.name}</p>
+                <p className="text-caption text-[var(--accent)]">
                   {candidate.label}
                 </p>
               </div>
@@ -148,10 +148,10 @@ export default function SetupClient({ email }: { email: string | null }) {
       {step === "pal" && (
         <>
           <DialogueFrame>
-            <p className="font-pixel mb-2 text-[10px] text-[var(--accent)]">
+            <p className="font-pixel mb-2 text-label text-[var(--accent)]">
               PROF. SEQUEL
             </p>
-            <p className="text-sm leading-relaxed">
+            <p className="text-body">
               First — which one will it be? Take your time. This one stays with
               you.
             </p>
@@ -175,11 +175,11 @@ export default function SetupClient({ email }: { email: string | null }) {
       {step === "palConfirm" && species && starter && (
         <>
           <DialogueFrame>
-            <p className="font-pixel mb-2 text-[10px] text-[var(--accent)]">
+            <p className="font-pixel mb-2 text-label text-[var(--accent)]">
               PROF. SEQUEL
             </p>
-            <p className="text-sm leading-relaxed">{species.description}</p>
-            <p className="mt-3 text-sm leading-relaxed">
+            <p className="text-body">{species.description}</p>
+            <p className="mt-3 text-body">
               So, you want {starter.name}?
             </p>
           </DialogueFrame>
@@ -206,10 +206,10 @@ export default function SetupClient({ email }: { email: string | null }) {
       {step === "nickname" && starter && (
         <>
           <DialogueFrame>
-            <p className="font-pixel mb-2 text-[10px] text-[var(--accent)]">
+            <p className="font-pixel mb-2 text-label text-[var(--accent)]">
               PROF. SEQUEL
             </p>
-            <p className="text-sm leading-relaxed">
+            <p className="text-body">
               {starter.name} is yours. Would you like to give it a nickname?
             </p>
           </DialogueFrame>
@@ -222,7 +222,7 @@ export default function SetupClient({ email }: { email: string | null }) {
             }}
             className="flex flex-col gap-3"
           >
-            <label htmlFor="nickname" className="text-sm font-medium">
+            <label htmlFor="nickname" className="text-body font-medium">
               Nickname{" "}
               <span className="font-normal text-[var(--foreground-muted)]">
                 (optional)
@@ -234,12 +234,12 @@ export default function SetupClient({ email }: { email: string | null }) {
               onChange={(e) => setNickname(e.target.value)}
               maxLength={14}
               placeholder={starter.name}
-              className="w-full max-w-xs rounded-md bg-[var(--panel)] px-3 py-2 text-sm"
+              className="w-full max-w-xs rounded-md bg-[var(--panel)] px-3 py-2 text-body"
               style={{ border: "2px solid var(--window-edge)" }}
             />
             <button
               type="submit"
-              className="pixel-button w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)]"
+              className="pixel-button w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
             >
               Next ▶
             </button>
@@ -250,14 +250,14 @@ export default function SetupClient({ email }: { email: string | null }) {
       {step === "expertise" && (
         <>
           <DialogueFrame>
-            <p className="font-pixel mb-2 text-[10px] text-[var(--accent)]">
+            <p className="font-pixel mb-2 text-label text-[var(--accent)]">
               PROF. SEQUEL
             </p>
-            <p className="text-sm leading-relaxed">
+            <p className="text-body">
               Now then. How much ground have you covered with Microsoft
               certification exams so far?
             </p>
-            <p className="mt-2 text-xs text-[var(--foreground-muted)]">
+            <p className="mt-2 text-caption text-[var(--foreground-muted)]">
               Nothing is locked either way — this only changes the advice I
               give you.
             </p>
@@ -289,22 +289,22 @@ export default function SetupClient({ email }: { email: string | null }) {
       {(step === "route" || step === "saving") && (
         <>
           <DialogueFrame>
-            <p className="font-pixel mb-2 text-[10px] text-[var(--accent)]">
+            <p className="font-pixel mb-2 text-label text-[var(--accent)]">
               PROF. SEQUEL
             </p>
-            <p className="text-sm leading-relaxed">
+            <p className="text-body">
               Last thing. Which route do you want to walk first? I&apos;ll pin
               it on your map — you can still visit any of the others.
             </p>
             {email && (
-              <p className="mt-2 text-xs text-[var(--foreground-muted)]">
+              <p className="mt-2 text-caption text-[var(--foreground-muted)]">
                 Saving to {email}.
               </p>
             )}
           </DialogueFrame>
 
           {error && (
-            <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+            <p className="text-body text-[var(--danger)]">{error}</p>
           )}
 
           <MenuList
@@ -322,7 +322,7 @@ export default function SetupClient({ email }: { email: string | null }) {
           />
 
           {step === "saving" && (
-            <p className="text-sm text-[var(--foreground-muted)]">
+            <p className="text-body text-[var(--foreground-muted)]">
               Setting up your trainer card
               {priorityExam ? ` for ${priorityExam.toUpperCase()}` : ""}…
             </p>

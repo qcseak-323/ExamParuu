@@ -15,7 +15,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)] disabled:opacity-50"
+      className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)] disabled:opacity-50"
     >
       {pending ? "Sending…" : "Send my link ▶"}
     </button>
@@ -94,7 +94,7 @@ export default function StartPrompt() {
         ref={startRef}
         type="button"
         onClick={handleStart}
-        className="pixel-button start-button rounded-md bg-[var(--accent)] px-10 py-5 font-pixel text-base text-[var(--accent-foreground)] sm:text-xl"
+        className="pixel-button start-button rounded-md bg-[var(--accent)] px-10 py-5 font-pixel text-title text-[var(--accent-foreground)] sm:text-display"
       >
         PRESS START ▶
       </button>
@@ -113,10 +113,10 @@ export default function StartPrompt() {
             className="w-full max-w-md"
           >
             <DialogueFrame>
-              <p className="font-pixel mb-2 text-[10px] text-[var(--accent)]">
+              <p className="font-pixel mb-2 text-label text-[var(--accent)]">
                 PROF. SEQUEL
               </p>
-              <p id={`${emailId}-title`} className="text-sm leading-relaxed">
+              <p id={`${emailId}-title`} className="text-body">
                 Before you set out — where should I send your trainer card?
                 I&apos;ll email you a link. No password to remember.
               </p>
@@ -136,7 +136,7 @@ export default function StartPrompt() {
                   name="email"
                   required
                   placeholder="you@example.com"
-                  className="w-full rounded-md bg-[var(--panel)] px-3 py-2 text-sm"
+                  className="min-h-11 w-full rounded-md bg-[var(--panel)] px-3 py-2 text-body"
                   style={{ border: "3px solid var(--border)" }}
                 />
                 <div className="flex flex-wrap gap-3">
@@ -147,7 +147,7 @@ export default function StartPrompt() {
                       playSfx("back");
                       setOpen(false);
                     }}
-                    className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-sm font-medium"
+                    className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
                   >
                     Not yet
                   </button>

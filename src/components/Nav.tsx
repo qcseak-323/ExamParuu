@@ -33,7 +33,7 @@ export default function Nav() {
         {/* Always home, signed in or not. The logo used to point signed-in
             trainers at /catalog, which left them no way back to the landing
             page from inside the app. */}
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="tap-target flex items-center gap-2">
           {species && stage && (
             <PixelSprite
               sprite={stage.sprite}
@@ -41,15 +41,15 @@ export default function Nav() {
               size={28}
             />
           )}
-          <span className="font-pixel text-sm">ExamReady</span>
+          <span className="font-pixel text-label">ExamReady</span>
           {signedIn && (
-            <span className="rounded bg-[var(--accent)] px-1.5 py-1 text-[10px] font-medium text-[var(--accent-foreground)]">
+            <span className="rounded bg-[var(--accent)] px-1.5 py-1 text-caption font-medium text-[var(--accent-foreground)]">
               Lv.{level}
             </span>
           )}
         </Link>
 
-        <nav className="flex flex-wrap items-center gap-1 text-sm">
+        <nav className="flex flex-wrap items-center gap-1 text-body">
           {/* Every trainer link goes somewhere gated, so showing them to a
               signed-out visitor would just be a set of redirects to /login. */}
           {signedIn &&
@@ -59,7 +59,7 @@ export default function Nav() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`rounded-md px-3 py-1.5 transition-colors ${
+                  className={`tap-target rounded-md px-3 py-1.5 transition-colors ${
                     active
                       ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
                       : "text-[var(--foreground-muted)] hover:bg-black/5 dark:hover:bg-white/10"
@@ -74,12 +74,12 @@ export default function Nav() {
 
           {signedIn ? (
             <>
-              <span className="hidden px-2 text-xs text-[var(--foreground-muted)] sm:inline">
+              <span className="hidden px-2 text-caption text-[var(--foreground-muted)] sm:inline">
                 {session?.user?.email}
               </span>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
-                className="rounded-md px-3 py-1.5 text-[var(--foreground-muted)] hover:bg-black/5 dark:hover:bg-white/10"
+                className="tap-target rounded-md px-3 py-1.5 text-[var(--foreground-muted)] hover:bg-black/5 dark:hover:bg-white/10"
               >
                 Log out
               </button>
@@ -87,7 +87,7 @@ export default function Nav() {
           ) : (
             <Link
               href="/login"
-              className={`rounded-md px-3 py-1.5 transition-colors ${
+              className={`tap-target rounded-md px-3 py-1.5 transition-colors ${
                 pathname.startsWith("/login")
                   ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
                   : "text-[var(--foreground-muted)] hover:bg-black/5 dark:hover:bg-white/10"

@@ -23,10 +23,20 @@
   --foreground: #172438;
   --foreground-muted: #56657a;
   --border: #21354f;
-  --accent: #1f8a63;
+  /* Was #1f8a63, which measures 4.31:1 on a white panel and 3.83:1 on the
+     page background — under AA for normal text. Darkened until it clears its
+     worst ground, the foot of the panel gradient (#dde6ef), at 5.26:1.
+     The dark theme's accent was already fine at 7.8–9.5:1, which is why this
+     went unnoticed: it is a bright-theme-only defect. */
+  --accent: #17694c;
   --accent-foreground: #ffffff;
   --danger: #c0392f;
+  --danger-foreground: #ffffff;
   --warning: #b07908;
+  /* "Correct answer" green, distinct from the interactive accent. Added
+     because QuizClient was reaching for raw `text-emerald-700` — the one
+     place the app stepped outside its own token system. */
+  --success: #1a6b37;
 
   /* Window chrome: an outer edge, a light bevel catching the top-left, and a
      dark bevel on the bottom-right. Three tones is what separates a 16-bit
@@ -65,7 +75,11 @@
   --accent: #45d3a0;
   --accent-foreground: #06231a;
   --danger: #ff8c80;
+  /* The dark danger is a light salmon, so its foreground has to be dark ink.
+     White on it measures 2.25:1; this measures 8.17:1. */
+  --danger-foreground: #2a0906;
   --warning: #ffcf6b;
+  --success: #5fe0b0;
 
   --window-top: #2b3856;
   --window-bottom: #1a2238;
@@ -95,6 +109,50 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-pixel: var(--font-press-start);
+}
+
+/* --- Type scale ----------------------------------------------------------
+   Two ramps, because Press Start 2P renders roughly twice the visual size of
+   Geist at the same px — one shared scale cannot serve both. Registered in
+   @theme so Tailwind emits real utilities (`text-display`, `text-label`, …)
+   rather than us hand-rolling classes it would not know about.
+
+   THE FLOOR IS 14px / 0.875rem, FOR BOTH FACES. Nothing below it, ever.
+   Press Start 2P is drawn on an 8×8 cell; under ~14px its strokes fall below
+   one device pixel and the glyphs stop resolving. It is not a small heading
+   at that point, it is texture. The app previously set 23 headings at 9–10px.
+
+   Everything is rem on purpose. `html[data-text-scale]` below moves the root
+   font size (15/16/19px) for the accessibility preference — rem follows it,
+   px does not. The arbitrary `text-[10px]` sizes these replace were silently
+   opting out of that preference entirely.
+
+   `--text-display` is capped at 1.75rem rather than something grander because
+   a pixel face at 40px fits about nine characters on a 375px screen, and
+   "Battle setup" would wrap to three lines. 28px is the largest step that
+   keeps a two-word title on one line at phone width. */
+@theme inline {
+  /* Pixel face — sparse. Exactly one --text-display per screen. */
+  --text-display: 1.75rem;
+  --text-display--line-height: 1.3;
+  --text-title: 1.25rem;
+  --text-title--line-height: 1.35;
+  /* max() because this step IS the pixel floor, and the text-scale preference
+     can push rem below it: at data-text-scale="sm" the root is 15px, so a bare
+     0.875rem computes to 13.125px and Press Start 2P stops resolving again.
+     Scaling up still works (19px root → 16.6px); only the floor is pinned.
+     The sans steps deliberately do NOT get this guard — a trainer who picks
+     "small" wants small, and Geist is still legible there. */
+  --text-label: max(0.875rem, 14px);
+  --text-label--line-height: 1.4;
+
+  /* Sans face — everything anyone actually reads. */
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.6;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.5;
 }
 
 /* Headings/UI chrome use the pixel display font by default; readable-font
@@ -135,6 +193,38 @@ body {
 .pixelated {
   image-rendering: pixelated;
 }
+
+/* Guarantees a 44×44 hit area without disturbing the visual box — padding
+   absorbs the difference. The landing page alone shipped five controls under
+   that, the smallest being the sound toggle at 23×32.
+   Use on anything tappable whose own box is smaller: nav links, icon
+   buttons, footer links, map markers. */
+.tap-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Caps running text near 66 characters. Lesson prose and the legal pages ran
+   the full container width, which at desktop is an unreadable measure. */
+.prose-measure {
+  max-width: 66ch;
+}
+
+/* --- Spacing rhythm ------------------------------------------------------
+   Four steps, not nine. `gap-1` through `gap-12` were all in use, often
+   inside one component, which is why groups did not read as groups. These
+   are Tailwind's existing scale — no new tokens needed, just the discipline
+   of picking from four:
+
+     gap-2  / 0.5rem   inside a control — icon to label, stat to value
+     gap-4  / 1rem     between items in a group — menu rows, answer options
+     gap-6  / 1.5rem   between groups on a screen
+     gap-10 / 2.5rem   between page sections
+
+   Anything else should round to the nearest of these. */
 
 /* The window treatment the whole UI is built from.
    An outer edge, then a light bevel on the top-left and a dark one on the
@@ -564,7 +654,11 @@ a.gym-marker-hit:focus-visible {
 .hero-scene {
   position: relative;
   overflow: hidden;
-  height: 260px;
+  /* The headline, the standfirst and START are absolutely centred on top of
+     this, and at 260px that stack covered 89% of it — the road, hills and
+     runner were all behind the copy panel, so the scene read as a blue frame.
+     Sized to leave the artwork visible above and below the copy. */
+  height: 330px;
   border: 2px solid var(--window-edge);
   border-radius: 10px;
   box-shadow:
@@ -590,7 +684,7 @@ a.gym-marker-hit:focus-visible {
 
 @media (min-width: 640px) {
   .hero-scene {
-    height: 320px;
+    height: 380px;
   }
 }
 

@@ -33,9 +33,9 @@ export default function HpBar({
   return (
     <div className="pixel-panel min-w-[160px] flex-1 p-2">
       <div className="flex items-baseline justify-between gap-2">
-        <span className="font-pixel text-[9px] uppercase">{label}</span>
+        <span className="font-pixel text-label uppercase">{label}</span>
         {level !== undefined && (
-          <span className="font-pixel text-[9px]">Lv{level}</span>
+          <span className="font-pixel text-label">Lv{level}</span>
         )}
       </div>
       <div className="hp-track mt-1">
@@ -44,7 +44,7 @@ export default function HpBar({
           style={{ width: `${ratio * 100}%`, background: fill }}
         />
       </div>
-      <p className="mt-1 text-right text-[10px] text-[var(--foreground-muted)]">
+      <p className="mt-1 text-right text-caption text-[var(--foreground-muted)]">
         {valueText ?? `${Math.max(0, current)}/${max}`}
       </p>
     </div>

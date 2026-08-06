@@ -168,13 +168,13 @@ export default function DialogueBox({
         role="presentation"
       >
         {speaker && (
-          <p className="font-pixel mb-2 text-[10px] text-[var(--accent)]">
+          <p className="font-pixel mb-2 text-label text-[var(--accent)]">
             {speaker}
           </p>
         )}
         {/* aria-live announces the whole line, not the partially typed one. */}
         <p
-          className="min-h-[3lh] text-sm leading-relaxed"
+          className="prose-measure min-h-[3lh] text-body-lg"
           aria-live="polite"
           aria-atomic="true"
         >

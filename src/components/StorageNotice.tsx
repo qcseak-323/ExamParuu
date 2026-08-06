@@ -7,7 +7,7 @@
  */
 export default function StorageNotice() {
   return (
-    <p className="mt-3 text-sm text-[var(--foreground-muted)]">
+    <p className="prose-measure mt-3 text-body text-[var(--foreground-muted)]">
       Saved to your trainer profile, so it follows you across devices, and kept
       in this browser for offline use.
     </p>

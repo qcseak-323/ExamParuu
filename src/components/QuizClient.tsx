@@ -92,9 +92,9 @@ function HpBar({
   return (
     <div className="pixel-panel min-w-[160px] flex-1 p-2">
       <div className="flex items-baseline justify-between gap-2">
-        <span className="font-pixel text-[9px] uppercase">{label}</span>
+        <span className="font-pixel text-label uppercase">{label}</span>
         {level !== undefined && (
-          <span className="font-pixel text-[9px]">Lv{level}</span>
+          <span className="font-pixel text-label">Lv{level}</span>
         )}
       </div>
       <div className="hp-track mt-1">
@@ -103,7 +103,7 @@ function HpBar({
           style={{ width: `${ratio * 100}%`, background: hpColor(ratio) }}
         />
       </div>
-      <p className="mt-1 text-right text-[10px] text-[var(--foreground-muted)]">
+      <p className="mt-1 text-right text-caption text-[var(--foreground-muted)]">
         {Math.max(0, current)}/{max}
       </p>
     </div>
@@ -302,7 +302,7 @@ export default function QuizClient({
 
   if (!content) {
     return (
-      <p className="text-sm text-[var(--foreground-muted)]">
+      <p className="text-body text-[var(--foreground-muted)]">
         No practice content is available for this exam yet.
       </p>
     );
@@ -355,17 +355,17 @@ export default function QuizClient({
 
     return (
       <div className="flex flex-col gap-6">
-        <h1 className="font-pixel text-xl">Battle setup</h1>
+        <h1 className="font-pixel text-display">Battle setup</h1>
 
         <DialogueFrame>
-          <p className="text-sm leading-relaxed">
+          <p className="prose-measure text-body-lg">
             Tall grass rustles ahead. Pick the route you want to train on and
             how long the encounter should run, then send out {palName}.
           </p>
         </DialogueFrame>
 
-        <section className="flex flex-col gap-2">
-          <h2 className="font-pixel text-xs">Route</h2>
+        <section className="flex flex-col gap-4">
+          <h2 className="font-pixel text-title">Route</h2>
           <MenuList
             ariaLabel="Choose a skills area"
             options={domainOptions}
@@ -373,8 +373,8 @@ export default function QuizClient({
           />
         </section>
 
-        <section className="flex flex-col gap-2">
-          <h2 className="font-pixel text-xs">Encounter length</h2>
+        <section className="flex flex-col gap-4">
+          <h2 className="font-pixel text-title">Encounter length</h2>
           <MenuList
             ariaLabel="Choose how many questions"
             columns={2}
@@ -392,7 +392,7 @@ export default function QuizClient({
         <button
           onClick={() => startBattle()}
           disabled={availableCount === 0}
-          className="pixel-button w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)] disabled:opacity-50"
+          className="pixel-button tap-target w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)] disabled:opacity-50"
         >
           Send out {palName} ▶
         </button>
@@ -449,7 +449,7 @@ export default function QuizClient({
 
     return (
       <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between text-xs text-[var(--foreground-muted)]">
+        <div className="flex items-center justify-between text-caption text-[var(--foreground-muted)]">
           <span>
             Turn {index + 1} of {activeQuestions.length}
           </span>
@@ -510,7 +510,7 @@ export default function QuizClient({
         {turn === "asking" ? (
           <>
             <DialogueFrame>
-              <p className="text-sm leading-relaxed" aria-live="polite">
+              <p className="prose-measure text-body-lg" aria-live="polite">
                 {question.question}
               </p>
             </DialogueFrame>
@@ -538,13 +538,13 @@ export default function QuizClient({
                     href={studyHref}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
+                    className="tap-target text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
                   >
                     Read “{teachingLabel}” ↗
                   </a>
                   <button
                     onClick={advance}
-                    className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2 text-sm font-medium text-[var(--accent-foreground)]"
+                    className="pixel-button tap-target rounded-md bg-[var(--accent)] px-5 py-2 text-body font-medium text-[var(--accent-foreground)]"
                   >
                     {outcome ? "See results ▶" : "Next ▶"}
                   </button>
@@ -562,14 +562,14 @@ export default function QuizClient({
 
             <a
               href={mailtoHref}
-              className="text-xs underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
+              className="tap-target text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
             >
               Report an issue with this question
             </a>
           </>
         )}
 
-        <p className="text-xs text-[var(--foreground-muted)]">
+        <p className="text-caption text-[var(--foreground-muted)]">
           Score so far: {correctCount}/{results.length}
         </p>
       </div>
@@ -613,8 +613,8 @@ export default function QuizClient({
             title={`${palName}, your ${species.label}-type ExamPal`}
           />
         </div>
-        <h1 className="font-pixel text-lg">{HEADLINE[result]}</h1>
-        <p className="text-lg">
+        <h1 className="font-pixel text-display">{HEADLINE[result]}</h1>
+        <p className="text-body-lg">
           You scored{" "}
           <span className="font-semibold text-[var(--accent)]">
             {correctCount}/{answered}
@@ -624,12 +624,12 @@ export default function QuizClient({
       </div>
 
       <DialogueFrame>
-        <p className="text-sm leading-relaxed">{SUBTITLE[result]}</p>
+        <p className="prose-measure text-body-lg">{SUBTITLE[result]}</p>
       </DialogueFrame>
 
       {missed.length > 0 && (
         <div className="flex flex-col gap-4">
-          <h2 className="font-pixel text-sm">Review missed questions</h2>
+          <h2 className="font-pixel text-title">Review missed questions</h2>
 
           {/* The whole point of the results screen: turn a list of failures
               into somewhere to go. Previously this block rendered no links at
@@ -637,30 +637,33 @@ export default function QuizClient({
           <div className="flex flex-wrap gap-3">
             <button
               onClick={() => startBattle(missed)}
-              className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)]"
+              className="pixel-button tap-target rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
             >
               Redemption round ({missed.length}) ▶
             </button>
             <Link
               href={`/exams/${examCode}/study`}
-              className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-sm font-medium"
+              className="pixel-button tap-target rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
             >
               Study these topics
             </Link>
           </div>
 
           {missed.map((q) => (
-            <div key={q.id} className="pixel-panel p-4 text-sm">
-              <p className="font-medium">{q.question}</p>
-              <p className="mt-2 text-emerald-700 dark:text-emerald-400">
+            <div key={q.id} className="pixel-panel p-4 text-body">
+              <p className="prose-measure font-medium">{q.question}</p>
+              {/* Was `text-emerald-700 dark:text-emerald-400`. Raw palette
+                  steps like that did not flip with the theme the way the rest
+                  of the UI does; `--success` does. */}
+              <p className="prose-measure mt-2 text-[var(--success)]">
                 Correct answer: {q.options[q.correctIndex]}
               </p>
-              <p className="mt-1 text-[var(--foreground-muted)]">
+              <p className="prose-measure mt-1 text-[var(--foreground-muted)]">
                 {q.explanation}
               </p>
               <Link
                 href={studyHrefForQuestion(q)}
-                className="mt-2 inline-block text-xs underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
+                className="tap-target mt-2 inline-flex text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
               >
                 Read “{teachingLabelForQuestion(q)}” →
               </Link>
@@ -672,13 +675,13 @@ export default function QuizClient({
       <div className="flex flex-wrap gap-3">
         <button
           onClick={() => startBattle()}
-          className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)]"
+          className="pixel-button tap-target rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
         >
           Battle again
         </button>
         <button
           onClick={() => setPhase("setup")}
-          className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-sm font-medium"
+          className="pixel-button tap-target rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
         >
           Change route
         </button>

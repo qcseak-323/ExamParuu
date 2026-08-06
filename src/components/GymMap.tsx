@@ -101,10 +101,10 @@ export default function GymMap({ stops }: { stops: GymStop[] }) {
               />
             </span>
             <span className="gym-marker-label">
-              <span className="font-pixel text-[10px]">
+              <span className="font-pixel text-label">
                 {stop.code.toUpperCase()}
               </span>
-              <span className="block text-[10px] text-[var(--foreground-muted)]">
+              <span className="block text-caption text-[var(--foreground-muted)]">
                 {stop.playable
                   ? `${stop.badgesEarned}/${stop.badgesTotal} ribbons`
                   : "Coming soon"}

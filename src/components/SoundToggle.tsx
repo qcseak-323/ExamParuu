@@ -25,7 +25,7 @@ export default function SoundToggle() {
       }}
       aria-pressed={on}
       title={on ? "Turn music off" : "Turn music on"}
-      className="rounded-md px-2 py-1.5 text-sm text-[var(--foreground-muted)] hover:bg-black/5 dark:hover:bg-white/10"
+      className="tap-target rounded-md px-2 py-1.5 text-body text-[var(--foreground-muted)] hover:bg-black/5 dark:hover:bg-white/10"
     >
       <span aria-hidden="true">{on ? "♪" : "🔇"}</span>
       <span className="sr-only">

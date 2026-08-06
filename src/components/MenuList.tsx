@@ -22,11 +22,16 @@ type Props = {
   ariaLabel: string;
 };
 
+// Semantic tones come from the theme's own tokens rather than raw Tailwind
+// palette steps. The raw colours these replaced did not flip with the theme
+// the way everything around them does — `emerald-800` stayed dark against the
+// dark theme's panels — and they sat outside the contrast budget the rest of
+// the palette is held to.
 const TONE_CLASS: Record<NonNullable<MenuOption["tone"]>, string> = {
   default: "border-[var(--border)]",
   correct:
-    "border-emerald-600 bg-emerald-600/10 text-emerald-800 dark:text-emerald-300",
-  wrong: "border-red-600 bg-red-600/10 text-red-800 dark:text-red-300",
+    "border-[var(--success)] bg-[var(--success)]/10 text-[var(--success)]",
+  wrong: "border-[var(--danger)] bg-[var(--danger)]/10 text-[var(--danger)]",
   muted: "border-black/10 opacity-60 dark:border-white/10",
 };
 
@@ -117,13 +122,13 @@ export default function MenuList({
               playSfx("confirm");
               onSelect(option.id);
             }}
-            className={`menu-item flex items-center gap-2 px-3 py-2.5 text-left text-sm ${tone} ${
+            className={`menu-item flex min-h-11 items-center gap-2 px-3 py-2.5 text-left text-body ${tone} ${
               isDisabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
             }`}
           >
             <span
               aria-hidden="true"
-              className={`font-pixel text-[10px] leading-none ${
+              className={`font-pixel text-label leading-none ${
                 isActive && !isDisabled ? "opacity-100" : "opacity-0"
               }`}
             >
@@ -131,7 +136,7 @@ export default function MenuList({
             </span>
             <span className="flex-1">{option.label}</span>
             {option.hint && (
-              <span className="shrink-0 text-xs text-[var(--foreground-muted)]">
+              <span className="shrink-0 text-caption text-[var(--foreground-muted)]">
                 {option.hint}
               </span>
             )}
