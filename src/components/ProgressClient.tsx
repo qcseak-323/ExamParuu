@@ -95,7 +95,7 @@ export default function ProgressClient({
   return (
     <div className="flex flex-col gap-10">
       <div>
-        <h1 className="font-pixel text-xl">Trainer card</h1>
+        <h1 className="font-pixel text-display">Trainer card</h1>
         <StorageNotice />
       </div>
 
@@ -109,14 +109,14 @@ export default function ProgressClient({
               title={`${displayName}, your ${species.label}-type ExamPal`}
             />
           </div>
-          <p className="font-pixel text-[10px]">{displayName}</p>
-          <p className="text-[10px] text-[var(--foreground-muted)]">
+          <p className="font-pixel text-label">{displayName}</p>
+          <p className="text-caption text-[var(--foreground-muted)]">
             {species.label} · {stage.name}
           </p>
         </div>
 
         <div className="min-w-[200px] flex-1">
-          <div className="flex justify-between text-xs text-[var(--foreground-muted)]">
+          <div className="flex justify-between text-caption text-[var(--foreground-muted)]">
             <span>Lv.{level} · {xp} XP total</span>
             <span>
               {xpIntoLevel}/{xpForNextLevel} to next level
@@ -128,7 +128,7 @@ export default function ProgressClient({
               style={{ width: `${(xpIntoLevel / xpForNextLevel) * 100}%` }}
             />
           </div>
-          <p className="mt-2 text-xs text-[var(--foreground-muted)]">
+          <p className="mt-2 text-caption text-[var(--foreground-muted)]">
             {upcoming
               ? `${upcoming.levelsAway} more level${upcoming.levelsAway === 1 ? "" : "s"} until ${displayName} evolves into ${upcoming.stage.name}.`
               : `${displayName} has reached its final form.`}
@@ -136,20 +136,20 @@ export default function ProgressClient({
         </div>
 
         <div className="text-center">
-          <p className="font-pixel text-lg">{streak}</p>
-          <p className="text-xs text-[var(--foreground-muted)]">day streak</p>
+          <p className="font-pixel text-title">{streak}</p>
+          <p className="text-caption text-[var(--foreground-muted)]">day streak</p>
         </div>
 
         <div className="text-center">
-          <p className="font-pixel text-lg">{redeemed}</p>
-          <p className="text-xs text-[var(--foreground-muted)]">
+          <p className="font-pixel text-title">{redeemed}</p>
+          <p className="text-caption text-[var(--foreground-muted)]">
             gaps closed
           </p>
         </div>
       </section>
 
       <section>
-        <h2 className="mb-4 font-pixel text-sm">Your routes</h2>
+        <h2 className="mb-4 font-pixel text-title">Your routes</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {examStats.map(({ exam, attemptCount, avg }) => (
             <Link
@@ -157,11 +157,11 @@ export default function ProgressClient({
               href={`/exams/${exam.code}/progress`}
               className="pixel-panel flex flex-col gap-2 p-5 hover:-translate-y-0.5 transition-transform"
             >
-              <span className="font-pixel text-xs text-[var(--accent)]">
+              <span className="font-pixel text-label text-[var(--accent)]">
                 {exam.code.toUpperCase()}
               </span>
-              <p className="text-sm font-medium">{exam.title}</p>
-              <p className="text-xs text-[var(--foreground-muted)]">
+              <p className="text-body font-medium">{exam.title}</p>
+              <p className="text-caption text-[var(--foreground-muted)]">
                 {attemptCount === 0
                   ? "No battles yet"
                   : `${attemptCount} battle${attemptCount === 1 ? "" : "s"} · ${avg}% average`}
@@ -174,7 +174,7 @@ export default function ProgressClient({
       <button
         onClick={handleReset}
         disabled={resetting}
-        className="w-fit rounded-md border border-red-600 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-600/10 disabled:opacity-50"
+        className="w-fit rounded-md border border-[var(--danger)] px-4 py-2 text-body font-medium text-[var(--danger)] hover:bg-[var(--danger)]/10 disabled:opacity-50"
       >
         {resetting ? "Resetting…" : "Reset all progress"}
       </button>

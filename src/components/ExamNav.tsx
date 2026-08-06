@@ -28,8 +28,11 @@ export default function ExamNav({
 
   return (
     <nav aria-label="Exam sections" className="mb-8 flex flex-col gap-3">
-      <div className="flex flex-wrap items-baseline gap-2 text-xs">
-        <Link href="/catalog" className="underline hover:text-[var(--accent)]">
+      <div className="flex flex-wrap items-baseline gap-2 text-caption">
+        <Link
+          href="/catalog"
+          className="tap-target underline hover:text-[var(--accent)]"
+        >
           Catalog
         </Link>
         <span aria-hidden="true" className="text-[var(--foreground-muted)]">
@@ -41,7 +44,7 @@ export default function ExamNav({
         <span className="text-[var(--foreground-muted)]">{examTitle}</span>
       </div>
 
-      <div className="flex flex-wrap gap-2 text-sm">
+      <div className="flex flex-wrap gap-2 text-body">
         {SECTIONS.map(({ segment, label }) => {
           const href = segment ? `${base}/${segment}` : base;
           const active = pathname === href;
@@ -50,7 +53,7 @@ export default function ExamNav({
               key={label}
               href={href}
               aria-current={active ? "page" : undefined}
-              className={`rounded-md border px-3 py-1 transition-colors ${
+              className={`tap-target rounded-md border px-3 py-1 transition-colors ${
                 active
                   ? "border-[var(--accent)] bg-[var(--accent)] text-[var(--accent-foreground)]"
                   : "border-[var(--border)] hover:bg-black/5 dark:hover:bg-white/10"

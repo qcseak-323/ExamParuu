@@ -74,9 +74,9 @@ export default function LessonClient({
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h1 className="font-pixel text-sm">{section.heading}</h1>
+        <h1 className="font-pixel text-display">{section.heading}</h1>
         {alreadyRead && (
-          <span className="text-xs text-[var(--accent)]">✓ already read</span>
+          <span className="text-caption text-[var(--accent)]">✓ already read</span>
         )}
       </div>
 
@@ -119,7 +119,7 @@ export default function LessonClient({
       />
 
       {!finished && (
-        <p className="text-xs text-[var(--foreground-muted)]">
+        <p className="text-caption text-[var(--foreground-muted)]">
           {beats.length} passage{beats.length === 1 ? "" : "s"} — press Enter or
           click the box to read on.
         </p>
@@ -127,7 +127,7 @@ export default function LessonClient({
 
       <Link
         href={`/exams/${examCode}/study`}
-        className="text-xs underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
+        className="text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
       >
         ← All lessons for this exam
       </Link>

@@ -24,8 +24,8 @@ export default async function StudyPage({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h1 className="font-pixel text-xl">Lessons</h1>
-        <p className="mt-3 max-w-2xl text-sm text-[var(--foreground-muted)]">
+        <h1 className="font-pixel text-display">Lessons</h1>
+        <p className="mt-3 max-w-2xl text-body text-[var(--foreground-muted)]">
           A concept-level walkthrough of each {exam.code.toUpperCase()}{" "}
           skills area. Take them one at a time — each is a couple of minutes,
           and finishing one counts toward your streak. This isn&apos;t a
@@ -44,8 +44,8 @@ export default async function StudyPage({
           point at, so a "read up on this" link from a missed question lands on
           real text rather than on a menu of things to click next. */}
       <div className="mt-8 border-t-4 border-[var(--border)] pt-8">
-        <h2 className="font-pixel text-sm">Everything in one page</h2>
-        <p className="mt-2 text-sm text-[var(--foreground-muted)]">
+        <h2 className="font-pixel text-title">Everything in one page</h2>
+        <p className="mt-2 text-body text-[var(--foreground-muted)]">
           The same material, unbroken, for skimming or searching.
         </p>
       </div>
@@ -60,8 +60,8 @@ export default async function StudyPage({
               className="scroll-mt-20 border-t-2 border-[var(--border)] pt-8"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 className="text-2xl font-semibold">{domain.name}</h2>
-                <span className="rounded bg-black/5 px-2 py-0.5 text-xs dark:bg-white/10">
+                <h2 className="text-title font-semibold">{domain.name}</h2>
+                <span className="rounded bg-black/5 px-2 py-0.5 text-caption dark:bg-white/10">
                   {domain.weight} of exam
                 </span>
               </div>
@@ -72,8 +72,8 @@ export default async function StudyPage({
                   // exact passage rather than dumping the reader at the top of
                   // a domain that may run to four sections.
                   <div key={section.id} id={section.id} className="scroll-mt-20">
-                    <h3 className="text-lg font-medium">{section.heading}</h3>
-                    <div className="mt-2 flex flex-col gap-3 text-sm leading-relaxed text-[var(--foreground)]/90">
+                    <h3 className="text-body-lg font-medium">{section.heading}</h3>
+                    <div className="mt-2 flex flex-col gap-3 text-body text-[var(--foreground)]/90">
                       {section.paragraphs.map((p, i) => (
                         <p key={i}>{p}</p>
                       ))}
@@ -85,13 +85,13 @@ export default async function StudyPage({
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   href={`/exams/${exam.code}/quiz?domain=${domain.id}`}
-                  className="pixel-button rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-[var(--accent-foreground)]"
+                  className="pixel-button rounded-md bg-[var(--accent)] px-4 py-2 text-body font-medium text-[var(--accent-foreground)]"
                 >
                   Practice this domain
                 </Link>
                 <Link
                   href={`/exams/${exam.code}/flashcards?domain=${domain.id}`}
-                  className="pixel-button rounded-md bg-[var(--panel)] px-4 py-2 text-sm font-medium"
+                  className="pixel-button rounded-md bg-[var(--panel)] px-4 py-2 text-body font-medium"
                 >
                   Review flashcards
                 </Link>

@@ -128,7 +128,7 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
 
   if (!content) {
     return (
-      <p className="text-sm text-[var(--foreground-muted)]">
+      <p className="text-body text-[var(--foreground-muted)]">
         No flashcards are available for this exam yet.
       </p>
     );
@@ -137,8 +137,8 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="font-pixel text-xl">Flashcards</h1>
-        <p className="mt-3 max-w-xl text-sm text-[var(--foreground-muted)]">
+        <h1 className="font-pixel text-display">Flashcards</h1>
+        <p className="mt-3 max-w-xl text-body text-[var(--foreground-muted)]">
           Click a card to flip it, then mark whether you knew it. Mastery is
           saved on this device so you can focus on what you don&apos;t know yet.
         </p>
@@ -146,11 +146,11 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
 
       <div className="flex flex-wrap items-end gap-4">
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium">Skills area</label>
+          <label className="text-body font-medium">Skills area</label>
           <select
             value={domainFilter}
             onChange={(e) => handleDomainChange(e.target.value)}
-            className="w-full max-w-sm rounded-md border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-sm"
+            className="w-full max-w-sm rounded-md border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-body"
           >
             <option value="all">All domains</option>
             {content.outline.domains.map((d) => (
@@ -161,7 +161,7 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
           </select>
         </div>
 
-        <label className="flex items-center gap-2 pb-2 text-sm">
+        <label className="flex items-center gap-2 pb-2 text-body">
           <input
             type="checkbox"
             checked={onlyLearning}
@@ -172,12 +172,12 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
 
         <button
           onClick={handleShuffle}
-          className="pixel-button mb-0.5 rounded-md bg-[var(--panel)] px-3 py-1.5 text-sm"
+          className="pixel-button mb-0.5 rounded-md bg-[var(--panel)] px-3 py-1.5 text-body"
         >
           Shuffle
         </button>
 
-        <span className="pb-2 text-sm text-[var(--foreground-muted)]">
+        <span className="pb-2 text-body text-[var(--foreground-muted)]">
           Known: {knownCount}/{totalInDomain}
           {dueCount > 0 && (
             <span className="ml-2 text-[var(--accent)]">
@@ -188,38 +188,38 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
       </div>
 
       {deck.length === 0 && (
-        <p className="text-sm text-[var(--foreground-muted)]">
+        <p className="text-body text-[var(--foreground-muted)]">
           No cards match this filter.
         </p>
       )}
 
       {deck.length > 0 && position < deck.length && card && (
         <div className="flex flex-col items-center gap-4">
-          <span className="text-sm text-[var(--foreground-muted)]">
+          <span className="text-body text-[var(--foreground-muted)]">
             Card {position + 1} of {deck.length} ·{" "}
             {getDomainName(examCode, card.domain)}
           </span>
 
           <button
             onClick={() => setFlipped((f) => !f)}
-            className="pixel-panel flex min-h-56 w-full max-w-xl items-center justify-center p-8 text-center text-lg hover:-translate-y-0.5 transition-transform"
+            className="pixel-panel flex min-h-56 w-full max-w-xl items-center justify-center p-8 text-center text-body-lg hover:-translate-y-0.5 transition-transform"
           >
             {flipped ? card.back : card.front}
           </button>
-          <p className="text-xs text-[var(--foreground-muted)]">
+          <p className="text-caption text-[var(--foreground-muted)]">
             Click the card to {flipped ? "hide" : "reveal"} the answer
           </p>
 
           <div className="flex gap-3">
             <button
               onClick={() => mark("learning")}
-              className="rounded-md border border-amber-600 px-4 py-2 text-sm font-medium text-amber-700 hover:bg-amber-600/10 dark:text-amber-400"
+              className="rounded-md border border-[var(--warning)] px-4 py-2 text-body font-medium text-[var(--warning)] hover:bg-[var(--warning)]/10"
             >
               Still learning
             </button>
             <button
               onClick={() => mark("known")}
-              className="rounded-md border border-emerald-600 px-4 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-600/10 dark:text-emerald-400"
+              className="rounded-md border border-[var(--success)] px-4 py-2 text-body font-medium text-[var(--success)] hover:bg-[var(--success)]/10"
             >
               I knew it
             </button>
@@ -229,12 +229,12 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
 
       {deck.length > 0 && position >= deck.length && (
         <div className="flex flex-col items-start gap-4">
-          <p className="text-lg font-medium">
+          <p className="text-body-lg font-medium">
             You&apos;ve gone through all {deck.length} cards in this set.
           </p>
           <button
             onClick={handleShuffle}
-            className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)]"
+            className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
           >
             Go again
           </button>

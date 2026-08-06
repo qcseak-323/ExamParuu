@@ -58,7 +58,7 @@ export default function ExamProgressClient({
 
   if (!exam || !content) {
     return (
-      <p className="text-sm text-[var(--foreground-muted)]">
+      <p className="text-body text-[var(--foreground-muted)]">
         No progress to show for this exam yet.
       </p>
     );
@@ -83,33 +83,33 @@ export default function ExamProgressClient({
   return (
     <div className="flex flex-col gap-10">
       <div>
-        <h1 className="font-pixel text-xl">
+        <h1 className="font-pixel text-display">
           {exam.code.toUpperCase()} progress
         </h1>
         <StorageNotice />
       </div>
 
       {attempts.length === 0 ? (
-        <p className="text-sm text-[var(--foreground-muted)]">
+        <p className="text-body text-[var(--foreground-muted)]">
           You haven&apos;t battled for this exam yet.
         </p>
       ) : (
         <section className="grid gap-4 sm:grid-cols-3">
           <div className="pixel-panel p-5">
-            <p className="text-xs text-[var(--foreground-muted)]">
+            <p className="text-caption text-[var(--foreground-muted)]">
               Battles fought
             </p>
-            <p className="mt-1 text-2xl font-semibold">{attempts.length}</p>
+            <p className="mt-1 text-display font-semibold">{attempts.length}</p>
           </div>
           <div className="pixel-panel p-5">
-            <p className="text-xs text-[var(--foreground-muted)]">
+            <p className="text-caption text-[var(--foreground-muted)]">
               Average score
             </p>
-            <p className="mt-1 text-2xl font-semibold">{overall?.avg}%</p>
+            <p className="mt-1 text-display font-semibold">{overall?.avg}%</p>
           </div>
           <div className="pixel-panel p-5">
-            <p className="text-xs text-[var(--foreground-muted)]">Best score</p>
-            <p className="mt-1 text-2xl font-semibold">{overall?.best}%</p>
+            <p className="text-caption text-[var(--foreground-muted)]">Best score</p>
+            <p className="mt-1 text-display font-semibold">{overall?.best}%</p>
           </div>
         </section>
       )}
@@ -118,8 +118,8 @@ export default function ExamProgressClient({
         {/* Renamed from "gym badges" so "Gym Badge" can mean the one thing it
             should: passing the mock exam. These are per-domain accuracy
             awards, which is a different achievement. */}
-        <h2 className="mb-4 font-pixel text-sm">Route ribbons</h2>
-        <p className="mb-4 text-xs text-[var(--foreground-muted)]">
+        <h2 className="mb-4 font-pixel text-title">Route ribbons</h2>
+        <p className="mb-4 text-caption text-[var(--foreground-muted)]">
           Earned at 85%+ accuracy across at least 8 answered questions in a
           skills area. Collect them, then challenge the gym.
         </p>
@@ -131,10 +131,10 @@ export default function ExamProgressClient({
                 badge.earned ? "" : "opacity-60"
               }`}
             >
-              <span className="text-2xl">{badge.earned ? "🏅" : "⚪"}</span>
+              <span aria-hidden="true" className="text-[1.75rem] leading-none">{badge.earned ? "🏅" : "⚪"}</span>
               <div>
-                <p className="text-sm font-medium">{badge.domainName}</p>
-                <p className="text-xs text-[var(--foreground-muted)]">
+                <p className="text-body font-medium">{badge.domainName}</p>
+                <p className="text-caption text-[var(--foreground-muted)]">
                   {badge.answered === 0
                     ? "No attempts yet"
                     : `${Math.round(badge.accuracy * 100)}% (${badge.correct}/${badge.answered})`}
@@ -146,7 +146,7 @@ export default function ExamProgressClient({
       </section>
 
       <section>
-        <h2 className="mb-4 font-pixel text-sm">Accuracy by skills area</h2>
+        <h2 className="mb-4 font-pixel text-title">Accuracy by skills area</h2>
         <div className="flex flex-col gap-4">
           {domains.map((d) => {
             const stat = domainAccuracy[d.id];
@@ -156,7 +156,7 @@ export default function ExamProgressClient({
                 : null;
             return (
               <div key={d.id}>
-                <div className="mb-1 flex justify-between text-sm">
+                <div className="mb-1 flex justify-between text-body">
                   <span>{d.name}</span>
                   <span className="text-[var(--foreground-muted)]">
                     {pct === null
@@ -172,7 +172,7 @@ export default function ExamProgressClient({
       </section>
 
       <section>
-        <h2 className="mb-4 font-pixel text-sm">Flashcard mastery</h2>
+        <h2 className="mb-4 font-pixel text-title">Flashcard mastery</h2>
         <div className="flex flex-col gap-4">
           {domains.map((d) => {
             const cards = getFlashcardsByDomain(examCode, d.id);
@@ -183,7 +183,7 @@ export default function ExamProgressClient({
               cards.length === 0 ? 0 : Math.round((known / cards.length) * 100);
             return (
               <div key={d.id}>
-                <div className="mb-1 flex justify-between text-sm">
+                <div className="mb-1 flex justify-between text-body">
                   <span>{d.name}</span>
                   <span className="text-[var(--foreground-muted)]">
                     {known}/{cards.length} known
@@ -198,7 +198,7 @@ export default function ExamProgressClient({
 
       {attempts.length > 0 && (
         <section>
-          <h2 className="mb-4 font-pixel text-sm">Recent battles</h2>
+          <h2 className="mb-4 font-pixel text-title">Recent battles</h2>
           <div className="flex flex-col divide-y divide-black/10 dark:divide-white/10">
             {[...attempts]
               .reverse()
@@ -206,7 +206,7 @@ export default function ExamProgressClient({
               .map((a) => (
                 <div
                   key={a.id}
-                  className="flex items-center justify-between py-2 text-sm"
+                  className="flex items-center justify-between py-2 text-body"
                 >
                   <span>{new Date(a.timestamp).toLocaleDateString()}</span>
                   <span className="font-medium">

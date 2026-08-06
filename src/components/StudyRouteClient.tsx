@@ -38,8 +38,8 @@ export default function StudyRouteClient({
     <div className="flex flex-col gap-8">
       <div className="pixel-panel p-5">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="font-pixel text-xs">Lessons read</h2>
-          <span className="text-sm text-[var(--foreground-muted)]">
+          <h2 className="font-pixel text-title">Lessons read</h2>
+          <span className="text-body text-[var(--foreground-muted)]">
             {done}/{total}
           </span>
         </div>
@@ -62,8 +62,8 @@ export default function StudyRouteClient({
         return (
           <section key={domain.id} className="flex flex-col gap-3">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="font-pixel text-xs">{domain.name}</h2>
-              <span className="text-xs text-[var(--foreground-muted)]">
+              <h2 className="font-pixel text-title">{domain.name}</h2>
+              <span className="text-caption text-[var(--foreground-muted)]">
                 {domain.weight} of exam
               </span>
             </div>
@@ -71,7 +71,7 @@ export default function StudyRouteClient({
             {/* subtopics as a "what you'll learn" preamble — authored in the
                 outline since the start, shown nowhere until now. */}
             {domain.subtopics.length > 0 && (
-              <ul className="flex flex-col gap-1 text-xs text-[var(--foreground-muted)]">
+              <ul className="flex flex-col gap-1 text-caption text-[var(--foreground-muted)]">
                 {domain.subtopics.map((subtopic) => (
                   <li key={subtopic} className="flex gap-2">
                     <span aria-hidden="true">·</span>

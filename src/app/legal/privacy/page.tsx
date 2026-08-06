@@ -2,9 +2,9 @@ export const metadata = { title: "Privacy — ExamReady" };
 
 export default function PrivacyPage() {
   return (
-    <div className="prose flex max-w-2xl flex-col gap-4 text-sm text-[var(--foreground)]">
-      <h1 className="font-pixel text-xl">Privacy</h1>
-      <p className="text-xs text-[var(--foreground-muted)]">
+    <div className="prose flex max-w-2xl flex-col gap-4 text-body text-[var(--foreground)]">
+      <h1 className="font-pixel text-display">Privacy</h1>
+      <p className="text-caption text-[var(--foreground-muted)]">
         Draft template — not reviewed by a lawyer. Replace with a full PDPA
         (Malaysia) / GDPR-compliant policy before any commercial launch or
         before adding accounts, a database, or analytics.

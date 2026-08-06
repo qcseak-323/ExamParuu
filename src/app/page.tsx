@@ -19,10 +19,10 @@ export default function Home() {
 
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-4 text-center">
           <div className="hero-copy rounded-md px-5 py-3">
-            <h1 className="font-pixel text-lg leading-relaxed sm:text-2xl">
+            <h1 className="font-pixel text-title sm:text-display">
               Pass exams while gaming
             </h1>
-            <p className="mt-2 text-sm sm:text-base">
+            <p className="mt-2 text-body">
               Microsoft certification practice, played like a 90s adventure.
             </p>
           </div>
@@ -33,19 +33,24 @@ export default function Home() {
 
       {/* The hook: three creatures, three words each. */}
       <section>
-        <h2 className="mb-4 text-center font-pixel text-sm">
+        <h2 className="mb-4 text-center font-pixel text-title">
           Pick a partner. Battle the exam.
         </h2>
-        <div className="grid grid-cols-3 gap-3 sm:gap-4">
+        {/* Three across only from `sm`. A pixel face is monospaced and wide:
+            "Terrasprout" sets to 157px at the 14px label step, which does not
+            fit an 87px column on a phone — it used to, at 10px, by being too
+            small to read. Below `sm` each starter becomes a row instead, which
+            keeps the "pick one of three" read without shrinking the name. */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
           {PAL_TYPES.map((type) => {
             const species = PAL_SPECIES[type];
             const [starter] = species.stages;
             return (
               <div
                 key={type}
-                className="pixel-panel flex flex-col items-center gap-2 p-4 text-center"
+                className="pixel-panel flex items-center gap-4 p-4 text-left sm:flex-col sm:gap-2 sm:text-center"
               >
-                <div className="pal-idle">
+                <div className="pal-idle shrink-0">
                   <PixelSprite
                     sprite={starter.sprite}
                     palette={species.palette}
@@ -53,8 +58,12 @@ export default function Home() {
                     title={`${starter.name}, the ${species.label}-type starter`}
                   />
                 </div>
-                <p className="font-pixel text-[10px]">{starter.name}</p>
-                <p className="text-xs text-[var(--accent)]">{species.label}</p>
+                <div className="flex min-w-0 flex-col gap-1 sm:items-center">
+                  <p className="font-pixel text-label">{starter.name}</p>
+                  <p className="text-caption text-[var(--accent)]">
+                    {species.label}
+                  </p>
+                </div>
               </div>
             );
           })}
@@ -69,17 +78,17 @@ export default function Home() {
           ["3. Level up", "Earn XP, badges, and streaks. Your pal evolves."],
         ].map(([title, body]) => (
           <div key={title} className="pixel-panel p-4">
-            <h3 className="font-pixel text-[10px] text-[var(--accent)]">
+            <h3 className="font-pixel text-label text-[var(--accent)]">
               {title}
             </h3>
-            <p className="mt-2 text-sm text-[var(--foreground-muted)]">
+            <p className="prose-measure mt-2 text-body text-[var(--foreground-muted)]">
               {body}
             </p>
           </div>
         ))}
       </section>
 
-      <p className="text-center text-xs text-[var(--foreground-muted)]">
+      <p className="prose-measure mx-auto text-center text-caption text-[var(--foreground-muted)]">
         Free, no paywall. Independent and not affiliated with Microsoft — all
         practice content is original, written from publicly published skills
         outlines.

@@ -200,7 +200,7 @@ export default function GymLeaderClient({
 
   if (!content || !exam) {
     return (
-      <p className="text-sm text-[var(--foreground-muted)]">
+      <p className="text-body text-[var(--foreground-muted)]">
         This exam has no content yet, so there is no gym to challenge.
       </p>
     );
@@ -216,7 +216,7 @@ export default function GymLeaderClient({
 
     return (
       <div className="mx-auto flex max-w-3xl flex-col gap-5">
-        <h1 className="font-pixel text-lg">
+        <h1 className="font-pixel text-display">
           {exam.code.toUpperCase()} Gym Challenge
         </h1>
 
@@ -232,13 +232,13 @@ export default function GymLeaderClient({
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={beginExam}
-                className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)]"
+                className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
               >
                 Begin the challenge ▶
               </button>
               <Link
                 href={`/exams/${examCode}`}
-                className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-sm font-medium"
+                className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
               >
                 Not yet
               </Link>
@@ -246,7 +246,7 @@ export default function GymLeaderClient({
           }
         />
 
-        <p className="text-xs text-[var(--foreground-muted)]">
+        <p className="text-caption text-[var(--foreground-muted)]">
           Our question bank is {content.questions.length} questions strong, so a
           full-length paper isn&apos;t possible yet — treat this as a solid dress
           rehearsal rather than a simulation of the real exam.
@@ -270,7 +270,7 @@ export default function GymLeaderClient({
 
     return (
       <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between text-xs text-[var(--foreground-muted)]">
+        <div className="flex items-center justify-between text-caption text-[var(--foreground-muted)]">
           <span>
             Question {index + 1} of {paper.length}
           </span>
@@ -323,7 +323,7 @@ export default function GymLeaderClient({
         </div>
 
         <DialogueFrame>
-          <p className="text-sm leading-relaxed" aria-live="polite">
+          <p className="text-body" aria-live="polite">
             {question.question}
           </p>
         </DialogueFrame>
@@ -377,10 +377,10 @@ export default function GymLeaderClient({
             title={`${palName}, your ${species.label}-type ExamPal`}
           />
         </div>
-        <h1 className="font-pixel text-lg">
+        <h1 className="font-pixel text-display">
           {passed ? "Gym Badge earned!" : timedOut ? "Time!" : "Not this time."}
         </h1>
-        <p className="text-lg">
+        <p className="text-body-lg">
           <span className="font-semibold text-[var(--accent)]">
             {correct}/{answered}
           </span>{" "}
@@ -389,7 +389,7 @@ export default function GymLeaderClient({
       </div>
 
       <DialogueFrame>
-        <p className="text-sm leading-relaxed">
+        <p className="text-body">
           {passed
             ? `That's the badge. ${palName} held up under a full paper — you're in good shape for the real thing.`
             : timedOut
@@ -399,11 +399,11 @@ export default function GymLeaderClient({
       </DialogueFrame>
 
       <section>
-        <h2 className="mb-3 font-pixel text-sm">Score by skills area</h2>
+        <h2 className="mb-3 font-pixel text-title">Score by skills area</h2>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-body">
             <thead>
-              <tr className="text-left text-xs text-[var(--foreground-muted)]">
+              <tr className="text-left text-caption text-[var(--foreground-muted)]">
                 <th className="pb-2">Skills area</th>
                 <th className="pb-2">Exam weight</th>
                 <th className="pb-2 text-right">Your score</th>
@@ -425,7 +425,7 @@ export default function GymLeaderClient({
           </table>
         </div>
         {weakest && weakest.correct / weakest.total < PASS_RATIO && (
-          <p className="mt-3 text-sm text-[var(--foreground-muted)]">
+          <p className="mt-3 text-body text-[var(--foreground-muted)]">
             Weakest area: <strong>{weakest.name}</strong> — and it carries{" "}
             {weakest.weight} of the real exam.
           </p>
@@ -434,7 +434,7 @@ export default function GymLeaderClient({
 
       {plan.length > 0 && (
         <section>
-          <h2 className="mb-3 font-pixel text-sm">
+          <h2 className="mb-3 font-pixel text-title">
             The leader recommends {plan.length} lesson
             {plan.length === 1 ? "" : "s"}
           </h2>
@@ -443,7 +443,7 @@ export default function GymLeaderClient({
               <li key={item.label}>
                 <Link
                   href={item.href}
-                  className="pixel-panel block p-3 text-sm hover:-translate-y-0.5 transition-transform"
+                  className="pixel-panel block p-3 text-body hover:-translate-y-0.5 transition-transform"
                 >
                   {item.label} →
                 </Link>
@@ -456,13 +456,13 @@ export default function GymLeaderClient({
       <div className="flex flex-wrap gap-3">
         <button
           onClick={() => setPhase("briefing")}
-          className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)]"
+          className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
         >
           Challenge again
         </button>
         <Link
           href={`/exams/${examCode}/study`}
-          className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-sm font-medium"
+          className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
         >
           Back to lessons
         </Link>

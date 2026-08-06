@@ -43,8 +43,8 @@ export default async function LoginPage({
   return (
     <div className="mx-auto flex max-w-sm flex-col gap-6">
       <div>
-        <h1 className="font-pixel text-xl">Log in</h1>
-        <p className="mt-3 text-sm text-[var(--foreground-muted)]">
+        <h1 className="font-pixel text-display">Log in</h1>
+        <p className="mt-3 text-body text-[var(--foreground-muted)]">
           Enter your email and we&apos;ll send you a sign-in link — no password
           needed. New here? The same link creates your trainer profile, and
           you&apos;ll pick your first ExamPal on the way in.
@@ -52,7 +52,7 @@ export default async function LoginPage({
       </div>
 
       {errorMessage && (
-        <div className="rounded-md border border-red-600 bg-red-600/10 px-4 py-3 text-sm text-red-700 dark:text-red-300">
+        <div className="rounded-md border border-[var(--danger)] bg-[var(--danger)]/10 px-4 py-3 text-body text-[var(--danger)]">
           {errorMessage}
         </div>
       )}
@@ -64,11 +64,11 @@ export default async function LoginPage({
           name="email"
           placeholder="you@example.com"
           required
-          className="rounded-md border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-sm"
+          className="min-h-11 rounded-md border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-body"
         />
         <button
           type="submit"
-          className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)]"
+          className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
         >
           Send sign-in link
         </button>

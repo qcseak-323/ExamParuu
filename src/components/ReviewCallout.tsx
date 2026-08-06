@@ -29,14 +29,14 @@ export default function ReviewCallout({ examCode }: { examCode: string }) {
 
   return (
     <div className="pixel-panel flex flex-col gap-3 p-5">
-      <h2 className="font-pixel text-xs text-[var(--accent)]">
+      <h2 className="font-pixel text-title text-[var(--accent)]">
         {summary.dueCount > 0
           ? `${summary.dueCount} question${summary.dueCount === 1 ? "" : "s"} due for review`
           : "Nothing due right now"}
       </h2>
 
       {topThree.length > 0 && (
-        <div className="text-sm">
+        <div className="text-body">
           <p className="text-[var(--foreground-muted)]">
             {topThree.length === 1
               ? "The topic giving you the most trouble:"
@@ -51,7 +51,7 @@ export default function ReviewCallout({ examCode }: { examCode: string }) {
                 >
                   {topic.name}
                 </Link>
-                <span className="shrink-0 text-xs text-[var(--foreground-muted)]">
+                <span className="shrink-0 text-caption text-[var(--foreground-muted)]">
                   {topic.misses} miss{topic.misses === 1 ? "" : "es"}
                 </span>
               </li>
@@ -63,7 +63,7 @@ export default function ReviewCallout({ examCode }: { examCode: string }) {
       {summary.dueCount > 0 && (
         <Link
           href={`/exams/${examCode}/quiz?mode=review`}
-          className="pixel-button w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-[var(--accent-foreground)]"
+          className="pixel-button w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
         >
           Start review battle ▶
         </Link>

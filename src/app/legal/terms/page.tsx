@@ -2,9 +2,9 @@ export const metadata = { title: "Terms of Use — ExamReady" };
 
 export default function TermsPage() {
   return (
-    <div className="prose flex max-w-2xl flex-col gap-4 text-sm text-[var(--foreground)]">
-      <h1 className="font-pixel text-xl">Terms of Use</h1>
-      <p className="text-xs text-[var(--foreground-muted)]">
+    <div className="prose flex max-w-2xl flex-col gap-4 text-body text-[var(--foreground)]">
+      <h1 className="font-pixel text-display">Terms of Use</h1>
+      <p className="text-caption text-[var(--foreground-muted)]">
         Draft template — not reviewed by a lawyer. Replace before any
         commercial launch.
       </p>
