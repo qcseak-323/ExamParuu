@@ -684,38 +684,60 @@ button.gym-marker-hit:hover {
   background: var(--scrim);
 }
 
-/* --- Home hero canvas ------------------------------------------------------ */
+/* --- Home hero canvas (Landing v2) ---------------------------------------- */
 
-/* The estuary drawn edge-to-edge across the whole viewport — the home page's
-   one dominating scene. Full-bleed via 100vw + negative margin (the body
-   clips the sliver a desktop scrollbar adds), pulled up against the nav by
-   cancelling main's top padding. Entirely gradients — sky, mangrove stands,
-   the brine, a mud bank — so it costs nothing to load and follows the theme:
-   Low Tide daylight on bright, Storm Watch on dark. */
-.hero-canvas {
-  position: relative;
+/* Full-bleed via 100vw + negative margin; the body clips the sliver a
+   desktop scrollbar adds. */
+.full-bleed {
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  margin-top: -2rem; /* main's py-8 */
+}
+
+/* The Landing v2 scene comes in stacked full-bleed bands: sky with mangrove
+   mounds rising into the fold (the hero), then a strip of brine, then the
+   sand the cast strolls on, then the dark equation strip. All gradients and
+   flat fills — nothing to load, and every band follows the theme: Low Tide
+   daylight on bright, Storm Watch on dark. */
+.hero-canvas {
+  position: relative;
+  margin-top: -2rem; /* main's py-8 — the sky meets the nav */
   overflow: hidden;
-  min-height: 400px;
-  padding-bottom: 140px; /* keeps the copy clear of the cast on the bank */
   background:
-    /* mud bank the cast stands on */
-    linear-gradient(transparent 76%, var(--hero-bank) 76%),
-    /* brine strip at the horizon */
-    linear-gradient(
-      transparent 62%,
-      var(--hero-water) 62%,
-      var(--hero-water) 76%,
-      transparent 76%
-    ),
-    /* mangrove stands on the far shore */
-    radial-gradient(ellipse 150px 52px at 10% 62%, var(--hero-trees) 0 100%, transparent 101%),
-    radial-gradient(ellipse 220px 68px at 40% 62%, var(--hero-trees-far) 0 100%, transparent 101%),
-    radial-gradient(ellipse 170px 56px at 90% 62%, var(--hero-trees) 0 100%, transparent 101%),
+    /* mangrove mounds on the horizon */
+    radial-gradient(ellipse 42% 210px at 3% 100%, var(--hero-trees-far) 0 100%, transparent 101%),
+    radial-gradient(ellipse 44% 190px at 48% 100%, var(--hero-trees) 0 100%, transparent 101%),
+    radial-gradient(ellipse 40% 200px at 98% 100%, var(--hero-trees-far) 0 100%, transparent 101%),
     /* sky */
-    linear-gradient(180deg, var(--hero-sky-top), var(--hero-sky-bottom) 62%);
+    linear-gradient(180deg, var(--hero-sky-top), var(--hero-sky-bottom));
+}
+
+.hero-water-strip {
+  height: 58px;
+  background: var(--hero-water);
+  border-top: 3px solid rgba(18, 32, 43, 0.25);
+}
+
+.hero-sand-strip {
+  position: relative;
+  height: 130px;
+  background: var(--hero-bank);
+}
+
+/* The rules of the game, stamped on dark ink. The ink is the constant
+   sprite-outline colour, so the strip reads the same in both themes and the
+   locked creature palettes on it stay ≥4.5:1. */
+.equation-strip {
+  background: var(--outline);
+  color: #eaf2ed;
+}
+
+@keyframes xp-pop {
+  0% { transform: translateY(6px) scale(0.6); opacity: 0; }
+  40% { transform: translateY(-4px) scale(1.15); opacity: 1; }
+  100% { transform: translateY(-10px) scale(1); opacity: 1; }
+}
+.xp-pop {
+  animation: xp-pop 0.5s ease forwards;
 }
 :root,
 :root[data-theme="bright"] {
@@ -748,11 +770,6 @@ button.gym-marker-hit:hover {
   pointer-events: none;
 }
 
-@media (min-width: 640px) {
-  .hero-canvas {
-    min-height: 460px;
-  }
-}
 
 .hero-combatant {
   position: absolute;

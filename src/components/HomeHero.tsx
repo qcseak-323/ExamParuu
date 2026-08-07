@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { PAL_SPECIES, stageForLevel } from "@/lib/pals";
 import { trainerAvatarSheet } from "@/lib/profile";
@@ -7,20 +8,20 @@ import { computeXp, computeLevel } from "@/lib/gamification";
 import { useQuizAttempts, useFlashcardProgress } from "@/lib/storage";
 import PalSprite from "@/components/PalSprite";
 import StartPrompt from "@/components/StartPrompt";
+import BattleDemo from "@/components/BattleDemo";
 
 /**
- * The home page's dominating canvas: the estuary drawn edge-to-edge
- * (`.hero-canvas`), the cast standing on the mud bank, and one brass start
- * button in the sky.
+ * Landing v2: the hero is a playable pitch. Copy and one brass action on the
+ * left, a real answerable question (BattleDemo) on the right, mangrove
+ * mounds rising into the fold behind both. Below the fold line: the brine
+ * strip, the sand the cast strolls along, and the equation strip stating
+ * the rules of the game.
  *
- * Two casts, one scene. A visitor sees both trainers and the three starters —
- * the invitation is "pick a side". A signed-in trainer sees *their* avatar
- * standing beside *their* Paruu at its current stage, and the button reads
- * Continue instead of Start. Sprite positions are percentages of the canvas
- * so the lineup breathes with the viewport; the outer pair hides on phones
- * rather than overlapping.
+ * Two casts, one scene. A visitor sees both trainers and the starters
+ * strolling the sand; a signed-in trainer sees their own avatar walking
+ * beside their own Paruu, and the button reads Continue instead of Start.
  */
-export default function HomeHero() {
+export default function HomeHero({ examCodes }: { examCodes: string[] }) {
   const { data: session, status } = useSession();
   const attempts = useQuizAttempts();
   const flashcardProgress = useFlashcardProgress();
@@ -38,57 +39,96 @@ export default function HomeHero() {
     : null;
 
   return (
-    <section className="hero-canvas">
-      <div className="relative z-10 mx-auto max-w-5xl px-4 pt-8 sm:pt-12">
-        <p className="text-label font-semibold uppercase tracking-[0.12em] text-[var(--foreground-soft)]">
-          Free Microsoft cert prep
-        </p>
-        {signedIn ? (
-          <>
-            <h1 className="font-pixel mt-2 text-hero lg:text-[3.5rem] lg:leading-none">
-              Welcome back, trainer.
-            </h1>
-            <p className="prose-measure mt-3 hidden text-body-lg text-[var(--foreground-muted)] sm:block">
-              {palName} is waiting on the flats. Pick up your route where you
-              left it.
+    <div>
+      <section className="hero-canvas full-bleed">
+        <div className="mx-auto grid max-w-5xl items-center gap-10 px-4 pb-20 pt-8 sm:pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+          <div>
+            <p className="text-label font-semibold uppercase tracking-[0.14em] text-[var(--foreground-soft)]">
+              Free Microsoft cert prep · no paywall
             </p>
-          </>
-        ) : (
-          <>
-            <h1 className="font-pixel mt-2 text-hero lg:text-[3.5rem] lg:leading-none">
-              Revision is a battle.
-              <br />
-              Bring a companion.
-            </h1>
-            <p className="prose-measure mt-3 hidden text-body-lg text-[var(--foreground-muted)] sm:block">
-              Battle real practice questions, earn XP, and raise a creature
-              from the Monsoon Belt while you learn.
-            </p>
-          </>
-        )}
-        <div className="mt-5">
-          <StartPrompt label={signedIn ? "Continue your journey" : "Start your journey"} />
-        </div>
-      </div>
 
-      {/* The cast on the bank. Decorative — the headline says everything. */}
-      <div aria-hidden="true">
+            {signedIn ? (
+              <>
+                <h1 className="font-pixel mt-3 text-hero lg:text-[3.25rem] lg:leading-none">
+                  Welcome back, trainer.
+                </h1>
+                <p className="prose-measure mt-4 text-body-lg text-[var(--foreground-muted)]">
+                  {palName} is waiting on the flats. Pick up your route where
+                  you left it — every battle is still a real practice
+                  question.
+                </p>
+              </>
+            ) : (
+              <>
+                <h1 className="font-pixel mt-3 text-hero lg:text-[3.25rem] lg:leading-none">
+                  Play the game.
+                  <br />
+                  Pass the exam.
+                </h1>
+                <p className="prose-measure mt-4 text-body-lg text-[var(--foreground-muted)]">
+                  A creature-raising game where every battle is a real
+                  practice question. Correct answers land hits and level your
+                  companion — playing is revising.
+                </p>
+              </>
+            )}
+
+            <div className="mt-6 flex flex-wrap items-center gap-5">
+              <StartPrompt
+                label={
+                  signedIn
+                    ? "Continue your journey"
+                    : "Start your first battle — free"
+                }
+              />
+              <Link
+                href="/catalog"
+                className="tap-target text-body font-semibold underline hover:text-[var(--accent-ink)]"
+              >
+                Browse exams →
+              </Link>
+            </div>
+
+            <p className="mt-3 text-caption text-[var(--foreground-soft)]">
+              No paywall · Email sign-in · {examCodes.length} exams covered
+            </p>
+
+            <div className="mt-3 flex flex-wrap gap-2">
+              {examCodes.map((code) => (
+                <span
+                  key={code}
+                  className="rounded-md border-2 border-[var(--border)] bg-[var(--panel)] px-2 py-1 text-caption font-semibold"
+                >
+                  {code.toUpperCase()}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <BattleDemo />
+        </div>
+      </section>
+
+      <div className="hero-water-strip full-bleed" aria-hidden="true" />
+
+      {/* The cast on the sand. Decorative — the headline says everything. */}
+      <div className="hero-sand-strip full-bleed" aria-hidden="true">
         {signedIn && stage ? (
           <>
             {avatarSheet && (
               <div
                 className="hero-combatant"
-                style={{ left: "14%", bottom: "20px" }}
+                style={{ left: "14%", bottom: "26px" }}
               >
-                <PalSprite sheet={avatarSheet} size={96} flip />
+                <PalSprite sheet={avatarSheet} size={64} flip />
               </div>
             )}
             <div
               className="hero-combatant"
-              style={{ left: avatarSheet ? "32%" : "16%", bottom: "16px" }}
+              style={{ left: avatarSheet ? "30%" : "16%", bottom: "26px" }}
             >
               <div className="pal-idle">
-                <PalSprite sheet={stage.image} size={96} />
+                <PalSprite sheet={stage.image} size={64} />
               </div>
             </div>
           </>
@@ -96,46 +136,73 @@ export default function HomeHero() {
           <>
             <div
               className="hero-combatant"
-              style={{ left: "6%", bottom: "18px" }}
+              style={{ left: "12%", bottom: "26px" }}
             >
-              <PalSprite sheet="trainer-boy" size={96} flip />
+              <PalSprite sheet="trainer-boy" size={64} flip />
             </div>
-            {/* `hidden` lives on a wrapper: .hero-combatant's own display
+            {/* `hidden` lives on wrappers: .hero-combatant's own display
                 rule is unlayered CSS, which beats the layered utility. */}
             <div className="hidden sm:block">
               <div
                 className="hero-combatant"
-                style={{ left: "18%", bottom: "24px" }}
+                style={{ left: "22%", bottom: "26px" }}
               >
-                <PalSprite sheet="trainer-girl" size={96} flip />
+                <PalSprite sheet="trainer-girl" size={64} flip />
               </div>
             </div>
-            {(
-              [
-                { type: "fire", right: "8%", bottom: "16px", size: 96, always: true },
-                { type: "water", right: "24%", bottom: "26px", size: 64, always: false },
-                { type: "wood", right: "34%", bottom: "14px", size: 64, always: false },
-              ] as const
-            ).map(({ type, right, bottom, size, always }) => {
-              const [starter] = PAL_SPECIES[type].stages;
-              const combatant = (
-                <div className="hero-combatant" style={{ right, bottom }}>
-                  <div className="pal-idle">
-                    <PalSprite sheet={starter.image} size={size} />
-                  </div>
+            <div className="hidden sm:block">
+              <div
+                className="hero-combatant"
+                style={{ left: "68%", bottom: "26px" }}
+              >
+                <div className="pal-idle">
+                  <PalSprite sheet={PAL_SPECIES.wood.stages[0].image} size={48} />
                 </div>
-              );
-              return always ? (
-                <span key={type}>{combatant}</span>
-              ) : (
-                <span key={type} className="hidden sm:block">
-                  {combatant}
-                </span>
-              );
-            })}
+              </div>
+            </div>
+            <div className="hidden sm:block">
+              <div
+                className="hero-combatant"
+                style={{ left: "78%", bottom: "26px" }}
+              >
+                <div className="pal-idle">
+                  <PalSprite sheet={PAL_SPECIES.water.stages[0].image} size={48} />
+                </div>
+              </div>
+            </div>
+            <div
+              className="hero-combatant"
+              style={{ left: "88%", bottom: "26px" }}
+            >
+              <div className="pal-idle">
+                <PalSprite sheet={PAL_SPECIES.fire.stages[0].image} size={48} />
+              </div>
+            </div>
           </>
         )}
       </div>
-    </section>
+
+      {/* The rules of the game, in one line. Locked creature palette steps
+          on the constant dark ink — ≥4.5:1 in both themes. */}
+      <section className="equation-strip full-bleed">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-8 gap-y-1 px-4 py-4 text-center text-caption font-semibold uppercase tracking-[0.1em]">
+          <span className="text-[var(--verdant-3)]">
+            Correct answer = hit + XP
+          </span>
+          <span aria-hidden="true" className="opacity-40">
+            ◆
+          </span>
+          <span className="text-[var(--ember-4)]">
+            Wrong answer = a lesson you must read
+          </span>
+          <span aria-hidden="true" className="opacity-40">
+            ◆
+          </span>
+          <span className="text-[var(--tide-4)]">
+            Every session = closer to a pass
+          </span>
+        </div>
+      </section>
+    </div>
   );
 }
