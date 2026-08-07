@@ -9,8 +9,8 @@
     "durationMinutes": 45,
     "passingScore": 700,
     "summary": "Cloud concepts, core Azure services, and Azure management and governance — the classic first step into the cloud.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-07",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/"
   },
   {

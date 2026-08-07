@@ -33,7 +33,7 @@ export default function Home() {
             <StartPrompt />
           </div>
           <p className="mt-3 text-caption text-[var(--foreground-soft)]">
-            Free. Email sign-in. DP-600 · AB-900.
+            Free. Email sign-in. AZ-900 · DP-600 · AB-900.
           </p>
         </div>
 

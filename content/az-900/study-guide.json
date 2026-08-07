@@ -1,0 +1,121 @@
+[
+  {
+    "domainId": "cloud-concepts",
+    "sections": [
+      {
+        "id": "what-cloud-computing-is",
+        "heading": "What cloud computing is",
+        "paragraphs": [
+          "Cloud computing is the delivery of computing services — servers, storage, networking, software — over the internet, paid for as you use them. The consumption-based model is the financial heart of it: instead of buying hardware up front (capital expenditure), you pay monthly for what you actually consume (operational expenditure), and the bill scales down as well as up. Serverless takes this to its extreme: you supply only code, the platform allocates everything else on demand, and you are billed per execution rather than per server.",
+          "The shared responsibility model divides duties between you and Microsoft, and where the line sits depends on the service type. Microsoft always owns the physical datacenters, network, and hosts. You always own your data, your devices, and your identities. Everything between — the operating system, network controls, applications — shifts toward Microsoft as you move from IaaS through PaaS to SaaS. Exam questions love to ask who patches the operating system in each model: you in IaaS, Microsoft in PaaS and SaaS."
+        ]
+      },
+      {
+        "id": "cloud-models-and-use-cases",
+        "heading": "Cloud models and their use cases",
+        "paragraphs": [
+          "The public cloud is shared infrastructure operated by a provider like Microsoft, offering no capital outlay and near-unlimited scale. A private cloud dedicates infrastructure to a single organisation — most control and often the most cost, whether it runs in your own datacenter or a hosted one. The hybrid model joins the two, and its classic use cases are keeping regulated or legacy workloads on-premises while everything else runs in Azure, and 'cloud bursting' — spilling into public capacity when local resources run out.",
+          "Pricing models follow the same spectrum. Pay-as-you-go trades the highest unit price for total flexibility. Reserved capacity commits you for one or three years in exchange for deep discounts, which suits steady, predictable workloads. Spot pricing offers the deepest discounts of all for workloads that can tolerate being evicted whenever Azure needs the capacity back — batch jobs, not databases."
+        ]
+      },
+      {
+        "id": "benefits-of-the-cloud",
+        "heading": "The benefits: availability, scale, reliability",
+        "paragraphs": [
+          "High availability means the service keeps answering even when components fail, and it is expressed in uptime SLAs — 99.9% allows roughly 8.7 hours of downtime a year, each extra nine cutting that dramatically. Scalability is the ability to add capacity: vertical scaling makes one machine bigger, horizontal scaling adds more machines. Elasticity is scaling made automatic — capacity follows demand without anyone clicking. Predictability flows from these: autoscaling and load balancing give you steady performance, and the consumption model gives you forecastable cost.",
+          "Reliability is the ability to recover from failure — a system that self-heals by moving work to healthy regions when one fails. Security and governance benefit from the cloud's scale: template-based deployment bakes standards in, and the provider's global threat intelligence protects even small tenants. Manageability comes in two flavours the exam distinguishes: management OF the cloud (autoscaling, self-healing, preview-before-apply) and management IN the cloud (portal, CLI, PowerShell, APIs)."
+        ]
+      },
+      {
+        "id": "cloud-service-types",
+        "heading": "IaaS, PaaS, and SaaS",
+        "paragraphs": [
+          "Infrastructure as a service rents you the building blocks — virtual machines, storage, networks — and leaves everything from the operating system up to you. It is the natural home for lift-and-shift migrations, where an on-premises server moves to the cloud unchanged. Platform as a service adds the operating system, middleware, and runtime to the provider's side of the line: you bring code and data, Azure App Service runs it. It is the developer's default, trading some control for far less maintenance.",
+          "Software as a service delivers the finished application — Microsoft 365, Dynamics 365 — where you manage nothing but your data, your users, and their access. The reliable way to answer service-type questions is to ask what the customer still manages: hardware only means it isn't cloud, OS upward means IaaS, just code and data means PaaS, just usage means SaaS."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "architecture-services",
+    "sections": [
+      {
+        "id": "regions-zones-and-datacenters",
+        "heading": "Regions, zones, and datacenters",
+        "paragraphs": [
+          "Azure's physical world is built from datacenters grouped into regions — geographic areas containing at least one datacenter with low-latency connectivity. Many regions offer availability zones: physically separate locations within the region, each with independent power, cooling, and networking, so an application spread across zones survives a whole datacenter failing. Zones protect against local failure; they do not protect against a disaster that takes out the entire region.",
+          "For that, regions are paired. A region pair links two regions at least 300 miles apart in the same geography, giving platform-managed replication targets, sequenced updates so both halves of a pair are never patched at once, and prioritised recovery if a broad outage occurs. Sovereign regions — Azure Government, Azure operated by 21Vianet in China — are physically and logically isolated clouds for jurisdictions with special compliance demands."
+        ]
+      },
+      {
+        "id": "resources-subscriptions-management-groups",
+        "heading": "Resources, subscriptions, and management groups",
+        "paragraphs": [
+          "The management hierarchy runs: management groups contain subscriptions, subscriptions contain resource groups, resource groups contain resources. A resource is any single service instance — a VM, a database. A resource group is a mandatory container that groups resources sharing a lifecycle: deleting the group deletes everything in it, and a resource lives in exactly one group at a time.",
+          "A subscription is the billing and access boundary — costs accumulate per subscription, and organisations commonly separate production from development this way. Management groups sit above subscriptions so that governance — policy and access — can be applied once and inherited by every subscription underneath, which is how a large organisation avoids configuring fifty subscriptions individually."
+        ]
+      },
+      {
+        "id": "compute-and-networking",
+        "heading": "Compute and networking",
+        "paragraphs": [
+          "Azure's compute types trade control against overhead. Virtual machines give full OS control. Virtual Machine Scale Sets run identical VMs behind a built-in load balancer, growing and shrinking automatically. Availability sets spread VMs across fault domains (separate power and network) and update domains (separate maintenance windows) inside one datacenter. Azure Virtual Desktop streams full Windows desktops from the cloud. Containers virtualise the OS rather than the hardware — lighter and faster than VMs. Azure Functions is serverless compute: event-driven code with no servers to manage at all.",
+          "Networking mirrors the on-premises world. A virtual network (VNet) is your private network in Azure, divided into subnets; peering joins two VNets so they behave as one. Azure DNS hosts your domains on Azure's infrastructure. To reach Azure from on-premises, VPN Gateway sends encrypted traffic over the public internet, while ExpressRoute is a private, dedicated circuit that never touches the internet — the choice for bandwidth-hungry or compliance-bound connections. A public endpoint gives a service an internet-reachable address; a private endpoint brings the service inside your VNet with a private IP."
+        ]
+      },
+      {
+        "id": "storage-services",
+        "heading": "Storage services and moving data",
+        "paragraphs": [
+          "A storage account holds Azure's storage services: Blob Storage for unstructured objects, Azure Files for SMB file shares, Queue Storage for messages, and Disk Storage for VM disks. Blob data lives in access tiers priced for how often you touch it: hot for frequent access, cool and cold for infrequent access held at least 30 and 90 days, and archive — cheapest to keep, hours to retrieve — for long-term retention.",
+          "Redundancy is a spectrum of copies: LRS keeps three in one datacenter, ZRS spreads them across availability zones, GRS and GZRS add a secondary region hundreds of miles away (RA-GRS makes that copy readable). Moving data has a tool per scale: AzCopy scripts transfers from the command line, Storage Explorer does it graphically, Azure File Sync caches Azure file shares on local Windows servers, Azure Migrate orchestrates whole-estate migrations, and Data Box ships you a physical appliance when the dataset is too large for the wire."
+        ]
+      },
+      {
+        "id": "identity-access-and-security",
+        "heading": "Identity, access, and security",
+        "paragraphs": [
+          "Microsoft Entra ID is Azure's cloud identity service — every sign-in to Azure, Microsoft 365, and thousands of connected apps authenticates against it. Entra Domain Services adds managed domain join and group policy for legacy workloads without running domain controllers. Authentication has layers: single sign-on means one credential for many apps, multifactor authentication demands something you know plus something you have or are, and passwordless (Windows Hello, FIDO2 keys, Authenticator) replaces the password outright. External identities let partners and customers use their own credentials. Conditional Access is the policy engine over all of it — if the sign-in comes from an unmanaged device or unusual location, require MFA or block it.",
+          "Authorisation is Azure RBAC: roles scoped to a management group, subscription, resource group, or resource, always granting the least privilege that works. Two models frame security thinking: Zero Trust — verify explicitly, use least privilege, assume breach — and defense in depth, layering physical security, identity, perimeter, network, compute, application, and data so one breached layer doesn't lose the war. Microsoft Defender for Cloud watches the whole posture, scoring configuration and recommending hardening across Azure and beyond."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "management-governance",
+    "sections": [
+      {
+        "id": "cost-management",
+        "heading": "Cost management",
+        "paragraphs": [
+          "Azure costs move with resource type, consumption, maintenance, geography, and network traffic — with outbound (egress) data as the classic surprise: data flowing into Azure is free, data flowing out is billed. Two calculators answer two questions before you spend: the pricing calculator estimates what a planned architecture will cost; the TCO calculator compares running on-premises against running in Azure.",
+          "After deployment, Microsoft Cost Management tracks actual spend: cost analysis breaks it down by service and resource, budgets set thresholds, and alerts fire before an overrun becomes a bill shock. Tags — name:value metadata on resources — are how large organisations slice those reports: tag everything with its cost centre or project, and the invoice explains itself."
+        ]
+      },
+      {
+        "id": "governance-and-compliance",
+        "heading": "Governance and compliance",
+        "paragraphs": [
+          "Azure Policy enforces organisational standards by evaluating resources against rules — only these regions, only these VM sizes, this tag is mandatory — blocking or flagging what doesn't comply, and applying automatically to everything under the assigned scope, new and existing. Initiatives bundle related policies so a compliance standard can be assigned as one unit.",
+          "Resource locks protect individual critical resources from accidents: a delete lock stops deletion, a read-only lock stops changes entirely, and — a favourite exam detail — locks apply even to owners, and must be removed before the guarded action can proceed. Microsoft Purview sits above both as the governance service for data itself: it maps and catalogues data across Azure, on-premises, and other clouds, so an organisation knows what sensitive data it holds and where."
+        ]
+      },
+      {
+        "id": "deploying-and-managing-resources",
+        "heading": "Deploying and managing resources",
+        "paragraphs": [
+          "Every management path leads through Azure Resource Manager (ARM), the deployment and management layer all tools share. The Azure portal is the web interface; Azure Cloud Shell puts a browser-based command line inside it with no local install; Azure CLI speaks 'az' commands with Bash-friendly syntax; Azure PowerShell offers cmdlets for PowerShell shops. They are interchangeable — questions test that you know they all do the same job through ARM.",
+          "Infrastructure as code treats environments as declarative files: an ARM template (or Bicep file) describes the desired end state, and ARM works out how to build it — the same template producing the same environment every time, which is how dev, test, and production stay identical. Azure Arc extends this control plane outward, projecting on-premises servers, Kubernetes clusters, and even other clouds' machines into Azure so Policy, RBAC, and monitoring govern them like native resources."
+        ]
+      },
+      {
+        "id": "monitoring-tools",
+        "heading": "Monitoring tools",
+        "paragraphs": [
+          "Three tools answer three different questions. Azure Advisor answers 'what should I improve?' — free, personalised recommendations across reliability, security, performance, cost, and operational excellence, drawn from how your resources are actually configured. Azure Service Health answers 'is it me or is it Azure?' — service issues, planned maintenance, and health advisories scoped to the regions and services you actually use, with alerts when something that affects you begins.",
+          "Azure Monitor answers 'what is happening in my resources?' — the platform-wide pipeline for metrics and logs. Log Analytics is where collected logs are queried and analysed; Azure Monitor alerts fire actions when a metric crosses a threshold or a log query matches; and Application Insights instruments your applications themselves — request rates, failures, dependencies, page load times — so problems surface before users report them."
+        ]
+      }
+    ]
+  }
+]

@@ -16,7 +16,8 @@ import {
   computeRedemptionXp,
 } from "@/lib/gamification";
 import { PAL_SPECIES, stageForLevel, nextStage } from "@/lib/pals";
-import { computeRegionBadges } from "@/lib/regions";
+import { computeRegionBadges, deriveTrainerTitle } from "@/lib/regions";
+import { isProvingPassed } from "@/lib/gamification";
 import type { PalType } from "@/lib/pals";
 import PalSprite from "@/components/PalSprite";
 import ProfileDangerZone from "@/components/ProfileDangerZone";
@@ -74,6 +75,10 @@ export default function ProgressClient({
     <div className="flex flex-col gap-10">
       <div>
         <h1 className="font-pixel text-display">Trainer card</h1>
+        {/* Standing in the Belt, derived from clears/badges/seals. */}
+        <p className="mt-1 text-label font-semibold uppercase tracking-[0.1em] text-[var(--accent-ink)]">
+          {deriveTrainerTitle(attempts)}
+        </p>
         <StorageNotice />
       </div>
 
@@ -121,6 +126,19 @@ export default function ProgressClient({
           <p className="font-pixel text-title">{redeemed}</p>
           <p className="text-caption text-[var(--foreground-muted)]">
             gaps closed
+          </p>
+        </div>
+
+        <div className="text-center">
+          <p className="font-pixel text-title">
+            {
+              catalog.filter(
+                (e) => e.hasContent && isProvingPassed(e.code, attempts),
+              ).length
+            }
+          </p>
+          <p className="text-caption text-[var(--foreground-muted)]">
+            Proving seals
           </p>
         </div>
       </section>
@@ -172,7 +190,7 @@ export default function ProgressClient({
                 {earned
                   ? "Badge earned"
                   : playable > 0
-                    ? "Clear every gym here"
+                    ? "Clear every dungeon here"
                     : "Uncharted"}
               </p>
             </div>

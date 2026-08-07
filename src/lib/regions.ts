@@ -1,6 +1,6 @@
 import type { CatalogEntry, ExamSeries, QuizAttempt } from "./types";
 import { catalog } from "./content";
-import { isGymCleared } from "./gamification";
+import { isGymCleared, isProvingPassed } from "./gamification";
 
 /**
  * The six regional gyms of the Monsoon Belt — one per 2026 Microsoft exam
@@ -36,7 +36,7 @@ export const REGIONS: Region[] = [
     worldName: "The Azure Archipelago",
     tagline: "Cloud foundations, administration, and architecture.",
     professorLine:
-      "The Archipelago is where most trainers start — broad waters, well charted. AZ-104 is the busiest gym in the whole Belt.",
+      "The Archipelago is where most trainers start — broad waters, well charted. AZ-104 is the busiest dungeon in the whole Belt.",
     glyphClass: "rounded-full bg-[var(--tide-3)]",
     x: 16,
     y: 30,
@@ -47,7 +47,7 @@ export const REGIONS: Region[] = [
     worldName: "The Lightning Shoals",
     tagline: "Generative AI, agents, and machine learning operations.",
     professorLine:
-      "The Shoals changed more this year than any other region — AI-901 replaced the old fundamentals, and three new gyms opened in a single season.",
+      "The Shoals changed more this year than any other region — AI-901 replaced the old fundamentals, and three new dungeons opened in a single season.",
     glyphClass: "rotate-45 bg-[var(--tide-4)]",
     x: 50,
     y: 18,
@@ -69,7 +69,7 @@ export const REGIONS: Region[] = [
     worldName: "The Bastion Cliffs",
     tagline: "Security operations, identity, and Zero Trust architecture.",
     professorLine:
-      "The Cliffs guard the whole Belt. Steep routes, patient trainers — and a brand-new SC-500 gym for cloud and AI security.",
+      "The Cliffs guard the whole Belt. Steep routes, patient trainers — and a brand-new SC-500 dungeon for cloud and AI security.",
     glyphClass: "rounded-[3px] bg-[var(--accent)]",
     x: 20,
     y: 72,
@@ -80,7 +80,7 @@ export const REGIONS: Region[] = [
     worldName: "Agent Atoll",
     tagline: "Copilot, AI agents, and the Microsoft 365 estate.",
     professorLine:
-      "The newest charted region — the old Microsoft 365 territory reformed around Copilot and agents. AB-900 is the friendliest gym door in the Belt.",
+      "The newest charted region — the old Microsoft 365 territory reformed around Copilot and agents. AB-900 is the friendliest dungeon door in the Belt.",
     glyphClass: "rounded-full bg-[var(--ember-3)]",
     x: 55,
     y: 62,
@@ -130,6 +130,37 @@ export type RegionBadge = {
  * playable exams yet cannot be earned. Derived from attempts — no storage,
  * no XP: the §10 invariant is untouched.
  */
+/**
+ * The trainer's standing in the Belt, worn under their name. Purely derived
+ * from dungeon clears, region badges, and Proving seals — the highest rung
+ * reached wins. No storage, no XP.
+ */
+export function deriveTrainerTitle(attempts: QuizAttempt[]): string {
+  const playable = catalog.filter((e) => e.hasContent);
+  const dungeonsCleared = playable.filter((e) =>
+    isGymCleared(e.code, attempts),
+  ).length;
+  const seals = playable.filter((e) =>
+    isProvingPassed(e.code, attempts),
+  ).length;
+  const badges = computeRegionBadges(attempts);
+  const earnable = badges.filter((b) => b.playable > 0);
+  const regionsWon = earnable.filter((b) => b.earned).length;
+
+  if (
+    earnable.length > 0 &&
+    regionsWon === earnable.length &&
+    seals >= 1
+  ) {
+    return "Warden of the Belt";
+  }
+  if (seals >= 1) return "Belt Certified";
+  if (regionsWon >= 1) return "Region Champion";
+  if (dungeonsCleared >= 1) return "Route Walker";
+  if (attempts.length > 0) return "Trainer in Training";
+  return "Fresh Arrival";
+}
+
 export function computeRegionBadges(attempts: QuizAttempt[]): RegionBadge[] {
   return REGIONS.map((region) => {
     const playableExams = catalog.filter(

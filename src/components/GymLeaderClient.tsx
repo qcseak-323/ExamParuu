@@ -202,7 +202,7 @@ export default function GymLeaderClient({
   if (!content || !exam) {
     return (
       <p className="text-body text-[var(--foreground-muted)]">
-        This exam has no content yet, so there is no gym to challenge.
+        This exam has no content yet, so there is no dungeon to challenge.
       </p>
     );
   }
@@ -218,11 +218,11 @@ export default function GymLeaderClient({
     return (
       <div className="mx-auto flex max-w-3xl flex-col gap-5">
         <h1 className="font-pixel text-display">
-          {exam.code.toUpperCase()} Gym Challenge
+          {exam.code.toUpperCase()} Dungeon Challenge
         </h1>
 
         <DialogueBox
-          speaker="GYM LEADER"
+          speaker="Dungeon Master"
           lines={[
             `So. You want the ${exam.code.toUpperCase()} badge.`,
             readiness,
@@ -285,7 +285,7 @@ export default function GymLeaderClient({
             {/* The clock is the leader's second bar, so it reads as part of
                 the fight rather than as an anxiety widget bolted on top. */}
             <HpBar
-              label="GYM LEADER"
+              label="DUNGEON MASTER"
               current={remainingMs}
               max={totalMs}
               tone="time"
@@ -296,7 +296,7 @@ export default function GymLeaderClient({
                 sprite={GLITCHLING}
                 palette={GLITCHLING_PALETTE}
                 size={96}
-                title="The gym leader"
+                title="The dungeon master"
               />
             </div>
           </div>
@@ -377,7 +377,7 @@ export default function GymLeaderClient({
           />
         </div>
         <h1 className="font-pixel text-display">
-          {passed ? "Gym Badge earned!" : timedOut ? "Time!" : "Not this time."}
+          {passed ? "Dungeon Badge earned!" : timedOut ? "Time!" : "Not this time."}
         </h1>
         <p className="text-body-lg">
           <span className="font-semibold text-[var(--accent-ink)]">
@@ -434,7 +434,7 @@ export default function GymLeaderClient({
       {plan.length > 0 && (
         <section>
           <h2 className="mb-3 font-pixel text-title">
-            The leader recommends {plan.length} lesson
+            The dungeon master recommends {plan.length} lesson
             {plan.length === 1 ? "" : "s"}
           </h2>
           <ul className="flex flex-col gap-2">

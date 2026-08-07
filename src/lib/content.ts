@@ -10,6 +10,11 @@ import ab900Questions from "../../content/ab-900/questions.json";
 import ab900Flashcards from "../../content/ab-900/flashcards.json";
 import ab900StudyGuide from "../../content/ab-900/study-guide.json";
 
+import az900Outline from "../../content/az-900/outline.json";
+import az900Questions from "../../content/az-900/questions.json";
+import az900Flashcards from "../../content/az-900/flashcards.json";
+import az900StudyGuide from "../../content/az-900/study-guide.json";
+
 import type {
   Outline,
   Question,
@@ -40,6 +45,12 @@ const examRegistry: Record<string, ExamContent> = {
     questions: ab900Questions as Question[],
     flashcards: ab900Flashcards as Flashcard[],
     studyGuide: ab900StudyGuide as StudyGuideDomain[],
+  },
+  "az-900": {
+    outline: az900Outline as Outline,
+    questions: az900Questions as Question[],
+    flashcards: az900Flashcards as Flashcard[],
+    studyGuide: az900StudyGuide as StudyGuideDomain[],
   },
 };
 

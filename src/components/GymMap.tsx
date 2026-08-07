@@ -107,7 +107,7 @@ export default function GymMap({
                 </span>
                 <span className="block text-caption text-[var(--foreground-muted)]">
                   {stop.playable
-                    ? `${stop.cleared}/${stop.playableCount} gym${stop.playableCount === 1 ? "" : "s"}`
+                    ? `${stop.cleared}/${stop.playableCount} dungeon${stop.playableCount === 1 ? "" : "s"}`
                     : "Uncharted"}
                 </span>
               </span>

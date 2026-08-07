@@ -144,7 +144,13 @@ export default async function ExamOverviewPage({
               href={`/exams/${exam.code}/gym`}
               className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
             >
-              Challenge the gym
+              Challenge the dungeon
+            </Link>
+            <Link
+              href={`/exams/${exam.code}/exam`}
+              className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
+            >
+              The Proving — real exam format
             </Link>
             <Link
               href={`/exams/${exam.code}/progress`}

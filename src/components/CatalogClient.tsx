@@ -10,7 +10,11 @@ import {
 } from "@/lib/regions";
 import { getDisplayTier, getRetroLabel } from "@/lib/levels";
 import { useQuizAttempts } from "@/lib/storage";
-import { computeBadges, isGymCleared } from "@/lib/gamification";
+import {
+  computeBadges,
+  isGymCleared,
+  isProvingPassed,
+} from "@/lib/gamification";
 import GymMap, { type RegionStop } from "@/components/GymMap";
 import { DialogueFrame } from "@/components/DialogueBox";
 import ProfessorPortrait from "@/components/ProfessorPortrait";
@@ -63,8 +67,8 @@ export default function CatalogClient({
         <h1 className="font-pixel text-display">Region map</h1>
         <p className="mt-3 max-w-2xl text-body text-[var(--foreground-muted)]">
           Six regions, one per Microsoft exam series — redrawn for the 2026
-          portfolio. Choose a region, then a gym inside it. Clear every gym in
-          a region to earn its badge.
+          portfolio. Choose a region, then a dungeon inside it. Clear every
+          dungeon in a region to earn its badge.
         </p>
       </div>
 
@@ -126,6 +130,7 @@ export default function CatalogClient({
                 ? computeBadges(exam.code, domains, attempts)
                 : [];
               const cleared = playable && isGymCleared(exam.code, attempts);
+              const sealed = playable && isProvingPassed(exam.code, attempts);
 
               return (
                 <li
@@ -160,7 +165,8 @@ export default function CatalogClient({
                     <>
                       <p className="mt-2 text-caption text-[var(--foreground-muted)]">
                         {badges.filter((b) => b.earned).length}/{badges.length}{" "}
-                        route ribbons{cleared ? " · ✓ gym cleared" : ""}
+                        route ribbons{cleared ? " · ✓ dungeon cleared" : ""}
+                        {sealed ? " · ⚑ Proving sealed" : ""}
                       </p>
                       <Link
                         href={`/exams/${exam.code}`}
@@ -194,7 +200,7 @@ export default function CatalogClient({
         </section>
       ) : (
         <p className="text-body text-[var(--foreground-muted)]">
-          Select a region on the map to see its gyms.
+          Select a region on the map to see its dungeons.
         </p>
       )}
     </div>

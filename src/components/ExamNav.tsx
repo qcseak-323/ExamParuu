@@ -8,7 +8,8 @@ const SECTIONS = [
   { segment: "study", label: "Lessons" },
   { segment: "quiz", label: "Battle" },
   { segment: "flashcards", label: "Flashcards" },
-  { segment: "gym", label: "Gym" },
+  { segment: "gym", label: "Dungeon" },
+  { segment: "exam", label: "The Proving" },
   { segment: "progress", label: "Progress" },
 ];
 

@@ -1,0 +1,43 @@
+{
+  "examCode": "AZ-900",
+  "examName": "Microsoft Azure Fundamentals",
+  "note": "Domain weights reflect the skills-measured outline published on Microsoft Learn as of 2026-07-20. Always check learn.microsoft.com for the current official breakdown before your exam.",
+  "domains": [
+    {
+      "id": "cloud-concepts",
+      "name": "Describe cloud concepts",
+      "weight": "25-30%",
+      "subtopics": [
+        "Cloud computing, the shared responsibility model, and the consumption-based model",
+        "Public, private, and hybrid cloud models with appropriate use cases",
+        "Cloud pricing models and serverless",
+        "Benefits of high availability, scalability, reliability, predictability, security, governance, and manageability",
+        "Infrastructure as a service (IaaS), platform as a service (PaaS), software as a service (SaaS), and their use cases"
+      ]
+    },
+    {
+      "id": "architecture-services",
+      "name": "Describe Azure architecture and services",
+      "weight": "35-40%",
+      "subtopics": [
+        "Regions, region pairs, sovereign regions, availability zones, and datacenters",
+        "Resources, resource groups, subscriptions, and management groups — and their hierarchy",
+        "Compute: virtual machines, scale sets, availability sets, Azure Virtual Desktop, containers, and functions",
+        "Networking: virtual networks, subnets, peering, Azure DNS, VPN Gateway, ExpressRoute, public and private endpoints",
+        "Storage: services, tiers, redundancy, and tools for moving data (AzCopy, Storage Explorer, File Sync, Azure Migrate, Data Box)",
+        "Identity, access, and security: Microsoft Entra ID, MFA and passwordless, Conditional Access, RBAC, Zero Trust, defense in depth, Microsoft Defender for Cloud"
+      ]
+    },
+    {
+      "id": "management-governance",
+      "name": "Describe Azure management and governance",
+      "weight": "30-35%",
+      "subtopics": [
+        "Cost factors, the pricing calculator, cost management capabilities, and tags",
+        "Governance and compliance: Microsoft Purview, Azure Policy, and resource locks",
+        "Managing and deploying resources: the portal, Cloud Shell, Azure CLI, Azure PowerShell, Azure Arc, infrastructure as code, and ARM templates",
+        "Monitoring: Azure Advisor, Azure Service Health, and Azure Monitor (Log Analytics, alerts, Application Insights)"
+      ]
+    }
+  ]
+}

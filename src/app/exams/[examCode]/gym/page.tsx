@@ -22,8 +22,8 @@ export async function generateMetadata({
   const exam = getCatalogEntry(examCode);
   return {
     title: exam
-      ? `${exam.code.toUpperCase()} Gym Challenge — ExamParuu`
-      : "Gym not found",
+      ? `${exam.code.toUpperCase()} Dungeon Challenge — ExamParuu`
+      : "Dungeon not found",
   };
 }
 

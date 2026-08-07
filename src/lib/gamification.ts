@@ -249,3 +249,25 @@ export function isGymCleared(
       a.correctCount / a.numQuestions >= 0.7,
   );
 }
+
+/**
+ * The Proving seal: a full-format exam simulation (the `"exam"` sentinel)
+ * passed at the real 700/1000 mark. The Proving scores against the whole
+ * bank — unanswered counts as wrong — so the predicate compares the raw
+ * correct count with 70% of the bank rather than trusting `numQuestions`,
+ * which only records what was answered. Display-only, like the badges.
+ */
+export function isProvingPassed(
+  examCode: string,
+  attempts: QuizAttempt[],
+): boolean {
+  const bank = getExamContent(examCode)?.questions.length ?? 0;
+  if (bank === 0) return false;
+  const needed = Math.ceil(bank * 0.7);
+  return attempts.some(
+    (a) =>
+      a.examCode === examCode &&
+      a.domainFilter === "exam" &&
+      a.correctCount >= needed,
+  );
+}
