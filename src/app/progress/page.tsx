@@ -10,6 +10,7 @@ export default async function ProgressPage() {
     <ProgressClient
       palType={trainer.examPal}
       palNickname={trainer.examPalName}
+      email={trainer.email}
     />
   );
 }

@@ -130,3 +130,40 @@ export async function deleteAccount(
 export async function signOutAfterDeletion(): Promise<void> {
   await signOut({ redirectTo: "/" });
 }
+
+/**
+ * Starts the journey over without giving up the account.
+ *
+ * Wipes every progress table — battles, flashcard progress, lesson history,
+ * which together are the XP, level and streak — and releases the ExamPal by
+ * clearing the profile fields. The account and email survive, and the next
+ * page load lands on first-run setup exactly as a brand-new trainer would.
+ *
+ * One transaction: a reset that deletes attempts but crashes before clearing
+ * the profile would leave a level-1 trainer holding a stage-3 pal, which the
+ * next sync could never repair.
+ */
+export async function restartJourney(): Promise<
+  { ok: true } | { ok: false; error: string }
+> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return { ok: false, error: "You need to be signed in." };
+
+  await prisma.$transaction([
+    prisma.quizAttempt.deleteMany({ where: { userId } }),
+    prisma.flashcardProgress.deleteMany({ where: { userId } }),
+    prisma.learningEvent.deleteMany({ where: { userId } }),
+    prisma.user.update({
+      where: { id: userId },
+      data: {
+        examPal: null,
+        examPalName: null,
+        expertise: null,
+        priorityExam: null,
+      },
+    }),
+  ]);
+
+  return { ok: true };
+}

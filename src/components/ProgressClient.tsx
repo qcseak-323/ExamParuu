@@ -1,16 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { catalog } from "@/lib/content";
 import {
   useQuizAttempts,
   useFlashcardProgress,
   useActivityDates,
   useLearningEvents,
-  resetAllProgress,
 } from "@/lib/storage";
-import { clearProgressInDb } from "@/lib/actions";
 import {
   computeXp,
   computeLevel,
@@ -20,16 +18,18 @@ import {
 import { PAL_SPECIES, stageForLevel, nextStage } from "@/lib/pals";
 import type { PalType } from "@/lib/pals";
 import PalSprite from "@/components/PalSprite";
+import ProfileDangerZone from "@/components/ProfileDangerZone";
 import StorageNotice from "@/components/StorageNotice";
 
 export default function ProgressClient({
   palType,
   palNickname,
+  email,
 }: {
   palType: PalType;
   palNickname: string | null;
+  email: string | null;
 }) {
-  const [resetting, setResetting] = useState(false);
   const attempts = useQuizAttempts();
   const flashcardProgress = useFlashcardProgress();
   const activityDates = useActivityDates();
@@ -68,29 +68,6 @@ export default function ProgressClient({
         }),
     [attempts],
   );
-
-  async function handleReset() {
-    const scope =
-      "This will permanently delete your battle history, flashcard mastery, and streak data from your account and every device. Your ExamPal stays with you. Continue?";
-
-    if (typeof window === "undefined" || !window.confirm(scope)) return;
-
-    // Order matters: clear the account copy first, otherwise the next sync
-    // pulls everything straight back and the reset looks like it failed.
-    setResetting(true);
-    try {
-      await clearProgressInDb();
-    } catch (err) {
-      setResetting(false);
-      console.error("Could not clear account progress", err);
-      window.alert(
-        "Couldn't reach your account to delete the saved copy, so nothing was reset. Check your connection and try again.",
-      );
-      return;
-    }
-    setResetting(false);
-    resetAllProgress();
-  }
 
   return (
     <div className="flex flex-col gap-10">
@@ -170,13 +147,10 @@ export default function ProgressClient({
         </div>
       </section>
 
-      <button
-        onClick={handleReset}
-        disabled={resetting}
-        className="w-fit rounded-md border border-[var(--danger)] px-4 py-2 text-body font-medium text-[var(--danger)] hover:bg-[var(--danger)]/10 disabled:opacity-50"
-      >
-        {resetting ? "Resetting…" : "Reset all progress"}
-      </button>
+      {/* Replaces the old bare "Reset all progress" button. That reset kept
+          the ExamPal; the restart in here releases it too, and the delete is
+          the full account-removal contract shared with Preferences. */}
+      <ProfileDangerZone email={email} />
     </div>
   );
 }
