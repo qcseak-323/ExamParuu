@@ -72,7 +72,7 @@ export default function CatalogClient({
           {stops.map((stop) => (
             <li key={stop.code} className="pixel-panel p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="font-pixel text-label text-[var(--accent)]">
+                <span className="font-pixel text-label text-[var(--accent-ink)]">
                   {stop.code.toUpperCase()}
                 </span>
                 {stop.prioritised && (
@@ -93,7 +93,7 @@ export default function CatalogClient({
               {stop.playable && (
                 <a
                   href={`/exams/${stop.code}`}
-                  className="mt-3 inline-block text-body underline hover:text-[var(--accent)]"
+                  className="mt-3 inline-block text-body underline hover:text-[var(--accent-ink)]"
                 >
                   Travel to {stop.code.toUpperCase()}
                 </a>

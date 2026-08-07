@@ -51,6 +51,10 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   // Skip Next's internals and static files; matching them would redirect the
-  // very assets the login page needs to render.
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.svg$).*)"],
+  // very assets the login page needs to render. `.png` matters: the creature
+  // art in /public/pals is raster, and gating it sent the landing page's own
+  // sprites to /login.
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|webp|gif|ico)$).*)",
+  ],
 };

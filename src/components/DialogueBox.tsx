@@ -162,16 +162,14 @@ export default function DialogueBox({
 
   return (
     <DialogueFrame className={className}>
+      {/* The speaker is a brass plate on the frame's top edge, not a line of
+          text inside it — the panel plus its tab is the field-guide look. */}
+      {speaker && <span className="dialogue-tab">{speaker}</span>}
       <div
         onClick={advance}
         className="cursor-pointer select-none"
         role="presentation"
       >
-        {speaker && (
-          <p className="font-pixel mb-2 text-label text-[var(--accent)]">
-            {speaker}
-          </p>
-        )}
         {/* aria-live announces the whole line, not the partially typed one. */}
         <p
           className="prose-measure min-h-[3lh] text-body-lg"

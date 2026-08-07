@@ -29,7 +29,7 @@ export default function ReviewCallout({ examCode }: { examCode: string }) {
 
   return (
     <div className="pixel-panel flex flex-col gap-3 p-5">
-      <h2 className="font-pixel text-title text-[var(--accent)]">
+      <h2 className="font-pixel text-title text-[var(--accent-ink)]">
         {summary.dueCount > 0
           ? `${summary.dueCount} question${summary.dueCount === 1 ? "" : "s"} due for review`
           : "Nothing due right now"}
@@ -47,7 +47,7 @@ export default function ReviewCallout({ examCode }: { examCode: string }) {
               <li key={topic.id} className="flex justify-between gap-3">
                 <Link
                   href={`/exams/${examCode}/study#${topic.id}`}
-                  className="underline hover:text-[var(--accent)]"
+                  className="underline hover:text-[var(--accent-ink)]"
                 >
                   {topic.name}
                 </Link>

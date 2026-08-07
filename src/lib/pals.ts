@@ -281,7 +281,10 @@ export const GLITCHLING_PALETTE: SpritePalette = {
 export type PalStage = {
   /** Species name at this stage. */
   name: string;
+  /** Legacy matrix, kept only until every call site renders the raster art. */
   sprite: SpriteMatrix;
+  /** Sheet name under /pals for PalSprite, e.g. "fire-1". */
+  image: string;
   /** Minimum trainer level required to reach this stage. */
   minLevel: number;
 };
@@ -300,87 +303,100 @@ export type PalSpecies = {
   stages: [PalStage, PalStage, PalStage];
 };
 
+/*
+ * The Monsoon Belt cast. Type keys are storage keys (`User.examPal`) and
+ * NEVER change; everything display-facing — line labels, species names,
+ * palettes — moved to the approved art. Palettes are the locked line
+ * palettes from the design source and are art/accent colours only, never
+ * UI text.
+ */
 export const PAL_SPECIES: Record<PalType, PalSpecies> = {
   fire: {
     type: "fire",
-    label: "Fire",
-    tagline: "Burns through questions fast.",
+    label: "Ember",
+    tagline: "Estuary-flame line — bold, fast starts.",
     description:
-      "A restless ember that never sits still. Pyrobyte thrives on momentum — the longer your streak runs, the brighter it gets.",
+      "A hornbill-casqued spark from the estuary flats. Glidebit thrives on momentum — the longer your streak runs, the brighter it burns.",
     move: "EMBER QUERY",
     palette: {
-      a: "#8c2f10",
-      b: "#e0561f",
-      c: "#ffa34d",
-      d: "#ffd166",
-      e: "#ffb020",
+      a: "#7A2E1E",
+      b: "#C4553B",
+      c: "#E8863F",
+      d: "#F5C86B",
+      e: "#F5C86B",
     },
     stages: [
-      { name: "Pyrobyte", sprite: PYROBYTE, minLevel: 1 },
+      { name: "Glidebit", sprite: PYROBYTE, image: "fire-1", minLevel: 1 },
       {
-        name: "Flarecore",
+        name: "Thermacache",
         sprite: compose(STAGE2_BODY, CRESTS.fire.stage2),
+        image: "fire-2",
         minLevel: 5,
       },
       {
-        name: "Infernode",
+        name: "Pyredaemon",
         sprite: compose(STAGE3_BODY, CRESTS.fire.stage3),
+        image: "fire-3",
         minLevel: 10,
       },
     ],
   },
   water: {
     type: "water",
-    label: "Water",
-    tagline: "Steady, patient, hard to rattle.",
+    label: "Tide",
+    tagline: "Tide line — calm under timers.",
     description:
-      "Calm under pressure and impossible to fluster. Hydrobit takes the long view — it would rather understand a topic than rush it.",
+      "An axolotl-frilled drop of the brine. Brinebit takes the long view — it would rather understand a topic than rush it.",
     move: "DATA SPLASH",
     palette: {
-      a: "#123f6d",
-      b: "#2f7fd1",
-      c: "#7fc4f5",
-      d: "#cdefff",
-      e: "#5bb0ea",
+      a: "#173B52",
+      b: "#2E6B8C",
+      c: "#4FA3B8",
+      d: "#9FD8DE",
+      e: "#9FD8DE",
     },
     stages: [
-      { name: "Hydrobit", sprite: HYDROBIT, minLevel: 1 },
+      { name: "Brinebit", sprite: HYDROBIT, image: "water-1", minLevel: 1 },
       {
-        name: "Streamcache",
+        name: "Coilcache",
         sprite: compose(STAGE2_BODY, CRESTS.water.stage2),
+        image: "water-2",
         minLevel: 5,
       },
       {
-        name: "Tsunamux",
+        name: "Leviamux",
         sprite: compose(STAGE3_BODY, CRESTS.water.stage3),
+        image: "water-3",
         minLevel: 10,
       },
     ],
   },
   wood: {
     type: "wood",
-    label: "Wood",
-    tagline: "Grows a little every single day.",
+    label: "Verdant",
+    tagline: "Mangrove line — patient and steady.",
     description:
-      "Quiet and stubbornly consistent. Terrasprout puts down roots — it rewards the trainer who shows up day after day.",
+      "A dappled fawn of the mangrove shade. Podbyte puts down roots — it rewards the trainer who shows up day after day.",
     move: "ROOT LOOKUP",
     palette: {
-      a: "#1f5e2a",
-      b: "#3f9c46",
-      c: "#7fd07a",
-      d: "#d6f0b0",
-      e: "#6ec24a",
+      a: "#1F4A34",
+      b: "#3E8455",
+      c: "#6DB56A",
+      d: "#A8D5C2",
+      e: "#A8D5C2",
     },
     stages: [
-      { name: "Terrasprout", sprite: TERRASPROUT, minLevel: 1 },
+      { name: "Podbyte", sprite: TERRASPROUT, image: "wood-1", minLevel: 1 },
       {
-        name: "Thornstack",
+        name: "Rootstack",
         sprite: compose(STAGE2_BODY, CRESTS.wood.stage2),
+        image: "wood-2",
         minLevel: 5,
       },
       {
         name: "Canopyrex",
         sprite: compose(STAGE3_BODY, CRESTS.wood.stage3),
+        image: "wood-3",
         minLevel: 10,
       },
     ],

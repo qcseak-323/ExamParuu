@@ -76,7 +76,7 @@ export default function LessonClient({
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h1 className="font-pixel text-display">{section.heading}</h1>
         {alreadyRead && (
-          <span className="text-caption text-[var(--accent)]">✓ already read</span>
+          <span className="text-caption text-[var(--accent-ink)]">✓ already read</span>
         )}
       </div>
 
@@ -127,7 +127,7 @@ export default function LessonClient({
 
       <Link
         href={`/exams/${examCode}/study`}
-        className="text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
+        className="text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent-ink)]"
       >
         ← All lessons for this exam
       </Link>

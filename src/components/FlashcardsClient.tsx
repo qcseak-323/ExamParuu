@@ -180,7 +180,7 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
         <span className="pb-2 text-body text-[var(--foreground-muted)]">
           Known: {knownCount}/{totalInDomain}
           {dueCount > 0 && (
-            <span className="ml-2 text-[var(--accent)]">
+            <span className="ml-2 text-[var(--accent-ink)]">
               · {dueCount} due
             </span>
           )}

@@ -1,5 +1,5 @@
 import { PAL_SPECIES, PAL_TYPES } from "@/lib/pals";
-import PixelSprite from "@/components/PixelSprite";
+import PalSprite from "@/components/PalSprite";
 import HeroScene from "@/components/HeroScene";
 import StartPrompt from "@/components/StartPrompt";
 
@@ -8,39 +8,45 @@ import StartPrompt from "@/components/StartPrompt";
  *
  * Built around a single action. Everything it could link to is gated, so
  * extra entry points would just bounce to /login — the job here is to say
- * what this is in one line and get the visitor to press START.
+ * what this is in one line and get the visitor to choose a companion.
  */
 export default function Home() {
   return (
-    <div className="flex flex-col gap-12">
-      {/* Hero: the scene fills the frame, the button sits on top of it. */}
-      <section className="relative">
-        <HeroScene />
-
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-4 text-center">
-          <div className="hero-copy rounded-md px-5 py-3">
-            <h1 className="font-pixel text-title sm:text-display">
-              Pass exams while gaming
-            </h1>
-            <p className="mt-2 text-body">
-              Microsoft certification practice, played like a 90s adventure.
-            </p>
+    <div className="flex flex-col gap-10">
+      {/* Hero: copy first, the estuary scene beside it from lg up. */}
+      <section className="grid items-center gap-6 lg:grid-cols-[minmax(0,30rem)_1fr] lg:gap-12">
+        <div>
+          <p className="text-label font-semibold uppercase tracking-[0.12em] text-[var(--foreground-soft)]">
+            Free Microsoft cert prep
+          </p>
+          <h1 className="font-pixel mt-2 text-hero lg:text-[3.5rem] lg:leading-none">
+            Revision is a battle.
+            <br />
+            Bring a companion.
+          </h1>
+          <p className="prose-measure mt-3 text-body-lg text-[var(--foreground-muted)]">
+            ExamReady turns certification prep into a creature-collecting RPG.
+            Battle real practice questions, earn XP, and raise a companion from
+            the Monsoon Belt while you learn.
+          </p>
+          <div className="mt-5">
+            <StartPrompt />
           </div>
+          <p className="mt-3 text-caption text-[var(--foreground-soft)]">
+            Free. Email sign-in. DP-600 · AB-900.
+          </p>
+        </div>
 
-          <StartPrompt />
+        <div className="pixel-panel p-2">
+          <HeroScene />
         </div>
       </section>
 
-      {/* The hook: three creatures, three words each. */}
+      {/* The hook: three companions, one line each. */}
       <section>
-        <h2 className="mb-4 text-center font-pixel text-title">
-          Pick a partner. Battle the exam.
+        <h2 className="mb-4 text-center font-pixel text-display">
+          Choose your companion
         </h2>
-        {/* Three across only from `sm`. A pixel face is monospaced and wide:
-            "Terrasprout" sets to 157px at the 14px label step, which does not
-            fit an 87px column on a phone — it used to, at 10px, by being too
-            small to read. Below `sm` each starter becomes a row instead, which
-            keeps the "pick one of three" read without shrinking the name. */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
           {PAL_TYPES.map((type) => {
             const species = PAL_SPECIES[type];
@@ -51,17 +57,18 @@ export default function Home() {
                 className="pixel-panel flex items-center gap-4 p-4 text-left sm:flex-col sm:gap-2 sm:text-center"
               >
                 <div className="pal-idle shrink-0">
-                  <PixelSprite
-                    sprite={starter.sprite}
-                    palette={species.palette}
+                  <PalSprite
+                    sheet={starter.image}
                     size={64}
-                    title={`${starter.name}, the ${species.label}-type starter`}
+                    title={`${starter.name}, the ${species.label}-line starter`}
                   />
                 </div>
                 <div className="flex min-w-0 flex-col gap-1 sm:items-center">
-                  <p className="font-pixel text-label">{starter.name}</p>
-                  <p className="text-caption text-[var(--accent)]">
-                    {species.label}
+                  <p className="text-body font-bold tracking-wide uppercase">
+                    {starter.name}
+                  </p>
+                  <p className="text-caption text-[var(--foreground-muted)]">
+                    {species.tagline}
                   </p>
                 </div>
               </div>
@@ -73,17 +80,33 @@ export default function Home() {
       {/* How it works, in three lines rather than three paragraphs. */}
       <section className="grid gap-3 sm:grid-cols-3">
         {[
-          ["1. Choose", "Pick a starter ExamPal and a certification route."],
-          ["2. Battle", "Answer to attack. Miss and you take the hit."],
-          ["3. Level up", "Earn XP, badges, and streaks. Your pal evolves."],
-        ].map(([title, body]) => (
-          <div key={title} className="pixel-panel p-4">
-            <h3 className="font-pixel text-label text-[var(--accent)]">
-              {title}
-            </h3>
-            <p className="prose-measure mt-2 text-body text-[var(--foreground-muted)]">
-              {body}
-            </p>
+          {
+            title: "Battle exam-style questions",
+            body: "Every correct answer lands a hit and earns XP for your companion.",
+            glyph: "rotate-45 bg-[var(--verdant-2)]",
+          },
+          {
+            title: "Wrong answers become lessons",
+            body: "Miss one and the explanation opens — the next question doesn't exist until you've read it.",
+            glyph: "rounded-[3px] bg-[var(--ember-2)]",
+          },
+          {
+            title: "Cards come back before you forget",
+            body: "Spaced-repetition flashcards resurface each fact right on schedule.",
+            glyph: "rounded-full bg-[var(--tide-2)]",
+          },
+        ].map(({ title, body, glyph }) => (
+          <div key={title} className="pixel-panel flex gap-3 p-4">
+            <div
+              aria-hidden="true"
+              className={`mt-1 h-[18px] w-[18px] shrink-0 border-2 border-[var(--outline)] ${glyph}`}
+            />
+            <div>
+              <h3 className="text-body font-semibold">{title}</h3>
+              <p className="prose-measure mt-1 text-caption text-[var(--foreground-muted)]">
+                {body}
+              </p>
+            </div>
           </div>
         ))}
       </section>

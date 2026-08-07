@@ -6,7 +6,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useQuizAttempts, useFlashcardProgress } from "@/lib/storage";
 import { computeXp, computeLevel } from "@/lib/gamification";
 import { PAL_SPECIES, stageForLevel } from "@/lib/pals";
-import PixelSprite from "@/components/PixelSprite";
+import PalSprite from "@/components/PalSprite";
 import SoundToggle from "@/components/SoundToggle";
 
 const TRAINER_LINKS = [
@@ -34,14 +34,10 @@ export default function Nav() {
             trainers at /catalog, which left them no way back to the landing
             page from inside the app. */}
         <Link href="/" className="tap-target flex items-center gap-2">
-          {species && stage && (
-            <PixelSprite
-              sprite={stage.sprite}
-              palette={species.palette}
-              size={28}
-            />
-          )}
-          <span className="font-pixel text-label">ExamReady</span>
+          {/* 32px, not 28: the badge renders the 32px source at exactly 1×.
+              A fractional scale of pixel art shimmers. */}
+          {species && stage && <PalSprite sheet={stage.image} size={32} />}
+          <span className="font-pixel text-title">ExamReady</span>
           {signedIn && (
             <span className="rounded bg-[var(--accent)] px-1.5 py-1 text-caption font-medium text-[var(--accent-foreground)]">
               Lv.{level}

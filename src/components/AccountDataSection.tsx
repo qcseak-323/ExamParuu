@@ -134,7 +134,7 @@ export default function AccountDataSection({ email }: { email: string | null }) 
               placeholder={email ?? "you@example.com"}
               disabled={deleting}
               className="w-full max-w-sm rounded-md bg-[var(--panel)] px-3 py-2 text-body"
-              style={{ border: "2px solid var(--window-edge)" }}
+              style={{ border: "2px solid var(--border)" }}
             />
             <div className="flex flex-wrap gap-3">
               <button

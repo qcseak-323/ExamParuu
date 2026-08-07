@@ -90,13 +90,15 @@ export default function StartPrompt() {
 
   return (
     <>
+      {/* The one brass action on the screen. Sans, not the display face —
+          brass hardware carries the emphasis so the type doesn't have to. */}
       <button
         ref={startRef}
         type="button"
         onClick={handleStart}
-        className="pixel-button start-button rounded-md bg-[var(--accent)] px-10 py-5 font-pixel text-title text-[var(--accent-foreground)] sm:text-display"
+        className="start-button tap-target w-full px-9 text-body-lg font-semibold sm:w-auto"
       >
-        PRESS START ▶
+        Choose your companion
       </button>
 
       {open && (
@@ -113,9 +115,7 @@ export default function StartPrompt() {
             className="w-full max-w-md"
           >
             <DialogueFrame>
-              <p className="font-pixel mb-2 text-label text-[var(--accent)]">
-                PROF. SEQUEL
-              </p>
+              <span className="dialogue-tab">Prof. Sequel</span>
               <p id={`${emailId}-title`} className="text-body">
                 Before you set out — where should I send your trainer card?
                 I&apos;ll email you a link. No password to remember.

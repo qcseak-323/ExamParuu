@@ -35,7 +35,7 @@ export default async function ExamOverviewPage({
     <div className="flex flex-col gap-8">
       <div>
         <div className="flex flex-wrap items-center gap-2 text-caption">
-          <span className="font-pixel text-[var(--accent)]">
+          <span className="font-pixel text-[var(--accent-ink)]">
             {exam.code.toUpperCase()}
           </span>
           <span className="rounded-full border border-[var(--border)] px-2 py-0.5">
@@ -68,7 +68,7 @@ export default async function ExamOverviewPage({
               href={exam.sourceUrl}
               target="_blank"
               rel="noreferrer"
-              className="underline hover:text-[var(--accent)]"
+              className="underline hover:text-[var(--accent-ink)]"
             >
               learn.microsoft.com
             </a>

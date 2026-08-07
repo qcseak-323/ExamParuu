@@ -16,13 +16,13 @@ export default function Footer() {
       <div className="mt-3 flex justify-center gap-4">
         <Link
           href="/legal/terms"
-          className="tap-target underline hover:text-[var(--accent)]"
+          className="tap-target underline hover:text-[var(--accent-ink)]"
         >
           Terms
         </Link>
         <Link
           href="/legal/privacy"
-          className="tap-target underline hover:text-[var(--accent)]"
+          className="tap-target underline hover:text-[var(--accent-ink)]"
         >
           Privacy
         </Link>

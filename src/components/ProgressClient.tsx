@@ -19,7 +19,7 @@ import {
 } from "@/lib/gamification";
 import { PAL_SPECIES, stageForLevel, nextStage } from "@/lib/pals";
 import type { PalType } from "@/lib/pals";
-import PixelSprite from "@/components/PixelSprite";
+import PalSprite from "@/components/PalSprite";
 import StorageNotice from "@/components/StorageNotice";
 
 export default function ProgressClient({
@@ -102,11 +102,10 @@ export default function ProgressClient({
       <section className="pixel-panel flex flex-wrap items-center gap-6 p-6">
         <div className="flex flex-col items-center gap-1">
           <div className="pal-idle">
-            <PixelSprite
-              sprite={stage.sprite}
-              palette={species.palette}
-              size={80}
-              title={`${displayName}, your ${species.label}-type ExamPal`}
+            <PalSprite
+              sheet={stage.image}
+              size={96}
+              title={`${displayName}, your ${species.label}-line ExamPal`}
             />
           </div>
           <p className="font-pixel text-label">{displayName}</p>
@@ -122,9 +121,9 @@ export default function ProgressClient({
               {xpIntoLevel}/{xpForNextLevel} to next level
             </span>
           </div>
-          <div className="mt-1 h-3 w-full overflow-hidden rounded-full border-2 border-[var(--border)] bg-black/10 dark:bg-white/10">
+          <div className="hp-track mt-1">
             <div
-              className="h-full bg-[var(--accent)]"
+              className="hp-fill hp-fill--xp"
               style={{ width: `${(xpIntoLevel / xpForNextLevel) * 100}%` }}
             />
           </div>
@@ -157,7 +156,7 @@ export default function ProgressClient({
               href={`/exams/${exam.code}/progress`}
               className="pixel-panel flex flex-col gap-2 p-5 hover:-translate-y-0.5 transition-transform"
             >
-              <span className="font-pixel text-label text-[var(--accent)]">
+              <span className="font-pixel text-label text-[var(--accent-ink)]">
                 {exam.code.toUpperCase()}
               </span>
               <p className="text-body font-medium">{exam.title}</p>

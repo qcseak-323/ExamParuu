@@ -25,6 +25,7 @@ import { useQuizAttempts, useFlashcardProgress } from "@/lib/storage";
 import { computeXp, computeLevel } from "@/lib/gamification";
 import { usePreferences } from "@/lib/preferences";
 import PixelSprite from "@/components/PixelSprite";
+import PalSprite from "@/components/PalSprite";
 import MenuList, { type MenuOption } from "@/components/MenuList";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
@@ -70,10 +71,12 @@ type Phase = "setup" | "battle" | "finished";
 type Turn = "asking" | "resolved";
 type Outcome = "victory" | "defeat" | "survived";
 
-function hpColor(ratio: number): string {
-  if (ratio > 0.5) return "#3fa34d";
-  if (ratio > 0.2) return "#e0a021";
-  return "#c8402f";
+/* Storm-glass liquid: verdant when healthy, brass when worn, ember when
+   critical. Gradients live in globals.css so both themes share one tube. */
+function hpFillClass(ratio: number): string {
+  if (ratio > 0.5) return "hp-fill--good";
+  if (ratio > 0.2) return "hp-fill--warn";
+  return "hp-fill--low";
 }
 
 function HpBar({
@@ -99,8 +102,8 @@ function HpBar({
       </div>
       <div className="hp-track mt-1">
         <div
-          className="hp-fill"
-          style={{ width: `${ratio * 100}%`, background: hpColor(ratio) }}
+          className={`hp-fill ${hpFillClass(ratio)}`}
+          style={{ width: `${ratio * 100}%` }}
         />
       </div>
       <p className="mt-1 text-right text-caption text-[var(--foreground-muted)]">
@@ -490,12 +493,11 @@ export default function QuizClient({
                     : "pal-idle"
               }`}
             >
-              <PixelSprite
-                sprite={stage.sprite}
-                palette={species.palette}
+              <PalSprite
+                sheet={stage.image}
                 size={96}
                 flip
-                title={`${palName}, your ${species.label}-type ExamPal`}
+                title={`${palName}, your ${species.label}-line ExamPal`}
               />
             </div>
             <HpBar
@@ -538,7 +540,7 @@ export default function QuizClient({
                     href={studyHref}
                     target="_blank"
                     rel="noreferrer"
-                    className="tap-target text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
+                    className="tap-target text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent-ink)]"
                   >
                     Read “{teachingLabel}” ↗
                   </a>
@@ -562,7 +564,7 @@ export default function QuizClient({
 
             <a
               href={mailtoHref}
-              className="tap-target text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
+              className="tap-target text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent-ink)]"
             >
               Report an issue with this question
             </a>
@@ -606,17 +608,16 @@ export default function QuizClient({
     <div className="flex flex-col gap-6">
       <div className="flex flex-col items-center gap-3 text-center">
         <div className={result === "defeat" ? "opacity-50" : "pal-idle"}>
-          <PixelSprite
-            sprite={stage.sprite}
-            palette={species.palette}
+          <PalSprite
+            sheet={stage.image}
             size={96}
-            title={`${palName}, your ${species.label}-type ExamPal`}
+            title={`${palName}, your ${species.label}-line ExamPal`}
           />
         </div>
         <h1 className="font-pixel text-display">{HEADLINE[result]}</h1>
         <p className="text-body-lg">
           You scored{" "}
-          <span className="font-semibold text-[var(--accent)]">
+          <span className="font-semibold text-[var(--accent-ink)]">
             {correctCount}/{answered}
           </span>{" "}
           ({pct}%)
@@ -663,7 +664,7 @@ export default function QuizClient({
               </p>
               <Link
                 href={studyHrefForQuestion(q)}
-                className="tap-target mt-2 inline-flex text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent)]"
+                className="tap-target mt-2 inline-flex text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent-ink)]"
               >
                 Read “{teachingLabelForQuestion(q)}” →
               </Link>

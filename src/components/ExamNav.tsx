@@ -31,14 +31,14 @@ export default function ExamNav({
       <div className="flex flex-wrap items-baseline gap-2 text-caption">
         <Link
           href="/catalog"
-          className="tap-target underline hover:text-[var(--accent)]"
+          className="tap-target underline hover:text-[var(--accent-ink)]"
         >
           Catalog
         </Link>
         <span aria-hidden="true" className="text-[var(--foreground-muted)]">
           /
         </span>
-        <span className="font-pixel text-[var(--accent)]">
+        <span className="font-pixel text-[var(--accent-ink)]">
           {examCode.toUpperCase()}
         </span>
         <span className="text-[var(--foreground-muted)]">{examTitle}</span>

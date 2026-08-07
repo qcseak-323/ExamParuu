@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Press_Start_2P } from "next/font/google";
+import { Geist_Mono, Instrument_Sans, Jersey_25 } from "next/font/google";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import PreferencesEffect from "@/components/PreferencesEffect";
@@ -9,8 +9,11 @@ import ProgressSync from "@/components/ProgressSync";
 import { PREFERENCES_INIT_SCRIPT } from "@/lib/preferencesScript";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+/* The Monsoon Belt faces: Instrument Sans for body, Jersey 25 as the pixel
+   display face — still pixel, but tall enough to hold up at every size it
+   is allowed to appear at (nothing below the title step). */
+const instrumentSans = Instrument_Sans({
+  variable: "--font-instrument",
   subsets: ["latin"],
 });
 
@@ -19,8 +22,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const pressStart = Press_Start_2P({
-  variable: "--font-press-start",
+const jersey = Jersey_25({
+  variable: "--font-jersey",
   weight: "400",
   subsets: ["latin"],
 });
@@ -39,7 +42,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${pressStart.variable} h-full antialiased`}
+      className={`${instrumentSans.variable} ${geistMono.variable} ${jersey.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       {/* Deliberately a raw <script> in <head>, not next/script. It has to run

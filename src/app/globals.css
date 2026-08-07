@@ -6,158 +6,158 @@
    light-OS machine left black overlays and dark-on-dark text everywhere. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* Palette notes
-   ─────────────
-   This targets the look of a 16-bit handheld RPG rather than the 8-bit one
-   the app started with: deeper colour, gradients instead of flat fills, and
-   window chrome that is bevelled rather than a single hard rule.
-   Those are era conventions and generic to the genre. The specific colour
-   values here are our own — nothing is sampled from another game — and every
-   sprite, name, and piece of music in this project remains original. */
+/* ==========================================================================
+   The Monsoon Belt — mangrove and estuary, brass and storm glass.
 
-/* Bright theme — daylight, verdant */
+   Two weathers: "Low Tide" (bright) and "Storm Watch" (dark). The UI is the
+   kit a field naturalist carries: chart-paper panels inked with a 2px border
+   and a hard 2px stamp shadow, brass hardware that stays #C08A3E in both
+   themes, and storm-glass tubes for every meter. The shared sprite outline
+   #12202B is the bright theme's ink and the dark theme's surface.
+
+   Every pairing keeps WCAG AA: ratios below are measured, not aspirational.
+   *-ink tokens are text-safe; the bare fill tokens (--accent, --success-fill,
+   --danger used as a fill) are for large graphics and UI ≥3:1 only.
+   ========================================================================== */
+
+/* Low Tide (bright) */
 :root,
 :root[data-theme="bright"] {
-  --background: #eef3ec;
-  --panel: #ffffff;
-  --foreground: #172438;
-  --foreground-muted: #56657a;
-  --border: #21354f;
-  /* Was #1f8a63, which measures 4.31:1 on a white panel and 3.83:1 on the
-     page background — under AA for normal text. Darkened until it clears its
-     worst ground, the foot of the panel gradient (#dde6ef), at 5.26:1.
-     The dark theme's accent was already fine at 7.8–9.5:1, which is why this
-     went unnoticed: it is a bright-theme-only defect. */
-  --accent: #17694c;
-  --accent-foreground: #ffffff;
-  --danger: #c0392f;
-  --danger-foreground: #ffffff;
-  --warning: #b07908;
-  /* "Correct answer" green, distinct from the interactive accent. Added
-     because QuizClient was reaching for raw `text-emerald-700` — the one
-     place the app stepped outside its own token system. */
-  --success: #1a6b37;
+  --background: #ECEAE3;        /* silt paper */
+  --panel: #F7F5EC;             /* chart card */
+  --panel-raised: #ECEAE3;      /* inset rows on a panel */
+  --well: #E0DDD1;              /* meter tracks, input wells (non-text) */
+  --foreground: #12202B;        /* ink · 13.8:1 on bg · 15.2:1 on panel */
+  --foreground-muted: #3F564C;  /* 6.6:1 on bg · 7.3:1 on panel */
+  --foreground-soft: #556A60;   /* 4.8:1 on bg — smallest text only */
+  --border: #12202B;            /* panel borders = the ink */
+  --line: #C9C2AC;              /* decorative hairlines only */
 
-  /* Window chrome: an outer edge, a light bevel catching the top-left, and a
-     dark bevel on the bottom-right. Three tones is what separates a 16-bit
-     window from an 8-bit box drawn with one line weight. */
-  --window-top: #ffffff;
-  --window-bottom: #dde6ef;
-  --window-bevel-light: #ffffff;
-  --window-bevel-dark: #93a6bd;
-  --window-edge: #21354f;
+  --accent: #C08A3E;            /* brass — objects, never text */
+  --accent-hi: #D9A85A;         /* top of the brass gradient */
+  --accent-foreground: #12202B; /* 5.5:1 on brass */
+  --accent-ink: #7E5417;        /* brass as TEXT · 5.5:1 on bg · 6.1 on panel */
 
-  /* Creature sprites use literal colours, but their outline has to follow the
-     theme or it disappears against the background. */
-  --sprite-outline: #21354f;
+  --success: #29623E;           /* correct as text · 6.0:1 on bg */
+  --success-fill: #3E8455;      /* correct fills/large only · 3.8:1 */
+  --danger: #9C3319;            /* wrong as text · 6.0:1 on bg */
+  --danger-fill: #C4553B;       /* wrong fills/large only · 3.7:1 */
+  --danger-foreground: #F7F5EC; /* on --danger fills */
+  --warning: #7E5417;
+  --link: #245C7B;              /* tide · 6.0:1 on bg */
 
-  --battle-sky-top: #63b7e8;
-  --battle-sky-bottom: #bfe6f7;
-  --battle-ground: #9ccf6b;
-  --battle-ground-dark: #6fae4c;
-  --battle-platform: #c8a86a;
-  --battle-platform-dark: #a4854c;
+  --focus: #245C7B;             /* 3px ring at 2px offset — sits on bg, 6.0:1 */
+  --stamp: #12202B;             /* the stamp shadow */
+  --scrim: rgba(18, 32, 43, 0.5);
 
-  --map-water: #4d9fd6;
-  --map-land: #a9d98a;
-  --map-forest: #6fb45c;
-  --map-route: #d8c08a;
-  --map-route-dash: #8a7346;
+  /* Matrix-rendered sprites (Glitchling, gym) flip their outline per theme. */
+  --sprite-outline: #12202B;
+  --ground-shadow: rgba(18, 32, 43, 0.12);
+
+  /* Battle arena: chart paper, faintly ruled. */
+  --arena-top: #DCE3D8;
+  --arena-bottom: #ECEAE3;
+  --arena-line: rgba(18, 32, 43, 0.03);
+
+  /* Region map — estuary, not overworld grass. */
+  --map-water: #4FA3B8;
+  --map-land: #A8D5C2;
+  --map-forest: #3E8455;
+  --map-route: #E0DDD1;
+  --map-route-dash: #7E5417;
 }
 
-/* Dark theme — dusk */
+/* Storm Watch (dark) */
 :root[data-theme="dark"] {
-  --background: #101725;
-  --panel: #1e2740;
-  --foreground: #e8eef7;
-  --foreground-muted: #9aabc4;
-  --border: #c6d4e8;
-  --accent: #45d3a0;
-  --accent-foreground: #06231a;
-  --danger: #ff8c80;
-  /* The dark danger is a light salmon, so its foreground has to be dark ink.
-     White on it measures 2.25:1; this measures 8.17:1. */
-  --danger-foreground: #2a0906;
-  --warning: #ffcf6b;
-  --success: #5fe0b0;
+  --background: #0C161E;        /* brine deep */
+  --panel: #12202B;             /* = the sprite outline; ink becomes water */
+  --panel-raised: #1B2E3B;      /* second-level surface */
+  --well: #081019;
+  --foreground: #EAF2ED;        /* foam · 14.5:1 on panel */
+  --foreground-muted: #A3BAB2;  /* 8.1:1 on panel · 6.8:1 on raised */
+  --foreground-soft: #93ACA4;   /* 6.9:1 on panel */
+  --border: #2E4B5C;
+  --line: #2E4B5C;
 
-  --window-top: #2b3856;
-  --window-bottom: #1a2238;
-  --window-bevel-light: #4d5f88;
-  --window-bevel-dark: #0c111d;
-  --window-edge: #c6d4e8;
+  --accent: #C08A3E;            /* brass is brass in any weather */
+  --accent-hi: #D9A85A;
+  --accent-foreground: #12202B; /* 5.5:1 on brass */
+  --accent-ink: #D9A85A;        /* 7.7:1 on panel · 6.5:1 on raised */
 
-  --sprite-outline: #e8eef7;
+  --success: #6DB56A;           /* 6.7:1 on panel — text-safe */
+  --success-fill: #6DB56A;
+  --danger: #E8863F;            /* 6.2:1 on panel — text-safe */
+  --danger-fill: #E8863F;
+  --danger-foreground: #12202B;
+  --warning: #F5C86B;
+  --link: #4FA3B8;              /* 5.7:1 on panel */
 
-  --battle-sky-top: #2a3866;
-  --battle-sky-bottom: #4a5590;
-  --battle-ground: #3c5c3a;
-  --battle-ground-dark: #29401f;
-  --battle-platform: #6b5a3c;
-  --battle-platform-dark: #4a3d28;
+  --focus: #9FD8DE;
+  --stamp: #060B10;
+  --scrim: rgba(4, 10, 15, 0.62);
 
-  --map-water: #1d3a5c;
-  --map-land: #3e6b46;
-  --map-forest: #2c5237;
-  --map-route: #7a6844;
-  --map-route-dash: #cbb684;
+  --sprite-outline: #EAF2ED;
+  --ground-shadow: rgba(0, 0, 0, 0.4);
+
+  --arena-top: #10222E;
+  --arena-bottom: #0C161E;
+  --arena-line: rgba(159, 216, 222, 0.045);
+
+  --map-water: #173B52;
+  --map-land: #1F4A34;
+  --map-forest: #163A28;
+  --map-route: #7E5417;
+  --map-route-dash: #D9A85A;
+}
+
+/* Locked creature palettes — art and accents only, never UI text. */
+:root {
+  --verdant-1: #1F4A34; --verdant-2: #3E8455; --verdant-3: #6DB56A; --verdant-4: #A8D5C2;
+  --ember-1: #7A2E1E;   --ember-2: #C4553B;   --ember-3: #E8863F;   --ember-4: #F5C86B;
+  --tide-1: #173B52;    --tide-2: #2E6B8C;    --tide-3: #4FA3B8;    --tide-4: #9FD8DE;
+  --outline: #12202B;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-instrument);
   --font-mono: var(--font-geist-mono);
-  --font-pixel: var(--font-press-start);
+  --font-pixel: var(--font-jersey);
 }
 
 /* --- Type scale ----------------------------------------------------------
-   Two ramps, because Press Start 2P renders roughly twice the visual size of
-   Geist at the same px — one shared scale cannot serve both. Registered in
-   @theme so Tailwind emits real utilities (`text-display`, `text-label`, …)
-   rather than us hand-rolling classes it would not know about.
+   Display face is Jersey 25 — still pixel, but tall and legible. It never
+   appears below the title step (1.5rem), so it clears the 14px floor with
+   room to spare. Body is Instrument Sans.
 
-   THE FLOOR IS 14px / 0.875rem, FOR BOTH FACES. Nothing below it, ever.
-   Press Start 2P is drawn on an 8×8 cell; under ~14px its strokes fall below
-   one device pixel and the glyphs stop resolving. It is not a small heading
-   at that point, it is texture. The app previously set 23 headings at 9–10px.
-
-   Everything is rem on purpose. `html[data-text-scale]` below moves the root
-   font size (15/16/19px) for the accessibility preference — rem follows it,
-   px does not. The arbitrary `text-[10px]` sizes these replace were silently
-   opting out of that preference entirely.
-
-   `--text-display` is capped at 1.75rem rather than something grander because
-   a pixel face at 40px fits about nine characters on a 375px screen, and
-   "Battle setup" would wrap to three lines. 28px is the largest step that
-   keeps a two-word title on one line at phone width. */
+   THE FLOOR IS 14px IN ANY FACE. The label/caption steps wear max(...,14px)
+   because the text-size preference can set a 15px root, where a bare
+   0.875rem computes to 13.125px. Everything is rem so that preference
+   (`html[data-text-scale]`, 15/16/19px) scales every size. */
 @theme inline {
-  /* Pixel face — sparse. Exactly one --text-display per screen. */
-  --text-display: 1.75rem;
-  --text-display--line-height: 1.3;
-  --text-title: 1.25rem;
-  --text-title--line-height: 1.35;
-  /* max() because this step IS the pixel floor, and the text-scale preference
-     can push rem below it: at data-text-scale="sm" the root is 15px, so a bare
-     0.875rem computes to 13.125px and Press Start 2P stops resolving again.
-     Scaling up still works (19px root → 16.6px); only the floor is pinned.
-     The sans steps deliberately do NOT get this guard — a trainer who picks
-     "small" wants small, and Geist is still legible there. */
+  /* Display face — Jersey 25. Stops at --text-title going down. */
+  --text-hero: 2.75rem;
+  --text-hero--line-height: 1.02;
+  --text-display: 2rem;
+  --text-display--line-height: 1.05;
+  --text-title: 1.5rem;
+  --text-title--line-height: 1.1;
+  /* Kicker tier — sans semibold uppercase, never the display face. */
   --text-label: max(0.875rem, 14px);
   --text-label--line-height: 1.4;
 
   /* Sans face — everything anyone actually reads. */
-  --text-body-lg: 1.125rem;
-  --text-body-lg--line-height: 1.6;
+  --text-body-lg: 1.1875rem;
+  --text-body-lg--line-height: 1.55;
   --text-body: 1rem;
-  --text-body--line-height: 1.6;
-  --text-caption: 0.875rem;
+  --text-body--line-height: 1.55;
+  --text-caption: max(0.875rem, 14px);
   --text-caption--line-height: 1.5;
 }
 
-/* Headings/UI chrome use the pixel display font by default; readable-font
-   mode swaps it for the body sans-serif so long text is never set in a
-   pixel font, which is a genuine accessibility failure. */
+/* Headings use the pixel display face by default; readable-font mode swaps
+   it for the body sans so no long text is ever set in a pixel font. */
 :root {
   --font-display: var(--font-pixel);
 }
@@ -175,30 +175,78 @@ html[data-text-scale="lg"] {
   font-size: 19px;
 }
 
-:root[data-contrast="high"] {
-  --foreground-muted: var(--foreground);
+/* High contrast — same weather, harder ink. Mirrors the design source. */
+:root[data-contrast="high"][data-theme="bright"],
+:root[data-contrast="high"]:not([data-theme="dark"]) {
+  --foreground: #000913;
+  --foreground-muted: #1E2F28;
+  --foreground-soft: #1E2F28;
+  --line: #12202B;
+  --accent-ink: #5C3D0E;
+  --success: #1F4A34;
+  --danger: #7A2E1E;
+  --link: #173B52;
+}
+:root[data-contrast="high"][data-theme="dark"] {
+  --foreground: #FFFFFF;
+  --foreground-muted: #D7E4DD;
+  --foreground-soft: #D7E4DD;
+  --line: #5E7E92;
+  --accent-ink: #E2B873;
+  --success: #A8D5C2;
+  --danger: #F5C86B;
+  --link: #9FD8DE;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Focus is a tide ring, everywhere. The 2px offset means the ring sits on
+   whatever surrounds the control (page or panel, ≥4.8:1 in both themes),
+   never on the brass fill it is outlining — which is what sank the ring
+   colour in the design source's own audit. */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
 }
 
 .font-pixel {
   font-family: var(--font-display), var(--font-sans), sans-serif;
-  letter-spacing: 0.02em;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* "The display face stops at the title step." Anything that asks for the
+   pixel face at the label size gets the kicker treatment instead: sans,
+   semibold, uppercase, tracked. One rule enforces the floor app-wide. */
+.font-pixel:where(.text-label) {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .pixelated {
   image-rendering: pixelated;
 }
 
+/* The raster cast bakes in the dark outline (#12202B). On Storm Watch that
+   colour is the surface itself, so give the sprite a faint foam rim. */
+.pal-raster {
+  image-rendering: pixelated;
+}
+[data-theme="dark"] .pal-raster {
+  filter: drop-shadow(1px 0 0 rgba(234, 242, 237, 0.38))
+    drop-shadow(-1px 0 0 rgba(234, 242, 237, 0.38))
+    drop-shadow(0 1px 0 rgba(234, 242, 237, 0.38))
+    drop-shadow(0 -1px 0 rgba(234, 242, 237, 0.38));
+}
+
 /* Guarantees a 44×44 hit area without disturbing the visual box — padding
-   absorbs the difference. The landing page alone shipped five controls under
-   that, the smallest being the sound toggle at 23×32.
-   Use on anything tappable whose own box is smaller: nav links, icon
-   buttons, footer links, map markers. */
+   absorbs the difference. */
 .tap-target {
   min-height: 44px;
   min-width: 44px;
@@ -207,90 +255,158 @@ body {
   justify-content: center;
 }
 
-/* Caps running text near 66 characters. Lesson prose and the legal pages ran
-   the full container width, which at desktop is an unreadable measure. */
+/* Caps running text near 66 characters. */
 .prose-measure {
   max-width: 66ch;
 }
 
 /* --- Spacing rhythm ------------------------------------------------------
-   Four steps, not nine. `gap-1` through `gap-12` were all in use, often
-   inside one component, which is why groups did not read as groups. These
-   are Tailwind's existing scale — no new tokens needed, just the discipline
-   of picking from four:
+   Four steps, unchanged from V0.04:
+     gap-2  inside a control · gap-4  between items in a group
+     gap-6  between groups   · gap-10 between page sections */
 
-     gap-2  / 0.5rem   inside a control — icon to label, stat to value
-     gap-4  / 1rem     between items in a group — menu rows, answer options
-     gap-6  / 1.5rem   between groups on a screen
-     gap-10 / 2.5rem   between page sections
+/* ==========================================================================
+   Hardware. In @layer components so Tailwind utilities on the same element
+   (tone borders, bg overrides) still win the cascade.
+   ========================================================================== */
+@layer components {
+  /* Chart panel — the base container. Inked border, hard stamp shadow:
+     printed on the page, not floating over it. */
+  .pixel-panel {
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 2px 2px 0 var(--stamp);
+  }
 
-   Anything else should round to the nearest of these. */
+  /* Stamped hardware button. Colour comes from utilities; the top-light
+     gradient reads as machined metal on brass and as paper relief on panel. */
+  .pixel-button {
+    background-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.22),
+      rgba(255, 255, 255, 0) 55%
+    );
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 2px 2px 0 var(--stamp);
+    min-height: 44px;
+  }
+  .pixel-button:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
+  .pixel-button[disabled] {
+    box-shadow: none;
+    cursor: not-allowed;
+  }
 
-/* The window treatment the whole UI is built from.
-   An outer edge, then a light bevel on the top-left and a dark one on the
-   bottom-right, over a soft vertical gradient. That inset-bevel-plus-gradient
-   is what reads as 16-bit rather than 8-bit — the previous single 3px rule
-   and hard offset shadow read as a generation earlier. */
-.pixel-panel {
-  background: linear-gradient(var(--window-top), var(--window-bottom));
-  border: 2px solid var(--window-edge);
-  border-radius: 8px;
-  box-shadow:
-    inset 1px 1px 0 var(--window-bevel-light),
-    inset -1px -1px 0 var(--window-bevel-dark),
-    0 2px 0 var(--window-bevel-dark);
-}
+  /* Dialogue window — chart panel with room for a brass speaker tab. */
+  .dialogue-frame {
+    position: relative;
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 2px 2px 0 var(--stamp);
+  }
+  .dialogue-frame-inner {
+    padding: 1rem 1rem 0.85rem;
+  }
+  /* Clear the speaker tab when one is riveted on. */
+  .dialogue-frame:has(.dialogue-tab) .dialogue-frame-inner {
+    padding-top: 1.4rem;
+  }
 
-.pixel-button {
-  border: 2px solid var(--window-edge);
-  border-radius: 7px;
-  box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.45),
-    inset -1px -2px 0 rgba(0, 0, 0, 0.28),
-    0 3px 0 var(--window-bevel-dark);
-  transition:
-    transform 70ms steps(1),
-    box-shadow 70ms steps(1);
-}
-.pixel-button:active {
-  transform: translateY(3px);
-  box-shadow:
-    inset 1px 1px 0 rgba(0, 0, 0, 0.2),
-    0 0 0 var(--window-bevel-dark);
-}
+  /* The speaker tab: brass plate riveted to the panel's top edge. */
+  .dialogue-tab {
+    position: absolute;
+    top: -12px;
+    left: 14px;
+    padding: 2px 10px;
+    background: linear-gradient(180deg, var(--accent-hi), var(--accent));
+    color: var(--accent-foreground);
+    border: 2px solid var(--outline);
+    border-radius: 4px;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-size: max(0.875rem, 14px);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+  .dialogue-tab--danger {
+    background: var(--danger);
+    color: var(--danger-foreground);
+  }
 
-/* --- Retro UI kit -------------------------------------------------------- */
+  /* The "press to continue" marker. Sized in em so it tracks text scale. */
+  .dialogue-arrow {
+    display: inline-block;
+    margin-left: 0.35em;
+    vertical-align: baseline;
+    width: 0;
+    height: 0;
+    border-left: 0.32em solid transparent;
+    border-right: 0.32em solid transparent;
+    border-top: 0.38em solid var(--accent-ink);
+    animation: dialogue-blink 900ms steps(1, end) infinite;
+  }
 
-/* The text window. Rounded, bevelled, and double-framed: an outer shell with
-   a thin inset rule floating inside it. The inner rule is what makes these
-   windows read as a "frame" rather than a plain box. */
-.dialogue-frame {
-  background: linear-gradient(var(--window-top), var(--window-bottom));
-  border: 2px solid var(--window-edge);
-  border-radius: 10px;
-  box-shadow:
-    inset 1px 1px 0 var(--window-bevel-light),
-    inset -1px -1px 0 var(--window-bevel-dark),
-    0 3px 0 var(--window-bevel-dark);
-  padding: 5px;
-}
-.dialogue-frame-inner {
-  border: 2px solid var(--window-bevel-dark);
-  border-radius: 6px;
-  padding: 0.85rem 1rem;
-}
+  /* Menu rows: inset chart rows on the panel surface. */
+  .menu-item {
+    background: var(--panel-raised);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 2px 2px 0 var(--stamp);
+    transition: transform 60ms steps(1), box-shadow 60ms steps(1);
+  }
+  .menu-item:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 2px 4px 0 var(--stamp);
+  }
+  .menu-item:active:not(:disabled) {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
 
-/* The "press to continue" marker. Sized in em so it tracks the text scale. */
-.dialogue-arrow {
-  display: inline-block;
-  margin-left: 0.35em;
-  vertical-align: baseline;
-  width: 0;
-  height: 0;
-  border-left: 0.32em solid transparent;
-  border-right: 0.32em solid transparent;
-  border-top: 0.38em solid var(--foreground);
-  animation: dialogue-blink 900ms steps(1, end) infinite;
+  /* Storm-glass meter: liquid in a tube. */
+  .hp-track {
+    position: relative;
+    background: var(--well);
+    border: 2px solid var(--border);
+    border-radius: 999px;
+    height: 1rem;
+    overflow: hidden;
+  }
+  .hp-track::after {
+    /* The highlight stripe is the glass. */
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 8px;
+    right: 8px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 999px;
+    pointer-events: none;
+  }
+  .hp-fill {
+    height: 100%;
+    border-right: 2px solid var(--outline);
+    transition: width 420ms steps(12, end);
+  }
+  .hp-fill--good {
+    background: linear-gradient(180deg, var(--verdant-3), var(--verdant-2));
+  }
+  .hp-fill--warn {
+    background: linear-gradient(180deg, var(--ember-4), var(--accent));
+  }
+  .hp-fill--low {
+    background: linear-gradient(180deg, var(--ember-3), var(--ember-2));
+  }
+  .hp-fill--xp {
+    background: linear-gradient(180deg, var(--tide-3), var(--tide-2));
+  }
 }
 
 @keyframes dialogue-blink {
@@ -302,37 +418,6 @@ body {
   100% {
     opacity: 0;
   }
-}
-
-.menu-item {
-  background: linear-gradient(var(--window-top), var(--window-bottom));
-  border: 2px solid var(--window-edge);
-  border-radius: 7px;
-  box-shadow:
-    inset 1px 1px 0 var(--window-bevel-light),
-    inset -1px -1px 0 var(--window-bevel-dark);
-  /* steps() rather than a smooth ease — nothing on this hardware eased. */
-  transition:
-    transform 60ms steps(1),
-    box-shadow 60ms steps(1);
-}
-/* The selected row lifts and takes an accent rim, which is how these menus
-   showed a cursor position beyond the arrow itself. */
-.menu-item:hover:not(:disabled),
-.menu-item:focus-visible {
-  outline: none;
-  transform: translateY(-2px);
-  box-shadow:
-    inset 1px 1px 0 var(--window-bevel-light),
-    inset -1px -1px 0 var(--window-bevel-dark),
-    0 0 0 2px var(--accent),
-    0 3px 0 var(--window-bevel-dark);
-}
-.menu-item:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow:
-    inset 1px 1px 0 rgba(0, 0, 0, 0.18),
-    0 0 0 2px var(--accent);
 }
 
 /* Idle bob, so a pal on screen looks alive rather than pasted on. */
@@ -349,85 +434,42 @@ body {
   }
 }
 
-/* Battle backdrop. A graded sky, a treeline, then the field — three depth
-   layers instead of the two flat bands it had before, which is the main thing
-   separating a 16-bit encounter screen from an 8-bit one. */
+/* Battle arena: ruled chart paper, not a painted sky. The creatures are the
+   only saturated thing on it, which is the point. */
 .battle-scene {
   position: relative;
   overflow: hidden;
-  border: 2px solid var(--window-edge);
-  border-radius: 10px;
-  box-shadow:
-    inset 1px 1px 0 var(--window-bevel-light),
-    0 3px 0 var(--window-bevel-dark);
+  border: 2px solid var(--border);
+  border-radius: 12px;
   background:
-    /* field */
-    linear-gradient(transparent 64%, var(--battle-ground) 64%),
-    /* treeline sitting on the horizon */
-    radial-gradient(
-        ellipse 90px 34px at 12% 64%,
-        var(--battle-ground-dark) 0 100%,
-        transparent 101%
-      ),
-    radial-gradient(
-        ellipse 120px 42px at 44% 64%,
-        var(--battle-ground-dark) 0 100%,
-        transparent 101%
-      ),
-    radial-gradient(
-        ellipse 100px 36px at 78% 64%,
-        var(--battle-ground-dark) 0 100%,
-        transparent 101%
-      ),
-    /* sky */ linear-gradient(var(--battle-sky-top), var(--battle-sky-bottom));
+    repeating-linear-gradient(
+      180deg,
+      var(--arena-line) 0 2px,
+      transparent 2px 28px
+    ),
+    linear-gradient(180deg, var(--arena-top), var(--arena-bottom));
 }
 
-/* The raised ground each combatant stands on. Genre furniture — it gives the
-   sprites somewhere to be rather than floating on the field. */
+/* The ground shadow each combatant stands on. */
 .battle-platform {
   position: relative;
   display: inline-block;
 }
-/* Drawn as ::before and left in normal stacking order, with the sprite lifted
-   above it. A negative z-index would drop it behind the scene's own
-   background and disappear entirely. */
 .battle-platform::before {
   content: "";
   position: absolute;
   left: 50%;
-  bottom: -4px;
-  width: 112%;
-  height: 22px;
+  bottom: -6px;
+  width: 92%;
+  height: 14px;
   transform: translateX(-50%);
   border-radius: 50%;
-  background: radial-gradient(
-    ellipse at 50% 35%,
-    var(--battle-platform) 0 60%,
-    var(--battle-platform-dark) 61% 100%
-  );
-  border: 2px solid var(--window-edge);
+  background: var(--ground-shadow);
 }
-.battle-platform > svg {
+.battle-platform > svg,
+.battle-platform > img {
   position: relative;
   z-index: 1;
-}
-
-/* Rounded, glossy meter with a highlight along the top — the flat bordered
-   bar it replaced belonged to the previous generation. */
-.hp-track {
-  background: rgba(0, 0, 0, 0.35);
-  border: 2px solid var(--window-edge);
-  border-radius: 999px;
-  height: 0.75rem;
-  overflow: hidden;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45);
-}
-.hp-fill {
-  height: 100%;
-  border-radius: 999px;
-  /* The inset white line is the gloss; without it the bar reads as flat. */
-  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.45);
-  transition: width 420ms steps(12, end);
 }
 
 /* Damage feedback: the sprite flickers, the frame jolts. */
@@ -477,36 +519,34 @@ body {
   }
 }
 
-/* --- Region map ----------------------------------------------------------- */
+/* --- Region map — the estuary chart -------------------------------------- */
 
 .gym-map {
   position: relative;
   width: 100%;
   height: 420px;
-  border: 2px solid var(--window-edge);
-  border-radius: 10px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow:
-    inset 1px 1px 0 var(--window-bevel-light),
-    0 3px 0 var(--window-bevel-dark);
-  /* Terrain: water at the edges, landmass in the middle, with a couple of
-     wooded patches. All gradients — no tiles to load. */
+  box-shadow: 2px 2px 0 var(--stamp);
+  /* Terrain: brine at the edges, tidal flats in the middle, mangrove
+     stands in the corners. All gradients — no tiles to load. */
   background:
     radial-gradient(
-        ellipse 30% 26% at 22% 22%,
-        var(--map-forest) 0 100%,
-        transparent 101%
-      ),
+      ellipse 30% 26% at 22% 22%,
+      var(--map-forest) 0 100%,
+      transparent 101%
+    ),
     radial-gradient(
-        ellipse 26% 22% at 74% 78%,
-        var(--map-forest) 0 100%,
-        transparent 101%
-      ),
+      ellipse 26% 22% at 74% 78%,
+      var(--map-forest) 0 100%,
+      transparent 101%
+    ),
     radial-gradient(
-        ellipse 78% 68% at 50% 50%,
-        var(--map-land) 0 100%,
-        transparent 101%
-      ),
+      ellipse 78% 68% at 50% 50%,
+      var(--map-land) 0 100%,
+      transparent 101%
+    ),
     var(--map-water);
 }
 
@@ -537,15 +577,10 @@ body {
   border-radius: 8px;
   text-decoration: none;
   color: var(--foreground);
-  transition:
-    transform 70ms steps(1),
-    box-shadow 70ms steps(1);
+  transition: transform 70ms steps(1);
 }
-a.gym-marker-hit:hover,
-a.gym-marker-hit:focus-visible {
-  outline: none;
+a.gym-marker-hit:hover {
   transform: translateY(-3px);
-  box-shadow: 0 0 0 2px var(--accent);
 }
 .gym-marker-locked {
   opacity: 0.65;
@@ -554,10 +589,11 @@ a.gym-marker-hit:focus-visible {
 
 .gym-marker-label {
   text-align: center;
-  padding: 2px 6px;
+  padding: 2px 8px;
   border-radius: 6px;
-  background: linear-gradient(var(--window-top), var(--window-bottom));
-  border: 2px solid var(--window-edge);
+  background: var(--panel);
+  border: 2px solid var(--border);
+  box-shadow: 2px 2px 0 var(--stamp);
   white-space: nowrap;
 }
 
@@ -574,64 +610,33 @@ a.gym-marker-hit:focus-visible {
   font-size: 11px;
   line-height: 1;
   border-radius: 50%;
-  border: 2px solid var(--window-edge);
+  border: 2px solid var(--border);
 }
 .gym-flag {
   right: -4px;
-  background: var(--warning);
-  color: #2a1c00;
+  background: var(--accent-hi);
+  color: var(--outline);
 }
 .gym-clear {
   left: -4px;
-  background: var(--accent);
-  color: var(--accent-foreground);
+  background: var(--success-fill);
+  color: #ffffff;
 }
 
-/* --- START button and sign-in prompt -------------------------------------- */
+/* --- Primary call to action ---------------------------------------------- */
 
-/* The one control the landing page is built around, so it gets a heavier
-   border and a slow pulse to pull the eye. */
+/* One primary action per screen gets brass; nothing else does. */
 .start-button {
-  border-width: 2px;
-  box-shadow:
-    inset 1px 2px 0 rgba(255, 255, 255, 0.5),
-    inset -1px -3px 0 rgba(0, 0, 0, 0.3),
-    0 5px 0 var(--window-bevel-dark),
-    0 7px 10px rgba(0, 0, 0, 0.3);
-  animation: start-pulse 2.4s ease-in-out infinite;
+  background-image: linear-gradient(180deg, var(--accent-hi), var(--accent));
+  color: var(--accent-foreground);
+  border: 2px solid var(--outline);
+  border-radius: 8px;
+  box-shadow: 2px 2px 0 var(--stamp);
+  min-height: 56px;
 }
 .start-button:active {
-  transform: translateY(5px);
-  box-shadow:
-    inset 1px 1px 0 rgba(0, 0, 0, 0.25),
-    0 0 0 var(--window-bevel-dark);
-}
-@keyframes start-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.035);
-  }
-}
-
-/* The hero text sits on the sky, which is the same blue in both themes, so it
-   sets its own colours rather than inheriting theme ones — `--foreground` is
-   near-white in dark mode and would vanish against it. */
-.hero-copy {
-  background: linear-gradient(
-    rgba(255, 255, 255, 0.95),
-    rgba(223, 234, 245, 0.95)
-  );
-  color: #172438;
-  border: 2px solid #21354f;
-  border-radius: 10px;
-  box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.9),
-    inset -1px -1px 0 rgba(120, 140, 165, 0.7),
-    0 3px 0 rgba(33, 53, 79, 0.55);
-  max-width: 34rem;
+  transform: translate(2px, 2px);
+  box-shadow: none;
 }
 
 .start-overlay {
@@ -642,160 +647,87 @@ a.gym-marker-hit:focus-visible {
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background: rgba(0, 0, 0, 0.55);
+  background: var(--scrim);
 }
 
 /* --- Landing hero scene --------------------------------------------------- */
 
-/* Flat colour bands rather than a photo: no asset to load, and it matches the
-   sprite art. The sky stays blue in both themes — it is a daytime road, and
-   re-tinting it for dark mode made it read as dusk rather than as the same
-   place. Contrast for the text over it is handled by the panel it sits in. */
+/* The estuary at the moment a wild Glitchling shows up. Drawn entirely from
+   gradients — sky, mangrove stands, the brine, a mud bank — so it costs
+   nothing to load and follows the theme: Low Tide daylight on bright,
+   Storm Watch on dark. */
 .hero-scene {
   position: relative;
   overflow: hidden;
-  /* The headline, the standfirst and START are absolutely centred on top of
-     this, and at 260px that stack covered 89% of it — the road, hills and
-     runner were all behind the copy panel, so the scene read as a blue frame.
-     Sized to leave the artwork visible above and below the copy. */
-  height: 330px;
-  border: 2px solid var(--window-edge);
-  border-radius: 10px;
-  box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.5),
-    0 3px 0 var(--window-bevel-dark);
-  /* A four-stop sky rather than two: deep at the top fading to haze at the
-     horizon, which is what gives the scene depth. */
-  background: linear-gradient(
-    #3f9fd8 0%,
-    #63b7e8 34%,
-    #a5d9f2 68%,
-    #d8eefb 100%
-  );
+  height: 300px;
+  border-radius: 8px;
+  background:
+    /* mud bank the creatures stand on */
+    linear-gradient(transparent 74%, var(--hero-bank) 74%),
+    /* brine strip at the horizon */
+    linear-gradient(
+      transparent 58%,
+      var(--hero-water) 58%,
+      var(--hero-water) 74%,
+      transparent 74%
+    ),
+    /* mangrove stands on the far shore */
+    radial-gradient(ellipse 120px 46px at 12% 58%, var(--hero-trees) 0 100%, transparent 101%),
+    radial-gradient(ellipse 150px 56px at 38% 58%, var(--hero-trees-far) 0 100%, transparent 101%),
+    radial-gradient(ellipse 130px 48px at 88% 58%, var(--hero-trees) 0 100%, transparent 101%),
+    /* sky */
+    linear-gradient(180deg, var(--hero-sky-top), var(--hero-sky-bottom) 58%);
+}
+:root,
+:root[data-theme="bright"] {
+  --hero-sky-top: #9FD8DE;
+  --hero-sky-bottom: #DCE8E1;
+  --hero-trees: #3E8455;
+  --hero-trees-far: #1F4A34;
+  --hero-water: #4FA3B8;
+  --hero-bank: #E0DDD1;
+}
+:root[data-theme="dark"] {
+  --hero-sky-top: #0C161E;
+  --hero-sky-bottom: #1B2E3B;
+  --hero-trees: #1F4A34;
+  --hero-trees-far: #12202B;
+  --hero-water: #173B52;
+  --hero-bank: #081019;
+}
 
-  /* This scene is daylight in both themes, so pin the outline colour dark
-     for everything inside it. The variable is otherwise theme-flipped, which
-     would give the runner, the sun, and the road edge a light outline in dark
-     mode — washed out against a sky that stayed blue. Scoping it here reaches
-     the sprite too, since PixelSprite resolves its outline from this same
-     variable. */
-  --sprite-outline: #21354f;
+/* Rain over the scene on Storm Watch only — the hairline treatment. */
+[data-theme="dark"] .hero-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    168deg,
+    rgba(159, 216, 222, 0.08) 0 1px,
+    transparent 1px 14px
+  );
+  pointer-events: none;
 }
 
 @media (min-width: 640px) {
   .hero-scene {
-    height: 380px;
+    height: 360px;
   }
 }
 
-.hero-sun {
+.hero-combatant {
   position: absolute;
-  top: 24px;
-  right: 40px;
-  width: 44px;
-  height: 44px;
-  background: #ffe66d;
-  border: 3px solid var(--sprite-outline);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.hero-combatant::after {
+  content: "";
+  width: 72%;
+  height: 12px;
+  margin-top: 2px;
   border-radius: 50%;
-}
-
-/* Three puffs built from radial gradients, tiled so the drift can loop
-   seamlessly by translating exactly one tile width. */
-.hero-clouds {
-  position: absolute;
-  inset: 0 auto auto 0;
-  width: 200%;
-  height: 55%;
-  background-image:
-    radial-gradient(circle at 10% 40%, #ffffff 0 18px, transparent 19px),
-    radial-gradient(circle at 15% 55%, #ffffff 0 22px, transparent 23px),
-    radial-gradient(circle at 21% 45%, #ffffff 0 16px, transparent 17px),
-    radial-gradient(circle at 38% 30%, #ffffff 0 14px, transparent 15px),
-    radial-gradient(circle at 43% 40%, #ffffff 0 19px, transparent 20px);
-  background-size: 50% 100%;
-  background-repeat: repeat-x;
-}
-.hero-clouds-drift {
-  animation: hero-clouds 38s linear infinite;
-}
-@keyframes hero-clouds {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-/* A rolling green horizon behind the road. */
-/* Two ranges at different tones so the horizon has depth rather than reading
-   as one cut-out silhouette. */
-.hero-hills {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 78px;
-  height: 90px;
-  background:
-    radial-gradient(ellipse 170px 54px at 30% 100%, #4f8f6a 0 100%, transparent 101%),
-    radial-gradient(ellipse 200px 62px at 72% 100%, #4f8f6a 0 100%, transparent 101%),
-    radial-gradient(ellipse 140px 60px at 18% 100%, #77c95f 0 100%, transparent 101%),
-    radial-gradient(ellipse 180px 74px at 52% 100%, #64b84e 0 100%, transparent 101%),
-    radial-gradient(ellipse 150px 58px at 86% 100%, #77c95f 0 100%, transparent 101%),
-    linear-gradient(transparent 66%, #86d16d 66%);
-}
-
-/* A verge strip between the grass and the tarmac, then the road itself with a
-   lit top edge — the flat grey slab it replaced had no depth at all. */
-.hero-road {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 78px;
-  background:
-    linear-gradient(#caa46a 0 6px, transparent 6px),
-    linear-gradient(#7c828c 0%, #5f656e 40%, #4d525a 100%);
-  border-top: 2px solid var(--sprite-outline);
-}
-
-/* Centre markings. The dashes are a repeating gradient, so scrolling is one
-   transform rather than a row of elements. */
-.hero-road-line {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 200%;
-  height: 8px;
-  margin-top: -4px;
-  background: repeating-linear-gradient(
-    to right,
-    #f4f1e8 0 34px,
-    transparent 34px 74px
-  );
-}
-.hero-road-scroll {
-  animation: hero-road 900ms linear infinite;
-}
-@keyframes hero-road {
-  to {
-    transform: translateX(-74px);
-  }
-}
-
-.hero-runner {
-  position: absolute;
-  left: 12%;
-  bottom: 46px;
-}
-.hero-runner-bob {
-  animation: hero-bob 280ms steps(2, end) infinite;
-}
-@keyframes hero-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
+  background: var(--ground-shadow);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,57 +1,43 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { RUNNER_FRAMES, RUNNER_PALETTE } from "@/lib/heroSprites";
+import { GLITCHLING, GLITCHLING_PALETTE, PAL_SPECIES } from "@/lib/pals";
 import { usePreferences } from "@/lib/preferences";
 import PixelSprite from "@/components/PixelSprite";
-
-const FRAME_MS = 140;
+import PalSprite from "@/components/PalSprite";
 
 /**
- * The landing-page backdrop: a trainer running a road under a blue sky.
+ * The landing-page scene: a starter facing a wild Glitchling across the
+ * estuary. The backdrop is pure CSS gradients (`.hero-scene`) — sky,
+ * mangrove stands, brine, mud bank — so there is no image to load and the
+ * scene follows the theme: Low Tide daylight on bright, rain on Storm Watch.
  *
- * Everything is drawn — flat colour bands, CSS-gradient clouds, and a road
- * whose markings are a repeating gradient that scrolls. There is no image
- * file, which keeps it consistent with the sprite system and means the whole
- * scene costs nothing to load.
- *
- * The runner stays put and the world moves past, which is how side-scrollers
- * of this era faked travel.
+ * The Glitchling is deliberately still matrix-rendered: it is the one
+ * creature that *should* look like the old renderer. It's a glitch.
  */
 export default function HeroScene() {
   const prefs = usePreferences();
   const still = prefs.reducedMotion;
-  const [frame, setFrame] = useState(0);
-
-  // The run cycle is driven from JS rather than CSS because the two frames
-  // are separate SVGs, not offsets into one sprite sheet.
-  useEffect(() => {
-    if (still) return;
-    const id = setInterval(
-      () => setFrame((f) => (f + 1) % RUNNER_FRAMES.length),
-      FRAME_MS,
-    );
-    return () => clearInterval(id);
-  }, [still]);
+  const starter = PAL_SPECIES.wood.stages[0];
 
   return (
     <div className="hero-scene" aria-hidden="true">
-      <div className="hero-sun" />
-
-      <div className={`hero-clouds ${still ? "" : "hero-clouds-drift"}`} />
-
-      <div className="hero-hills" />
-
-      <div className="hero-road">
-        <div className={`hero-road-line ${still ? "" : "hero-road-scroll"}`} />
+      {/* The wild one, on the far shore. */}
+      <div
+        className="hero-combatant"
+        style={{ right: "12%", bottom: "112px" }}
+      >
+        <PixelSprite
+          sprite={GLITCHLING}
+          palette={GLITCHLING_PALETTE}
+          size={64}
+        />
       </div>
 
-      <div className={`hero-runner ${still ? "" : "hero-runner-bob"}`}>
-        <PixelSprite
-          sprite={RUNNER_FRAMES[frame]}
-          palette={RUNNER_PALETTE}
-          size={112}
-        />
+      {/* Your side of the bank. */}
+      <div className="hero-combatant" style={{ left: "10%", bottom: "16px" }}>
+        <div className={still ? "" : "pal-idle"}>
+          <PalSprite sheet={starter.image} size={96} flip />
+        </div>
       </div>
     </div>
   );

@@ -21,6 +21,7 @@ import {
 } from "@/lib/pals";
 import { usePreferences } from "@/lib/preferences";
 import PixelSprite from "@/components/PixelSprite";
+import PalSprite from "@/components/PalSprite";
 import MenuList, { type MenuOption } from "@/components/MenuList";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import HpBar from "@/components/battle/HpBar";
@@ -304,12 +305,11 @@ export default function GymLeaderClient({
             <div
               className={`battle-platform ${prefs.reducedMotion ? "" : "pal-idle"}`}
             >
-              <PixelSprite
-                sprite={stage.sprite}
-                palette={species.palette}
+              <PalSprite
+                sheet={stage.image}
                 size={96}
                 flip
-                title={`${palName}, your ${species.label}-type ExamPal`}
+                title={`${palName}, your ${species.label}-line ExamPal`}
               />
             </div>
             <HpBar
@@ -370,18 +370,17 @@ export default function GymLeaderClient({
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
       <div className="flex flex-col items-center gap-3 text-center">
         <div className={passed ? "pal-idle" : "opacity-60"}>
-          <PixelSprite
-            sprite={stage.sprite}
-            palette={species.palette}
+          <PalSprite
+            sheet={stage.image}
             size={96}
-            title={`${palName}, your ${species.label}-type ExamPal`}
+            title={`${palName}, your ${species.label}-line ExamPal`}
           />
         </div>
         <h1 className="font-pixel text-display">
           {passed ? "Gym Badge earned!" : timedOut ? "Time!" : "Not this time."}
         </h1>
         <p className="text-body-lg">
-          <span className="font-semibold text-[var(--accent)]">
+          <span className="font-semibold text-[var(--accent-ink)]">
             {correct}/{answered}
           </span>{" "}
           ({pct}%) — {Math.round(PASS_RATIO * 100)}% to pass

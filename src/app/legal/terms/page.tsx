@@ -42,7 +42,7 @@ export default function TermsPage() {
         Your email and a copy of your progress are stored on our servers so
         they carry across devices, and a copy is kept in your browser&apos;s
         local storage so the site works offline. See the{" "}
-        <a href="/legal/privacy" className="underline hover:text-[var(--accent)]">
+        <a href="/legal/privacy" className="underline hover:text-[var(--accent-ink)]">
           privacy page
         </a>{" "}
         for the detail.
