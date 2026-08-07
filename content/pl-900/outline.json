@@ -1,0 +1,52 @@
+{
+  "examCode": "PL-900",
+  "examName": "Microsoft Power Platform Fundamentals",
+  "note": "Domain weights reflect the skills-measured outline published on Microsoft Learn as of 2026-07-24 — the version that added the Copilot Studio agents domain. Always check learn.microsoft.com for the current official breakdown before your exam.",
+  "domains": [
+    {
+      "id": "business-value",
+      "name": "Describe the business value of Microsoft Power Platform",
+      "weight": "5-10%",
+      "subtopics": [
+        "The value of Power Apps, Power Automate, Dataverse, connectors, Power Pages, generative AI features, and Copilot Studio"
+      ]
+    },
+    {
+      "id": "environment",
+      "name": "Manage the Microsoft Power Platform environment",
+      "weight": "20-25%",
+      "subtopics": [
+        "Dataverse versus traditional databases; tables, columns, relationships, forms, and views",
+        "Business logic options including Power Fx, and using AI to create and edit tables",
+        "Environments, the security model, privacy and accessibility, monitoring, and ALM with pipelines"
+      ]
+    },
+    {
+      "id": "power-apps",
+      "name": "Demonstrate the capabilities of Power Apps",
+      "weight": "20-25%",
+      "subtopics": [
+        "Canvas apps, model-driven apps, Plan designer, and code apps — capabilities and use cases",
+        "Building apps with AI, including the vibe experience"
+      ]
+    },
+    {
+      "id": "power-automate",
+      "name": "Demonstrate the capabilities of Power Automate",
+      "weight": "20-25%",
+      "subtopics": [
+        "Cloud and desktop flows; approvals, Teams, Outlook, SharePoint, Forms, and document automation",
+        "Connector triggers and actions; using AI to create and modify flows"
+      ]
+    },
+    {
+      "id": "copilot-studio-agents",
+      "name": "Describe features and capabilities of agents in Microsoft Copilot Studio",
+      "weight": "20-25%",
+      "subtopics": [
+        "Agent use cases; topics, knowledge sources, tools (including MCP servers and agent flows), and publishing channels",
+        "Microsoft Agent 365, monitoring usage and adoption, and agent evaluations"
+      ]
+    }
+  ]
+}

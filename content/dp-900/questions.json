@@ -1,0 +1,552 @@
+[
+  {
+    "id": "dp900-cd-01",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "question": "A dataset consists of JSON documents where products carry different fields — some have sizes, some voltages, some expiry dates — but every field is labelled. How is this data best classified?",
+    "options": ["Structured", "Semi-structured", "Unstructured", "Binary"],
+    "correctIndex": 1,
+    "explanation": "Semi-structured data carries its schema with it: labelled fields that can vary record to record, as in JSON. Structured data would demand the same fixed columns for every record; unstructured data has no field labels at all.",
+    "teaches": "representing-data"
+  },
+  {
+    "id": "dp900-cd-02",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "question": "A media company stores millions of video files and their thumbnails. How is this data classified, and which Azure store fits it?",
+    "options": [
+      "Structured — Azure SQL Database",
+      "Semi-structured — Azure Table storage",
+      "Unstructured — Azure Blob storage",
+      "Relational — Azure Files"
+    ],
+    "correctIndex": 2,
+    "explanation": "Video and images have no schema the store can query — unstructured data — and object storage (Blob) is built to hold exactly that at scale.",
+    "teaches": "representing-data"
+  },
+  {
+    "id": "dp900-cd-03",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "question": "An analytics team scans just three columns of a very wide table across billions of rows. Which file format is designed to make that scan fast and cheap?",
+    "options": ["CSV", "JSON", "Avro", "Parquet"],
+    "correctIndex": 3,
+    "explanation": "Parquet is columnar: values are grouped by column, so a query touching three columns reads only those columns' data. Row-oriented formats like CSV, JSON, and Avro must read whole records.",
+    "teaches": "representing-data"
+  },
+  {
+    "id": "dp900-cd-04",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "question": "A booking system processes thousands of small reservations per minute, each of which must be recorded completely or not at all. Which workload type and guarantee set is this?",
+    "options": [
+      "Analytical workload with columnar storage",
+      "Transactional (OLTP) workload with ACID guarantees",
+      "Batch workload with eventual consistency",
+      "Streaming workload with windowed aggregation"
+    ],
+    "correctIndex": 1,
+    "explanation": "Many small, correctness-critical writes recording business events is OLTP, and 'completely or not at all' is atomicity — the A in the ACID guarantees transactional systems provide.",
+    "teaches": "stores-and-workloads"
+  },
+  {
+    "id": "dp900-cd-05",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "question": "Why do organisations typically copy transactional data into a separate analytical store instead of running reports against the live OLTP database?",
+    "options": [
+      "SQL cannot express aggregate queries",
+      "Analytical scans over history are heavy and would degrade the transactional system, and the two workloads favour opposite storage designs",
+      "Analytical stores are always cheaper than transactional ones",
+      "Regulations forbid reporting on live data"
+    ],
+    "correctIndex": 1,
+    "explanation": "OLTP systems optimise for many small correct writes; analytics scans huge swathes of history. Running one on the other's store hurts both, so data is copied into stores designed for analysis.",
+    "teaches": "stores-and-workloads"
+  },
+  {
+    "id": "dp900-cd-06",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "question": "Who is primarily responsible for restoring a database after a failure and managing user permissions on it?",
+    "options": [
+      "The data analyst",
+      "The data engineer",
+      "The database administrator",
+      "The report consumer"
+    ],
+    "correctIndex": 2,
+    "explanation": "Availability, backup and restore, performance, and access control are the database administrator's remit. Engineers build pipelines; analysts build reports.",
+    "teaches": "data-roles"
+  },
+  {
+    "id": "dp900-cd-07",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "question": "Building and maintaining the pipelines that ingest data from source systems, clean it, and land it in an analytical store is the core job of which role?",
+    "options": [
+      "Database administrator",
+      "Data engineer",
+      "Data analyst",
+      "Security administrator"
+    ],
+    "correctIndex": 1,
+    "explanation": "Pipelines — ingestion, transformation, and loading — are the data engineer's territory: the plumbing between systems of record and systems of insight.",
+    "teaches": "data-roles"
+  },
+  {
+    "id": "dp900-cd-08",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "question": "Exploring a dataset, modelling relationships between tables, and building the monthly sales report in Power BI describes which role?",
+    "options": [
+      "Data analyst",
+      "Database administrator",
+      "Data engineer",
+      "Solution architect"
+    ],
+    "correctIndex": 0,
+    "explanation": "Turning data into models, visualizations, and business understanding is the data analyst's job — in the Microsoft world, the Power BI seat.",
+    "teaches": "data-roles"
+  },
+  {
+    "id": "dp900-cd-09",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "question": "Which format is row-based, human-readable, and the most universal interchange format for tabular data files?",
+    "options": ["Parquet", "ORC", "Delimited text (CSV)", "Avro"],
+    "correctIndex": 2,
+    "explanation": "CSV is plain delimited text: row-oriented, readable in any editor, and understood by effectively every data tool — the lowest common denominator of tabular exchange.",
+    "teaches": "representing-data"
+  },
+  {
+    "id": "dp900-cd-10",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "question": "A retail chain needs a store for its live point-of-sale orders. Which pairing of data classification and store is correct?",
+    "options": [
+      "Unstructured data in Blob storage",
+      "Structured data in a relational OLTP database",
+      "Semi-structured data in a data lake",
+      "Streaming data in Power BI"
+    ],
+    "correctIndex": 1,
+    "explanation": "Order records have fixed, typed fields — structured data — and recording live business transactions is exactly what relational OLTP databases are designed for.",
+    "teaches": "stores-and-workloads"
+  },
+  {
+    "id": "dp900-cd-11",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "question": "Which statement correctly contrasts transactional and analytical workloads?",
+    "options": [
+      "Transactional: few huge scans over history. Analytical: many small current writes",
+      "Transactional: many small current reads and writes. Analytical: fewer queries scanning large volumes of history",
+      "Both are identical in access pattern but differ in file format",
+      "Analytical workloads cannot use SQL"
+    ],
+    "correctIndex": 1,
+    "explanation": "OLTP is many small operations on current data; OLAP is fewer, heavier queries over accumulated history. The shapes are opposites, which drives separate store designs.",
+    "teaches": "stores-and-workloads"
+  },
+  {
+    "id": "dp900-cd-12",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "question": "A spreadsheet-like table where every row has exactly the same typed columns is an example of which kind of data?",
+    "options": ["Unstructured", "Semi-structured", "Structured", "Streamed"],
+    "correctIndex": 2,
+    "explanation": "A fixed schema of rows and identical typed columns is the definition of structured data — the shape relational tables and SQL are built around.",
+    "teaches": "representing-data"
+  },
+  {
+    "id": "dp900-rd-01",
+    "examCode": "dp-900",
+    "domain": "relational-data",
+    "question": "Customer addresses were being stored on every order row, and updating one customer's address meant editing hundreds of rows. Splitting customers into their own table linked by key solves this. What is this practice called?",
+    "options": ["Indexing", "Normalization", "Partitioning", "Denormalization"],
+    "correctIndex": 1,
+    "explanation": "Normalization splits data into related tables so each fact is stored once — eliminating exactly this update anomaly. Denormalization is the deliberate reverse, used for read-heavy analytics.",
+    "teaches": "relational-concepts"
+  },
+  {
+    "id": "dp900-rd-02",
+    "examCode": "dp-900",
+    "domain": "relational-data",
+    "question": "Which SQL statement family and keyword adds new rows to a table?",
+    "options": [
+      "DDL — CREATE",
+      "DML — INSERT",
+      "DDL — ALTER",
+      "DML — SELECT"
+    ],
+    "correctIndex": 1,
+    "explanation": "INSERT adds rows and belongs to the Data Manipulation Language family (SELECT reads, UPDATE changes, DELETE removes). DDL statements like CREATE and ALTER define objects, not rows.",
+    "teaches": "relational-concepts"
+  },
+  {
+    "id": "dp900-rd-03",
+    "examCode": "dp-900",
+    "domain": "relational-data",
+    "question": "Analysts repeatedly need the same complex join of five tables, presented as if it were a single table they can SELECT from. Which database object provides this?",
+    "options": ["An index", "A stored procedure", "A view", "A primary key"],
+    "correctIndex": 2,
+    "explanation": "A view is a saved query exposed as a virtual table — the join is written once and queried like a table. A stored procedure is executable logic; an index accelerates lookups.",
+    "teaches": "relational-concepts"
+  },
+  {
+    "id": "dp900-rd-04",
+    "examCode": "dp-900",
+    "domain": "relational-data",
+    "question": "Lookups by customer surname are slow because the engine scans the whole table. Which object is designed to speed up such lookups?",
+    "options": ["A view", "A foreign key", "An index on the surname column", "A trigger"],
+    "correctIndex": 2,
+    "explanation": "An index lets the engine seek directly to matching rows instead of scanning everything — the database equivalent of a book's index.",
+    "teaches": "relational-concepts"
+  },
+  {
+    "id": "dp900-rd-05",
+    "examCode": "dp-900",
+    "domain": "relational-data",
+    "question": "A migration must keep instance-level SQL Server features — cross-database queries and SQL Agent jobs — but the team no longer wants to manage the operating system. Which Azure SQL option fits?",
+    "options": [
+      "Azure SQL Database",
+      "Azure SQL Managed Instance",
+      "SQL Server on an Azure Virtual Machine",
+      "Azure Database for MySQL"
+    ],
+    "correctIndex": 1,
+    "explanation": "Managed Instance is the PaaS option with near-complete instance-scoped compatibility — Agent jobs and cross-database queries survive, while Microsoft manages the OS and platform. SQL Database is database-scoped; a VM would keep the OS burden.",
+    "teaches": "azure-relational-services"
+  },
+  {
+    "id": "dp900-rd-06",
+    "examCode": "dp-900",
+    "domain": "relational-data",
+    "question": "A brand-new cloud application needs a relational database with the least possible administration — no OS, no instance, just a database. Which service is designed for this?",
+    "options": [
+      "SQL Server on an Azure Virtual Machine",
+      "Azure SQL Managed Instance",
+      "Azure SQL Database",
+      "Azure Table storage"
+    ],
+    "correctIndex": 2,
+    "explanation": "Azure SQL Database is the fully managed database-scoped PaaS offering — the default for new applications that don't need instance-level features or OS control.",
+    "teaches": "azure-relational-services"
+  },
+  {
+    "id": "dp900-rd-07",
+    "examCode": "dp-900",
+    "domain": "relational-data",
+    "question": "An application built on community PostgreSQL is moving to Azure, and the team wants to keep their PostgreSQL skills and drivers while Azure manages the servers. What should they use?",
+    "options": [
+      "Azure Database for PostgreSQL",
+      "SQL Server on an Azure VM",
+      "Azure Cosmos DB for Gremlin",
+      "Azure Files"
+    ],
+    "correctIndex": 0,
+    "explanation": "Azure Database for PostgreSQL is the managed PaaS version of the open-source engine — same protocol and skills, Azure-run platform. The MySQL equivalent exists for MySQL apps.",
+    "teaches": "azure-relational-services"
+  },
+  {
+    "id": "dp900-rd-08",
+    "examCode": "dp-900",
+    "domain": "relational-data",
+    "question": "In a relational table, what uniquely identifies each row, and what connects rows to a related table?",
+    "options": [
+      "A view and a stored procedure",
+      "A primary key and a foreign key",
+      "An index and a partition",
+      "A schema and a datatype"
+    ],
+    "correctIndex": 1,
+    "explanation": "The primary key uniquely identifies each row; a foreign key in another table references it, forming the relationship the model is named for.",
+    "teaches": "relational-concepts"
+  },
+  {
+    "id": "dp900-rd-09",
+    "examCode": "dp-900",
+    "domain": "relational-data",
+    "question": "A legacy application requires specific OS-level configuration and full control over the SQL Server installation after moving to Azure. Which option preserves that control?",
+    "options": [
+      "Azure SQL Database",
+      "SQL Server on an Azure Virtual Machine",
+      "Azure SQL Managed Instance",
+      "Azure Database for PostgreSQL"
+    ],
+    "correctIndex": 1,
+    "explanation": "SQL Server on an Azure VM is IaaS: the complete product on an OS you control — maximum compatibility for configurations PaaS won't allow, at the price of managing it yourself.",
+    "teaches": "azure-relational-services"
+  },
+  {
+    "id": "dp900-nr-01",
+    "examCode": "dp-900",
+    "domain": "nonrelational-data",
+    "question": "A department's legacy application expects to read and write files on an SMB network drive. Which Azure service lets it run unchanged in the cloud?",
+    "options": [
+      "Azure Blob storage",
+      "Azure Files",
+      "Azure Table storage",
+      "Azure Cosmos DB"
+    ],
+    "correctIndex": 1,
+    "explanation": "Azure Files provides managed SMB file shares that applications mount like any network drive — the lift-and-shift answer for file-path-based apps. Blob storage exposes objects, not mountable file shares.",
+    "teaches": "azure-storage-capabilities"
+  },
+  {
+    "id": "dp900-nr-02",
+    "examCode": "dp-900",
+    "domain": "nonrelational-data",
+    "question": "Billions of device-status records need cheap storage with fast retrieval by device ID — no joins, no complex queries. Which Azure store is the simplest fit?",
+    "options": [
+      "Azure Table storage",
+      "Azure SQL Database",
+      "Azure Files",
+      "Azure Databricks"
+    ],
+    "correctIndex": 0,
+    "explanation": "Table storage is a simple, inexpensive NoSQL key-value store addressed by partition and row key — built for huge volumes of simple keyed lookups, with no join or rich-query overhead.",
+    "teaches": "azure-storage-capabilities"
+  },
+  {
+    "id": "dp900-nr-03",
+    "examCode": "dp-900",
+    "domain": "nonrelational-data",
+    "question": "Which scenario is the strongest case for Azure Cosmos DB?",
+    "options": [
+      "A monthly financial report over a fixed schema",
+      "A globally distributed product catalog needing millisecond reads in every region and flexible per-product attributes",
+      "Mounting a network drive for a legacy app",
+      "Archiving cold backups at the lowest cost"
+    ],
+    "correctIndex": 1,
+    "explanation": "Global distribution, guaranteed low latency, elastic scale, and flexible schemas are Cosmos DB's signature — the catalog scenario hits all four. Reports, file shares, and cold archives belong elsewhere.",
+    "teaches": "cosmos-db"
+  },
+  {
+    "id": "dp900-nr-04",
+    "examCode": "dp-900",
+    "domain": "nonrelational-data",
+    "question": "A team migrating an application built on MongoDB wants to move to Cosmos DB without rewriting its data access. Which capability makes that possible?",
+    "options": [
+      "Cosmos DB's API for MongoDB",
+      "The Gremlin API",
+      "Azure File Sync",
+      "A T-SQL compatibility layer"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cosmos DB exposes multiple APIs so existing apps keep their drivers — the MongoDB API accepts Mongo wire-protocol calls. Gremlin serves graph workloads, not document apps.",
+    "teaches": "cosmos-db"
+  },
+  {
+    "id": "dp900-nr-05",
+    "examCode": "dp-900",
+    "domain": "nonrelational-data",
+    "question": "Which Cosmos DB API is designed for graph data — entities with many relationships, queried by traversing connections?",
+    "options": ["NoSQL API", "Apache Cassandra API", "Apache Gremlin API", "Table API"],
+    "correctIndex": 2,
+    "explanation": "Gremlin is the graph traversal API — the fit for social networks, recommendations, and other highly connected data. The NoSQL API serves JSON documents; Cassandra serves wide-column workloads.",
+    "teaches": "cosmos-db"
+  },
+  {
+    "id": "dp900-nr-06",
+    "examCode": "dp-900",
+    "domain": "nonrelational-data",
+    "question": "Application logs must be kept for years at the lowest storage cost, with retrieval expected to be rare and slow. Which Azure Blob storage feature addresses this?",
+    "options": [
+      "The hot access tier",
+      "The archive access tier",
+      "Zone-redundant storage",
+      "SMB mounting"
+    ],
+    "correctIndex": 1,
+    "explanation": "Blob access tiers price data by access frequency, and archive is the cheapest to hold with retrieval taking hours — designed exactly for long-term, rarely touched retention.",
+    "teaches": "azure-storage-capabilities"
+  },
+  {
+    "id": "dp900-nr-07",
+    "examCode": "dp-900",
+    "domain": "nonrelational-data",
+    "question": "Which statement about Azure Blob storage is correct?",
+    "options": [
+      "It stores objects — unstructured files of any type — at massive scale",
+      "It requires a fixed schema for every file",
+      "It can only be accessed by mounting a drive",
+      "It is a relational database engine"
+    ],
+    "correctIndex": 0,
+    "explanation": "Blob storage is object storage for unstructured data — any file type, effectively unlimited scale, accessed over HTTP APIs rather than mounted drives (that's Azure Files).",
+    "teaches": "azure-storage-capabilities"
+  },
+  {
+    "id": "dp900-aw-01",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "question": "One pipeline cleans and reshapes data before loading it into the warehouse; another loads raw data first and transforms it inside the analytical store. What are these two patterns called?",
+    "options": [
+      "OLTP and OLAP",
+      "ETL and ELT",
+      "Batch and streaming",
+      "Backup and restore"
+    ],
+    "correctIndex": 1,
+    "explanation": "Extract-transform-load transforms before landing; extract-load-transform lands raw data and transforms in the destination's engine. The order of the letters is literally the difference.",
+    "teaches": "large-scale-analytics"
+  },
+  {
+    "id": "dp900-aw-02",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "question": "Which analytical store holds vast amounts of raw files in open formats, deferring structure until the data is used?",
+    "options": [
+      "A data warehouse",
+      "A data lake",
+      "An OLTP database",
+      "A Power BI dashboard"
+    ],
+    "correctIndex": 1,
+    "explanation": "A data lake stores raw files at scale for many future uses; a warehouse holds curated, structured, query-ready data. The lakehouse pattern combines the two over one copy of the data.",
+    "teaches": "large-scale-analytics"
+  },
+  {
+    "id": "dp900-aw-03",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "question": "Which Microsoft service is the unified analytics SaaS that brings lakehouses, warehouses, pipelines, real-time intelligence, and Power BI together over a single data foundation called OneLake?",
+    "options": [
+      "Azure Databricks",
+      "Microsoft Fabric",
+      "Azure Table storage",
+      "Azure Files"
+    ],
+    "correctIndex": 1,
+    "explanation": "Microsoft Fabric is the unified analytics platform with OneLake as its single data foundation. Databricks is the Spark-based analytics platform — powerful, but not the unified SaaS described.",
+    "teaches": "large-scale-analytics"
+  },
+  {
+    "id": "dp900-aw-04",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "question": "A data science team needs an Apache Spark-based environment on Azure for large-scale data engineering and machine learning. Which service is built on Spark?",
+    "options": [
+      "Azure Databricks",
+      "Azure SQL Database",
+      "Azure Files",
+      "Power BI Desktop"
+    ],
+    "correctIndex": 0,
+    "explanation": "Azure Databricks is the Spark-based analytics platform for engineering and data science at scale — the Spark association is its defining trait on the exam.",
+    "teaches": "large-scale-analytics"
+  },
+  {
+    "id": "dp900-aw-05",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "question": "Sensor readings must appear on an operations dashboard within seconds of being produced. Nightly sales totals can be computed once a day. Which processing style fits each?",
+    "options": [
+      "Streaming for the sensors; batch for the nightly totals",
+      "Batch for both",
+      "Batch for the sensors; streaming for the totals",
+      "Streaming for both"
+    ],
+    "correctIndex": 0,
+    "explanation": "Time-to-insight decides it: seconds-fresh dashboards need stream processing of events as they arrive; naturally periodic totals suit scheduled batch runs.",
+    "teaches": "real-time-analytics"
+  },
+  {
+    "id": "dp900-aw-06",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "question": "Which Azure service runs continuous queries over event streams to power real-time analytics?",
+    "options": [
+      "Azure Stream Analytics",
+      "Azure Database for MySQL",
+      "Azure Migrate",
+      "The pricing calculator"
+    ],
+    "correctIndex": 0,
+    "explanation": "Azure Stream Analytics executes query logic continuously over streaming input — the dedicated query-over-stream engine, typically fed by Event Hubs as the ingestion front door.",
+    "teaches": "real-time-analytics"
+  },
+  {
+    "id": "dp900-aw-07",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "question": "In a Power BI data model, what is a measure?",
+    "options": [
+      "A saved image of a report page",
+      "A calculation over the data — like a total or ratio — written in DAX",
+      "A scheduled data refresh",
+      "A workspace permission level"
+    ],
+    "correctIndex": 1,
+    "explanation": "Measures are the model's calculations — sums, averages, ratios — defined in DAX so every report built on the model computes them consistently.",
+    "teaches": "power-bi"
+  },
+  {
+    "id": "dp900-aw-08",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "question": "A report must show how monthly revenue has changed across the past three years. Which visualization is the standard choice?",
+    "options": ["A pie chart", "A line chart", "A card", "A scatter plot"],
+    "correctIndex": 1,
+    "explanation": "Trends over time are the line chart's job. Pies show contribution to a whole, cards show a single headline number, and scatter plots relate two measures.",
+    "teaches": "power-bi"
+  },
+  {
+    "id": "dp900-aw-09",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "question": "Which pairing of Power BI components and purposes is correct?",
+    "options": [
+      "Desktop: build reports and models. Service: share, collaborate, and view dashboards",
+      "Desktop: only view reports. Service: only store files",
+      "Both are identical products on different platforms",
+      "The service replaces the need for any data model"
+    ],
+    "correctIndex": 0,
+    "explanation": "Power BI Desktop is the authoring tool for models and reports; the Power BI service is where they are published, shared, refreshed, and consumed — with mobile apps for viewing anywhere.",
+    "teaches": "power-bi"
+  },
+  {
+    "id": "dp900-aw-10",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "question": "A single headline number — today's total sales — must dominate the top of a dashboard. Which visual fits?",
+    "options": ["A map", "A matrix", "A card or KPI visual", "A stacked bar chart"],
+    "correctIndex": 2,
+    "explanation": "Cards and KPI visuals exist to present one number prominently, optionally against a target. Tables, maps, and bars answer different questions.",
+    "teaches": "power-bi"
+  },
+  {
+    "id": "dp900-aw-11",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "question": "What is the 'lakehouse' pattern?",
+    "options": [
+      "A warehouse that only stores CSV files",
+      "Warehouse-style tables and management layered over data-lake storage, so one copy of the data serves both engineering and SQL analytics",
+      "A Power BI feature for small datasets",
+      "A backup strategy for OLTP databases"
+    ],
+    "correctIndex": 1,
+    "explanation": "The lakehouse combines the lake's open, scalable file storage with the warehouse's structured tables and governance — one copy of data serving both worlds, the foundation pattern of Microsoft Fabric.",
+    "teaches": "large-scale-analytics"
+  },
+  {
+    "id": "dp900-aw-12",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "question": "Which service acts as the high-throughput front door that ingests millions of events per second for downstream real-time processing?",
+    "options": [
+      "Azure Event Hubs",
+      "Azure Files",
+      "Azure Advisor",
+      "Azure DNS"
+    ],
+    "correctIndex": 0,
+    "explanation": "Event Hubs is the event-ingestion service: producers publish streams to it at massive scale, and processors like Stream Analytics consume from it.",
+    "teaches": "real-time-analytics"
+  }
+]

@@ -1,0 +1,49 @@
+{
+  "examCode": "SC-900",
+  "examName": "Microsoft Security, Compliance, and Identity Fundamentals",
+  "note": "Domain weights reflect the skills-measured outline published on Microsoft Learn as of 2026-07-28. Always check learn.microsoft.com for the current official breakdown before your exam.",
+  "domains": [
+    {
+      "id": "sci-concepts",
+      "name": "Describe the concepts of security, compliance, and identity",
+      "weight": "10-15%",
+      "subtopics": [
+        "Shared responsibility, defense-in-depth, Zero Trust, encryption and hashing, GRC",
+        "Identity as the security perimeter: authentication, authorization, identity providers, directory services, federation"
+      ]
+    },
+    {
+      "id": "entra",
+      "name": "Describe the capabilities of Microsoft Entra",
+      "weight": "25-30%",
+      "subtopics": [
+        "Microsoft Entra ID, identity types (including agent ID), and hybrid identity",
+        "Authentication methods, MFA, and password protection",
+        "Conditional Access and Entra roles / RBAC",
+        "ID Governance, access reviews, Privileged Identity Management, and ID Protection"
+      ]
+    },
+    {
+      "id": "security-solutions",
+      "name": "Describe the capabilities of Microsoft security solutions",
+      "weight": "35-40%",
+      "subtopics": [
+        "Azure infrastructure security: DDoS Protection, Firewall, WAF, VNet segmentation, NSGs, Bastion, Key Vault",
+        "Microsoft Defender for Cloud and cloud security posture management",
+        "Microsoft Sentinel: SIEM and SOAR",
+        "Microsoft Defender XDR services and the Defender portal"
+      ]
+    },
+    {
+      "id": "compliance-solutions",
+      "name": "Describe the capabilities of Microsoft compliance solutions",
+      "weight": "20-25%",
+      "subtopics": [
+        "Service Trust Portal and Microsoft's privacy principles",
+        "Microsoft Purview portal, Compliance Manager, and compliance score",
+        "Data classification, sensitivity labels, DLP, records management, and retention",
+        "Insider risk management, eDiscovery, and audit"
+      ]
+    }
+  ]
+}

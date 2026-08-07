@@ -309,7 +309,7 @@ export default function GymLeaderClient({
                 sheet={stage.image}
                 size={96}
                 flip
-                title={`${palName}, your ${species.label}-line ExamPal`}
+                title={`${palName}, your ${species.label}-line Paruu`}
               />
             </div>
             <HpBar
@@ -373,7 +373,7 @@ export default function GymLeaderClient({
           <PalSprite
             sheet={stage.image}
             size={96}
-            title={`${palName}, your ${species.label}-line ExamPal`}
+            title={`${palName}, your ${species.label}-line Paruu`}
           />
         </div>
         <h1 className="font-pixel text-display">

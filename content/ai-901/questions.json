@@ -1,0 +1,542 @@
+[
+  {
+    "id": "ai901-co-01",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "A bank discovers its loan-approval model approves applications from one demographic group at a much higher rate than others with similar finances. Which responsible AI principle is being violated?",
+    "options": ["Transparency", "Fairness", "Accountability", "Reliability and safety"],
+    "correctIndex": 1,
+    "explanation": "Fairness requires an AI system to treat all groups equitably. A model that systematically disadvantages a demographic group with comparable financial profiles has learned bias — the fairness principle demands examining data and outcomes to correct it.",
+    "teaches": "responsible-ai-principles"
+  },
+  {
+    "id": "ai901-co-02",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "Before releasing an AI feature that recommends medication dosages, a team runs extensive testing across edge cases and unexpected inputs. Which responsible AI principle drives this work?",
+    "options": ["Inclusiveness", "Privacy and security", "Reliability and safety", "Fairness"],
+    "correctIndex": 2,
+    "explanation": "Reliability and safety is about systems working dependably even in unexpected conditions — and rigorous testing before release matters most where errors cause real harm, as with medical guidance.",
+    "teaches": "responsible-ai-principles"
+  },
+  {
+    "id": "ai901-co-03",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "A company adds a clear notice telling customers when they are chatting with an AI assistant rather than a human, and publishes what the assistant can and cannot do. Which principle is this?",
+    "options": ["Transparency", "Fairness", "Reliability and safety", "Inclusiveness"],
+    "correctIndex": 0,
+    "explanation": "Transparency means people are informed about how an AI system works, its limitations, and when they are interacting with AI at all. Disclosure notices and published limitations are its classic implementations.",
+    "teaches": "responsible-ai-principles"
+  },
+  {
+    "id": "ai901-co-04",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "An AI-powered screen reader describes images aloud so blind users can browse the web fully. Which responsible AI principle does this exemplify?",
+    "options": ["Accountability", "Inclusiveness", "Privacy and security", "Transparency"],
+    "correctIndex": 1,
+    "explanation": "Inclusiveness holds that AI should empower everyone, explicitly including people with disabilities — assistive capabilities like describing the visual world are its flagship example.",
+    "teaches": "responsible-ai-principles"
+  },
+  {
+    "id": "ai901-co-05",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "A company decides that a named human review board — not the model — is answerable for every automated hiring decision, with an appeal path for candidates. Which principle is being implemented?",
+    "options": ["Accountability", "Fairness", "Transparency", "Reliability and safety"],
+    "correctIndex": 0,
+    "explanation": "Accountability keeps people and organisations answerable for what their AI does. Governance structures — human review, clear ownership of outcomes, appeal routes — are how that principle takes shape.",
+    "teaches": "responsible-ai-principles"
+  },
+  {
+    "id": "ai901-co-06",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "At its core, how does a generative language model produce a response?",
+    "options": [
+      "It searches the internet and quotes the best match",
+      "It repeatedly predicts the most probable next token based on its training and the conversation so far",
+      "It retrieves a pre-written answer from a database of responses",
+      "It forwards the question to a human operator"
+    ],
+    "correctIndex": 1,
+    "explanation": "Generative models learn statistical patterns from vast training data and generate output token by token, each step predicting what most plausibly comes next. That is why they produce fluent, plausible text — and why their output is not guaranteed fact.",
+    "teaches": "generative-models-and-configuration"
+  },
+  {
+    "id": "ai901-co-07",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "An application must answer questions about photographs that users upload. Which model capability is essential when choosing a model?",
+    "options": [
+      "The lowest possible cost per token",
+      "Multimodal input — the model must accept images as well as text",
+      "The largest possible context window",
+      "A dedicated deployment"
+    ],
+    "correctIndex": 1,
+    "explanation": "Interpreting uploaded photographs requires a multimodal model that accepts visual input alongside text. Cost, context size, and hosting matter, but a text-only model simply cannot do the job at all.",
+    "teaches": "generative-models-and-configuration"
+  },
+  {
+    "id": "ai901-co-08",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "A deployed model gives usefully varied, creative answers in a brainstorming app, but the same settings make its answers inconsistent in a policy-lookup app. Which configuration parameter should be lowered for the policy app?",
+    "options": ["The token limit", "Temperature", "The number of deployments", "The prompt length"],
+    "correctIndex": 1,
+    "explanation": "Temperature controls output randomness: high values produce varied, creative responses; low values make output focused and repeatable — which is what consistent policy answers need.",
+    "teaches": "generative-models-and-configuration"
+  },
+  {
+    "id": "ai901-co-09",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "A system takes the goal 'arrange next week's project review', then checks calendars, books a room, and sends invitations using connected tools. Which kind of AI workload is this?",
+    "options": ["Text analysis", "Speech synthesis", "Agentic AI", "Information extraction"],
+    "correctIndex": 2,
+    "explanation": "An agent takes a goal, reasons about the steps, and uses tools to act — booking the meeting rather than merely drafting text about it. Acting toward a goal with tools is the signature of agentic AI.",
+    "teaches": "identifying-ai-workloads"
+  },
+  {
+    "id": "ai901-co-10",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "A legal team needs the names of people, organisations, and dates automatically found and labelled in thousands of contracts. Which text analysis technique is this?",
+    "options": ["Sentiment analysis", "Entity detection", "Summarization", "Speech recognition"],
+    "correctIndex": 1,
+    "explanation": "Entity detection finds and classifies named things — people, places, organisations, dates — in text. Keyword extraction would surface main terms without classifying them; sentiment scores tone.",
+    "teaches": "identifying-ai-workloads"
+  },
+  {
+    "id": "ai901-co-11",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "A product team wants incoming app-store reviews automatically scored as positive, negative, or neutral so unhappy users get responses first. Which technique fits?",
+    "options": ["Sentiment analysis", "Keyword extraction", "Image classification", "Speech synthesis"],
+    "correctIndex": 0,
+    "explanation": "Scoring text as positive, negative, or neutral is sentiment analysis — the standard tool for triaging reviews and feedback by emotional tone.",
+    "teaches": "identifying-ai-workloads"
+  },
+  {
+    "id": "ai901-co-12",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "Analysts receive 30-page research reports and want two-paragraph versions that keep the key findings. Which text analysis technique produces this?",
+    "options": ["Entity detection", "Keyword extraction", "Summarization", "Sentiment analysis"],
+    "correctIndex": 2,
+    "explanation": "Summarization condenses long text while preserving its meaning. Keyword extraction would return a list of terms, not readable condensed prose.",
+    "teaches": "identifying-ai-workloads"
+  },
+  {
+    "id": "ai901-co-13",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "Which pairing correctly matches the two speech capabilities to their directions?",
+    "options": [
+      "Speech recognition: text → audio; speech synthesis: audio → text",
+      "Speech recognition: audio → text; speech synthesis: text → audio",
+      "Both convert audio to text with different accuracy",
+      "Both generate synthetic voices from samples"
+    ],
+    "correctIndex": 1,
+    "explanation": "Speech recognition (speech-to-text) turns spoken audio into text for dictation, captions, and transcription. Speech synthesis (text-to-speech) produces natural spoken audio from written text.",
+    "teaches": "speech-vision-and-extraction"
+  },
+  {
+    "id": "ai901-co-14",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "A warehouse app must not only say that a photo contains boxes, but locate each box in the image with a bounding region. Which computer vision capability is this?",
+    "options": ["Image classification", "Object detection", "Image generation", "Optical character recognition"],
+    "correctIndex": 1,
+    "explanation": "Image classification labels the whole image; object detection finds each individual object and localises it with bounding regions. Needing positions, not just a label, is the tell for detection.",
+    "teaches": "speech-vision-and-extraction"
+  },
+  {
+    "id": "ai901-co-15",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "A marketing team types 'a watercolour of a lighthouse at dawn, muted colours' and receives a brand-new image matching the description. Which kind of model produced it?",
+    "options": [
+      "An object detection model",
+      "A speech synthesis model",
+      "An image-generation model",
+      "An entity detection model"
+    ],
+    "correctIndex": 2,
+    "explanation": "Image-generation models create new images from text descriptions — the reverse of vision models, which interpret images that already exist.",
+    "teaches": "speech-vision-and-extraction"
+  },
+  {
+    "id": "ai901-co-16",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "An insurer wants the policy number, claim amount, and incident date pulled automatically out of scanned claim forms into a database. Which AI workload is this?",
+    "options": ["Generative AI", "Information extraction", "Speech synthesis", "Image generation"],
+    "correctIndex": 1,
+    "explanation": "Turning unstructured content — like scanned forms — into structured fields is information extraction. Nothing new is being generated; existing content is being read into data.",
+    "teaches": "speech-vision-and-extraction"
+  },
+  {
+    "id": "ai901-co-17",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "Which scenario is generative AI rather than text analysis?",
+    "options": [
+      "Scoring support tickets by sentiment",
+      "Finding all company names mentioned in a report",
+      "Drafting a personalised reply to each customer complaint",
+      "Extracting key phrases from meeting notes"
+    ],
+    "correctIndex": 2,
+    "explanation": "Analysis reads what is already there — sentiment, entities, key phrases. Generation writes something new, and drafting original replies is creating content, not extracting it.",
+    "teaches": "identifying-ai-workloads"
+  },
+  {
+    "id": "ai901-fd-01",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "In a chat application, where should the standing instruction 'You are a support assistant. Answer only from the product manual and stay polite' be placed?",
+    "options": [
+      "In the system prompt",
+      "In every user prompt",
+      "In the deployment name",
+      "In the temperature setting"
+    ],
+    "correctIndex": 0,
+    "explanation": "The system prompt sets the model's persistent role, tone, and boundaries for the whole conversation. User prompts carry each actual request; repeating standing instructions there is fragile and wasteful.",
+    "teaches": "prompts-and-model-deployment"
+  },
+  {
+    "id": "ai901-fd-02",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "A prompt keeps producing vague, inconsistently formatted answers. Which change most reliably improves the output?",
+    "options": [
+      "Ask the model to try harder",
+      "Make the prompt specific about task, format, and context — and include an example of good output",
+      "Raise the temperature",
+      "Shorten the prompt to a single word"
+    ],
+    "correctIndex": 1,
+    "explanation": "Effective prompts state the task, the wanted format, and the relevant context explicitly; showing an example of good output raises quality more than any phrasing trick. Higher temperature would add variety, not precision.",
+    "teaches": "prompts-and-model-deployment"
+  },
+  {
+    "id": "ai901-fd-03",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "A developer wants to try a model from the Foundry catalog with different prompts and temperature settings before writing any application code. What is the standard workflow?",
+    "options": [
+      "Write a full client application first, then test",
+      "Deploy the model in the Foundry portal and experiment in the chat playground",
+      "Email prompts to Azure support for evaluation",
+      "Export the model and run it locally"
+    ],
+    "correctIndex": 1,
+    "explanation": "The portal loop is deploy first, then use the chat playground to interact with the deployed model — trying prompts and settings interactively. The application later calls the very same deployment.",
+    "teaches": "prompts-and-model-deployment"
+  },
+  {
+    "id": "ai901-fd-04",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "What does deploying a model in Microsoft Foundry actually give you?",
+    "options": [
+      "A downloadable copy of the model weights",
+      "A callable endpoint your applications and the playground both use",
+      "Automatic retraining on your data",
+      "A guarantee of factually correct output"
+    ],
+    "correctIndex": 1,
+    "explanation": "Deployment makes a model callable: it stands up an endpoint that the portal playground and your applications talk to. It does not hand over weights, retrain anything, or change the model's factual reliability.",
+    "teaches": "prompts-and-model-deployment"
+  },
+  {
+    "id": "ai901-fd-05",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "A lightweight chat client built with the Foundry SDK must let the model 'remember' earlier turns of the conversation. How is that achieved?",
+    "options": [
+      "The model stores every conversation automatically",
+      "The client sends the conversation's message history with each call, because the model itself is stateless",
+      "Raising the temperature enables memory",
+      "Deploying the model twice"
+    ],
+    "correctIndex": 1,
+    "explanation": "Models are stateless — each call sees only what is sent. The client keeps the conversation history and includes it (with the system prompt) on every request, which is what creates the appearance of memory.",
+    "teaches": "chat-clients-and-agents"
+  },
+  {
+    "id": "ai901-fd-06",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "What distinguishes an agent created in the Foundry portal from a plain chat deployment?",
+    "options": [
+      "Agents respond faster",
+      "An agent pairs a model with instructions and tools so it can take actions toward goals, not just reply",
+      "Agents do not use models",
+      "Agents can only be used inside the portal"
+    ],
+    "correctIndex": 1,
+    "explanation": "An agent is a model plus standing instructions plus (optionally) tools and knowledge — it can reason about a goal and act, where a chat deployment only converses. Agent clients can drive it from applications, not just the portal.",
+    "teaches": "chat-clients-and-agents"
+  },
+  {
+    "id": "ai901-fd-07",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "When creating a single-agent solution in the Foundry portal, which elements define the agent?",
+    "options": [
+      "A name, a model, instructions, and optionally tools and knowledge",
+      "A resource group and a storage account",
+      "A GitHub repository",
+      "A custom-trained model only"
+    ],
+    "correctIndex": 0,
+    "explanation": "The portal's agent definition is: name it, choose the model, write its instructions, and optionally attach tools and knowledge sources to ground it. The portal playground then lets you test it before writing a client.",
+    "teaches": "chat-clients-and-agents"
+  },
+  {
+    "id": "ai901-fd-08",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "In a lightweight agent client application, what is the basic interaction pattern?",
+    "options": [
+      "Create a conversation thread, post the user's message, run the agent, read the response",
+      "Upload the agent to the user's device",
+      "Send one combined string containing all possible questions",
+      "Poll the portal's playground with a web scraper"
+    ],
+    "correctIndex": 0,
+    "explanation": "Agent clients work in threads: create the conversation, add the user's message, invoke the agent on the thread, and read back its response — the same agent tested in the portal, driven from code.",
+    "teaches": "chat-clients-and-agents"
+  },
+  {
+    "id": "ai901-fd-09",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "A triage app should read each incoming support ticket, score its sentiment, and pull out product names so urgent unhappy customers surface first. What kind of solution is this?",
+    "options": [
+      "An image-generation app",
+      "A text analysis application calling language capabilities from a lightweight client",
+      "A speech synthesis pipeline",
+      "A video extraction workflow"
+    ],
+    "correctIndex": 1,
+    "explanation": "Sentiment plus entity extraction over text is text analysis: the lightweight app sends each ticket to the deployed language capability and acts on the structured results it gets back.",
+    "teaches": "text-and-speech-in-foundry"
+  },
+  {
+    "id": "ai901-fd-10",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "Users should be able to speak a question aloud and have the assistant understand and answer it, without the app writing its own transcription step. What enables this most directly?",
+    "options": [
+      "A deployed multimodal model that accepts spoken prompts",
+      "An image-generation model",
+      "Keyword extraction",
+      "A read-only lock on the audio files"
+    ],
+    "correctIndex": 0,
+    "explanation": "Multimodal models can take audio as input directly — the user speaks, the model understands and responds. A separate speech-to-text step is only needed when using a text-only model.",
+    "teaches": "text-and-speech-in-foundry"
+  },
+  {
+    "id": "ai901-fd-11",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "A news app wants articles read aloud in a natural voice that users select from a catalogue. Which Foundry Tools capability does the lightweight app call?",
+    "options": [
+      "Azure Speech text-to-speech with neural voices",
+      "Azure Speech speech-to-text",
+      "Content Understanding for audio",
+      "Entity detection"
+    ],
+    "correctIndex": 0,
+    "explanation": "Reading text aloud is speech synthesis — Azure Speech's text-to-speech, with its catalogue of natural neural voices. Speech-to-text goes the other direction, and Content Understanding extracts data rather than speaking.",
+    "teaches": "text-and-speech-in-foundry"
+  },
+  {
+    "id": "ai901-fd-12",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "A meeting app needs live captions of what participants say. Which capability powers this?",
+    "options": [
+      "Azure Speech speech-to-text",
+      "Text-to-speech",
+      "Image classification",
+      "Summarization"
+    ],
+    "correctIndex": 0,
+    "explanation": "Live captioning is transcription: speech-to-text in Azure Speech converts the spoken audio to text in real time. Synthesis would speak text out, the opposite direction.",
+    "teaches": "text-and-speech-in-foundry"
+  },
+  {
+    "id": "ai901-fd-13",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "A field technician photographs a machine and asks the app 'which cable is loose here?'. The app attaches the photo to the prompt of a deployed model, which answers in text. Which capability is being used?",
+    "options": [
+      "Interpreting visual input in a prompt with a multimodal model",
+      "Image generation",
+      "Speech recognition",
+      "Keyword extraction"
+    ],
+    "correctIndex": 0,
+    "explanation": "Attaching an image to a prompt and asking a question about it is multimodal visual input: the model interprets the picture in the context of the instruction. Nothing new is being drawn, so it isn't generation.",
+    "teaches": "vision-and-image-generation"
+  },
+  {
+    "id": "ai901-fd-14",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "A design app lets users describe scenes ('a minimalist poster of a mountain at night') and returns brand-new artwork. Which Foundry building block does this require?",
+    "options": [
+      "A deployed image-generation model",
+      "Object detection",
+      "Azure Speech",
+      "A delete lock"
+    ],
+    "correctIndex": 0,
+    "explanation": "Creating new visuals from text is the job of an image-generation model deployed in Foundry — deployed and called through the same portal-and-SDK workflow as text models.",
+    "teaches": "vision-and-image-generation"
+  },
+  {
+    "id": "ai901-fd-15",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "Which statement correctly separates the two vision directions in Foundry?",
+    "options": [
+      "Multimodal input interprets existing images; image-generation models create new ones",
+      "Both require training your own model from scratch",
+      "Image generation reads text out of photos",
+      "Multimodal models can only output images"
+    ],
+    "correctIndex": 0,
+    "explanation": "Interpreting existing images is multimodal input to a model; producing new images from descriptions is generation. Recognising which direction a scenario needs is the exam's favourite vision question.",
+    "teaches": "vision-and-image-generation"
+  },
+  {
+    "id": "ai901-fd-16",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "An accounts team wants vendor, date, totals, and line items pulled automatically from thousands of PDF invoices into their finance system. Which Foundry Tools service is designed for this?",
+    "options": [
+      "Azure Content Understanding",
+      "Azure Speech",
+      "The chat playground",
+      "An image-generation model"
+    ],
+    "correctIndex": 0,
+    "explanation": "Content Understanding extracts structured fields from documents and forms — invoices being the canonical case: define the fields, point it at the documents, and receive database-ready results.",
+    "teaches": "content-understanding"
+  },
+  {
+    "id": "ai901-fd-17",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "A support centre wants customer names, account numbers, and promised follow-ups extracted from recorded phone calls. How does Content Understanding handle this?",
+    "options": [
+      "It cannot process audio",
+      "It processes the audio, transcribing and extracting the defined fields as structured data",
+      "It converts the calls into images first",
+      "It generates new synthetic calls"
+    ],
+    "correctIndex": 1,
+    "explanation": "Content Understanding spans modalities: for audio it transcribes and pulls out the facts that matter into the structured fields you define — names, numbers, commitments.",
+    "teaches": "content-understanding"
+  },
+  {
+    "id": "ai901-fd-18",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "A media company wants to know what was said and shown, over time, across a library of training videos, as searchable structured data. Which capability fits?",
+    "options": [
+      "Content Understanding for video",
+      "Text-to-speech",
+      "The system prompt",
+      "Temperature tuning"
+    ],
+    "correctIndex": 0,
+    "explanation": "For video, Content Understanding combines speech and visual extraction over the timeline — what was said and shown, when — returned as structured, searchable data.",
+    "teaches": "content-understanding"
+  },
+  {
+    "id": "ai901-fd-19",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "What is the standard pattern for building a lightweight information-extraction app with Content Understanding?",
+    "options": [
+      "Define the fields to extract, submit the content for analysis, read the structured results",
+      "Train a new model from scratch for each document",
+      "Manually type each document into the portal",
+      "Convert everything to speech first"
+    ],
+    "correctIndex": 0,
+    "explanation": "The loop is always: define the schema of wanted fields, point Content Understanding at the content — document, image, audio, or video — and consume the structured results in your application.",
+    "teaches": "content-understanding"
+  },
+  {
+    "id": "ai901-fd-20",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "A retailer photographs shelf displays and wants the products present and any visible label text extracted as data. Which service handles images this way?",
+    "options": [
+      "Content Understanding for images",
+      "Text-to-speech",
+      "The agent playground",
+      "A reserved VM instance"
+    ],
+    "correctIndex": 0,
+    "explanation": "Content Understanding's image analysis extracts what an image contains, including text within it, as structured output — extraction, as opposed to conversationally interpreting one image in a prompt.",
+    "teaches": "content-understanding"
+  },
+  {
+    "id": "ai901-fd-21",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "A developer's chat client needs to connect to the right model. Which two things does the Foundry SDK client fundamentally need?",
+    "options": [
+      "The project/endpoint connection and the name of the model deployment to call",
+      "The model's training data and a GPU",
+      "A GitHub token and a container registry",
+      "Administrator rights on every user's device"
+    ],
+    "correctIndex": 0,
+    "explanation": "A client connects to the Foundry project's endpoint and addresses a specific model deployment by name — those two references are what turn SDK calls into responses from the model you deployed.",
+    "teaches": "chat-clients-and-agents"
+  },
+  {
+    "id": "ai901-fd-22",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "During portal testing, an agent answers general questions well but knows nothing about the company's return policy. What is the standard fix?",
+    "options": [
+      "Attach the policy documents to the agent as knowledge so its answers are grounded in them",
+      "Raise the temperature until it guesses the policy",
+      "Rename the agent",
+      "Switch to an image-generation model"
+    ],
+    "correctIndex": 0,
+    "explanation": "Grounding an agent means attaching knowledge — your documents — so it answers from them rather than from general training. Temperature changes creativity, not knowledge.",
+    "teaches": "chat-clients-and-agents"
+  },
+  {
+    "id": "ai901-fd-23",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "Which sequence describes the intended Foundry workflow from idea to working app?",
+    "options": [
+      "Write the client app → hope a model exists → publish",
+      "Choose a model in the catalog → deploy it → test prompts in the playground → build the lightweight client with the SDK against the same deployment",
+      "Train a model from scratch → export it → embed it in the app binary",
+      "Create an agent → delete it → recreate it in production"
+    ],
+    "correctIndex": 1,
+    "explanation": "Foundry's loop runs catalog → deployment → playground experimentation → SDK client against the same deployment. The playground and the app exercise one deployed model, so what you tested is what ships.",
+    "teaches": "prompts-and-model-deployment"
+  }
+]

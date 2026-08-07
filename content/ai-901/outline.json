@@ -1,0 +1,31 @@
+{
+  "examCode": "AI-901",
+  "examName": "Microsoft Azure AI Fundamentals",
+  "note": "Domain weights reflect the skills-measured outline published on Microsoft Learn as of 2026-04-15. AI-901 replaced AI-900 on June 30, 2026 and is built around generative AI, agents, and Microsoft Foundry — always check learn.microsoft.com for the current official breakdown before your exam.",
+  "domains": [
+    {
+      "id": "ai-concepts",
+      "name": "Identify AI concepts and capabilities",
+      "weight": "40-45%",
+      "subtopics": [
+        "Responsible AI: fairness, reliability and safety, privacy and security, inclusiveness, transparency, accountability",
+        "How generative AI models work, choosing a model by capability, and deployment options and configuration parameters",
+        "AI workloads: generative and agentic AI, text analysis, speech, computer vision, and information extraction",
+        "Text analysis techniques: keyword extraction, entity detection, sentiment analysis, summarization",
+        "Speech recognition and synthesis, computer vision and image-generation models, and extracting information from text, images, audio, and video"
+      ]
+    },
+    {
+      "id": "foundry-implementation",
+      "name": "Implement AI solutions by using Microsoft Foundry",
+      "weight": "55-60%",
+      "subtopics": [
+        "Effective system and user prompts; deploying a model and interacting with it in the Foundry portal",
+        "Lightweight chat clients with the Foundry SDK; single-agent solutions in the portal and agent client applications",
+        "Text and speech solutions: text analysis apps, responding to spoken prompts with a multimodal model, Azure Speech in Foundry Tools",
+        "Vision solutions: interpreting visual input in prompts, generating new visuals, building vision-capable applications",
+        "Information extraction with Azure Content Understanding: documents and forms, images, audio, and video"
+      ]
+    }
+  ]
+}

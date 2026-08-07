@@ -1,0 +1,84 @@
+[
+  {
+    "domainId": "ai-concepts",
+    "sections": [
+      {
+        "id": "responsible-ai-principles",
+        "heading": "The six responsible AI principles",
+        "paragraphs": [
+          "Microsoft's responsible AI framework names six principles, and the exam tests you on matching a scenario to the right one. Fairness: the system treats all groups equitably — a loan model must not disadvantage applicants by gender or ethnicity, so training data is examined for bias. Reliability and safety: the system must work dependably even in unexpected conditions — an autonomous vehicle or a medical model needs rigorous testing before release because errors cause real harm. Privacy and security: personal data used in training and inference stays protected, minimised, and access-controlled.",
+          "Inclusiveness: AI should empower everyone, including people with disabilities — think of vision models describing the world to blind users, or speech interfaces designed for every accent. Transparency: people should be told how the system works, what its limits are, and when they are interacting with AI rather than a human. Accountability: people and organisations remain answerable for what their AI does — governance structures ensure a human, not the model, carries responsibility for decisions. Scenario keywords are the tell: 'bias' points to fairness, 'testing' to reliability, 'explain its decision' to transparency, 'who answers for it' to accountability."
+        ]
+      },
+      {
+        "id": "generative-models-and-configuration",
+        "heading": "How generative models work, and choosing one",
+        "paragraphs": [
+          "Generative AI models are trained on vast datasets to learn statistical relationships in language (or images), and they generate output by repeatedly predicting the most probable next token given everything so far. That single mechanism produces conversation, summaries, code, and images — but also explains their limits: they generate plausible output, not guaranteed truth, which is why grounding them in your own data matters. Choosing a model is a capability match: multimodal models accept images and audio as well as text; smaller models cost less and respond faster, and suit simpler tasks; larger models reason better and cost more.",
+          "Deploying a model makes it callable at an endpoint, and configuration parameters shape its behaviour. Temperature is the one to know: low values make output focused and repeatable, high values make it varied and creative. Token limits cap how much the model reads and writes per call. Deployment options trade cost against capacity — shared, pay-per-token hosting for getting started, and dedicated capacity when throughput and isolation matter."
+        ]
+      },
+      {
+        "id": "identifying-ai-workloads",
+        "heading": "Identifying AI workloads",
+        "paragraphs": [
+          "Workload identification questions describe a scenario and ask what kind of AI it is. Generative AI creates new content — drafting emails, writing code, producing images. Agentic AI goes further: an agent takes a goal, reasons about steps, and uses tools to act — booking the meeting rather than drafting the invitation. Text analysis reads existing text to extract meaning. Speech covers recognition (audio in, text out) and synthesis (text in, audio out). Computer vision interprets images and video. Information extraction pulls structured data out of unstructured sources like documents, forms, and recordings.",
+          "The text analysis toolbox has four techniques the outline names. Keyword extraction surfaces the main terms and phrases in a document. Entity detection finds and classifies named things — people, places, organisations, dates. Sentiment analysis scores whether text reads positive, negative, or neutral — the go-to for review and feedback triage. Summarization condenses long text while keeping its meaning. They differ from generation: analysis reads what is there; generation writes something new."
+        ]
+      },
+      {
+        "id": "speech-vision-and-extraction",
+        "heading": "Speech, vision, and information extraction",
+        "paragraphs": [
+          "Speech recognition (speech-to-text) turns spoken audio into text — powering dictation, captions, and call transcription — and handles multiple languages, speaker separation, and noisy audio. Speech synthesis (text-to-speech) is the reverse, producing natural spoken audio from text with a choice of voices, and modern neural voices are close to human. Computer vision models classify whole images, detect and locate individual objects with bounding boxes, read text out of images (OCR), and describe scenes in natural language. Image-generation models invert the pipeline: they create new images from text descriptions.",
+          "Information extraction is the workload that turns unstructured content into structured data: pulling the vendor, date, and line items from an invoice; reading fields from a scanned form; extracting names and account numbers from a call recording; finding when a topic is discussed in a video. It spans every modality — text, images, audio, video — and in the Foundry world it is delivered by Azure Content Understanding, which the implementation domain covers in depth."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "foundry-implementation",
+    "sections": [
+      {
+        "id": "prompts-and-model-deployment",
+        "heading": "Prompts, and deploying models in Foundry",
+        "paragraphs": [
+          "Microsoft Foundry is the platform where Azure AI solutions are built: a portal for exploring and deploying models, an SDK for calling them from code, and Foundry Tools for capabilities like speech and content understanding. Two kinds of prompt shape every interaction. The system prompt sets the model's standing instructions — its role, tone, boundaries ('You are a support assistant; answer only from the product manual'). The user prompt is the actual request. Effective prompts are specific about the task, the format wanted, and the context — adding examples of good output raises quality more than any clever phrasing.",
+          "The working loop starts in the Foundry portal: browse the model catalog, deploy a model to make it callable, then talk to it in the portal's chat playground to try prompts and settings like temperature before writing any code. A deployment gives you an endpoint your applications call — the playground and your future app talk to the same deployed model."
+        ]
+      },
+      {
+        "id": "chat-clients-and-agents",
+        "heading": "Chat clients and agents",
+        "paragraphs": [
+          "A lightweight chat client is a small application built with the Foundry SDK: connect to your Foundry project, reference the deployed model, send a system prompt plus the conversation's messages, and display the reply. The SDK manages the connection details; your code manages the conversation history, because models are stateless — each call carries the messages the model should remember.",
+          "An agent is a step beyond chat: it pairs a model with instructions and tools so it can take actions and complete goals, not just reply. In the Foundry portal you create a single-agent solution by giving it a name, a model, instructions (its standing orders), and optionally tools and knowledge to ground it in your data. The portal's playground lets you test the agent before touching code, and a lightweight agent client then drives the same agent from an application: create a conversation thread, post the user's message, run the agent, read its response."
+        ]
+      },
+      {
+        "id": "text-and-speech-in-foundry",
+        "heading": "Text and speech solutions",
+        "paragraphs": [
+          "Text analysis in a Foundry application means calling language capabilities — sentiment, entities, key phrases, summarization — from a lightweight app: send the text, receive structured results, act on them. A support-ticket triage app, for instance, scores sentiment and extracts entities so urgent unhappy customers surface first. The implementation pattern is always the same: deployed capability, endpoint, small client that sends content and reads the structured answer.",
+          "Speech solutions come in two flavours the exam distinguishes. A deployed multimodal model can accept spoken prompts directly — the user talks, the model understands the audio and responds, no separate transcription step in your code. Azure Speech in Foundry Tools is the dedicated speech service for building speech into apps: speech-to-text for transcription and captioning, text-to-speech with a catalogue of neural voices for reading content aloud, both callable from a lightweight application."
+        ]
+      },
+      {
+        "id": "vision-and-image-generation",
+        "heading": "Vision and image generation",
+        "paragraphs": [
+          "Multimodal models take images inside prompts: attach a photo and ask 'what is wrong with this circuit board?' and the model interprets the visual input in the context of your question. That one pattern — visual input plus natural-language instruction — replaces much of what once needed specialised vision APIs, and building a vision-capable app is the same lightweight-client shape: send the image with the prompt, read the answer.",
+          "Generating visuals is the reverse direction: an image-generation model deployed in Foundry turns a text description into a new image, with the prompt's specificity controlling composition and style. The exam expects you to know which direction a scenario needs — interpreting existing images is multimodal input; creating new ones is an image-generation model — and that both are deployed and called through the same Foundry portal and SDK workflow as text models."
+        ]
+      },
+      {
+        "id": "content-understanding",
+        "heading": "Information extraction with Content Understanding",
+        "paragraphs": [
+          "Azure Content Understanding, in Foundry Tools, is the information-extraction service: it takes unstructured content — documents, forms, images, audio, video — and returns structured data. For documents and forms it reads fields the way a person would: give it invoices and it returns vendor, date, totals, and line items ready for a database. For images it extracts what the image contains and any text in it. For audio it transcribes and pulls out the facts that matter — names, numbers, commitments in a call recording. For video it combines the two, extracting what was said and shown over time.",
+          "Building with it follows one pattern: define what you want extracted (the schema of fields), point Content Understanding at the content, and receive structured results your application can store or act on. A lightweight information-extraction app is exactly that loop — upload, analyse, read fields — which is why Content Understanding questions are usually recognisable by the phrase 'extract structured information from…' whatever the modality."
+        ]
+      }
+    ]
+  }
+]

@@ -16,7 +16,7 @@ import { useSfx } from "@/components/AudioProvider";
  *
  * Restart keeps the account but wipes every scrap of progress — battles,
  * flashcards, lesson history (which together are the XP and streak) — and
- * releases the ExamPal, so the next page is first-run setup as a brand-new
+ * releases the Paruu, so the next page is first-run setup as a brand-new
  * trainer. Delete removes the account entirely; signing up again later
  * starts completely fresh because nothing survives the cascade.
  *
@@ -81,7 +81,7 @@ export default function ProfileDangerZone({ email }: { email: string | null }) {
         <div>
           <p className="text-body font-medium">Restart my journey</p>
           <p className="mt-1 text-caption text-[var(--foreground-muted)]">
-            Releases your ExamPal and erases all progress — every battle,
+            Releases your Paruu and erases all progress — every battle,
             flashcard, lesson, your XP, level and streak. Your account and
             email stay, and you&apos;ll go through first-run setup again with
             a fresh choice of companion. This cannot be undone.
@@ -126,7 +126,7 @@ export default function ProfileDangerZone({ email }: { email: string | null }) {
         <div>
           <p className="text-body font-medium">Delete my profile</p>
           <p className="mt-1 text-caption text-[var(--foreground-muted)]">
-            Removes your account, your ExamPal, and all of your progress from
+            Removes your account, your Paruu, and all of your progress from
             our servers and this browser — immediately, with no grace period.
             If you sign up again later you&apos;ll start completely fresh.
             You can export a copy first from Options.

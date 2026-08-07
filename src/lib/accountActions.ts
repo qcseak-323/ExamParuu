@@ -135,7 +135,7 @@ export async function signOutAfterDeletion(): Promise<void> {
  * Starts the journey over without giving up the account.
  *
  * Wipes every progress table — battles, flashcard progress, lesson history,
- * which together are the XP, level and streak — and releases the ExamPal by
+ * which together are the XP, level and streak — and releases the Paruu by
  * clearing the profile fields. The account and email survive, and the next
  * page load lands on first-run setup exactly as a brand-new trainer would.
  *

@@ -122,8 +122,24 @@ export default function CatalogClient({
             </div>
           </DialogueFrame>
 
-          <ul className="grid gap-3 sm:grid-cols-2">
-            {selectedExams.map((exam) => {
+          {/* Grouped by Microsoft's own level tiers: Fundamentals →
+              Intermediate (Associate) → Advanced (Expert/Specialty). */}
+          {[
+            { label: "Fundamentals", levels: ["Fundamentals"] },
+            { label: "Intermediate", levels: ["Associate"] },
+            { label: "Advanced", levels: ["Expert", "Specialty"] },
+          ].map(({ label, levels }) => {
+            const tierExams = selectedExams.filter((e) =>
+              levels.includes(e.msLevel),
+            );
+            if (tierExams.length === 0) return null;
+            return (
+              <section key={label}>
+                <h3 className="mb-2 text-label font-semibold uppercase tracking-[0.1em] text-[var(--foreground-soft)]">
+                  {label}
+                </h3>
+                <ul className="grid gap-3 sm:grid-cols-2">
+                  {tierExams.map((exam) => {
               const playable = exam.hasContent;
               const domains = getExamContent(exam.code)?.outline.domains ?? [];
               const badges = playable
@@ -193,10 +209,13 @@ export default function CatalogClient({
                       )}
                     </p>
                   )}
-                </li>
-              );
-            })}
-          </ul>
+                    </li>
+                  );
+                  })}
+                </ul>
+              </section>
+            );
+          })}
         </section>
       ) : (
         <p className="text-body text-[var(--foreground-muted)]">

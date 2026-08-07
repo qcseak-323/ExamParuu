@@ -34,7 +34,7 @@ type Step =
 const INTRO_LINES = [
   "Hello there! Welcome to the world of certification.",
   "My name is Prof. Sequel. I study the exams people take to prove what they know.",
-  "This world is inhabited by creatures called ExamPals. They study alongside you, and they grow stronger the more you practise.",
+  "This world is inhabited by creatures called Paruu. They study alongside you, and they grow stronger the more you practise.",
   "Before you set out, let's get you sorted — a partner, a sense of where you're starting from, and a route to walk first.",
 ];
 
@@ -171,7 +171,7 @@ export default function SetupClient({ email }: { email: string | null }) {
           </DialogueFrame>
 
           <MenuList
-            ariaLabel="Choose your starter ExamPal"
+            ariaLabel="Choose your starter Paruu"
             options={PAL_TYPES.map((type) => ({
               id: type,
               label: `${PAL_SPECIES[type].stages[0].name} — ${PAL_SPECIES[type].label}`,

@@ -15,6 +15,26 @@ import az900Questions from "../../content/az-900/questions.json";
 import az900Flashcards from "../../content/az-900/flashcards.json";
 import az900StudyGuide from "../../content/az-900/study-guide.json";
 
+import ai901Outline from "../../content/ai-901/outline.json";
+import ai901Questions from "../../content/ai-901/questions.json";
+import ai901Flashcards from "../../content/ai-901/flashcards.json";
+import ai901StudyGuide from "../../content/ai-901/study-guide.json";
+
+import dp900Outline from "../../content/dp-900/outline.json";
+import dp900Questions from "../../content/dp-900/questions.json";
+import dp900Flashcards from "../../content/dp-900/flashcards.json";
+import dp900StudyGuide from "../../content/dp-900/study-guide.json";
+
+import sc900Outline from "../../content/sc-900/outline.json";
+import sc900Questions from "../../content/sc-900/questions.json";
+import sc900Flashcards from "../../content/sc-900/flashcards.json";
+import sc900StudyGuide from "../../content/sc-900/study-guide.json";
+
+import pl900Outline from "../../content/pl-900/outline.json";
+import pl900Questions from "../../content/pl-900/questions.json";
+import pl900Flashcards from "../../content/pl-900/flashcards.json";
+import pl900StudyGuide from "../../content/pl-900/study-guide.json";
+
 import type {
   Outline,
   Question,
@@ -51,6 +71,30 @@ const examRegistry: Record<string, ExamContent> = {
     questions: az900Questions as Question[],
     flashcards: az900Flashcards as Flashcard[],
     studyGuide: az900StudyGuide as StudyGuideDomain[],
+  },
+  "ai-901": {
+    outline: ai901Outline as Outline,
+    questions: ai901Questions as Question[],
+    flashcards: ai901Flashcards as Flashcard[],
+    studyGuide: ai901StudyGuide as StudyGuideDomain[],
+  },
+  "dp-900": {
+    outline: dp900Outline as Outline,
+    questions: dp900Questions as Question[],
+    flashcards: dp900Flashcards as Flashcard[],
+    studyGuide: dp900StudyGuide as StudyGuideDomain[],
+  },
+  "sc-900": {
+    outline: sc900Outline as Outline,
+    questions: sc900Questions as Question[],
+    flashcards: sc900Flashcards as Flashcard[],
+    studyGuide: sc900StudyGuide as StudyGuideDomain[],
+  },
+  "pl-900": {
+    outline: pl900Outline as Outline,
+    questions: pl900Questions as Question[],
+    flashcards: pl900Flashcards as Flashcard[],
+    studyGuide: pl900StudyGuide as StudyGuideDomain[],
   },
 };
 

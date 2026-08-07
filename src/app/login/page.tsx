@@ -47,7 +47,7 @@ export default async function LoginPage({
         <p className="mt-3 text-body text-[var(--foreground-muted)]">
           Enter your email and we&apos;ll send you a sign-in link — no password
           needed. New here? The same link creates your trainer profile, and
-          you&apos;ll pick your first ExamPal on the way in.
+          you&apos;ll pick your first Paruu on the way in.
         </p>
       </div>
 

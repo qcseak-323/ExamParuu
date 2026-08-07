@@ -65,8 +65,8 @@
     "durationMinutes": 45,
     "passingScore": 700,
     "summary": "Generative AI, Copilot fundamentals, and modern AI agents on Azure — the 2026 replacement for AI-900.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-07",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/"
   },
   {
@@ -121,8 +121,8 @@
     "durationMinutes": 45,
     "passingScore": 700,
     "summary": "Core data concepts and how they're implemented with relational, non-relational, and analytics workloads on Azure.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-07",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/azure-data-fundamentals/"
   },
   {
@@ -205,8 +205,8 @@
     "durationMinutes": 45,
     "passingScore": 700,
     "summary": "The concepts behind Microsoft's security, compliance, and identity stack across cloud and on-premises.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-07",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/security-compliance-and-identity-fundamentals/"
   },
   {
@@ -387,8 +387,8 @@
     "durationMinutes": 45,
     "passingScore": 700,
     "summary": "The business value and basics of Power Apps, Power Automate, Power BI, and Copilot Studio.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-07",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/power-platform-fundamentals/"
   },
   {

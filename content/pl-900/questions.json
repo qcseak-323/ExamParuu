@@ -1,0 +1,547 @@
+[
+  {
+    "id": "pl900-bv-01",
+    "examCode": "pl-900",
+    "domain": "business-value",
+    "question": "A logistics firm wants its business data organised once, secured with role-based access, and usable by every app and flow it builds. Which Power Platform component provides this shared foundation?",
+    "options": ["Power Pages", "Microsoft Dataverse", "Desktop flows", "Agent evaluations"],
+    "correctIndex": 1,
+    "explanation": "Dataverse is the platform's shared data backbone: business data organised in secured tables, instantly available to Power Apps, Power Automate, and Copilot Studio alike.",
+    "teaches": "platform-business-value"
+  },
+  {
+    "id": "pl900-bv-02",
+    "examCode": "pl-900",
+    "domain": "business-value",
+    "question": "Apps and flows need to reach data in Salesforce, SQL Server, and Microsoft 365 without writing custom integration code. What makes this possible?",
+    "options": [
+      "Connectors — prebuilt bridges to hundreds of services",
+      "Retention labels",
+      "Availability zones",
+      "Power Fx"
+    ],
+    "correctIndex": 0,
+    "explanation": "Connectors are the platform's integration glue: hundreds of prebuilt connections to Microsoft and third-party services, exposing triggers and actions apps and flows use directly.",
+    "teaches": "platform-business-value"
+  },
+  {
+    "id": "pl900-bv-03",
+    "examCode": "pl-900",
+    "domain": "business-value",
+    "question": "A company wants customers and partners to interact with its business data through a secure external website built on the same data foundation as its internal apps. Which product fits?",
+    "options": ["Power Pages", "Desktop flows", "Microsoft Agent 365", "Compliance Manager"],
+    "correctIndex": 0,
+    "explanation": "Power Pages builds secure, data-driven external websites on Dataverse — the outward-facing member of the family.",
+    "teaches": "platform-business-value"
+  },
+  {
+    "id": "pl900-bv-04",
+    "examCode": "pl-900",
+    "domain": "business-value",
+    "question": "An organisation wants to build its own conversational AI assistant, grounded in company knowledge, that answers employee questions and takes actions in Teams. Which product is designed for this?",
+    "options": ["Copilot Studio", "Power BI", "Azure Key Vault", "Plan designer"],
+    "correctIndex": 0,
+    "explanation": "Copilot Studio is where organisations build agents: conversational assistants grounded in their knowledge, able to act, published to channels like Teams.",
+    "teaches": "platform-business-value"
+  },
+  {
+    "id": "pl900-en-01",
+    "examCode": "pl-900",
+    "domain": "environment",
+    "question": "What most distinguishes Dataverse from a traditional database?",
+    "options": [
+      "It can only store text",
+      "Security, business logic, and platform integration are built in, rather than left to application code",
+      "It cannot define relationships between tables",
+      "It requires managing your own database servers"
+    ],
+    "correctIndex": 1,
+    "explanation": "A traditional database provides tables and leaves security, rules, and APIs to the application. Dataverse packages role-based security, business logic, and instant Power Platform availability around the data itself.",
+    "teaches": "dataverse-fundamentals"
+  },
+  {
+    "id": "pl900-en-02",
+    "examCode": "pl-900",
+    "domain": "environment",
+    "question": "In Dataverse, an Account should show its related Contacts without duplicating contact data on the account. What models this?",
+    "options": [
+      "A relationship between the Account and Contact tables",
+      "A canvas app screen",
+      "A retention policy",
+      "A desktop flow"
+    ],
+    "correctIndex": 0,
+    "explanation": "Relationships connect tables so related records reference each other — one contact stored once, linked to its account — the relational core of Dataverse.",
+    "teaches": "dataverse-fundamentals"
+  },
+  {
+    "id": "pl900-en-03",
+    "examCode": "pl-900",
+    "domain": "environment",
+    "question": "Which pairing about model-driven presentation is correct?",
+    "options": [
+      "A form is the record's editing layout; a view is a filtered, sorted list of records",
+      "A form is a chart; a view is a workflow",
+      "Forms and views both store data",
+      "Views edit single records; forms list many"
+    ],
+    "correctIndex": 0,
+    "explanation": "Forms define how a single record is displayed and edited; views define list presentations — which columns, filters, and sort order.",
+    "teaches": "dataverse-fundamentals"
+  },
+  {
+    "id": "pl900-en-04",
+    "examCode": "pl-900",
+    "domain": "environment",
+    "question": "Which language expresses calculations and app behaviour across Power Platform in Excel-like formulas?",
+    "options": ["Power Fx", "T-SQL", "C#", "KQL"],
+    "correctIndex": 0,
+    "explanation": "Power Fx is the platform's low-code formula language — Excel-like expressions powering canvas app logic and Dataverse business logic.",
+    "teaches": "dataverse-fundamentals"
+  },
+  {
+    "id": "pl900-en-05",
+    "examCode": "pl-900",
+    "domain": "environment",
+    "question": "A maker describes the data their solution needs in natural language, and the tables, columns, and relationships are drafted automatically for refinement. What does this describe?",
+    "options": [
+      "Using Copilot/AI to create and edit Dataverse tables",
+      "Writing migration scripts by hand",
+      "Importing a CSV",
+      "An access review"
+    ],
+    "correctIndex": 0,
+    "explanation": "Dataverse table design is AI-assisted: describe the data model conversationally and Copilot drafts tables, columns, and relationships you then refine.",
+    "teaches": "dataverse-fundamentals"
+  },
+  {
+    "id": "pl900-en-06",
+    "examCode": "pl-900",
+    "domain": "environment",
+    "question": "Development, test, and production copies of a solution must be isolated, each with its own Dataverse database and security boundary. What provides this separation?",
+    "options": ["Environments", "Sensitivity labels", "Topics", "Views"],
+    "correctIndex": 0,
+    "explanation": "An environment is the container for apps, flows, agents, and a Dataverse database, with its own security — the standard unit for separating dev, test, and production.",
+    "teaches": "admin-and-governance"
+  },
+  {
+    "id": "pl900-en-07",
+    "examCode": "pl-900",
+    "domain": "environment",
+    "question": "Sales staff should see only their own region's customer rows, while managers see all. Where is this level of access control enforced?",
+    "options": [
+      "Dataverse security roles with row-level access",
+      "The Teams admin center",
+      "A canvas app's colour settings",
+      "Desktop flow scripts"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Dataverse security model controls access down to tables, rows, and columns through security roles — data-level enforcement that applies whichever app touches the data.",
+    "teaches": "admin-and-governance"
+  },
+  {
+    "id": "pl900-en-08",
+    "examCode": "pl-900",
+    "domain": "environment",
+    "question": "A finished solution must move from development to test to production as a governed, repeatable deployment. Which capability is designed for this?",
+    "options": [
+      "Power Platform pipelines (ALM)",
+      "Manual copy-paste of apps",
+      "The chat playground",
+      "Smart lockout"
+    ],
+    "correctIndex": 0,
+    "explanation": "Application lifecycle management packages work into solutions, and Power Platform pipelines automate promoting them through environments — deployment as a governed step, not a manual export.",
+    "teaches": "admin-and-governance"
+  },
+  {
+    "id": "pl900-en-09",
+    "examCode": "pl-900",
+    "domain": "environment",
+    "question": "Administrators need to see app usage, flow health, and capacity across every environment. Where does this visibility live?",
+    "options": [
+      "The Power Platform admin center's monitoring and analytics",
+      "The Azure pricing calculator",
+      "Each maker's personal notes",
+      "The Service Trust Portal"
+    ],
+    "correctIndex": 0,
+    "explanation": "The admin center provides monitoring and analytics across environments — usage, capacity, health — the administrator's view of the platform estate.",
+    "teaches": "admin-and-governance"
+  },
+  {
+    "id": "pl900-pa-01",
+    "examCode": "pl-900",
+    "domain": "power-apps",
+    "question": "Field technicians need a phone app with big buttons, photo capture, and a custom layout designed around their task. Which app type fits?",
+    "options": [
+      "A canvas app",
+      "A model-driven app",
+      "A Power BI report",
+      "A desktop flow"
+    ],
+    "correctIndex": 0,
+    "explanation": "Canvas apps give total layout freedom — drag controls where the task needs them, wire logic with Power Fx — ideal for focused, mobile-friendly task apps.",
+    "teaches": "power-apps-types"
+  },
+  {
+    "id": "pl900-pa-02",
+    "examCode": "pl-900",
+    "domain": "power-apps",
+    "question": "A case-management application should generate its interface — forms, views, dashboards — directly from Dataverse tables, with a consistent process-driven look. Which app type is this?",
+    "options": [
+      "A model-driven app",
+      "A canvas app",
+      "A Power Page",
+      "An agent flow"
+    ],
+    "correctIndex": 0,
+    "explanation": "Model-driven apps start from the data model: point at Dataverse tables and the platform generates the record-centric interface — the fit for structured, process-heavy applications.",
+    "teaches": "power-apps-types"
+  },
+  {
+    "id": "pl900-pa-03",
+    "examCode": "pl-900",
+    "domain": "power-apps",
+    "question": "A team wants to describe a whole business problem and have AI plan the full solution — the tables, apps, and automations together — before refining it. Which capability does this?",
+    "options": ["Plan designer", "An NSG", "A view", "Records management"],
+    "correctIndex": 0,
+    "explanation": "Plan designer works at solution level: describe the business need and it designs the complete package — data model, apps, and automations — as an AI-guided plan.",
+    "teaches": "power-apps-types"
+  },
+  {
+    "id": "pl900-pa-04",
+    "examCode": "pl-900",
+    "domain": "power-apps",
+    "question": "Professional developers want to build a full-code application that still runs under Power Platform's governance, security, and Dataverse foundation. Which option is designed for them?",
+    "options": ["Code apps", "Canvas apps only", "Desktop flows", "Power BI"],
+    "correctIndex": 0,
+    "explanation": "Code apps bring pro-code development into the platform: full-code applications inside Power Platform's managed governance and data foundation.",
+    "teaches": "power-apps-types"
+  },
+  {
+    "id": "pl900-pa-05",
+    "examCode": "pl-900",
+    "domain": "power-apps",
+    "question": "A maker types 'an inspection app with photo capture and an approval step' and receives a working canvas app to refine. What is this creation path called?",
+    "options": [
+      "Using AI/Copilot to create the app from a description",
+      "Importing a solution",
+      "Writing JavaScript by hand",
+      "A security role assignment"
+    ],
+    "correctIndex": 0,
+    "explanation": "AI-first creation: describe the app in natural language, Copilot generates screens, controls, and data connections, and the maker refines — the modern starting point for both canvas and model-driven apps.",
+    "teaches": "building-apps-with-ai"
+  },
+  {
+    "id": "pl900-pa-06",
+    "examCode": "pl-900",
+    "domain": "power-apps",
+    "question": "What characterises the 'vibe' experience in Power Apps?",
+    "options": [
+      "Conversationally describing intent while AI assembles an AI-powered app around it",
+      "A colour theme editor",
+      "A network security feature",
+      "Manual XML editing"
+    ],
+    "correctIndex": 0,
+    "explanation": "The vibe experience keeps the maker in natural-language territory: describe the outcome, and AI assembles the AI-powered app — describing outcomes rather than assembling controls.",
+    "teaches": "building-apps-with-ai"
+  },
+  {
+    "id": "pl900-pa-07",
+    "examCode": "pl-900",
+    "domain": "power-apps",
+    "question": "Which statement correctly contrasts canvas and model-driven apps?",
+    "options": [
+      "Canvas: layout freedom from a blank screen. Model-driven: interface generated from the Dataverse data model",
+      "Canvas apps cannot use connectors",
+      "Model-driven apps cannot use Dataverse",
+      "They are identical except for licensing"
+    ],
+    "correctIndex": 0,
+    "explanation": "Canvas starts from the screen (pixel control, Power Fx, any connector); model-driven starts from the data (generated, consistent, record-centric UI). Which one a scenario needs is a favourite exam question.",
+    "teaches": "power-apps-types"
+  },
+  {
+    "id": "pl900-pa-08",
+    "examCode": "pl-900",
+    "domain": "power-apps",
+    "question": "A maker wants a model-driven app started by AI: the tables and app drafted from a description of the process. Is this supported?",
+    "options": [
+      "Yes — AI can draft the Dataverse tables and generate the model-driven app around them",
+      "No — model-driven apps must be built manually",
+      "Only for canvas apps",
+      "Only with custom code"
+    ],
+    "correctIndex": 0,
+    "explanation": "The AI creation path covers both app types: for model-driven apps, Copilot drafts the data model and generates the app over it, ready for refinement.",
+    "teaches": "building-apps-with-ai"
+  },
+  {
+    "id": "pl900-pa-09",
+    "examCode": "pl-900",
+    "domain": "power-apps",
+    "question": "Which app type would you choose for a quick, task-focused tool that must work well on phones and connect to SharePoint?",
+    "options": ["A canvas app", "A model-driven app", "A code app", "An agent"],
+    "correctIndex": 0,
+    "explanation": "Task-focused + custom mobile layout + connector data source is the canvas app profile.",
+    "teaches": "power-apps-types"
+  },
+  {
+    "id": "pl900-au-01",
+    "examCode": "pl-900",
+    "domain": "power-automate",
+    "question": "A nightly process must pull data from a 20-year-old Windows application that has no API, by driving its interface directly. Which Power Automate capability handles this?",
+    "options": [
+      "A desktop flow (robotic process automation)",
+      "A cloud flow with connectors",
+      "A Power Fx formula",
+      "A sensitivity label"
+    ],
+    "correctIndex": 0,
+    "explanation": "Desktop flows are RPA: they drive Windows applications by clicking and typing — the answer whenever the target system has no API or connector.",
+    "teaches": "flow-use-cases"
+  },
+  {
+    "id": "pl900-au-02",
+    "examCode": "pl-900",
+    "domain": "power-automate",
+    "question": "Expense requests over a threshold must route to a manager, record the decision, and notify the requester. Which Power Automate capability is purpose-built for this?",
+    "options": ["Approvals", "Desktop flows", "Plan designer", "Agent evaluations"],
+    "correctIndex": 0,
+    "explanation": "Approvals are a first-class Power Automate capability: route the request, capture approve/reject with comments, and continue the flow on the outcome.",
+    "teaches": "flow-use-cases"
+  },
+  {
+    "id": "pl900-au-03",
+    "examCode": "pl-900",
+    "domain": "power-automate",
+    "question": "Invoices arrive as PDF attachments, and their vendor, date, and totals must be extracted and entered into a finance system automatically. Which use case is this?",
+    "options": [
+      "Document automation with AI extraction",
+      "A model-driven app",
+      "An access review",
+      "Channel publishing"
+    ],
+    "correctIndex": 0,
+    "explanation": "Document automation combines AI extraction of structured data from documents with flows that push the results into business systems — the end of manual re-keying.",
+    "teaches": "flow-use-cases"
+  },
+  {
+    "id": "pl900-au-04",
+    "examCode": "pl-900",
+    "domain": "power-automate",
+    "question": "In a cloud flow, what is the relationship between triggers and actions?",
+    "options": [
+      "The trigger is the event that starts the flow; actions are the connector steps that then execute",
+      "Actions start the flow; triggers finish it",
+      "Both run before the flow exists",
+      "Triggers are only manual buttons"
+    ],
+    "correctIndex": 0,
+    "explanation": "Every cloud flow begins with one trigger — an event, schedule, or manual start — followed by actions: connector operations shaped by conditions and loops.",
+    "teaches": "building-flows"
+  },
+  {
+    "id": "pl900-au-05",
+    "examCode": "pl-900",
+    "domain": "power-automate",
+    "question": "'When a response is submitted in Microsoft Forms, save the attachment to SharePoint and post to the team's channel.' A maker types this sentence and receives a drafted flow. What happened?",
+    "options": [
+      "AI/Copilot generated the cloud flow from the natural-language description",
+      "The flow was imported from a solution",
+      "A desktop recorder captured it",
+      "Nothing — flows cannot be created this way"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cloud flows are AI-creatable: describe the automation and Copilot drafts the trigger and actions, which the maker refines in the designer.",
+    "teaches": "building-flows"
+  },
+  {
+    "id": "pl900-au-06",
+    "examCode": "pl-900",
+    "domain": "power-automate",
+    "question": "Which trigger examples are valid ways for a cloud flow to start?",
+    "options": [
+      "When an email arrives; on a daily schedule; when a button is pressed manually",
+      "Only when an administrator runs it",
+      "Only when Dataverse is offline",
+      "Flows have no triggers"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cloud flows start from connector events (mail arriving, items created), schedules, or manual/instant triggers — the three trigger families.",
+    "teaches": "building-flows"
+  },
+  {
+    "id": "pl900-au-07",
+    "examCode": "pl-900",
+    "domain": "power-automate",
+    "question": "New items added to a SharePoint list must appear as notifications in a Teams channel within moments. Which flow shape fits?",
+    "options": [
+      "A cloud flow triggered by the SharePoint item, with a Teams post action",
+      "A desktop flow driving the Teams desktop client",
+      "A Power Pages site",
+      "A view on the list"
+    ],
+    "correctIndex": 0,
+    "explanation": "Both services have connectors, so a cloud flow is right: SharePoint trigger, Teams action. Desktop RPA is for systems without connectors.",
+    "teaches": "flow-use-cases"
+  },
+  {
+    "id": "pl900-au-08",
+    "examCode": "pl-900",
+    "domain": "power-automate",
+    "question": "Can AI help create and modify desktop flows too?",
+    "options": [
+      "Yes — describe or demonstrate the manual task and AI helps generate and adjust the automation",
+      "No — desktop flows are always hand-built",
+      "Only on macOS",
+      "Only for flows without applications"
+    ],
+    "correctIndex": 0,
+    "explanation": "The AI-assisted path covers desktop flows as well: describing or demonstrating the task lets Copilot generate and modify the RPA automation.",
+    "teaches": "building-flows"
+  },
+  {
+    "id": "pl900-au-09",
+    "examCode": "pl-900",
+    "domain": "power-automate",
+    "question": "Which scenario list belongs to Power Automate's classic Microsoft 365 use cases?",
+    "options": [
+      "Approvals, Teams notifications, Outlook mail handling, SharePoint changes, Forms submissions, document automation",
+      "Compiling C++ programs",
+      "Managing Azure DDoS Protection",
+      "Editing sensitivity labels"
+    ],
+    "correctIndex": 0,
+    "explanation": "The outline names exactly these: approvals, Teams, Outlook, SharePoint, Forms, and document automation — the everyday automations of Microsoft 365.",
+    "teaches": "flow-use-cases"
+  },
+  {
+    "id": "pl900-cs-01",
+    "examCode": "pl-900",
+    "domain": "copilot-studio-agents",
+    "question": "In a Copilot Studio agent, each kind of request — 'check my leave balance', 'reset my password' — is handled by its own conversation path with trigger phrases. What are these paths called?",
+    "options": ["Topics", "Environments", "Views", "Pipelines"],
+    "correctIndex": 0,
+    "explanation": "Topics structure the agent's conversations: trigger phrases recognise the request, and the topic's path — messages, questions, branches — resolves it.",
+    "teaches": "building-agents"
+  },
+  {
+    "id": "pl900-cs-02",
+    "examCode": "pl-900",
+    "domain": "copilot-studio-agents",
+    "question": "An HR agent must answer from the company's actual policy documents on SharePoint rather than inventing answers. What grounds it?",
+    "options": [
+      "Knowledge sources pointed at the policy content",
+      "A higher temperature setting",
+      "A desktop flow",
+      "A retention label"
+    ],
+    "correctIndex": 0,
+    "explanation": "Knowledge sources — websites, SharePoint, documents, Dataverse — ground the agent's answers in real content instead of general generation.",
+    "teaches": "building-agents"
+  },
+  {
+    "id": "pl900-cs-03",
+    "examCode": "pl-900",
+    "domain": "copilot-studio-agents",
+    "question": "Mid-conversation, an agent must actually book the meeting room and connect to an external system through a standard protocol. Which capabilities give agents the ability to act?",
+    "options": [
+      "Tools — agent flows for automated processes and MCP servers for external systems",
+      "Trigger phrases",
+      "Compliance score",
+      "A canvas app theme"
+    ],
+    "correctIndex": 0,
+    "explanation": "Tools turn agents from talkers into doers: agent flows execute automated processes, and MCP servers connect external systems and capabilities through a standard protocol.",
+    "teaches": "building-agents"
+  },
+  {
+    "id": "pl900-cs-04",
+    "examCode": "pl-900",
+    "domain": "copilot-studio-agents",
+    "question": "One agent build must reach employees in Teams, appear in Microsoft 365 Copilot, and answer customers on the website. What makes this possible?",
+    "options": [
+      "Publishing the agent to multiple channels",
+      "Rebuilding the agent per destination",
+      "Exporting to CSV",
+      "An NSG rule"
+    ],
+    "correctIndex": 0,
+    "explanation": "Channels are how agents are published: one agent, deployed to Teams, Microsoft 365 Copilot, websites, and more.",
+    "teaches": "building-agents"
+  },
+  {
+    "id": "pl900-cs-05",
+    "examCode": "pl-900",
+    "domain": "copilot-studio-agents",
+    "question": "As agents multiply across an organisation, IT needs a registry and control plane where agents get identities and fall under security and compliance policy. What provides this?",
+    "options": [
+      "Microsoft Agent 365",
+      "Azure Bastion",
+      "The vibe experience",
+      "Power Pages"
+    ],
+    "correctIndex": 0,
+    "explanation": "Agent 365 is the organisation-wide management layer for agents: identity, access governance, and security and compliance applied to agents like a workforce.",
+    "teaches": "managing-agents"
+  },
+  {
+    "id": "pl900-cs-06",
+    "examCode": "pl-900",
+    "domain": "copilot-studio-agents",
+    "question": "Which metrics belong to monitoring a Copilot Studio agent's usage and adoption?",
+    "options": [
+      "Sessions, resolution and escalation rates, and which topics carry traffic",
+      "CPU temperature and fan speed",
+      "Number of Azure subscriptions",
+      "Storage account redundancy"
+    ],
+    "correctIndex": 0,
+    "explanation": "Copilot Studio analytics report sessions, outcomes (resolved, escalated, abandoned), and topic performance — the evidence for improving the agent and proving value.",
+    "teaches": "managing-agents"
+  },
+  {
+    "id": "pl900-cs-07",
+    "examCode": "pl-900",
+    "domain": "copilot-studio-agents",
+    "question": "Before releasing changes, a team runs scripted test conversations against their agent and scores the answers to catch regressions. What is this practice called?",
+    "options": ["Agent evaluations", "Cloud bursting", "Normalization", "Smart lockout"],
+    "correctIndex": 0,
+    "explanation": "Agent evaluations are systematic quality tests: scenarios run against the agent with scored results — the agent equivalent of a test suite.",
+    "teaches": "managing-agents"
+  },
+  {
+    "id": "pl900-cs-08",
+    "examCode": "pl-900",
+    "domain": "copilot-studio-agents",
+    "question": "Which scenarios are classic use cases for Copilot Studio agents?",
+    "options": [
+      "An HR assistant answering policy questions and a support agent resolving common requests end to end",
+      "Compiling mobile games",
+      "Managing VM fault domains",
+      "Encrypting storage accounts"
+    ],
+    "correctIndex": 0,
+    "explanation": "Agents shine where conversations meet knowledge and action: internal assistants (HR, IT helpdesk) and customer-facing support that answers and acts.",
+    "teaches": "building-agents"
+  },
+  {
+    "id": "pl900-cs-09",
+    "examCode": "pl-900",
+    "domain": "copilot-studio-agents",
+    "question": "What fills the space when a user asks the agent something no authored topic covers?",
+    "options": [
+      "Generative answers drawing on the agent's knowledge sources",
+      "The conversation ends with an error",
+      "A desktop flow starts",
+      "The user is signed out"
+    ],
+    "correctIndex": 0,
+    "explanation": "Between authored topics, generative answers respond from the agent's grounded knowledge — structured paths where you've authored them, generative coverage everywhere else.",
+    "teaches": "building-agents"
+  }
+]

@@ -1,0 +1,102 @@
+[
+  {
+    "domainId": "core-data-concepts",
+    "sections": [
+      {
+        "id": "representing-data",
+        "heading": "Structured, semi-structured, unstructured",
+        "paragraphs": [
+          "Structured data fits a fixed schema of rows and columns — every record has the same fields, which is what makes relational tables queryable with SQL. Semi-structured data carries its schema with it, flexibly: JSON documents, XML, key-value pairs — records can differ, but fields are still labelled and reachable. Unstructured data has no schema at all from the store's point of view: images, audio, video, free-form documents. The exam's classification questions hinge on this: an invoice table is structured, a JSON product document is semi-structured, a folder of photographs is unstructured.",
+          "File formats matter because analytics engines care how bytes are laid out. Delimited text (CSV) is the universal interchange format, row-oriented and human-readable. JSON nests naturally and dominates APIs. XML is its heavier ancestor. Avro is a row-based binary format good for write-heavy streams; Parquet and ORC are columnar formats — grouping values by column — which makes analytical scans over a few columns of a wide table dramatically faster and smaller. Row formats favour transactions; columnar formats favour analytics."
+        ]
+      },
+      {
+        "id": "stores-and-workloads",
+        "heading": "Data stores and workload types",
+        "paragraphs": [
+          "Transactional (OLTP) workloads record business events as they happen — orders, payments, bookings — many small reads and writes, each one needing to be correct right now. They prize the ACID guarantees: atomicity, consistency, isolation, durability. Analytical (OLAP) workloads ask questions over history — trends, aggregates, comparisons — few queries, each scanning enormous amounts of data. The two shapes pull storage design in opposite directions, which is why organisations copy transactional data into analytical stores rather than reporting against the live system.",
+          "Stores line up with the data they hold: relational databases for structured records, document and key-value stores for semi-structured data, and object storage — Azure Blob storage — for unstructured files at any scale. Choosing 'which Azure datastore for this use case' is usually answered by classifying the data first, then matching the workload: live orders → relational OLTP; product catalog with varied attributes → document store; video archive → blob storage; company-wide reporting → an analytical store."
+        ]
+      },
+      {
+        "id": "data-roles",
+        "heading": "The three data roles",
+        "paragraphs": [
+          "The database administrator manages and secures databases: availability, backup and restore, performance tuning, and granting users access. When a question mentions restoring after failure or assigning permissions, it is describing the DBA. The data engineer builds and operates the pipelines: ingesting data from sources, transforming and cleaning it, and landing it in stores that analysts can use — the plumbing between systems of record and systems of insight.",
+          "The data analyst turns data into understanding: exploring it, modelling relationships, building visualizations and reports, and helping the business read them. In Microsoft terms the analyst lives in Power BI, the engineer in tools like Data Factory pipelines, Databricks, and Fabric, and the DBA in the database engines themselves. Exam questions describe a task and ask whose job it is — pipelines are the engineer's, reports the analyst's, backups the administrator's."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "relational-data",
+    "sections": [
+      {
+        "id": "relational-concepts",
+        "heading": "Relational concepts and SQL",
+        "paragraphs": [
+          "Relational data lives in tables: rows are records, columns are typed attributes, a primary key identifies each row uniquely, and foreign keys connect tables to each other. Normalization is the discipline of splitting data into related tables so each fact is stored once — it prevents update anomalies and saves space, at the price of needing joins to reassemble the picture. Analytical models often deliberately de-normalize for read speed; transactional models normalize for correctness.",
+          "SQL statements come in families the exam expects you to tell apart. Data Manipulation Language works on rows: SELECT reads, INSERT adds, UPDATE changes, DELETE removes. Data Definition Language works on objects: CREATE, ALTER, DROP. Common database objects beyond tables: a view is a saved query presented as a virtual table; a stored procedure is executable logic kept in the database; an index speeds lookups on chosen columns the way a book index speeds finding a topic."
+        ]
+      },
+      {
+        "id": "azure-relational-services",
+        "heading": "The Azure SQL family and open source",
+        "paragraphs": [
+          "The Azure SQL family is a spectrum of control versus management. SQL Server on Azure Virtual Machines is IaaS — the full product on a VM you patch and back up yourself, maximum compatibility for lift-and-shift. Azure SQL Managed Instance is PaaS with near-complete SQL Server compatibility — instance-scoped features like cross-database queries and SQL Agent survive the move, while Microsoft manages the platform. Azure SQL Database is the fully managed, database-scoped PaaS option — least administration, ideal for new cloud applications that don't need instance-level features.",
+          "The pattern for choosing: need OS control or legacy configuration → VM; need instance features with managed platform → Managed Instance; building new → SQL Database. Open-source engines get the same treatment: Azure Database for PostgreSQL and Azure Database for MySQL are managed PaaS versions of the community engines, letting teams keep their existing skills and drivers while Azure runs the servers."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "nonrelational-data",
+    "sections": [
+      {
+        "id": "azure-storage-capabilities",
+        "heading": "Blob, Files, and Table storage",
+        "paragraphs": [
+          "Azure Blob storage is object storage for unstructured data — documents, images, backups, logs — at effectively unlimited scale, with access tiers (hot, cool, archive) pricing data by how often it is touched. Azure Files provides fully managed SMB file shares: existing applications that expect a network drive can mount them unchanged, which is its defining use case — lift-and-shift apps that read and write ordinary file paths.",
+          "Azure Table storage is a simple NoSQL key-value store: entities with flexible properties, addressed by partition key and row key. It is cheap and fast for huge volumes of simple lookups but offers no joins and no rich querying — the step up when those are needed is Azure Cosmos DB. The exam separates the three by scenario: files any app can mount → Files; petabytes of media → Blob; billions of simple keyed records → Table."
+        ]
+      },
+      {
+        "id": "cosmos-db",
+        "heading": "Azure Cosmos DB",
+        "paragraphs": [
+          "Azure Cosmos DB is Azure's globally distributed, multi-model NoSQL database: single-digit-millisecond reads and writes, elastic scale, and turnkey replication to any number of regions. Its use cases are the workloads relational engines strain at — product catalogs with wildly varying attributes, IoT telemetry arriving at massive rates, gaming and retail workloads needing worldwide low latency.",
+          "Cosmos DB speaks several APIs so existing skills carry over: the native NoSQL API for JSON documents, MongoDB compatibility for Mongo-built apps, Apache Cassandra for wide-column workloads, Apache Gremlin for graphs of highly connected data, and Table API as the grown-up home for Table-storage-style workloads. The exam pattern: match the incoming application's data model to the API that speaks it."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "analytics-workload",
+    "sections": [
+      {
+        "id": "large-scale-analytics",
+        "heading": "Ingestion, stores, and the platforms",
+        "paragraphs": [
+          "Large-scale analytics starts with ingestion: collecting data from source systems and processing it on the way in — ETL (extract, transform, load) cleans data before landing; ELT lands it raw and transforms inside the analytical store. The destinations differ by shape: a data warehouse holds curated, structured data modelled for fast SQL reporting; a data lake holds vast raw files in open formats awaiting many uses; the lakehouse pattern layers warehouse-style tables and management on top of lake storage — one copy of the data serving both worlds.",
+          "Two Microsoft platforms carry this at cloud scale. Azure Databricks is the Apache Spark-based analytics platform for engineering and data science on massive data. Microsoft Fabric is the unified analytics SaaS — lakehouses, warehouses, pipelines, real-time intelligence, and Power BI in one service over a single data foundation called OneLake. Fundamentals questions expect you to recognise each platform's role rather than operate them."
+        ]
+      },
+      {
+        "id": "real-time-analytics",
+        "heading": "Batch versus streaming",
+        "paragraphs": [
+          "Batch processing gathers data over time and processes it together on a schedule — nightly loads, monthly statements. Latency is high but throughput per run is huge, and it suits data that is naturally periodic. Stream processing handles events continuously as they arrive — sensor readings, clicks, transactions — with results in seconds, which is what dashboards that must show 'right now' require.",
+          "The distinguishing test is time-to-insight: if the answer may be hours old, batch; if it must reflect the last few seconds, streaming. On Azure, real-time analytics runs through services such as Azure Stream Analytics for query-over-stream processing, Event Hubs as the ingestion front door for event streams, and Fabric's Real-Time Intelligence for streaming analytics inside the unified platform."
+        ]
+      },
+      {
+        "id": "power-bi",
+        "heading": "Power BI and choosing visuals",
+        "paragraphs": [
+          "Power BI is Microsoft's business analytics suite: Power BI Desktop for building, the Power BI service for sharing and dashboards, and mobile apps for consuming anywhere. Its heart is the data model — tables connected by relationships, enriched with measures (calculations such as totals and ratios, written in DAX) — so one well-modelled dataset can feed many reports consistently.",
+          "Choosing a visualization is matching chart to question. Trends over time → line chart. Comparing categories → bar or column chart. Contribution to a whole → pie or stacked chart, used sparingly. Relationship between two measures → scatter plot. Geographic distribution → map. A single headline number → card or KPI visual. Tables and matrices show detail when the numbers themselves are the point."
+        ]
+      }
+    ]
+  }
+]

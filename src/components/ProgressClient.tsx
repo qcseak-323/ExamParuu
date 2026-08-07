@@ -88,7 +88,7 @@ export default function ProgressClient({
             <PalSprite
               sheet={stage.image}
               size={96}
-              title={`${displayName}, your ${species.label}-line ExamPal`}
+              title={`${displayName}, your ${species.label}-line Paruu`}
             />
           </div>
           <p className="font-pixel text-label">{displayName}</p>
@@ -199,7 +199,7 @@ export default function ProgressClient({
       </section>
 
       {/* Replaces the old bare "Reset all progress" button. That reset kept
-          the ExamPal; the restart in here releases it too, and the delete is
+          the Paruu; the restart in here releases it too, and the delete is
           the full account-removal contract shared with Preferences. */}
       <ProfileDangerZone email={email} />
     </div>

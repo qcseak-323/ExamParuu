@@ -1,5 +1,5 @@
 /**
- * ExamPals — the starter companion a trainer picks when they create an account.
+ * Paruu — the starter companion a trainer picks when they create an account.
  *
  * Everything here is original: the creatures, their names, and their sprites.
  * Nothing is derived from any existing game's assets or characters, which

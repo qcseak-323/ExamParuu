@@ -1,0 +1,134 @@
+[
+  {
+    "domainId": "sci-concepts",
+    "sections": [
+      {
+        "id": "security-and-compliance-concepts",
+        "heading": "Core security and compliance concepts",
+        "paragraphs": [
+          "Three models frame everything else in this exam. The shared responsibility model divides security duties between cloud provider and customer — the provider always secures the physical infrastructure, the customer always owns their data, identities, and devices, and the middle shifts with the service type. Defense-in-depth layers protections — physical, identity, perimeter, network, compute, application, data — so a breach of one layer meets the next. Zero Trust replaces 'trusted inside the network' with three principles: verify explicitly, use least-privilege access, and assume breach.",
+          "Two cryptographic ideas recur: encryption transforms data so only key-holders can read it — at rest, in transit — and is reversible with the key; hashing produces a fixed fingerprint of data that cannot be reversed, which is why passwords are stored as hashes, not encrypted. GRC — governance, risk, and compliance — is the management layer: governance sets the rules an organisation operates by, risk management identifies and mitigates what could go wrong, and compliance proves the rules meet external obligations."
+        ]
+      },
+      {
+        "id": "identity-concepts",
+        "heading": "Identity concepts",
+        "paragraphs": [
+          "With resources everywhere and networks nowhere, identity is the primary security perimeter: access decisions attach to who or what is asking, not which network they sit on. Authentication (AuthN) proves who you are — the username, password, MFA prompt. Authorization (AuthZ) decides what you may do once proven. The exam loves this pair: proving identity is authentication; granting the right level of access is authorization.",
+          "An identity provider (IdP) is the service that creates, maintains, and verifies identities and issues tokens the applications trust — Microsoft Entra ID is one. Directory services store and organise identity objects; Active Directory Domain Services is the on-premises classic, managing domain-joined machines and users. Federation is trust between identity providers: one organisation's users access another's resources by having their home IdP vouch for them, which is how cross-organisation single sign-on works."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "entra",
+    "sections": [
+      {
+        "id": "entra-id-and-identity-types",
+        "heading": "Entra ID and identity types",
+        "paragraphs": [
+          "Microsoft Entra ID is Microsoft's cloud identity and access management service — the identity provider behind Azure, Microsoft 365, and thousands of integrated applications. It authenticates users, issues tokens, and enforces access policy. The identities it manages go beyond people: user identities for humans; workload identities — service principals and managed identities — for applications and services; device identities for registered and joined machines; and agent ID, the newer identity type that gives AI agents their own governed identities rather than borrowing a human's.",
+          "Hybrid identity connects on-premises Active Directory with Entra ID so one identity works everywhere: accounts synchronise from AD to the cloud, and users sign in to cloud services with the same identity they use at their desk. That bridge is what lets organisations adopt the cloud without abandoning decades of on-premises directory investment."
+        ]
+      },
+      {
+        "id": "entra-authentication",
+        "heading": "Authentication in Entra ID",
+        "paragraphs": [
+          "Entra ID supports an escalating menu of authentication methods: passwords (the weakest), SMS and voice verification, the Microsoft Authenticator app, software and hardware OATH tokens, and passwordless options — Windows Hello for Business, FIDO2 security keys, and passkeys — where no password exists to steal. Multifactor authentication requires two or more of: something you know (password/PIN), something you have (phone, key), something you are (biometric). One compromised factor is no longer enough, which blocks the vast majority of account-compromise attacks.",
+          "Password protection reduces harm while passwords remain: banned-password lists block weak and easily guessed choices (including custom organisation-specific bans), smart lockout distinguishes attackers guessing from users mistyping, and self-service password reset lets users recover safely without a helpdesk call."
+        ]
+      },
+      {
+        "id": "entra-access-management",
+        "heading": "Conditional Access and Entra roles",
+        "paragraphs": [
+          "Conditional Access is Entra's policy engine, evaluated at sign-in: it takes signals — who the user is, where they sign in from, what device and its health, which app, real-time risk — and applies a decision: allow, require MFA, or block. Policies express organisational if-then rules: if signing in from outside trusted locations, require MFA; if the device is non-compliant, block. It is the enforcement point where Zero Trust's 'verify explicitly' becomes practice.",
+          "Entra roles govern who can administer the directory itself. Built-in roles — Global Administrator, User Administrator, Billing Administrator, and many narrower ones — grant defined sets of directory permissions, and role-based access control means assigning the least-privileged role that does the job rather than handing out Global Administrator. Entra roles manage the identity platform; Azure RBAC manages Azure resources — related ideas, separate systems."
+        ]
+      },
+      {
+        "id": "entra-governance-and-protection",
+        "heading": "Identity governance and protection",
+        "paragraphs": [
+          "Microsoft Entra ID Governance answers 'does everyone have exactly the access they should — still?'. Entitlement management bundles resources into access packages that users request and approvers grant, with expiry built in. Access reviews put recurring human eyes on access: reviewers periodically confirm or revoke group memberships, application access, and role assignments, so access granted for a project ends with the project.",
+          "Privileged Identity Management (PIM) protects the most powerful roles with just-in-time activation: administrators are eligible for a role and activate it for a limited window — with approval and justification if required — instead of holding it permanently. Entra ID Protection watches sign-ins and users for risk: leaked credentials, impossible travel, anomalous behaviour. It scores user risk and sign-in risk, and those scores can drive automated responses through Conditional Access — require a password change, demand MFA, or block."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "security-solutions",
+    "sections": [
+      {
+        "id": "azure-infrastructure-security",
+        "heading": "Azure infrastructure security services",
+        "paragraphs": [
+          "Each Azure network security service answers a different attack. Azure DDoS Protection absorbs volumetric denial-of-service floods before they reach your applications. Azure Firewall is the managed, stateful network firewall filtering traffic across virtual networks with centrally managed rules. Web Application Firewall (WAF) speaks HTTP: it blocks web-class exploits — SQL injection, cross-site scripting — that a port-level firewall can't see. Virtual network segmentation isolates workloads into VNets and subnets, and network security groups (NSGs) are the subnet- and NIC-level allow/deny rules controlling which traffic may flow.",
+          "Azure Bastion solves 'how do administrators reach VMs safely': RDP and SSH through the portal over TLS, with no public IP on the VM and no exposed management ports. Azure Key Vault is the safe for secrets: keys, passwords, connection strings, and certificates live there under access policy and audit, instead of in code and config files. Exam questions name a need — stop web attacks, remove public RDP, store certificates — and expect the matching service."
+        ]
+      },
+      {
+        "id": "defender-for-cloud",
+        "heading": "Defender for Cloud and security posture",
+        "paragraphs": [
+          "Microsoft Defender for Cloud is Azure's security management home, and its two halves have names the exam tests. Cloud Security Posture Management (CSPM) continuously assesses configuration against security policies and standards, surfaces recommendations, and rolls them into Secure Score — a measurable posture number that improves as recommendations are implemented. Security policies and standards (like the Microsoft cloud security benchmark) define what 'configured securely' means; recommendations are the gap list.",
+          "The second half is cloud workload protection: threat detection and hardening for the workloads themselves — servers, storage, databases, containers, and more — with alerts when attacks are detected. Posture management tells you where you're weak before an attack; workload protection watches and defends the running estate. Defender for Cloud spans beyond Azure, covering hybrid and multi-cloud resources too."
+        ]
+      },
+      {
+        "id": "sentinel-siem-soar",
+        "heading": "Microsoft Sentinel: SIEM and SOAR",
+        "paragraphs": [
+          "A SIEM — security information and event management — collects security data from across the whole estate into one place, correlates it, and detects threats: the security team's wide-angle lens. SOAR — security orchestration, automation, and response — acts on what's found: automated playbooks that enrich, notify, contain, and remediate without waiting for a human at 3 a.m.",
+          "Microsoft Sentinel is Microsoft's cloud-native SIEM with SOAR built in. It ingests signals from Microsoft services and third-party sources through connectors, applies analytics rules to detect threats across correlated data, presents incidents for investigation with visual timelines, and runs automation playbooks in response. Being cloud-native means no SIEM servers to run and scale — the classic question contrasts Sentinel-as-SIEM/SOAR against Defender XDR's focused workload protection."
+        ]
+      },
+      {
+        "id": "defender-xdr",
+        "heading": "The Defender XDR family",
+        "paragraphs": [
+          "Microsoft Defender XDR is the extended detection and response suite — coordinated protection across the attack surface, each member owning a territory. Defender for Office 365 guards email and collaboration: phishing, malicious attachments and links in Exchange, Teams, and SharePoint. Defender for Endpoint protects devices: endpoint detection and response, attack surface reduction, automated investigation on laptops, servers, and mobile. Defender for Cloud Apps is the cloud access security broker: discovering shadow IT, controlling SaaS app usage, and protecting data across cloud applications.",
+          "Defender for Identity watches on-premises Active Directory for identity attacks — pass-the-hash, reconnaissance, lateral movement. Defender Vulnerability Management finds, prioritises, and tracks software weaknesses across devices. Defender Threat Intelligence supplies the attacker's-eye view: threat actor profiles, indicators, and infrastructure data enriching investigations. The Microsoft Defender portal unifies them — one place where incidents from every Defender service (and Sentinel, if connected) come together into single coordinated stories."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "compliance-solutions",
+    "sections": [
+      {
+        "id": "service-trust-and-privacy",
+        "heading": "Service Trust Portal and privacy principles",
+        "paragraphs": [
+          "The Service Trust Portal is Microsoft's public evidence locker: audit reports, compliance certifications, penetration test summaries, and documentation about how Microsoft's cloud services protect data — the place customers go to verify Microsoft's own compliance before trusting it with theirs.",
+          "Microsoft's privacy commitments rest on six principles: control (you control your data and its use), transparency (Microsoft is open about data practices), security (data is protected with strong technical measures), strong legal protections (respecting local privacy laws and resisting improper government requests), no content-based targeting (your emails and files are not mined for advertising), and benefits to you (data collected is used to make your experience better). Recognising these principles by name is exactly what the exam asks."
+        ]
+      },
+      {
+        "id": "purview-compliance-management",
+        "heading": "Purview portal and Compliance Manager",
+        "paragraphs": [
+          "The Microsoft Purview portal is the home of the compliance and data governance suite — where risk, compliance, and data protection solutions are configured and monitored across Microsoft 365 and beyond. Inside it, Compliance Manager turns regulatory obligation into a worklist: assessments map your configuration against regulations and standards (GDPR, ISO 27001, and hundreds more), each with improvement actions describing exactly what to change.",
+          "Compliance score is the number on top: a measure of progress against those obligations, where completing improvement actions — yours and credit for Microsoft's platform actions — raises the score. Its use is prioritisation and evidence: the score shows where the biggest compliance gaps are and demonstrates progress over time to auditors and leadership."
+        ]
+      },
+      {
+        "id": "purview-information-protection",
+        "heading": "Information protection and lifecycle",
+        "paragraphs": [
+          "Protecting data starts with knowing it: Purview's data classification finds sensitive information — credit cards, ID numbers, health data — using built-in and custom sensitive information types and trainable classifiers. Content explorer shows where classified data lives across the estate; Activity explorer shows what is being done with it — copies, label changes, sharing. Sensitivity labels stamp content with its sensitivity and can enforce protection — encryption, watermarks, access restrictions — that travels with the file; label policies publish the right labels to the right people.",
+          "Data loss prevention (DLP) enforces behaviour: policies that detect sensitive content in motion — email, chat, shared files — and warn, block, or audit the risky action. Retention policies and retention labels govern the lifecycle: keep content for the required period, then delete it — policies sweep broad locations, labels target specific items, and records management adds the stricter regime where declared records become immutable and disposition is reviewed. Classification finds, labels mark and protect, DLP prevents leaks, retention governs time."
+        ]
+      },
+      {
+        "id": "purview-risk-and-audit",
+        "heading": "Insider risk, eDiscovery, and audit",
+        "paragraphs": [
+          "Insider Risk Management addresses threats from within: it correlates signals — unusual downloads, mass deletions, activity before resignation — into risk indicators, raising cases for investigators while preserving fairness through pseudonymisation until escalation. It is policy-driven and privacy-conscious by design.",
+          "eDiscovery serves legal and investigative needs: searching across mailboxes, sites, chats, and files, placing legal holds so evidence cannot be altered or deleted, and managing cases end to end — with the premium tier adding custodian management and analytics. Audit solutions record who did what, where, and when across Microsoft 365 — the activity log investigators query when reconstructing events, with longer retention and finer-grained events at the premium tier. Insider risk watches behaviour, eDiscovery gathers evidence, audit remembers everything."
+        ]
+      }
+    ]
+  }
+]

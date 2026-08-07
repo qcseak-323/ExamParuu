@@ -98,7 +98,7 @@ export default function AccountDataSection({ email }: { email: string | null }) 
         <div>
           <p className="text-body font-medium">Delete my account</p>
           <p className="mt-1 text-caption text-[var(--foreground-muted)]">
-            Removes your account, your ExamPal, and all of your progress from
+            Removes your account, your Paruu, and all of your progress from
             our servers and from this browser. This is immediate and cannot be
             undone — there is no grace period and no backup to restore from.
             Export first if you want a copy.

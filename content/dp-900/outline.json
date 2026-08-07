@@ -1,0 +1,47 @@
+{
+  "examCode": "DP-900",
+  "examName": "Microsoft Azure Data Fundamentals",
+  "note": "Domain weights reflect the skills-measured outline published on Microsoft Learn as of 2026-07-21. Always check learn.microsoft.com for the current official breakdown before your exam.",
+  "domains": [
+    {
+      "id": "core-data-concepts",
+      "name": "Describe core data concepts",
+      "weight": "25-30%",
+      "subtopics": [
+        "Structured, semi-structured, and unstructured data",
+        "Common data file formats and data stores",
+        "Transactional versus analytical workloads",
+        "Roles: database administrator, data engineer, data analyst"
+      ]
+    },
+    {
+      "id": "relational-data",
+      "name": "Identify considerations for relational data on Azure",
+      "weight": "20-25%",
+      "subtopics": [
+        "Relational features, normalization, common SQL statements, and database objects",
+        "The Azure SQL family: Azure SQL Database, SQL Managed Instance, SQL Server on Azure VMs",
+        "Azure services for open-source databases"
+      ]
+    },
+    {
+      "id": "nonrelational-data",
+      "name": "Describe considerations for working with non-relational data on Azure",
+      "weight": "15-20%",
+      "subtopics": [
+        "Azure Blob storage, Azure Files, and Azure Table storage",
+        "Azure Cosmos DB use cases and APIs"
+      ]
+    },
+    {
+      "id": "analytics-workload",
+      "name": "Describe an analytics workload on Azure",
+      "weight": "25-30%",
+      "subtopics": [
+        "Data ingestion and processing, analytical data stores, Azure Databricks and Microsoft Fabric",
+        "Batch versus streaming data and real-time analytics services",
+        "Power BI capabilities, data models, and choosing visualizations"
+      ]
+    }
+  ]
+}

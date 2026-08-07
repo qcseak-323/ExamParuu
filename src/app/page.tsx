@@ -1,4 +1,5 @@
 import { PAL_SPECIES, PAL_TYPES } from "@/lib/pals";
+import { catalog } from "@/lib/content";
 import PalSprite from "@/components/PalSprite";
 import HeroScene from "@/components/HeroScene";
 import StartPrompt from "@/components/StartPrompt";
@@ -32,8 +33,14 @@ export default function Home() {
           <div className="mt-5">
             <StartPrompt />
           </div>
+          {/* Derived from the catalog so new content lists itself. */}
           <p className="mt-3 text-caption text-[var(--foreground-soft)]">
-            Free. Email sign-in. AZ-900 · DP-600 · AB-900.
+            Free. Email sign-in.{" "}
+            {catalog
+              .filter((e) => e.hasContent)
+              .map((e) => e.code.toUpperCase())
+              .join(" · ")}
+            .
           </p>
         </div>
 

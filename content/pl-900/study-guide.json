@@ -1,0 +1,99 @@
+[
+  {
+    "domainId": "business-value",
+    "sections": [
+      {
+        "id": "platform-business-value",
+        "heading": "What each piece is for",
+        "paragraphs": [
+          "The Power Platform's pitch is that business problems get solved by the people who have them, with low-code tools on a shared data foundation. Power Apps builds applications without traditional development — a working tool in days, not quarters. Power Automate removes repetitive manual work by automating processes across services. Microsoft Dataverse is the shared, secure data backbone the whole platform builds on — business data organised once, used everywhere. Connectors are the glue: hundreds of prebuilt bridges to Microsoft and third-party services, so apps and flows reach data wherever it lives without custom integration code.",
+          "Power Pages extends the reach outward: secure, data-driven external websites on the same Dataverse foundation, so customers and partners interact with business data directly. Generative AI runs through the platform — describing what you want in natural language and having apps, flows, and screens drafted for you. Copilot Studio is where organisations build their own agents: conversational AI assistants grounded in company knowledge that answer questions and take actions across the channels where people already work."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "environment",
+    "sections": [
+      {
+        "id": "dataverse-fundamentals",
+        "heading": "Dataverse: more than a database",
+        "paragraphs": [
+          "A traditional database gives you tables and leaves everything else — security, business rules, APIs, integration — to application code. Dataverse packages all of that in: tables with rich column types, role-based security down to rows and columns, business logic that runs regardless of which app touches the data, and instant availability to every Power Platform tool. Tables hold rows of records; columns are typed attributes; relationships connect tables so an Account has its Contacts and Orders without duplicating data.",
+          "Forms and views shape how model-driven experiences present a table: a form is the record's editing layout; a view is a filtered, sorted list definition. Business logic lives close to the data — business rules for validation and defaults, and Power Fx, the platform's Excel-like formula language, expressing calculation and behaviour in formulas rather than code. And table design itself is now AI-assisted: describe the data you need in natural language and Copilot drafts the tables, columns, and relationships, which you refine rather than build from scratch."
+        ]
+      },
+      {
+        "id": "admin-and-governance",
+        "heading": "Environments, security, and ALM",
+        "paragraphs": [
+          "An environment is the container everything lives in — apps, flows, agents, and its own Dataverse database — with its own security boundary and purpose: separate environments for development, test, and production, or per region or department. The security model layers from there: environment roles govern who may make and use things, and Dataverse security roles control table and row-level access, so people see exactly the data their job requires. The platform supports data privacy obligations and accessibility guidelines out of the box, inheriting Microsoft's compliance envelope.",
+          "Administration comes with visibility: the admin center's monitoring and analytics show usage, capacity, and flow and app health across environments. Application lifecycle management moves work safely between environments: solutions package apps, flows, tables, and settings, and Power Platform pipelines automate promoting a solution from development through test to production — deployment as a governed, repeatable step rather than a manual export-import."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "power-apps",
+    "sections": [
+      {
+        "id": "power-apps-types",
+        "heading": "Canvas, model-driven, Plan designer, code apps",
+        "paragraphs": [
+          "Canvas apps start from a blank screen: you drag controls exactly where you want them and wire behaviour with Power Fx formulas — total visual freedom, connecting to anything through connectors. They shine for task-focused, phone-friendly tools: inspections, requests, checklists. Model-driven apps start from the data instead: point one at Dataverse tables and the platform generates a consistent, professional interface of forms, views, and dashboards — the fit for process-heavy, record-centric applications like case or asset management, where structure matters more than pixel placement.",
+          "Two newer options complete the family. Plan designer works at the solution level: describe the business problem and it plans the whole package — the tables, the apps, the automations — as one AI-guided design you then refine. Code apps open the platform to professional developers: full-code applications that still run inside Power Platform's governance, security, and Dataverse foundation — pro-dev flexibility without leaving the managed environment."
+        ]
+      },
+      {
+        "id": "building-apps-with-ai",
+        "heading": "Building apps with AI",
+        "paragraphs": [
+          "App building now starts with a conversation. Describe the app you need — 'an inspection app with photo capture and an approval step' — and Copilot generates a working canvas app with screens, controls, and data connections, or drafts the Dataverse tables and model-driven app around them. You iterate by asking for changes, refining in the studio as needed. The exam expects you to know this AI-first creation path exists for both app types and what it produces.",
+          "The vibe experience is the furthest point of that direction: describing intent conversationally and having AI assemble an AI-powered app around it, keeping you in the flow of describing outcomes rather than assembling controls. The consistent theme: natural language first, generated working artifact second, human refinement third — the platform's answer to the blank-canvas problem."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "power-automate",
+    "sections": [
+      {
+        "id": "flow-use-cases",
+        "heading": "Cloud flows, desktop flows, and where they fit",
+        "paragraphs": [
+          "Cloud flows run in the cloud between services through connectors, and they are the default: when something happens in one system, do things in others. Desktop flows are robotic process automation — they drive a Windows desktop, clicking and typing through applications that have no APIs, which is how legacy systems get automated. The rule of thumb the exam tests: modern services with connectors → cloud flow; legacy desktop-only applications → desktop flow.",
+          "The bread-and-butter use cases live in Microsoft 365. Approvals route requests to the right person and record the outcome. Teams flows post notifications and run processes from chat. Outlook flows trigger on mail and manage attachments. SharePoint flows react to list and library changes. Forms responses kick off processes the moment someone submits. Document automation extracts data from invoices and forms with AI and pushes it into systems — the classic end of paper-shuffling."
+        ]
+      },
+      {
+        "id": "building-flows",
+        "heading": "Triggers, actions, and AI-built flows",
+        "paragraphs": [
+          "Every cloud flow is a trigger followed by actions. The trigger is the event that starts it — 'when an email arrives', 'when an item is created', or a schedule, or a manual button. Actions are the steps that follow, each one a connector operation — send a message, create a row, start an approval — with conditions and loops shaping the path. Triggers and actions both come from connectors, which is why the connector catalogue defines what flows can touch.",
+          "AI builds flows the same way it builds apps: describe the automation in natural language — 'when a response arrives in Forms, save the attachment to SharePoint and notify the channel' — and Copilot drafts the flow with the right trigger and actions, ready to refine. Desktop flows get the same treatment: describe or demonstrate the manual task, and AI helps generate and modify the automation. Building starts with intent; the designer is for refinement."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "copilot-studio-agents",
+    "sections": [
+      {
+        "id": "building-agents",
+        "heading": "Building agents: topics, knowledge, tools, channels",
+        "paragraphs": [
+          "Copilot Studio builds agents — conversational AI assistants that answer questions and take actions for employees or customers: an HR agent answering policy questions, a support agent handling common requests end to end. Conversations are structured with topics: each topic handles one kind of request, with trigger phrases that recognise it and a conversation path — questions, messages, branches — that resolves it. Generative answers fill the space between authored topics.",
+          "Knowledge sources ground the agent in truth: point it at websites, SharePoint, documents, and Dataverse, and it answers from that content rather than inventing. Tools give it hands: agent flows run automated processes mid-conversation, and MCP servers connect the agent to external systems and capabilities through a standard protocol — together turning 'it can tell you' into 'it can do it for you'. Publishing puts the agent where people are, through channels: Teams, Microsoft 365 Copilot, websites, and more, from one build."
+        ]
+      },
+      {
+        "id": "managing-agents",
+        "heading": "Managing agents: Agent 365, monitoring, evaluations",
+        "paragraphs": [
+          "Once agents multiply, they need managing like a workforce. Microsoft Agent 365 is that management layer: an organisation-wide registry and control plane where agents get identities, access is governed, and security and compliance policies apply to agents the way they apply to people. It answers the governance questions — which agents exist, what can they reach, are they behaving.",
+          "Day to day, Copilot Studio's analytics show usage and adoption: sessions, resolution and escalation rates, which topics carry traffic, where conversations succeed or fail — the evidence for improving the agent and proving its value. Agent evaluations add systematic quality testing: run test conversations and scenarios against the agent, score its answers, and catch regressions before users do — the agent-world equivalent of a test suite."
+        ]
+      }
+    ]
+  }
+]

@@ -22,7 +22,7 @@ export default function PrivacyPage() {
       <p>
         An account is required to reach the study material, quizzes,
         flashcards, and progress tracking. We store your email address and a
-        session record so we can recognise you, the starter ExamPal you chose
+        session record so we can recognise you, the starter Paruu you chose
         and any nickname you gave it, and a copy of your quiz attempts and
         flashcard progress so it is available on your other devices. A copy is
         also kept in your browser&apos;s local storage so the site works
@@ -46,7 +46,7 @@ export default function PrivacyPage() {
       <p>
         On the <span className="font-medium">Options</span> page you can
         download everything we hold about you as a JSON file, or permanently
-        delete your account. Deletion removes your profile, your ExamPal, and
+        delete your account. Deletion removes your profile, your Paruu, and
         all of your progress from our servers and from this browser
         immediately — there is no grace period and no backup we can restore
         from, so export first if you want a copy. If any of that fails, you can

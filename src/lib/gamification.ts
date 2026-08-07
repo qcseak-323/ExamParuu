@@ -27,7 +27,7 @@ const STREAK_MILESTONES = [3, 7, 14, 30];
 /**
  * THE INVARIANT — read before touching this function.
  *
- * `computeLevel` is monotone in xp, and level drives ExamPal evolution. So XP
+ * `computeLevel` is monotone in xp, and level drives Paruu evolution. So XP
  * terms may only ever be APPENDED, never modified or removed. Leave the three
  * original terms exactly as they are and keep every new term non-negative, and
  * `xp_new >= xp_old` holds for every existing user — meaning nobody's pal can
