@@ -773,9 +773,12 @@ export default function QuizClient({
               }
             />
 
+            {/* NOT keyed `question.id`: the DialogueBox above already owns
+                that key, and duplicate sibling keys broke reconciliation —
+                stale dialogue boxes stacked up instead of unmounting. */}
             {!isCorrect && (
               <VocabFlashcards
-                key={question.id}
+                key={`vocab-${question.id}`}
                 cards={relatedFlashcardsForQuestion(question)}
               />
             )}
