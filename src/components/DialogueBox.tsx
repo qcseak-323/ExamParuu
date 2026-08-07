@@ -31,6 +31,8 @@ type Props = {
   /** Rendered under the text once every line has been read. */
   footer?: React.ReactNode;
   speaker?: string;
+  /** Character portrait shown beside the text, e.g. <ProfessorPortrait />. */
+  portrait?: React.ReactNode;
   className?: string;
 };
 
@@ -57,6 +59,7 @@ export default function DialogueBox({
   onDone,
   footer,
   speaker,
+  portrait,
   className = "",
 }: Props) {
   const prefs = usePreferences();
@@ -170,16 +173,20 @@ export default function DialogueBox({
         className="cursor-pointer select-none"
         role="presentation"
       >
-        {/* aria-live announces the whole line, not the partially typed one. */}
-        <p
-          className="prose-measure min-h-[3lh] text-body-lg"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          <span className="sr-only">{line}</span>
-          <span aria-hidden="true">{revealed}</span>
-          {showArrow && <span className="dialogue-arrow" aria-hidden="true" />}
-        </p>
+        {/* items-end so a portrait stands on the box's floor beside the text. */}
+        <div className="flex items-end gap-3">
+          {portrait}
+          {/* aria-live announces the whole line, not the partially typed one. */}
+          <p
+            className="prose-measure min-h-[3lh] flex-1 text-body-lg"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <span className="sr-only">{line}</span>
+            <span aria-hidden="true">{revealed}</span>
+            {showArrow && <span className="dialogue-arrow" aria-hidden="true" />}
+          </p>
+        </div>
       </div>
       {lineComplete && isLastLine && footer && (
         <div className="mt-3">{footer}</div>

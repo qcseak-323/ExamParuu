@@ -9,6 +9,7 @@ import { completeProfileSetup } from "@/lib/actions";
 import { catalog } from "@/lib/content";
 import { getRetroLabel, getDisplayTier } from "@/lib/levels";
 import PalSprite from "@/components/PalSprite";
+import ProfessorPortrait from "@/components/ProfessorPortrait";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import MenuList from "@/components/MenuList";
 import { useSfx } from "@/components/AudioProvider";
@@ -149,7 +150,8 @@ export default function SetupClient({ email }: { email: string | null }) {
 
       {step === "intro" && (
         <DialogueBox
-          speaker="PROF. SEQUEL"
+          speaker="Prof. Sequel"
+          portrait={<ProfessorPortrait />}
           lines={INTRO_LINES}
           onDone={() => setStep("pal")}
         />
@@ -159,10 +161,13 @@ export default function SetupClient({ email }: { email: string | null }) {
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
-            <p className="text-body">
-              First — which one will it be? Take your time. This one stays with
-              you.
-            </p>
+            <div className="flex items-end gap-3">
+              <ProfessorPortrait />
+              <p className="flex-1 text-body">
+                First — which one will it be? Take your time. This one stays
+                with you.
+              </p>
+            </div>
           </DialogueFrame>
 
           <MenuList
@@ -184,10 +189,13 @@ export default function SetupClient({ email }: { email: string | null }) {
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
-            <p className="text-body">{species.description}</p>
-            <p className="mt-3 text-body">
-              So, you want {starter.name}?
-            </p>
+            <div className="flex items-end gap-3">
+              <ProfessorPortrait />
+              <div className="flex-1">
+                <p className="text-body">{species.description}</p>
+                <p className="mt-3 text-body">So, you want {starter.name}?</p>
+              </div>
+            </div>
           </DialogueFrame>
 
           <MenuList
@@ -213,9 +221,12 @@ export default function SetupClient({ email }: { email: string | null }) {
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
-            <p className="text-body">
-              {starter.name} is yours. Would you like to give it a nickname?
-            </p>
+            <div className="flex items-end gap-3">
+              <ProfessorPortrait />
+              <p className="flex-1 text-body">
+                {starter.name} is yours. Would you like to give it a nickname?
+              </p>
+            </div>
           </DialogueFrame>
 
           <form
@@ -255,14 +266,19 @@ export default function SetupClient({ email }: { email: string | null }) {
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
-            <p className="text-body">
-              Now then. How much ground have you covered with Microsoft
-              certification exams so far?
-            </p>
-            <p className="mt-2 text-caption text-[var(--foreground-muted)]">
-              Nothing is locked either way — this only changes the advice I
-              give you.
-            </p>
+            <div className="flex items-end gap-3">
+              <ProfessorPortrait />
+              <div className="flex-1">
+                <p className="text-body">
+                  Now then. How much ground have you covered with Microsoft
+                  certification exams so far?
+                </p>
+                <p className="mt-2 text-caption text-[var(--foreground-muted)]">
+                  Nothing is locked either way — this only changes the advice I
+                  give you.
+                </p>
+              </div>
+            </div>
           </DialogueFrame>
 
           <MenuList
@@ -282,7 +298,8 @@ export default function SetupClient({ email }: { email: string | null }) {
 
       {step === "expertiseReply" && expertiseOption && (
         <DialogueBox
-          speaker="PROF. SEQUEL"
+          speaker="Prof. Sequel"
+          portrait={<ProfessorPortrait />}
           lines={[expertiseOption.response]}
           onDone={() => setStep("route")}
         />
@@ -292,15 +309,20 @@ export default function SetupClient({ email }: { email: string | null }) {
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
-            <p className="text-body">
-              Last thing. Which route do you want to walk first? I&apos;ll pin
-              it on your map — you can still visit any of the others.
-            </p>
-            {email && (
-              <p className="mt-2 text-caption text-[var(--foreground-muted)]">
-                Saving to {email}.
-              </p>
-            )}
+            <div className="flex items-end gap-3">
+              <ProfessorPortrait />
+              <div className="flex-1">
+                <p className="text-body">
+                  Last thing. Which route do you want to walk first? I&apos;ll
+                  pin it on your map — you can still visit any of the others.
+                </p>
+                {email && (
+                  <p className="mt-2 text-caption text-[var(--foreground-muted)]">
+                    Saving to {email}.
+                  </p>
+                )}
+              </div>
+            </div>
           </DialogueFrame>
 
           {error && (

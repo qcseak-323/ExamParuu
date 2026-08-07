@@ -579,8 +579,24 @@ body {
   color: var(--foreground);
   transition: transform 70ms steps(1);
 }
-a.gym-marker-hit:hover {
+/* Region markers are buttons now; strip the UA button chrome. */
+button.gym-marker-hit {
+  background: none;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+a.gym-marker-hit:hover,
+button.gym-marker-hit:hover {
   transform: translateY(-3px);
+}
+/* The selected region's nameplate turns brass. */
+.gym-marker-selected .gym-marker-label {
+  background: linear-gradient(180deg, var(--accent-hi), var(--accent));
+  color: var(--accent-foreground);
+}
+.gym-marker-selected .gym-marker-label .text-caption {
+  color: var(--accent-foreground);
 }
 .gym-marker-locked {
   opacity: 0.65;

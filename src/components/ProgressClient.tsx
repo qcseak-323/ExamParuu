@@ -16,6 +16,7 @@ import {
   computeRedemptionXp,
 } from "@/lib/gamification";
 import { PAL_SPECIES, stageForLevel, nextStage } from "@/lib/pals";
+import { computeRegionBadges } from "@/lib/regions";
 import type { PalType } from "@/lib/pals";
 import PalSprite from "@/components/PalSprite";
 import ProfileDangerZone from "@/components/ProfileDangerZone";
@@ -143,6 +144,38 @@ export default function ProgressClient({
                   : `${attemptCount} battle${attemptCount === 1 ? "" : "s"} · ${avg}% average`}
               </p>
             </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* The badge case: one slot per regional gym. Earned by clearing the
+          timed mock of every playable exam in the region — derived from
+          attempts, nothing stored. */}
+      <section>
+        <h2 className="mb-4 font-pixel text-title">Badge case</h2>
+        <div className="pixel-panel grid grid-cols-2 gap-4 p-5 sm:grid-cols-3 lg:grid-cols-6">
+          {computeRegionBadges(attempts).map(({ region, earned, playable }) => (
+            <div
+              key={region.id}
+              className={`flex flex-col items-center gap-2 text-center ${
+                earned ? "" : "opacity-45"
+              }`}
+            >
+              <div
+                aria-hidden="true"
+                className={`h-8 w-8 border-2 border-[var(--outline)] ${
+                  earned ? region.glyphClass : "rounded-[3px] bg-[var(--well)]"
+                }`}
+              />
+              <p className="text-caption font-semibold">{region.worldName}</p>
+              <p className="text-caption text-[var(--foreground-muted)]">
+                {earned
+                  ? "Badge earned"
+                  : playable > 0
+                    ? "Clear every gym here"
+                    : "Uncharted"}
+              </p>
+            </div>
           ))}
         </div>
       </section>

@@ -125,10 +125,19 @@ export type RemoteProgress = {
 
 export type CatalogStatus = "GA" | "beta" | "retiring";
 
+/**
+ * Which regional gym an exam belongs to. Mostly the Microsoft series prefix;
+ * the surviving MS-* exams live in the "ab" region because Microsoft folded
+ * the Microsoft 365 track into the Copilot & Agents (AB) series in 2026
+ * (MS-900 itself retired into AB-900).
+ */
+export type ExamSeries = "az" | "ai" | "dp" | "sc" | "ab" | "pl";
+
 export type CatalogEntry = {
   code: string;
   title: string;
   family: string;
+  series: ExamSeries;
   msLevel: MsLevel;
   status: CatalogStatus;
   durationMinutes: number | null;

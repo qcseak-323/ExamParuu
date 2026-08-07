@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { sendSignInLink } from "@/lib/authActions";
 import { DialogueFrame } from "@/components/DialogueBox";
+import ProfessorPortrait from "@/components/ProfessorPortrait";
 import { useSfx } from "@/components/AudioProvider";
 
 function SubmitButton() {
@@ -116,10 +117,13 @@ export default function StartPrompt() {
           >
             <DialogueFrame>
               <span className="dialogue-tab">Prof. Sequel</span>
-              <p id={`${emailId}-title`} className="text-body">
-                Before you set out — where should I send your trainer card?
-                I&apos;ll email you a link. No password to remember.
-              </p>
+              <div className="flex items-end gap-3">
+                <ProfessorPortrait />
+                <p id={`${emailId}-title`} className="flex-1 text-body">
+                  Before you set out — where should I send your trainer card?
+                  I&apos;ll email you a link. No password to remember.
+                </p>
+              </div>
 
               <form action={sendSignInLink} className="mt-4 flex flex-col gap-3">
                 {/* One canonical destination: the catalog guard forwards a

@@ -1,0 +1,148 @@
+import type { CatalogEntry, ExamSeries, QuizAttempt } from "./types";
+import { catalog } from "./content";
+import { isGymCleared } from "./gamification";
+
+/**
+ * The six regional gyms of the Monsoon Belt — one per 2026 Microsoft exam
+ * series. Each region is a place in the world with its own colour identity
+ * (drawn from the locked art palettes, never used as UI text) and a badge
+ * earned by clearing every playable gym inside it.
+ *
+ * The mapping mirrors Microsoft's 2026 portfolio: the AB "Copilot & Agents"
+ * series absorbed the Microsoft 365 track (MS-900 retired into AB-900), so
+ * the surviving MS-* exams live in Agent Atoll.
+ */
+
+export type Region = {
+  id: ExamSeries;
+  /** The real-world series name, e.g. "Azure (AZ)". */
+  name: string;
+  /** The in-world place name shown on the map. */
+  worldName: string;
+  tagline: string;
+  /** What Prof. Sequel says when you land here. */
+  professorLine: string;
+  /** Tailwind classes for the region glyph (shape + locked-palette colour). */
+  glyphClass: string;
+  /** Percentage coordinates on the region map. */
+  x: number;
+  y: number;
+};
+
+export const REGIONS: Region[] = [
+  {
+    id: "az",
+    name: "Azure (AZ)",
+    worldName: "The Azure Archipelago",
+    tagline: "Cloud foundations, administration, and architecture.",
+    professorLine:
+      "The Archipelago is where most trainers start — broad waters, well charted. AZ-104 is the busiest gym in the whole Belt.",
+    glyphClass: "rounded-full bg-[var(--tide-3)]",
+    x: 16,
+    y: 30,
+  },
+  {
+    id: "ai",
+    name: "AI & Machine Learning (AI)",
+    worldName: "The Lightning Shoals",
+    tagline: "Generative AI, agents, and machine learning operations.",
+    professorLine:
+      "The Shoals changed more this year than any other region — AI-901 replaced the old fundamentals, and three new gyms opened in a single season.",
+    glyphClass: "rotate-45 bg-[var(--tide-4)]",
+    x: 50,
+    y: 18,
+  },
+  {
+    id: "dp",
+    name: "Data & Analytics (DP)",
+    worldName: "The Datastream Delta",
+    tagline: "Fabric, SQL, Databricks, and analytics engineering.",
+    professorLine:
+      "Every channel of the Delta carries data somewhere. Fabric country — my own field station is on the DP-600 route.",
+    glyphClass: "rounded-[3px] bg-[var(--tide-2)]",
+    x: 82,
+    y: 28,
+  },
+  {
+    id: "sc",
+    name: "Security (SC)",
+    worldName: "The Bastion Cliffs",
+    tagline: "Security operations, identity, and Zero Trust architecture.",
+    professorLine:
+      "The Cliffs guard the whole Belt. Steep routes, patient trainers — and a brand-new SC-500 gym for cloud and AI security.",
+    glyphClass: "rounded-[3px] bg-[var(--accent)]",
+    x: 20,
+    y: 72,
+  },
+  {
+    id: "ab",
+    name: "Copilot & Agents (AB)",
+    worldName: "Agent Atoll",
+    tagline: "Copilot, AI agents, and the Microsoft 365 estate.",
+    professorLine:
+      "The newest charted region — the old Microsoft 365 territory reformed around Copilot and agents. AB-900 is the friendliest gym door in the Belt.",
+    glyphClass: "rounded-full bg-[var(--ember-3)]",
+    x: 55,
+    y: 62,
+  },
+  {
+    id: "pl",
+    name: "Power Platform (PL)",
+    worldName: "The Maker Mangroves",
+    tagline: "Low-code apps, automation, and Power BI analytics.",
+    professorLine:
+      "Everything in the Mangroves gets built from what's growing to hand. PL-300 draws more analysts than any other route here.",
+    glyphClass: "rotate-45 bg-[var(--verdant-2)]",
+    x: 84,
+    y: 74,
+  },
+];
+
+export function getRegion(id: string): Region | undefined {
+  return REGIONS.find((r) => r.id === id);
+}
+
+export function getExamsBySeries(series: ExamSeries): CatalogEntry[] {
+  const tierOrder = {
+    Fundamentals: 0,
+    Associate: 1,
+    Expert: 2,
+    Specialty: 3,
+    "Applied Skills": 4,
+  } as const;
+  return catalog
+    .filter((e) => e.series === series)
+    .sort((a, b) => tierOrder[a.msLevel] - tierOrder[b.msLevel]);
+}
+
+export type RegionBadge = {
+  region: Region;
+  /** Exams in this region that have practice content today. */
+  playable: number;
+  cleared: number;
+  /** Every playable gym in the region has been cleared (and there is one). */
+  earned: boolean;
+};
+
+/**
+ * The badge case. A region badge is earned by clearing the timed mock of
+ * every exam in the region that has practice content. Regions with no
+ * playable exams yet cannot be earned. Derived from attempts — no storage,
+ * no XP: the §10 invariant is untouched.
+ */
+export function computeRegionBadges(attempts: QuizAttempt[]): RegionBadge[] {
+  return REGIONS.map((region) => {
+    const playableExams = catalog.filter(
+      (e) => e.series === region.id && e.hasContent,
+    );
+    const cleared = playableExams.filter((e) =>
+      isGymCleared(e.code, attempts),
+    ).length;
+    return {
+      region,
+      playable: playableExams.length,
+      cleared,
+      earned: playableExams.length > 0 && cleared === playableExams.length,
+    };
+  });
+}

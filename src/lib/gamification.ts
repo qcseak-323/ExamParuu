@@ -230,3 +230,22 @@ export function computeBadges(
     };
   });
 }
+
+/**
+ * "Gym cleared" for one exam: a timed mock (the `"mock"` sentinel in
+ * `domainFilter`) that reached the pass mark. Derived, never stored — this is
+ * the single home for the predicate that used to live inline in the catalog.
+ * Display-only: it feeds badges, not XP, so the §10 XP invariant is untouched.
+ */
+export function isGymCleared(
+  examCode: string,
+  attempts: QuizAttempt[],
+): boolean {
+  return attempts.some(
+    (a) =>
+      a.examCode === examCode &&
+      a.domainFilter === "mock" &&
+      a.numQuestions > 0 &&
+      a.correctCount / a.numQuestions >= 0.7,
+  );
+}
