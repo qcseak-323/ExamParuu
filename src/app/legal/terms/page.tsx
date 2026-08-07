@@ -1,4 +1,4 @@
-export const metadata = { title: "Terms of Use — ExamReady" };
+export const metadata = { title: "Terms of Use — ExamParuu" };
 
 export default function TermsPage() {
   return (
@@ -10,7 +10,7 @@ export default function TermsPage() {
       </p>
 
       <p>
-        ExamReady is an independent, unofficial study resource. It is not
+        ExamParuu is an independent, unofficial study resource. It is not
         affiliated with, endorsed by, or sponsored by Microsoft Corporation.
         &quot;Microsoft,&quot; exam codes (such as DP-600 and AB-900), and
         related certification names are trademarks of Microsoft; they are

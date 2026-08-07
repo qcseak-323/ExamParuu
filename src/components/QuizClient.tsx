@@ -414,7 +414,7 @@ export default function QuizClient({
     const teachingLabel = teachingLabelForQuestion(question);
 
     const mailtoHref = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(
-      `ExamReady question flag: ${question.id}`,
+      `ExamParuu question flag: ${question.id}`,
     )}&body=${encodeURIComponent(
       `Question (${question.id}): ${question.question}\n\nWhat's wrong with this question?\n`,
     )}`;

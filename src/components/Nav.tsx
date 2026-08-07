@@ -37,7 +37,7 @@ export default function Nav() {
           {/* 32px, not 28: the badge renders the 32px source at exactly 1×.
               A fractional scale of pixel art shimmers. */}
           {species && stage && <PalSprite sheet={stage.image} size={32} />}
-          <span className="font-pixel text-title">ExamReady</span>
+          <span className="font-pixel text-title">ExamParuu</span>
           {signedIn && (
             <span className="rounded bg-[var(--accent)] px-1.5 py-1 text-caption font-medium text-[var(--accent-foreground)]">
               Lv.{level}

@@ -29,7 +29,7 @@ const jersey = Jersey_25({
 });
 
 export const metadata: Metadata = {
-  title: "ExamReady — Microsoft Certification Practice",
+  title: "ExamParuu — Microsoft Certification Practice",
   description:
     "Free, retro-styled practice questions, study guides, and flashcards to help you pass Microsoft certification exams — starting with DP-600 and AB-900.",
 };

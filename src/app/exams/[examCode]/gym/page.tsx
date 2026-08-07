@@ -22,7 +22,7 @@ export async function generateMetadata({
   const exam = getCatalogEntry(examCode);
   return {
     title: exam
-      ? `${exam.code.toUpperCase()} Gym Challenge — ExamReady`
+      ? `${exam.code.toUpperCase()} Gym Challenge — ExamParuu`
       : "Gym not found",
   };
 }

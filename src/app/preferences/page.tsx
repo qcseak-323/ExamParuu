@@ -1,7 +1,7 @@
 import PreferencesClient from "@/components/PreferencesClient";
 import { requireUser } from "@/lib/session";
 
-export const metadata = { title: "Preferences — ExamReady" };
+export const metadata = { title: "Preferences — ExamParuu" };
 
 export default async function PreferencesPage() {
   // requireUser, not requireTrainer: a trainer who hasn't picked a starter yet

@@ -1,4 +1,4 @@
-export const metadata = { title: "Privacy — ExamReady" };
+export const metadata = { title: "Privacy — ExamParuu" };
 
 export default function PrivacyPage() {
   return (

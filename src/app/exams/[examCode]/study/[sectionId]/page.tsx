@@ -11,7 +11,7 @@ export async function generateMetadata({
   const { examCode, sectionId } = await params;
   const found = getSection(examCode, sectionId);
   return {
-    title: found ? `${found.section.heading} — ExamReady` : "Lesson not found",
+    title: found ? `${found.section.heading} — ExamParuu` : "Lesson not found",
   };
 }
 

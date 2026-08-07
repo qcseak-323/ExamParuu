@@ -15,7 +15,7 @@ export async function generateMetadata({
 }) {
   const { examCode } = await params;
   const exam = getCatalogEntry(examCode);
-  return { title: exam ? `${exam.code.toUpperCase()} — ExamReady` : "Exam not found" };
+  return { title: exam ? `${exam.code.toUpperCase()} — ExamParuu` : "Exam not found" };
 }
 
 export default async function ExamOverviewPage({

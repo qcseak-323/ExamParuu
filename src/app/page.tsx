@@ -25,7 +25,7 @@ export default function Home() {
             Bring a companion.
           </h1>
           <p className="prose-measure mt-3 text-body-lg text-[var(--foreground-muted)]">
-            ExamReady turns certification prep into a creature-collecting RPG.
+            ExamParuu turns certification prep into a creature-collecting RPG.
             Battle real practice questions, earn XP, and raise a companion from
             the Monsoon Belt while you learn.
           </p>

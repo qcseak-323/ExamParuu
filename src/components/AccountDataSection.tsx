@@ -41,7 +41,7 @@ export default function AccountDataSection({ email }: { email: string | null }) 
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `examready-data-${new Date().toISOString().slice(0, 10)}.json`;
+      link.download = `examparuu-data-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(link);
       link.click();
       link.remove();

@@ -10,8 +10,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Resend({
       apiKey: process.env.RESEND_API_KEY,
       // Sent from a verified subdomain (SPF/DKIM configured in Resend),
-      // separate from prolymax.com's main mail flow.
-      from: "ExamReady <sign-in@mail.prolymax.com>",
+      // separate from any other mail flow on the domain.
+      from: "ExamParuu <sign-in@mail.examparuu.com>",
     }),
   ],
   session: { strategy: "database" },

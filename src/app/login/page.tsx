@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { sendSignInLink } from "@/lib/authActions";
 
-export const metadata = { title: "Log in — ExamReady" };
+export const metadata = { title: "Log in — ExamParuu" };
 
 const ERROR_MESSAGES: Record<string, string> = {
   EmailSignin:

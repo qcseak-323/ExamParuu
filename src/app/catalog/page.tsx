@@ -2,7 +2,7 @@ import CatalogClient from "@/components/CatalogClient";
 import { requireTrainer } from "@/lib/session";
 
 export const metadata = {
-  title: "Region map — ExamReady",
+  title: "Region map — ExamParuu",
 };
 
 export default async function CatalogPage() {

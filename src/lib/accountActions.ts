@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 /**
  * Data-subject actions: see everything held about you, and delete it.
  *
- * These matter more than they would in a normal app, because using ExamReady
+ * These matter more than they would in a normal app, because using ExamParuu
  * at all requires an account — nobody can study here without handing over an
  * email address. "Email the owner and ask" is not a reasonable answer to that,
  * and PDPA/GDPR expect self-service.

@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import SetupClient from "@/components/SetupClient";
 import { requireUser } from "@/lib/session";
 
-export const metadata = { title: "Trainer setup — ExamReady" };
+export const metadata = { title: "Trainer setup — ExamParuu" };
 
 export default async function SetupPage() {
   // requireUser rather than requireTrainer: this is the page that *creates*
