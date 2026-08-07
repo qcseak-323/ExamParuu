@@ -9,7 +9,7 @@ export const PREFERENCES_INIT_SCRIPT = `
   try {
     var raw = window.localStorage.getItem(${JSON.stringify(PREFS_KEY)});
     var prefs = raw ? JSON.parse(raw) : {};
-    var theme = prefs.theme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "bright");
+    var theme = prefs.theme || "bright";
     var root = document.documentElement;
     root.setAttribute("data-theme", theme);
     if (prefs.readableFont) root.setAttribute("data-readable-font", "true");

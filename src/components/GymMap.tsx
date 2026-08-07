@@ -24,12 +24,34 @@ export type RegionStop = {
 };
 
 /**
- * The Monsoon Belt drawn as six regions — one per Microsoft exam series —
- * joined by a shipping route. Markers are buttons that select a region;
- * the exams inside it are listed by the catalog below the map.
+ * Fixed decorative wave marks, spread across the brine between islands.
+ * Hand-placed rather than random so the chart doesn't shimmer on re-render.
+ */
+const WAVES: { x: number; y: number }[] = [
+  { x: 8, y: 50 },
+  { x: 34, y: 8 },
+  { x: 38, y: 44 },
+  { x: 62, y: 36 },
+  { x: 68, y: 8 },
+  { x: 90, y: 50 },
+  { x: 12, y: 92 },
+  { x: 40, y: 86 },
+  { x: 70, y: 90 },
+  { x: 94, y: 12 },
+  { x: 50, y: 62 },
+  { x: 5, y: 12 },
+];
+
+/**
+ * The Monsoon Belt drawn as an estuary chart: one island landmass per region
+ * — sand rendered under each marker, ringed by a dashed shore ripple — the
+ * brine dotted with wave marks, a compass rose in the corner, and the
+ * shipping route threaded island to island on top. All SVG in the theme's
+ * palette, so the chart re-inks itself between Low Tide and Storm Watch.
  *
- * Marker labels are the short series codes: the full world names live in
- * the chip list and region panel, where they have room to breathe.
+ * Markers are buttons that select a region; the exams inside it are listed
+ * by the catalog below the map. Marker labels are the short series codes:
+ * the full world names live in the chip list and region panel.
  */
 export default function GymMap({
   stops,
@@ -51,6 +73,71 @@ export default function GymMap({
         preserveAspectRatio="none"
         aria-hidden="true"
       >
+        {/* Wave marks on the open brine. */}
+        <g
+          stroke="var(--map-wave)"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0.55"
+          vectorEffect="non-scaling-stroke"
+        >
+          {WAVES.map((w, i) => (
+            <path
+              key={i}
+              d={`M ${w.x - 2} ${w.y} q 1 -1.6 2 0 q 1 1.6 2 0`}
+              vectorEffect="non-scaling-stroke"
+            />
+          ))}
+        </g>
+
+        {/* One island per region: a cluster of sand banks with a dashed
+            shore ripple around the main mass. Drawn before the route so the
+            shipping lane passes over the land, chart-style. */}
+        {stops.map((stop) => (
+          <g key={stop.id}>
+            <ellipse
+              cx={stop.x}
+              cy={stop.y + 3}
+              rx={16.5}
+              ry={11.5}
+              fill="none"
+              stroke="var(--map-wave)"
+              strokeWidth="1"
+              strokeDasharray="2 3"
+              opacity="0.6"
+              vectorEffect="non-scaling-stroke"
+            />
+            <g fill="var(--map-island)" stroke="var(--map-shore)">
+              <ellipse
+                cx={stop.x}
+                cy={stop.y + 3}
+                rx={13.5}
+                ry={9}
+                strokeWidth="1.4"
+                vectorEffect="non-scaling-stroke"
+              />
+              <ellipse
+                cx={stop.x - 9}
+                cy={stop.y + 7}
+                rx={6}
+                ry={4}
+                strokeWidth="1.4"
+                vectorEffect="non-scaling-stroke"
+              />
+              <ellipse
+                cx={stop.x + 10}
+                cy={stop.y + 6}
+                rx={5}
+                ry={3.5}
+                strokeWidth="1.4"
+                vectorEffect="non-scaling-stroke"
+              />
+            </g>
+          </g>
+        ))}
+
+        {/* The shipping route, island to island. */}
         <polyline
           points={points}
           fill="none"
@@ -69,6 +156,24 @@ export default function GymMap({
           strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
         />
+
+        {/* Compass rose. */}
+        <g
+          transform="translate(92 10)"
+          stroke="var(--map-shore)"
+          fill="var(--map-island)"
+        >
+          <polygon
+            points="0,-6 1.6,-1.6 6,0 1.6,1.6 0,6 -1.6,1.6 -6,0 -1.6,-1.6"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+          />
+          <circle
+            r="1.2"
+            fill="var(--map-route-dash)"
+            strokeWidth="0"
+          />
+        </g>
       </svg>
 
       {stops.map((stop) => {

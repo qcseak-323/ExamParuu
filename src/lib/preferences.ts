@@ -31,17 +31,11 @@ export const DEFAULT_PREFERENCES: Preferences = {
 const PREFS_KEY = "examready-preferences";
 
 // Mirrors the pre-hydration script in preferencesScript.ts. Both must agree,
-// otherwise React overwrites the theme the script already picked and a
-// dark-OS visitor gets a light flash followed by the wrong theme.
-function systemTheme(): Theme {
-  if (typeof window === "undefined") return DEFAULT_PREFERENCES.theme;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "bright";
-}
-
+// otherwise React overwrites the theme the script already picked. Light
+// ("bright") is the product default; dark is an explicit choice via the nav
+// toggle or the preferences page, not inherited from the OS.
 function readPrefs(): Preferences {
-  const base: Preferences = { ...DEFAULT_PREFERENCES, theme: systemTheme() };
+  const base: Preferences = { ...DEFAULT_PREFERENCES };
   if (typeof window === "undefined") return DEFAULT_PREFERENCES;
   try {
     const raw = window.localStorage.getItem(PREFS_KEY);

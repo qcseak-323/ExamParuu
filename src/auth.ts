@@ -3,6 +3,7 @@ import Resend from "next-auth/providers/resend";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import { isPalType } from "@/lib/pals";
+import { isTrainerAvatar } from "@/lib/profile";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -31,11 +32,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const record = user as typeof user & {
         examPal?: string | null;
         examPalName?: string | null;
+        trainerAvatar?: string | null;
         expertise?: string | null;
         priorityExam?: string | null;
       };
       session.user.examPal = isPalType(record.examPal) ? record.examPal : null;
       session.user.examPalName = record.examPalName ?? null;
+      session.user.trainerAvatar = isTrainerAvatar(record.trainerAvatar)
+        ? record.trainerAvatar
+        : null;
       session.user.expertise = record.expertise ?? null;
       session.user.priorityExam = record.priorityExam ?? null;
       return session;

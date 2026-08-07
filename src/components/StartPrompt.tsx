@@ -35,7 +35,11 @@ const CONTINUE_TO = "/catalog";
  * box. A trainer who is already signed in skips all that and goes straight to
  * picking an exam.
  */
-export default function StartPrompt() {
+export default function StartPrompt({
+  label = "Choose your companion",
+}: {
+  label?: string;
+}) {
   const [open, setOpen] = useState(false);
   const { status } = useSession();
   const router = useRouter();
@@ -99,7 +103,7 @@ export default function StartPrompt() {
         onClick={handleStart}
         className="start-button tap-target w-full px-9 text-body-lg font-semibold sm:w-auto"
       >
-        Choose your companion
+        {label}
       </button>
 
       {open && (

@@ -4,7 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { PAL_SPECIES, PAL_TYPES, type PalType } from "@/lib/pals";
-import { EXPERTISE_OPTIONS, type ExpertiseLevel } from "@/lib/profile";
+import {
+  EXPERTISE_OPTIONS,
+  TRAINER_AVATARS,
+  type ExpertiseLevel,
+  type TrainerAvatar,
+} from "@/lib/profile";
 import { completeProfileSetup } from "@/lib/actions";
 import { catalog } from "@/lib/content";
 import { getRetroLabel, getDisplayTier } from "@/lib/levels";
@@ -23,6 +28,7 @@ import { useSfx } from "@/components/AudioProvider";
  */
 type Step =
   | "intro"
+  | "avatar"
   | "pal"
   | "palConfirm"
   | "nickname"
@@ -39,12 +45,12 @@ const INTRO_LINES = [
 ];
 
 /** Small progress readout, so the flow doesn't feel open-ended. */
-const STEP_ORDER: Step[] = ["pal", "expertise", "route"];
+const STEP_ORDER: Step[] = ["avatar", "pal", "expertise", "route"];
 function stepNumber(step: Step): number {
-  if (step === "intro") return 1;
-  if (step === "pal" || step === "palConfirm" || step === "nickname") return 1;
-  if (step === "expertise" || step === "expertiseReply") return 2;
-  return 3;
+  if (step === "intro" || step === "avatar") return 1;
+  if (step === "pal" || step === "palConfirm" || step === "nickname") return 2;
+  if (step === "expertise" || step === "expertiseReply") return 3;
+  return 4;
 }
 
 export default function SetupClient({ email }: { email: string | null }) {
@@ -53,6 +59,9 @@ export default function SetupClient({ email }: { email: string | null }) {
   const playSfx = useSfx();
 
   const [step, setStep] = useState<Step>("intro");
+  const [trainerAvatar, setTrainerAvatar] = useState<TrainerAvatar | null>(
+    null,
+  );
   const [palType, setPalType] = useState<PalType | null>(null);
   const [nickname, setNickname] = useState("");
   const [expertise, setExpertise] = useState<ExpertiseLevel | null>(null);
@@ -66,11 +75,12 @@ export default function SetupClient({ email }: { email: string | null }) {
   const playableExams = catalog.filter((exam) => exam.hasContent);
 
   async function commit(chosenExam: string) {
-    if (!palType || !expertise) return;
+    if (!trainerAvatar || !palType || !expertise) return;
     setStep("saving");
     setError(null);
 
     const result = await completeProfileSetup({
+      trainerAvatar,
       palType,
       nickname: nickname.trim() || null,
       expertise,
@@ -151,10 +161,64 @@ export default function SetupClient({ email }: { email: string | null }) {
       {step === "intro" && (
         <DialogueBox
           speaker="Prof. Sequel"
-          portrait={<ProfessorPortrait />}
+          portrait={<ProfessorPortrait size="lg" />}
           lines={INTRO_LINES}
-          onDone={() => setStep("pal")}
+          onDone={() => setStep("avatar")}
         />
+      )}
+
+      {step === "avatar" && (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {TRAINER_AVATARS.map((avatar) => {
+              const isChosen = trainerAvatar === avatar.id;
+              return (
+                <div
+                  key={avatar.id}
+                  className={`pixel-panel flex flex-col items-center gap-2 p-4 text-center ${
+                    isChosen ? "ring-4 ring-[var(--accent)]" : ""
+                  }`}
+                >
+                  <PalSprite
+                    sheet={avatar.sheet}
+                    size={96}
+                    title={avatar.label}
+                  />
+                  <p className="text-body font-bold tracking-wide uppercase">
+                    {avatar.label}
+                  </p>
+                  <p className="text-caption text-[var(--foreground-muted)]">
+                    {avatar.hint}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          <DialogueFrame>
+            <span className="dialogue-tab">Prof. Sequel</span>
+            <div className="flex items-end gap-3">
+              <ProfessorPortrait />
+              <p className="flex-1 text-body">
+                Now — are you a boy, or a girl? This is how you&apos;ll appear
+                on your trainer card and out on the Belt.
+              </p>
+            </div>
+          </DialogueFrame>
+
+          <MenuList
+            ariaLabel="Choose your trainer"
+            options={TRAINER_AVATARS.map((avatar) => ({
+              id: avatar.id,
+              label: avatar.label,
+              hint: avatar.hint,
+            }))}
+            onSelect={(id) => {
+              setTrainerAvatar(id as TrainerAvatar);
+              setStep("pal");
+            }}
+          />
+        </>
       )}
 
       {step === "pal" && (

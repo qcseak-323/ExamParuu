@@ -8,6 +8,7 @@ import { computeXp, computeLevel } from "@/lib/gamification";
 import { PAL_SPECIES, stageForLevel } from "@/lib/pals";
 import PalSprite from "@/components/PalSprite";
 import SoundToggle from "@/components/SoundToggle";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const TRAINER_LINKS = [
   { href: "/catalog", label: "Catalog" },
@@ -66,6 +67,7 @@ export default function Nav() {
               );
             })}
 
+          <ThemeToggle />
           <SoundToggle />
 
           {signedIn ? (

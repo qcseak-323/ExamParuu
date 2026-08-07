@@ -121,37 +121,65 @@ export default async function ExamOverviewPage({
             </p>
           </section>
 
+          {/* The two ways to play, side by side. Practice is the learning
+              loop with no clock; Exam is everything with a timer on it. */}
+          <section className="grid gap-4 lg:grid-cols-2">
+            <div className="pixel-panel flex flex-col gap-3 p-6">
+              <h2 className="font-pixel text-title">Practice Mode</h2>
+              <p className="text-body text-[var(--foreground-muted)]">
+                No clock. Wrong answers open a lesson on the spot, and tricky
+                vocabulary comes back as flashcards until it sticks.
+              </p>
+              <div className="mt-auto flex flex-wrap gap-3 pt-2">
+                <Link
+                  href={`/exams/${exam.code}/quiz`}
+                  className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
+                >
+                  Start practice battle
+                </Link>
+                <Link
+                  href={`/exams/${exam.code}/study`}
+                  className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
+                >
+                  Study guide
+                </Link>
+                <Link
+                  href={`/exams/${exam.code}/flashcards`}
+                  className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
+                >
+                  Flashcards
+                </Link>
+              </div>
+            </div>
+
+            <div className="pixel-panel flex flex-col gap-3 p-6">
+              <h2 className="font-pixel text-title">Exam Mode</h2>
+              <p className="text-body text-[var(--foreground-muted)]">
+                The clock is running. The Proving replicates the real exam —
+                {exam.durationMinutes
+                  ? ` ${exam.durationMinutes} minutes,`
+                  : ""}{" "}
+                no feedback until the score report. The dungeon is a shorter
+                timed mock guarding this route.
+              </p>
+              <div className="mt-auto flex flex-wrap gap-3 pt-2">
+                <Link
+                  href={`/exams/${exam.code}/exam`}
+                  className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
+                >
+                  The Proving — real format
+                </Link>
+                <Link
+                  href={`/exams/${exam.code}/gym`}
+                  className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
+                >
+                  Challenge the dungeon
+                </Link>
+              </div>
+            </div>
+          </section>
+
           <div className="flex flex-wrap gap-3">
-            <Link
-              href={`/exams/${exam.code}/study`}
-              className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
-            >
-              Read study guide
-            </Link>
-            <Link
-              href={`/exams/${exam.code}/quiz`}
-              className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
-            >
-              Start practice quiz
-            </Link>
-            <Link
-              href={`/exams/${exam.code}/flashcards`}
-              className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
-            >
-              Review flashcards
-            </Link>
-            <Link
-              href={`/exams/${exam.code}/gym`}
-              className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
-            >
-              Challenge the dungeon
-            </Link>
-            <Link
-              href={`/exams/${exam.code}/exam`}
-              className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
-            >
-              The Proving — real exam format
-            </Link>
             <Link
               href={`/exams/${exam.code}/progress`}
               className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"

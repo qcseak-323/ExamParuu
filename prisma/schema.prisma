@@ -26,6 +26,9 @@ model User {
   examPal       String?
   // Optional trainer nickname for the pal, shown in battle dialogue.
   examPalName   String?
+  // Trainer sprite chosen during setup: "boy" | "girl". Same nullable-string
+  // convention as examPal — additive, and NULL just means "not chosen yet".
+  trainerAvatar String?
   // Self-reported experience with Microsoft certification exams:
   // "new" | "some" | "certified". Used to pitch guidance, not to gate content.
   expertise     String?

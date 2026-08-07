@@ -194,6 +194,47 @@ export function studyHrefForQuestion(question: Question): string {
   return `/exams/${question.examCode}/study#${anchor}`;
 }
 
+/**
+ * Flashcards worth surfacing right after this question is missed.
+ *
+ * Practice mode inserts vocabulary in the moment of failure, so relevance
+ * matters more than coverage: a card qualifies when one of the terms on its
+ * front actually appears in the question, its options, or its explanation.
+ * Fronts are often composites ("LRS / ZRS / GRS", "public vs private
+ * endpoint"), so they are split into phrases before matching. When nothing
+ * matches, one card from the same skills area still gets shown — the domain
+ * is the vocabulary neighbourhood even when no term lines up exactly.
+ */
+export function relatedFlashcardsForQuestion(
+  question: Question,
+  limit = 2,
+): Flashcard[] {
+  const cards = getExamContent(question.examCode)?.flashcards ?? [];
+  const inDomain = cards.filter((c) => c.domain === question.domain);
+  if (inDomain.length === 0) return [];
+
+  const haystack = [
+    question.question,
+    ...question.options,
+    question.explanation,
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  const mentioned = inDomain.filter((card) =>
+    card.front
+      .split(/\s+vs\.?\s+|[\/,()]/i)
+      .map((phrase) => phrase.trim().toLowerCase())
+      .filter((phrase) => phrase.length >= 4)
+      .some((phrase) => haystack.includes(phrase)),
+  );
+
+  return (mentioned.length > 0 ? mentioned : inDomain.slice(0, 1)).slice(
+    0,
+    limit,
+  );
+}
+
 /** Human-readable label for whatever a question points at. */
 export function teachingLabelForQuestion(question: Question): string {
   if (question.teaches) {

@@ -15,9 +15,17 @@ import {
   isGymCleared,
   isProvingPassed,
 } from "@/lib/gamification";
+import {
+  getGuardian,
+  guardianFighter,
+  isGuardianOwned,
+  GUARDIAN_SILHOUETTE,
+} from "@/lib/guardians";
 import GymMap, { type RegionStop } from "@/components/GymMap";
 import { DialogueFrame } from "@/components/DialogueBox";
 import ProfessorPortrait from "@/components/ProfessorPortrait";
+import PixelSprite from "@/components/PixelSprite";
+import FighterSprite from "@/components/battle/FighterSprite";
 import { useSfx } from "@/components/AudioProvider";
 
 /**
@@ -147,6 +155,9 @@ export default function CatalogClient({
                 : [];
               const cleared = playable && isGymCleared(exam.code, attempts);
               const sealed = playable && isProvingPassed(exam.code, attempts);
+              const guardian = playable ? getGuardian(exam.code) : undefined;
+              const guardianOwned =
+                guardian !== undefined && isGuardianOwned(exam.code, attempts);
 
               return (
                 <li
@@ -179,6 +190,32 @@ export default function CatalogClient({
                   </p>
                   {playable ? (
                     <>
+                      {/* The dungeon's guardian: named once caught, a
+                          silhouette while it still bars the door. */}
+                      {guardian && (
+                        <div className="mt-3 flex items-center gap-3 rounded-md bg-black/5 p-2 dark:bg-white/5">
+                          {guardianOwned ? (
+                            <FighterSprite
+                              fighter={guardianFighter(guardian)}
+                              size={48}
+                              title={`${guardian.name}, guardian of this dungeon`}
+                            />
+                          ) : (
+                            <PixelSprite
+                              sprite={guardian.sprite}
+                              palette={GUARDIAN_SILHOUETTE}
+                              size={48}
+                              title="An uncaught guardian"
+                              className="opacity-60"
+                            />
+                          )}
+                          <p className="text-caption text-[var(--foreground-muted)]">
+                            {guardianOwned
+                              ? `Guarded by ${guardian.name} — on your team`
+                              : "A wild guardian bars this dungeon. Clear it and the Paruu joins you."}
+                          </p>
+                        </div>
+                      )}
                       <p className="mt-2 text-caption text-[var(--foreground-muted)]">
                         {badges.filter((b) => b.earned).length}/{badges.length}{" "}
                         route ribbons{cleared ? " · ✓ dungeon cleared" : ""}

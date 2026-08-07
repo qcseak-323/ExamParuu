@@ -11,17 +11,17 @@ import {
 import { buildExamPaper, scoreByDomain } from "@/lib/review";
 import { saveQuizAttempt, useQuizAttempts, useFlashcardProgress } from "@/lib/storage";
 import { saveQuizAttemptToDb } from "@/lib/actions";
-import { computeXp, computeLevel, computeBadges } from "@/lib/gamification";
 import {
-  PAL_SPECIES,
-  GLITCHLING,
-  GLITCHLING_PALETTE,
-  stageForLevel,
-  type PalType,
-} from "@/lib/pals";
+  computeXp,
+  computeLevel,
+  computeBadges,
+  isGymCleared,
+} from "@/lib/gamification";
+import { GLITCHLING, GLITCHLING_PALETTE, type PalType } from "@/lib/pals";
+import { fighterRoster, getGuardian, guardianFighter } from "@/lib/guardians";
 import { usePreferences } from "@/lib/preferences";
 import PixelSprite from "@/components/PixelSprite";
-import PalSprite from "@/components/PalSprite";
+import FighterSprite from "@/components/battle/FighterSprite";
 import MenuList, { type MenuOption } from "@/components/MenuList";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import HpBar from "@/components/battle/HpBar";
@@ -75,9 +75,18 @@ export default function GymLeaderClient({
   const setTrack = useTrackControl();
 
   const { level } = computeLevel(computeXp(attempts, flashcards));
-  const species = PAL_SPECIES[palType];
-  const stage = stageForLevel(palType, level);
-  const palName = palNickname ?? stage.name;
+
+  // The dungeon's guardian: the opponent across the scene, and the prize for
+  // a first clear. Older exams without a defined guardian fall back to the
+  // Glitchling as the dungeon master.
+  const guardian = getGuardian(examCode);
+
+  // Whoever the trainer brings: starter by default, or any guardian already
+  // caught. Chosen in the briefing.
+  const roster = fighterRoster(palType, level, palNickname, attempts);
+  const [fighterId, setFighterId] = useState("starter");
+  const fighter = roster.find((f) => f.id === fighterId) ?? roster[0];
+  const palName = fighter.name;
 
   const [phase, setPhase] = useState<Phase>("briefing");
   const [paper, setPaper] = useState<Question[]>([]);
@@ -91,6 +100,11 @@ export default function GymLeaderClient({
   // backgrounded and the interval is throttled.
   const deadlineRef = useRef<number | null>(null);
   const finishedRef = useRef(false);
+  // Whether the dungeon was already cleared when this run began — captured at
+  // start so the debrief can tell a *first* clear (guardian joins) from a
+  // repeat clear, even after the attempt persists and the predicate flips.
+  // State rather than a ref because the debrief renders from it.
+  const [wasClearedAtStart, setWasClearedAtStart] = useState(false);
 
   const totalMs = useMemo(() => {
     const minutes =
@@ -160,6 +174,7 @@ export default function GymLeaderClient({
   }, [phase]);
 
   function beginExam() {
+    setWasClearedAtStart(isGymCleared(examCode, attempts));
     const built = buildExamPaper(examCode, attempts, paperSize);
     setPaper(built);
     setIndex(0);
@@ -215,16 +230,56 @@ export default function GymLeaderClient({
         ? `You carry all ${ribbons.length} route ribbons. You look ready.`
         : `You carry ${ribbonsEarned} of ${ribbons.length} route ribbons. You can face me regardless — but the ribbons you're missing are usually the topics that cost people the exam.`;
 
+    const alreadyOwned = isGymCleared(examCode, attempts);
+    const guardianLine = guardian
+      ? alreadyOwned
+        ? `${guardian.name} guards this door — but you two have already met. This run is for the record.`
+        : `${guardian.name} guards this door. ${guardian.tagline} Clear the dungeon and it joins your team.`
+      : null;
+
     return (
       <div className="mx-auto flex max-w-3xl flex-col gap-5">
         <h1 className="font-pixel text-display">
           {exam.code.toUpperCase()} Dungeon Challenge
         </h1>
 
+        {guardian && (
+          <div className="pixel-panel flex items-center gap-4 p-4">
+            <FighterSprite
+              fighter={guardianFighter(guardian)}
+              size={64}
+              title={`${guardian.name}, guardian of this dungeon`}
+            />
+            <div>
+              <p className="font-pixel text-label uppercase">{guardian.name}</p>
+              <p className="text-caption text-[var(--foreground-muted)]">
+                Guardian of the {exam.code.toUpperCase()} dungeon
+                {alreadyOwned ? " · on your team" : ""}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {roster.length > 1 && (
+          <section className="flex flex-col gap-3">
+            <h2 className="font-pixel text-title">Bring your Paruu</h2>
+            <MenuList
+              ariaLabel="Choose your Paruu"
+              options={roster.map((f) => ({
+                id: f.id,
+                label: f.name,
+                hint: fighter.id === f.id ? "◀ selected" : f.hint,
+              }))}
+              onSelect={setFighterId}
+            />
+          </section>
+        )}
+
         <DialogueBox
           speaker="Dungeon Master"
           lines={[
             `So. You want the ${exam.code.toUpperCase()} badge.`,
+            ...(guardianLine ? [guardianLine] : []),
             readiness,
             `${paperSize} questions, weighted the way the real paper is weighted. ${Math.round(totalMs / 60_000)} minutes on the clock. No explanations until we're done — that's what makes it an exam and not a practice bout.`,
             `${Math.round(PASS_RATIO * 100)}% to earn the badge. Whenever you're ready.`,
@@ -285,19 +340,27 @@ export default function GymLeaderClient({
             {/* The clock is the leader's second bar, so it reads as part of
                 the fight rather than as an anxiety widget bolted on top. */}
             <HpBar
-              label="DUNGEON MASTER"
+              label={guardian ? guardian.name.toUpperCase() : "DUNGEON MASTER"}
               current={remainingMs}
               max={totalMs}
               tone="time"
               valueText={formatClock(remainingMs)}
             />
             <div className="battle-platform">
-              <PixelSprite
-                sprite={GLITCHLING}
-                palette={GLITCHLING_PALETTE}
-                size={96}
-                title="The dungeon master"
-              />
+              {guardian ? (
+                <FighterSprite
+                  fighter={guardianFighter(guardian)}
+                  size={96}
+                  title={`${guardian.name}, guardian of this dungeon`}
+                />
+              ) : (
+                <PixelSprite
+                  sprite={GLITCHLING}
+                  palette={GLITCHLING_PALETTE}
+                  size={96}
+                  title="The dungeon master"
+                />
+              )}
             </div>
           </div>
 
@@ -305,11 +368,11 @@ export default function GymLeaderClient({
             <div
               className={`battle-platform ${prefs.reducedMotion ? "" : "pal-idle"}`}
             >
-              <PalSprite
-                sheet={stage.image}
+              <FighterSprite
+                fighter={fighter}
                 size={96}
                 flip
-                title={`${palName}, your ${species.label}-line Paruu`}
+                title={fighter.title}
               />
             </div>
             <HpBar
@@ -366,15 +429,14 @@ export default function GymLeaderClient({
     plan.push({ href: studyHrefForQuestion(q), label });
   }
 
+  // The catch moment: this run is the trainer's first clear of this dungeon.
+  const guardianJoins = passed && guardian && !wasClearedAtStart;
+
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
       <div className="flex flex-col items-center gap-3 text-center">
         <div className={passed ? "pal-idle" : "opacity-60"}>
-          <PalSprite
-            sheet={stage.image}
-            size={96}
-            title={`${palName}, your ${species.label}-line Paruu`}
-          />
+          <FighterSprite fighter={fighter} size={96} title={fighter.title} />
         </div>
         <h1 className="font-pixel text-display">
           {passed ? "Dungeon Badge earned!" : timedOut ? "Time!" : "Not this time."}
@@ -386,6 +448,22 @@ export default function GymLeaderClient({
           ({pct}%) — {Math.round(PASS_RATIO * 100)}% to pass
         </p>
       </div>
+
+      {guardianJoins && (
+        <div className="pixel-panel flex flex-col items-center gap-3 p-6 text-center">
+          <div className="pal-idle">
+            <FighterSprite
+              fighter={guardianFighter(guardian)}
+              size={96}
+              title={`${guardian.name}, guardian of this dungeon`}
+            />
+          </div>
+          <p className="font-pixel text-title">{guardian.name} joins your team!</p>
+          <p className="prose-measure text-body text-[var(--foreground-muted)]">
+            {guardian.tagline} You can send it into any battle from now on.
+          </p>
+        </div>
+      )}
 
       <DialogueFrame>
         <p className="text-body">

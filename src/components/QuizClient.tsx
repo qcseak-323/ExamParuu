@@ -7,6 +7,7 @@ import {
   getExamContent,
   getQuestionsByDomain,
   getDomainName,
+  relatedFlashcardsForQuestion,
   studyHrefForQuestion,
   teachingLabelForQuestion,
 } from "@/lib/content";
@@ -14,22 +15,17 @@ import { shuffle } from "@/lib/shuffle";
 import { selectReviewQuestions, getReviewSummary } from "@/lib/review";
 import { saveQuizAttempt } from "@/lib/storage";
 import { saveQuizAttemptToDb } from "@/lib/actions";
-import {
-  PAL_SPECIES,
-  GLITCHLING,
-  GLITCHLING_PALETTE,
-  stageForLevel,
-  type PalType,
-} from "@/lib/pals";
+import { GLITCHLING, GLITCHLING_PALETTE, type PalType } from "@/lib/pals";
 import { useQuizAttempts, useFlashcardProgress } from "@/lib/storage";
 import { computeXp, computeLevel } from "@/lib/gamification";
+import { fighterRoster } from "@/lib/guardians";
 import { usePreferences } from "@/lib/preferences";
 import PixelSprite from "@/components/PixelSprite";
-import PalSprite from "@/components/PalSprite";
+import FighterSprite from "@/components/battle/FighterSprite";
 import MenuList, { type MenuOption } from "@/components/MenuList";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
-import type { Question, QuizResultEntry } from "@/lib/types";
+import type { Flashcard, Question, QuizResultEntry } from "@/lib/types";
 
 const COUNT_OPTIONS = [5, 10, 20, "all"] as const;
 const FEEDBACK_EMAIL = "qcseak@gmail.com";
@@ -113,6 +109,50 @@ function HpBar({
   );
 }
 
+/**
+ * The vocabulary insert for practice mode: after a miss, the flashcards whose
+ * terms the question was actually using appear as tap-to-reveal cards. Keyed
+ * on the question id by the caller so the reveals reset every turn.
+ */
+function VocabFlashcards({ cards }: { cards: Flashcard[] }) {
+  const [revealed, setRevealed] = useState<Record<string, boolean>>({});
+  const playSfx = useSfx();
+
+  return (
+    <section className="flex flex-col gap-2">
+      <h2 className="font-pixel text-label uppercase text-[var(--foreground-muted)]">
+        Vocab check
+      </h2>
+      {cards.map((card) => {
+        const open = Boolean(revealed[card.id]);
+        return (
+          <button
+            key={card.id}
+            type="button"
+            aria-expanded={open}
+            onClick={() => {
+              playSfx("cursor");
+              setRevealed((r) => ({ ...r, [card.id]: !r[card.id] }));
+            }}
+            className="pixel-panel tap-target p-4 text-left"
+          >
+            <p className="text-body font-medium">{card.front}</p>
+            {open ? (
+              <p className="prose-measure mt-1 text-body text-[var(--foreground-muted)]">
+                {card.back}
+              </p>
+            ) : (
+              <p className="mt-1 text-caption text-[var(--foreground-muted)]">
+                Tap to reveal ▸
+              </p>
+            )}
+          </button>
+        );
+      })}
+    </section>
+  );
+}
+
 export default function QuizClient({
   examCode,
   palType,
@@ -132,9 +172,12 @@ export default function QuizClient({
   const flashcardProgress = useFlashcardProgress();
   const { level } = computeLevel(computeXp(allAttempts, flashcardProgress));
 
-  const species = PAL_SPECIES[palType];
-  const stage = stageForLevel(palType, level);
-  const palName = palNickname ?? stage.name;
+  // Whoever the trainer sends out: the starter by default, or any guardian
+  // whose dungeon they have cleared. Chosen per battle in the setup phase.
+  const roster = fighterRoster(palType, level, palNickname, allAttempts);
+  const [fighterId, setFighterId] = useState("starter");
+  const fighter = roster.find((f) => f.id === fighterId) ?? roster[0];
+  const palName = fighter.name;
 
   // `?mode=review` deep-links straight into the review deck, matching the
   // existing `?domain=` seam used by the study guide's practice links.
@@ -367,6 +410,30 @@ export default function QuizClient({
           </p>
         </DialogueFrame>
 
+        {/* Only appears once there is a choice to make — a lone starter
+            doesn't need a menu of one. */}
+        {roster.length > 1 && (
+          <section className="flex flex-col gap-4">
+            <h2 className="font-pixel text-title">Your Paruu</h2>
+            <div className="flex flex-wrap items-start gap-4">
+              <div className="pal-idle shrink-0 pt-1">
+                <FighterSprite fighter={fighter} size={64} title={fighter.title} />
+              </div>
+              <div className="min-w-[240px] flex-1">
+                <MenuList
+                  ariaLabel="Choose your Paruu"
+                  options={roster.map((f) => ({
+                    id: f.id,
+                    label: f.name,
+                    hint: fighter.id === f.id ? "◀ selected" : f.hint,
+                  }))}
+                  onSelect={setFighterId}
+                />
+              </div>
+            </div>
+          </section>
+        )}
+
         <section className="flex flex-col gap-4">
           <h2 className="font-pixel text-title">Route</h2>
           <MenuList
@@ -439,7 +506,7 @@ export default function QuizClient({
      */
     const resolvedLines: string[] = isCorrect
       ? [
-          `${palName} used ${species.move}! It's super effective!`,
+          `${palName} used ${fighter.move}! It's super effective!`,
           question.explanation,
         ]
       : [
@@ -493,11 +560,11 @@ export default function QuizClient({
                     : "pal-idle"
               }`}
             >
-              <PalSprite
-                sheet={stage.image}
+              <FighterSprite
+                fighter={fighter}
                 size={96}
                 flip
-                title={`${palName}, your ${species.label}-line Paruu`}
+                title={fighter.title}
               />
             </div>
             <HpBar
@@ -554,6 +621,13 @@ export default function QuizClient({
               }
             />
 
+            {!isCorrect && (
+              <VocabFlashcards
+                key={question.id}
+                cards={relatedFlashcardsForQuestion(question)}
+              />
+            )}
+
             <MenuList
               ariaLabel="Answer review"
               columns={2}
@@ -608,11 +682,7 @@ export default function QuizClient({
     <div className="flex flex-col gap-6">
       <div className="flex flex-col items-center gap-3 text-center">
         <div className={result === "defeat" ? "opacity-50" : "pal-idle"}>
-          <PalSprite
-            sheet={stage.image}
-            size={96}
-            title={`${palName}, your ${species.label}-line Paruu`}
-          />
+          <FighterSprite fighter={fighter} size={96} title={fighter.title} />
         </div>
         <h1 className="font-pixel text-display">{HEADLINE[result]}</h1>
         <p className="text-body-lg">

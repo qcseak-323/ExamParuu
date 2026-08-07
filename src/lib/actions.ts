@@ -4,7 +4,11 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { findFlashcardExamCode, getCatalogEntry } from "@/lib/content";
 import { isPalType, type PalType } from "@/lib/pals";
-import { isExpertiseLevel } from "@/lib/profile";
+import {
+  isExpertiseLevel,
+  isTrainerAvatar,
+  type TrainerAvatar,
+} from "@/lib/profile";
 import type {
   QuizAttempt,
   QuizResultEntry,
@@ -21,6 +25,7 @@ import type {
 const MAX_NICKNAME_LENGTH = 14;
 
 export type ProfileSetupInput = {
+  trainerAvatar: TrainerAvatar;
   palType: PalType;
   nickname: string | null;
   expertise: string;
@@ -51,6 +56,9 @@ export async function completeProfileSetup(
   if (!isPalType(input.palType)) {
     return { ok: false, error: "That isn't one of the three starters." };
   }
+  if (!isTrainerAvatar(input.trainerAvatar)) {
+    return { ok: false, error: "Pick one of the trainer sprites." };
+  }
   if (!isExpertiseLevel(input.expertise)) {
     return { ok: false, error: "Pick one of the experience levels." };
   }
@@ -73,6 +81,7 @@ export async function completeProfileSetup(
     data: {
       examPal: input.palType,
       examPalName: trimmed || null,
+      trainerAvatar: input.trainerAvatar,
       expertise: input.expertise,
       priorityExam: input.priorityExam,
     },

@@ -6,6 +6,37 @@
  * self-assessment would punish people for being honest about being new.
  */
 
+export type TrainerAvatar = "boy" | "girl";
+
+export const TRAINER_AVATARS: {
+  id: TrainerAvatar;
+  /** Sheet name under /pals for PalSprite. */
+  sheet: string;
+  label: string;
+  hint: string;
+}[] = [
+  {
+    id: "boy",
+    sheet: "trainer-boy",
+    label: "Boy trainer",
+    hint: "Cap and satchel, ready for the tide flats",
+  },
+  {
+    id: "girl",
+    sheet: "trainer-girl",
+    label: "Girl trainer",
+    hint: "Storm coat and compass, ready for the mangroves",
+  },
+];
+
+export function isTrainerAvatar(value: unknown): value is TrainerAvatar {
+  return value === "boy" || value === "girl";
+}
+
+export function trainerAvatarSheet(value: string | null): string | null {
+  return TRAINER_AVATARS.find((a) => a.id === value)?.sheet ?? null;
+}
+
 export type ExpertiseLevel = "new" | "some" | "certified";
 
 export const EXPERTISE_LEVELS: ExpertiseLevel[] = ["new", "some", "certified"];

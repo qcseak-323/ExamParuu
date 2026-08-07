@@ -20,6 +20,7 @@ export type AccountExport = {
     createdSessions: number;
     examPal: string | null;
     examPalName: string | null;
+    trainerAvatar: string | null;
     expertise: string | null;
     priorityExam: string | null;
   };
@@ -61,6 +62,7 @@ export async function exportAccountData(): Promise<AccountExport | null> {
       createdSessions: user.sessions.length,
       examPal: user.examPal,
       examPalName: user.examPalName,
+      trainerAvatar: user.trainerAvatar,
       expertise: user.expertise,
       priorityExam: user.priorityExam,
     },
@@ -159,6 +161,7 @@ export async function restartJourney(): Promise<
       data: {
         examPal: null,
         examPalName: null,
+        trainerAvatar: null,
         expertise: null,
         priorityExam: null,
       },

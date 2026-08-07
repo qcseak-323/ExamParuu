@@ -202,6 +202,9 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
+  /* The full-bleed hero is 100vw, which on desktop includes the scrollbar
+     gutter; clip (not hidden — no new scroll container) the 15px sliver. */
+  overflow-x: clip;
 }
 
 /* Focus is a tide ring, everywhere. The 2px offset means the ring sits on
@@ -556,6 +559,21 @@ body {
   }
 }
 
+/* Chart inks for the estuary map: island sand, its shoreline, and the wave
+   marks on open water. Kept with the map rules rather than the theme blocks
+   so the whole chart reads as one system. */
+:root,
+:root[data-theme="bright"] {
+  --map-island: #EAE3CF;
+  --map-shore: #B6A87E;
+  --map-wave: #7FB9C8;
+}
+:root[data-theme="dark"] {
+  --map-island: #1B2E3B;
+  --map-shore: #2E4B5C;
+  --map-wave: #2E6B8C;
+}
+
 .gym-map-route {
   position: absolute;
   inset: 0;
@@ -666,33 +684,38 @@ button.gym-marker-hit:hover {
   background: var(--scrim);
 }
 
-/* --- Landing hero scene --------------------------------------------------- */
+/* --- Home hero canvas ------------------------------------------------------ */
 
-/* The estuary at the moment a wild Glitchling shows up. Drawn entirely from
-   gradients — sky, mangrove stands, the brine, a mud bank — so it costs
-   nothing to load and follows the theme: Low Tide daylight on bright,
-   Storm Watch on dark. */
-.hero-scene {
+/* The estuary drawn edge-to-edge across the whole viewport — the home page's
+   one dominating scene. Full-bleed via 100vw + negative margin (the body
+   clips the sliver a desktop scrollbar adds), pulled up against the nav by
+   cancelling main's top padding. Entirely gradients — sky, mangrove stands,
+   the brine, a mud bank — so it costs nothing to load and follows the theme:
+   Low Tide daylight on bright, Storm Watch on dark. */
+.hero-canvas {
   position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-top: -2rem; /* main's py-8 */
   overflow: hidden;
-  height: 300px;
-  border-radius: 8px;
+  min-height: 400px;
+  padding-bottom: 140px; /* keeps the copy clear of the cast on the bank */
   background:
-    /* mud bank the creatures stand on */
-    linear-gradient(transparent 74%, var(--hero-bank) 74%),
+    /* mud bank the cast stands on */
+    linear-gradient(transparent 76%, var(--hero-bank) 76%),
     /* brine strip at the horizon */
     linear-gradient(
-      transparent 58%,
-      var(--hero-water) 58%,
-      var(--hero-water) 74%,
-      transparent 74%
+      transparent 62%,
+      var(--hero-water) 62%,
+      var(--hero-water) 76%,
+      transparent 76%
     ),
     /* mangrove stands on the far shore */
-    radial-gradient(ellipse 120px 46px at 12% 58%, var(--hero-trees) 0 100%, transparent 101%),
-    radial-gradient(ellipse 150px 56px at 38% 58%, var(--hero-trees-far) 0 100%, transparent 101%),
-    radial-gradient(ellipse 130px 48px at 88% 58%, var(--hero-trees) 0 100%, transparent 101%),
+    radial-gradient(ellipse 150px 52px at 10% 62%, var(--hero-trees) 0 100%, transparent 101%),
+    radial-gradient(ellipse 220px 68px at 40% 62%, var(--hero-trees-far) 0 100%, transparent 101%),
+    radial-gradient(ellipse 170px 56px at 90% 62%, var(--hero-trees) 0 100%, transparent 101%),
     /* sky */
-    linear-gradient(180deg, var(--hero-sky-top), var(--hero-sky-bottom) 58%);
+    linear-gradient(180deg, var(--hero-sky-top), var(--hero-sky-bottom) 62%);
 }
 :root,
 :root[data-theme="bright"] {
@@ -713,7 +736,7 @@ button.gym-marker-hit:hover {
 }
 
 /* Rain over the scene on Storm Watch only — the hairline treatment. */
-[data-theme="dark"] .hero-scene::after {
+[data-theme="dark"] .hero-canvas::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -726,8 +749,8 @@ button.gym-marker-hit:hover {
 }
 
 @media (min-width: 640px) {
-  .hero-scene {
-    height: 360px;
+  .hero-canvas {
+    min-height: 460px;
   }
 }
 

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import type { PalType } from "@/lib/pals";
+import type { TrainerAvatar } from "@/lib/profile";
 
 /**
  * Route guards for the trainer-only part of the app.
@@ -18,6 +19,8 @@ export type Trainer = {
   email: string | null;
   examPal: PalType;
   examPalName: string | null;
+  /** Null for profiles created before the avatar step existed. */
+  trainerAvatar: TrainerAvatar | null;
   expertise: string | null;
   /** Exam code the trainer chose to focus on first. */
   priorityExam: string | null;
@@ -28,6 +31,7 @@ export type SignedInUser = {
   email: string | null;
   examPal: PalType | null;
   examPalName: string | null;
+  trainerAvatar: TrainerAvatar | null;
   expertise: string | null;
   priorityExam: string | null;
 };
@@ -50,6 +54,7 @@ export async function requireUser(returnTo?: string): Promise<SignedInUser> {
     email: session.user.email ?? null,
     examPal: session.user.examPal,
     examPalName: session.user.examPalName,
+    trainerAvatar: session.user.trainerAvatar,
     expertise: session.user.expertise,
     priorityExam: session.user.priorityExam,
   };
@@ -71,6 +76,7 @@ export async function requireTrainer(returnTo?: string): Promise<Trainer> {
     email: user.email,
     examPal: user.examPal,
     examPalName: user.examPalName,
+    trainerAvatar: user.trainerAvatar,
     expertise: user.expertise,
     priorityExam: user.priorityExam,
   };

@@ -18,18 +18,29 @@ import {
 import { PAL_SPECIES, stageForLevel, nextStage } from "@/lib/pals";
 import { computeRegionBadges, deriveTrainerTitle } from "@/lib/regions";
 import { isProvingPassed } from "@/lib/gamification";
+import {
+  allGuardians,
+  guardianFighter,
+  isGuardianOwned,
+  GUARDIAN_SILHOUETTE,
+} from "@/lib/guardians";
+import { trainerAvatarSheet, type TrainerAvatar } from "@/lib/profile";
 import type { PalType } from "@/lib/pals";
 import PalSprite from "@/components/PalSprite";
+import PixelSprite from "@/components/PixelSprite";
+import FighterSprite from "@/components/battle/FighterSprite";
 import ProfileDangerZone from "@/components/ProfileDangerZone";
 import StorageNotice from "@/components/StorageNotice";
 
 export default function ProgressClient({
   palType,
   palNickname,
+  trainerAvatar,
   email,
 }: {
   palType: PalType;
   palNickname: string | null;
+  trainerAvatar: TrainerAvatar | null;
   email: string | null;
 }) {
   const attempts = useQuizAttempts();
@@ -83,6 +94,17 @@ export default function ProgressClient({
       </div>
 
       <section className="pixel-panel flex flex-wrap items-center gap-6 p-6">
+        {trainerAvatar && (
+          <div className="flex flex-col items-center gap-1">
+            <PalSprite
+              sheet={trainerAvatarSheet(trainerAvatar) ?? "trainer-boy"}
+              size={96}
+              title="Your trainer"
+            />
+            <p className="font-pixel text-label">You</p>
+          </div>
+        )}
+
         <div className="flex flex-col items-center gap-1">
           <div className="pal-idle">
             <PalSprite
@@ -140,6 +162,75 @@ export default function ProgressClient({
           <p className="text-caption text-[var(--foreground-muted)]">
             Proving seals
           </p>
+        </div>
+      </section>
+
+      {/* The full team: the starter line as it evolves, then one slot per
+          dungeon guardian. Everything derived — evolution from level,
+          guardians from cleared dungeons — nothing stored. */}
+      <section>
+        <h2 className="mb-4 font-pixel text-title">Your Paruu</h2>
+        <div className="pixel-panel grid grid-cols-2 gap-5 p-5 sm:grid-cols-3 lg:grid-cols-5">
+          {species.stages.map((s) => {
+            const reached = level >= s.minLevel;
+            return (
+              <div
+                key={s.name}
+                className="flex flex-col items-center gap-1 text-center"
+              >
+                <PalSprite
+                  sheet={s.image}
+                  size={64}
+                  title={reached ? s.name : `Unevolved form`}
+                  className={reached ? "" : "opacity-30 grayscale"}
+                />
+                <p className="text-caption font-semibold">
+                  {reached ? s.name : "???"}
+                </p>
+                <p className="text-caption text-[var(--foreground-muted)]">
+                  {reached
+                    ? s.name === stage.name
+                      ? `${species.label} line · with you now`
+                      : `${species.label} line`
+                    : `Evolves at Lv.${s.minLevel}`}
+                </p>
+              </div>
+            );
+          })}
+
+          {allGuardians().map((guardian) => {
+            const owned = isGuardianOwned(guardian.examCode, attempts);
+            return (
+              <div
+                key={guardian.examCode}
+                className="flex flex-col items-center gap-1 text-center"
+              >
+                {owned ? (
+                  <FighterSprite
+                    fighter={guardianFighter(guardian)}
+                    size={64}
+                    title={`${guardian.name}, guardian of the ${guardian.examCode.toUpperCase()} dungeon`}
+                  />
+                ) : (
+                  <PixelSprite
+                    sprite={guardian.sprite}
+                    palette={GUARDIAN_SILHOUETTE}
+                    size={64}
+                    title="An uncaught guardian"
+                    className="opacity-50"
+                  />
+                )}
+                <p className="text-caption font-semibold">
+                  {owned ? guardian.name : "???"}
+                </p>
+                <p className="text-caption text-[var(--foreground-muted)]">
+                  {owned
+                    ? `Guardian · ${guardian.examCode.toUpperCase()}`
+                    : `Clear the ${guardian.examCode.toUpperCase()} dungeon`}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </section>
 
