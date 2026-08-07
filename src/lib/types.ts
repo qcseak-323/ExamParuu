@@ -93,7 +93,7 @@ export type QuizAttempt = {
 
 export type FlashcardStatus = "known" | "learning";
 
-export type LearningEventKind = "lesson" | "cardReview";
+export type LearningEventKind = "lesson" | "cardReview" | "wildWin";
 
 /**
  * An append-only record of a learning action.

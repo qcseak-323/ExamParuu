@@ -403,6 +403,22 @@ export const PAL_SPECIES: Record<PalType, PalSpecies> = {
   },
 };
 
+/** The evolution path's display names, by stage index. */
+export const FORM_LABELS = ["Base form", "Super form", "Ultimate form"] as const;
+
+export function formLabel(stageIndex: number): string {
+  return FORM_LABELS[stageIndex] ?? FORM_LABELS[0];
+}
+
+/** Stage index of a pal's current form, for form-scaled effects. */
+export function stageIndexForLevel(type: PalType, level: number): number {
+  const { stages } = PAL_SPECIES[type];
+  for (let i = stages.length - 1; i >= 0; i -= 1) {
+    if (level >= stages[i].minLevel) return i;
+  }
+  return 0;
+}
+
 /**
  * Which form a pal is currently in. Evolution is driven by trainer level, so
  * it falls straight out of the XP the user has already earned — there is no

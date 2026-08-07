@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   getExamContent,
   getQuestionsByDomain,
   getDomainName,
+  learnSearchUrlForQuestion,
   relatedFlashcardsForQuestion,
   studyHrefForQuestion,
   teachingLabelForQuestion,
@@ -22,6 +23,7 @@ import { fighterRoster } from "@/lib/guardians";
 import { usePreferences } from "@/lib/preferences";
 import PixelSprite from "@/components/PixelSprite";
 import FighterSprite from "@/components/battle/FighterSprite";
+import { useBattleTransition } from "@/components/battle/BattleTransition";
 import MenuList, { type MenuOption } from "@/components/MenuList";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
@@ -65,7 +67,7 @@ function damagePerWrongFor(questionCount: number): number {
 
 type Phase = "setup" | "battle" | "finished";
 type Turn = "asking" | "resolved";
-type Outcome = "victory" | "defeat" | "survived";
+type Outcome = "victory" | "defeat" | "survived" | "fled";
 
 /* Storm-glass liquid: verdant when healthy, brass when worn, ember when
    critical. Gradients live in globals.css so both themes share one tube. */
@@ -153,6 +155,31 @@ function VocabFlashcards({ cards }: { cards: Flashcard[] }) {
   );
 }
 
+/** The collapsed pre-answer vocab drawer for practice mode. */
+function PreAnswerVocab({ cards }: { cards: Flashcard[] }) {
+  const [open, setOpen] = useState(false);
+  const playSfx = useSfx();
+
+  if (cards.length === 0) return null;
+
+  return (
+    <div className="flex flex-col gap-2">
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={() => {
+          playSfx("cursor");
+          setOpen((o) => !o);
+        }}
+        className="pixel-button w-fit rounded-md bg-[var(--panel)] px-4 py-2 text-caption font-semibold uppercase tracking-[0.06em]"
+      >
+        Vocab check {open ? "▾" : "▸"}
+      </button>
+      {open && <VocabFlashcards cards={cards} />}
+    </div>
+  );
+}
+
 export default function QuizClient({
   examCode,
   palType,
@@ -208,6 +235,16 @@ export default function QuizClient({
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [finalOutcome, setFinalOutcome] = useState<Outcome | null>(null);
   const [hitTarget, setHitTarget] = useState<"pal" | "foe" | null>(null);
+  const [paused, setPaused] = useState(false);
+
+  // One advance per resolved turn. Rapid clicks on "Next" used to each
+  // increment the index — past question 5 that walked off the end of the
+  // array and crashed the page. Re-armed when the next answer resolves.
+  const advanceLockRef = useRef(false);
+
+  // The stage-change fade + whoosh, fired whenever a battle begins.
+  const { run: runTransition, overlay: transitionOverlay } =
+    useBattleTransition();
 
   const correctCount = useMemo(
     () => results.filter((r) => r.correct).length,
@@ -221,10 +258,11 @@ export default function QuizClient({
     return () => setTrack(null);
   }, [phase, setTrack]);
 
-  // Clear the hit flash after it has played.
+  // Clear the hit flash after it has played. 700ms covers the staggered
+  // attack bolts of an Ultimate-form strike, not just the shake.
   useEffect(() => {
     if (!hitTarget) return;
-    const id = setTimeout(() => setHitTarget(null), 450);
+    const id = setTimeout(() => setHitTarget(null), 700);
     return () => clearTimeout(id);
   }, [hitTarget]);
 
@@ -264,35 +302,53 @@ export default function QuizClient({
     setTurn("asking");
     setOutcome(null);
     setFinalOutcome(null);
+    setPaused(false);
+    advanceLockRef.current = false;
     setPhase("battle");
   }
 
   function finish(finalResults: QuizResultEntry[], result: Outcome) {
     const correct = finalResults.filter((r) => r.correct).length;
-    const attempt = {
-      id: `${Date.now()}`,
-      examCode,
-      timestamp: Date.now(),
-      domainFilter,
-      // What was actually answered, which is not the same as what was drawn
-      // when a battle ends early. Recording the drawn count instead would
-      // understate the score of every run that ended in a faint.
-      numQuestions: finalResults.length,
-      correctCount: correct,
-      results: finalResults,
-    };
 
-    saveQuizAttempt(attempt);
-    // The whole app is behind a session now, so there is no signed-out branch
-    // to guard here any more.
-    saveQuizAttemptToDb(attempt).catch((err) =>
-      console.error("Failed to sync battle result to account", err),
-    );
+    // A surrender before any answer has nothing to record — a 0-question
+    // attempt would only poison the per-exam averages.
+    if (finalResults.length > 0) {
+      const attempt = {
+        id: `${Date.now()}`,
+        examCode,
+        timestamp: Date.now(),
+        domainFilter,
+        // What was actually answered, which is not the same as what was drawn
+        // when a battle ends early. Recording the drawn count instead would
+        // understate the score of every run that ended in a faint.
+        numQuestions: finalResults.length,
+        correctCount: correct,
+        results: finalResults,
+      };
+
+      saveQuizAttempt(attempt);
+      // The whole app is behind a session now, so there is no signed-out
+      // branch to guard here any more.
+      saveQuizAttemptToDb(attempt).catch((err) =>
+        console.error("Failed to sync battle result to account", err),
+      );
+    }
 
     setFinalOutcome(result);
+    setPaused(false);
     setPhase("finished");
-    setTrack(result === "defeat" ? "defeat" : "victory");
-    playSfx(result === "defeat" ? "faint" : "levelUp");
+    if (result === "fled") {
+      setTrack("town");
+      playSfx("back");
+    } else {
+      setTrack(result === "defeat" ? "defeat" : "victory");
+      playSfx(result === "defeat" ? "faint" : "levelUp");
+    }
+  }
+
+  /** Practice mode's escape hatch: end the battle, keep what was answered. */
+  function surrender() {
+    finish(results, "fled");
   }
 
   function answer(optionIndex: number) {
@@ -330,6 +386,7 @@ export default function QuizClient({
     setPlayerHp(nextPlayerHp);
     setOutcome(nextOutcome);
     setTurn("resolved");
+    advanceLockRef.current = false;
     setHitTarget(isCorrect ? "foe" : "pal");
     playSfx(isCorrect ? "correct" : "wrong");
     // A miss costs health, so it should land like one.
@@ -337,11 +394,17 @@ export default function QuizClient({
   }
 
   function advance() {
+    // Double-fire guard — see advanceLockRef. Without it a fast double
+    // click advanced twice, and past the last question that meant reading
+    // `activeQuestions[index]` off the end and a blank page.
+    if (advanceLockRef.current || turn !== "resolved") return;
+    advanceLockRef.current = true;
+
     if (outcome) {
       finish(results, outcome);
       return;
     }
-    setIndex((i) => i + 1);
+    setIndex((i) => Math.min(i + 1, activeQuestions.length - 1));
     setSelected(null);
     setTurn("asking");
   }
@@ -460,12 +523,14 @@ export default function QuizClient({
         </section>
 
         <button
-          onClick={() => startBattle()}
+          onClick={() => runTransition(() => startBattle())}
           disabled={availableCount === 0}
           className="pixel-button tap-target w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)] disabled:opacity-50"
         >
           Send out {palName} ▶
         </button>
+
+        {transitionOverlay}
       </div>
     );
   }
@@ -519,12 +584,60 @@ export default function QuizClient({
 
     return (
       <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between text-caption text-[var(--foreground-muted)]">
+        <div className="flex items-center justify-between gap-3 text-caption text-[var(--foreground-muted)]">
           <span>
             Turn {index + 1} of {activeQuestions.length}
           </span>
-          <span>{getDomainName(examCode, question.domain)}</span>
+          <span className="flex items-center gap-3">
+            <span>{getDomainName(examCode, question.domain)}</span>
+            {/* Practice has no clock, so pausing is really about having a
+                guilt-free way out mid-battle. */}
+            <button
+              type="button"
+              onClick={() => {
+                playSfx("back");
+                setPaused(true);
+              }}
+              className="pixel-button rounded-md bg-[var(--panel)] px-3 py-1 text-caption font-semibold"
+            >
+              ❚❚ Pause
+            </button>
+          </span>
         </div>
+
+        {paused && (
+          <div className="start-overlay">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Battle paused"
+              className="pixel-panel flex w-full max-w-sm flex-col gap-4 p-6"
+            >
+              <p className="text-center font-pixel text-display">Paused</p>
+              <p className="text-center text-body text-[var(--foreground-muted)]">
+                The wild {foeName} waits. Nothing is lost while you&apos;re
+                here.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  playSfx("confirm");
+                  setPaused(false);
+                }}
+                className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
+              >
+                Resume battle ▶
+              </button>
+              <button
+                type="button"
+                onClick={surrender}
+                className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
+              >
+                Surrender — got away safely
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Battle scene */}
         <div
@@ -532,12 +645,33 @@ export default function QuizClient({
             hitTarget && !prefs.reducedMotion ? "scene-shake" : ""
           }`}
         >
+          {/* The attack: bolts fly from your side to the foe's. Colour and
+              shape follow the attacker's line; count and size follow its
+              form — base, super, ultimate. */}
+          {hitTarget === "foe" && !prefs.reducedMotion && (
+            <span aria-hidden="true">
+              {Array.from({ length: fighter.formIndex + 1 }).map((_, i) => (
+                <span
+                  key={i}
+                  className={`attack-bolt attack-bolt--${fighter.fx}`}
+                  style={{
+                    width: `${16 + fighter.formIndex * 5}px`,
+                    height: `${16 + fighter.formIndex * 5}px`,
+                    animationDelay: `${i * 90}ms`,
+                  }}
+                />
+              ))}
+            </span>
+          )}
+
           {/* Opponent: bar left, sprite right */}
           <div className="flex items-start justify-between gap-4">
             <HpBar label={foeName} current={foeHp} max={foeMaxHp} />
             <div
               className={`battle-platform ${
                 hitTarget === "foe" && !prefs.reducedMotion ? "sprite-hit" : ""
+              } ${
+                outcome === "victory" && turn === "resolved" ? "foe-faint" : ""
               }`}
             >
               <PixelSprite
@@ -590,6 +724,14 @@ export default function QuizClient({
               options={answerOptions}
               onSelect={(id) => answer(Number(id))}
             />
+
+            {/* Practice-mode privilege: the vocabulary is available BEFORE
+                committing an answer. Collapsed by default so it's a choice,
+                not a spoiler. Keyed on the question so it re-collapses. */}
+            <PreAnswerVocab
+              key={`pre-${question.id}`}
+              cards={relatedFlashcardsForQuestion(question)}
+            />
           </>
         ) : (
           <>
@@ -603,14 +745,24 @@ export default function QuizClient({
               lines={resolvedLines}
               footer={
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <a
-                    href={studyHref}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="tap-target text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent-ink)]"
-                  >
-                    Read “{teachingLabel}” ↗
-                  </a>
+                  <span className="flex flex-wrap gap-3">
+                    <a
+                      href={studyHref}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="tap-target text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent-ink)]"
+                    >
+                      Read “{teachingLabel}” ↗
+                    </a>
+                    <a
+                      href={learnSearchUrlForQuestion(question)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="tap-target text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent-ink)]"
+                    >
+                      Microsoft Learn ↗
+                    </a>
+                  </span>
                   <button
                     onClick={advance}
                     className="pixel-button tap-target rounded-md bg-[var(--accent)] px-5 py-2 text-body font-medium text-[var(--accent-foreground)]"
@@ -648,6 +800,8 @@ export default function QuizClient({
         <p className="text-caption text-[var(--foreground-muted)]">
           Score so far: {correctCount}/{results.length}
         </p>
+
+        {transitionOverlay}
       </div>
     );
   }
@@ -668,12 +822,14 @@ export default function QuizClient({
     victory: `${foeName} fainted!`,
     defeat: `${palName} fainted!`,
     survived: `${foeName} fled!`,
+    fled: "Got away safely!",
   };
 
   const SUBTITLE: Record<Outcome, string> = {
     victory: `${palName} saw it through. That's a passing run.`,
     defeat: `You ran out of health before the battle was won. ${palName} will be fine — take the review below and try again.`,
     survived: `You made it to the end but couldn't land the finishing blow. ${PASS_RATIO * 100}% is the mark to beat.`,
+    fled: `You broke off the battle. Everything you answered still counts — come back when you're ready.`,
   };
 
   const result = finalOutcome ?? "survived";
@@ -707,7 +863,7 @@ export default function QuizClient({
               all, so a missed question was simply a dead end. */}
           <div className="flex flex-wrap gap-3">
             <button
-              onClick={() => startBattle(missed)}
+              onClick={() => runTransition(() => startBattle(missed))}
               className="pixel-button tap-target rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
             >
               Redemption round ({missed.length}) ▶
@@ -732,12 +888,22 @@ export default function QuizClient({
               <p className="prose-measure mt-1 text-[var(--foreground-muted)]">
                 {q.explanation}
               </p>
-              <Link
-                href={studyHrefForQuestion(q)}
-                className="tap-target mt-2 inline-flex text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent-ink)]"
-              >
-                Read “{teachingLabelForQuestion(q)}” →
-              </Link>
+              <span className="mt-2 flex flex-wrap gap-3">
+                <Link
+                  href={studyHrefForQuestion(q)}
+                  className="tap-target inline-flex text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent-ink)]"
+                >
+                  Read “{teachingLabelForQuestion(q)}” →
+                </Link>
+                <a
+                  href={learnSearchUrlForQuestion(q)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="tap-target inline-flex text-caption underline text-[var(--foreground-muted)] hover:text-[var(--accent-ink)]"
+                >
+                  Microsoft Learn ↗
+                </a>
+              </span>
             </div>
           ))}
         </div>
@@ -745,7 +911,7 @@ export default function QuizClient({
 
       <div className="flex flex-wrap gap-3">
         <button
-          onClick={() => startBattle()}
+          onClick={() => runTransition(() => startBattle())}
           className="pixel-button tap-target rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
         >
           Battle again
@@ -757,6 +923,8 @@ export default function QuizClient({
           Change route
         </button>
       </div>
+
+      {transitionOverlay}
     </div>
   );
 }

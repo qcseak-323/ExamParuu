@@ -11,7 +11,8 @@ import SoundToggle from "@/components/SoundToggle";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const TRAINER_LINKS = [
-  { href: "/catalog", label: "Catalog" },
+  // The route stays /catalog (bookmarks, guards); only the word changed.
+  { href: "/catalog", label: "Dungeon" },
   { href: "/progress", label: "Trainer" },
   { href: "/preferences", label: "Options" },
 ];

@@ -6,6 +6,7 @@ import { PAL_SPECIES, stageForLevel } from "@/lib/pals";
 import { trainerAvatarSheet } from "@/lib/profile";
 import { computeXp, computeLevel } from "@/lib/gamification";
 import { useQuizAttempts, useFlashcardProgress } from "@/lib/storage";
+import { usePreferences } from "@/lib/preferences";
 import PalSprite from "@/components/PalSprite";
 import StartPrompt from "@/components/StartPrompt";
 import BattleDemo from "@/components/BattleDemo";
@@ -21,11 +22,44 @@ import BattleDemo from "@/components/BattleDemo";
  * strolling the sand; a signed-in trainer sees their own avatar walking
  * beside their own Paruu, and the button reads Continue instead of Start.
  */
+/** One character sprinting the sand strip, trailed by speed lines. */
+function Runner({
+  sheet,
+  size,
+  duration,
+  delay,
+}: {
+  sheet: string;
+  size: number;
+  duration: string;
+  delay: string;
+}) {
+  return (
+    <div
+      className="runner"
+      style={
+        {
+          "--runner-duration": duration,
+          "--runner-delay": delay,
+        } as React.CSSProperties
+      }
+    >
+      <span className="speed-lines" aria-hidden="true" />
+      <span className="runner-sprite">
+        <PalSprite sheet={sheet} size={size} flip />
+      </span>
+    </div>
+  );
+}
+
 export default function HomeHero({ examCodes }: { examCodes: string[] }) {
   const { data: session, status } = useSession();
   const attempts = useQuizAttempts();
   const flashcardProgress = useFlashcardProgress();
   const { level } = computeLevel(computeXp(attempts, flashcardProgress));
+  // Runners traverse the viewport on an infinite loop — under reduced motion
+  // that loop would strobe at the killed duration, so the cast simply stands.
+  const still = usePreferences().reducedMotion;
 
   const palType =
     status === "authenticated" ? (session?.user?.examPal ?? null) : null;
@@ -74,13 +108,7 @@ export default function HomeHero({ examCodes }: { examCodes: string[] }) {
             )}
 
             <div className="mt-6 flex flex-wrap items-center gap-5">
-              <StartPrompt
-                label={
-                  signedIn
-                    ? "Continue your journey"
-                    : "Start your first battle — free"
-                }
-              />
+              <StartPrompt label={signedIn ? "CONTINUE" : "START"} />
               <Link
                 href="/catalog"
                 className="tap-target text-body font-semibold underline hover:text-[var(--accent-ink)]"
@@ -111,28 +139,39 @@ export default function HomeHero({ examCodes }: { examCodes: string[] }) {
 
       <div className="hero-water-strip full-bleed" aria-hidden="true" />
 
-      {/* The cast on the sand. Decorative — the headline says everything. */}
-      <div className="hero-sand-strip full-bleed" aria-hidden="true">
+      {/* The cast sprints along the sand, speed lines trailing, wind gusting
+          across the strip. Under reduced motion they stand instead. */}
+      <div
+        className={`hero-sand-strip full-bleed ${still ? "" : "wind-gusts"}`}
+        aria-hidden="true"
+      >
         {signedIn && stage ? (
-          <>
-            {avatarSheet && (
+          still ? (
+            <>
+              {avatarSheet && (
+                <div
+                  className="hero-combatant"
+                  style={{ left: "14%", bottom: "26px" }}
+                >
+                  <PalSprite sheet={avatarSheet} size={64} flip />
+                </div>
+              )}
               <div
                 className="hero-combatant"
-                style={{ left: "14%", bottom: "26px" }}
+                style={{ left: avatarSheet ? "30%" : "16%", bottom: "26px" }}
               >
-                <PalSprite sheet={avatarSheet} size={64} flip />
-              </div>
-            )}
-            <div
-              className="hero-combatant"
-              style={{ left: avatarSheet ? "30%" : "16%", bottom: "26px" }}
-            >
-              <div className="pal-idle">
                 <PalSprite sheet={stage.image} size={64} />
               </div>
-            </div>
-          </>
-        ) : (
+            </>
+          ) : (
+            <>
+              {avatarSheet && (
+                <Runner sheet={avatarSheet} size={64} duration="16s" delay="0s" />
+              )}
+              <Runner sheet={stage.image} size={64} duration="16s" delay="0.9s" />
+            </>
+          )
+        ) : still ? (
           <>
             <div
               className="hero-combatant"
@@ -140,43 +179,41 @@ export default function HomeHero({ examCodes }: { examCodes: string[] }) {
             >
               <PalSprite sheet="trainer-boy" size={64} flip />
             </div>
-            {/* `hidden` lives on wrappers: .hero-combatant's own display
-                rule is unlayered CSS, which beats the layered utility. */}
-            <div className="hidden sm:block">
-              <div
-                className="hero-combatant"
-                style={{ left: "22%", bottom: "26px" }}
-              >
-                <PalSprite sheet="trainer-girl" size={64} flip />
-              </div>
-            </div>
-            <div className="hidden sm:block">
-              <div
-                className="hero-combatant"
-                style={{ left: "68%", bottom: "26px" }}
-              >
-                <div className="pal-idle">
-                  <PalSprite sheet={PAL_SPECIES.wood.stages[0].image} size={48} />
-                </div>
-              </div>
-            </div>
-            <div className="hidden sm:block">
-              <div
-                className="hero-combatant"
-                style={{ left: "78%", bottom: "26px" }}
-              >
-                <div className="pal-idle">
-                  <PalSprite sheet={PAL_SPECIES.water.stages[0].image} size={48} />
-                </div>
-              </div>
-            </div>
             <div
               className="hero-combatant"
               style={{ left: "88%", bottom: "26px" }}
             >
-              <div className="pal-idle">
-                <PalSprite sheet={PAL_SPECIES.fire.stages[0].image} size={48} />
-              </div>
+              <PalSprite sheet={PAL_SPECIES.fire.stages[0].image} size={48} />
+            </div>
+          </>
+        ) : (
+          <>
+            <Runner sheet="trainer-boy" size={64} duration="16s" delay="0s" />
+            <Runner
+              sheet={PAL_SPECIES.fire.stages[0].image}
+              size={48}
+              duration="12.5s"
+              delay="1.4s"
+            />
+            {/* `hidden` on wrappers: .runner's display is unlayered CSS. */}
+            <div className="hidden sm:block">
+              <Runner sheet="trainer-girl" size={64} duration="18s" delay="4s" />
+            </div>
+            <div className="hidden sm:block">
+              <Runner
+                sheet={PAL_SPECIES.wood.stages[0].image}
+                size={48}
+                duration="13.5s"
+                delay="7s"
+              />
+            </div>
+            <div className="hidden sm:block">
+              <Runner
+                sheet={PAL_SPECIES.water.stages[0].image}
+                size={48}
+                duration="14.5s"
+                delay="10s"
+              />
             </div>
           </>
         )}

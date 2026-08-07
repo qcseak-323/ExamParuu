@@ -355,6 +355,18 @@ body {
     animation: dialogue-blink 900ms steps(1, end) infinite;
   }
 
+  /* The selector's gold fill: the active/selected row is a bright brass
+     plate, like the cursor row on a handheld menu. Ink text on the gold
+     gradient stays ≥5:1. */
+  .menu-item--gold {
+    background: linear-gradient(180deg, #f2c14e, var(--accent-hi));
+    color: var(--outline);
+  }
+  .menu-item--gold .text-caption,
+  .menu-item--gold [class*="foreground-muted"] {
+    color: var(--outline);
+  }
+
   /* Menu rows: inset chart rows on the panel surface. */
   .menu-item {
     background: var(--panel-raised);
@@ -421,6 +433,143 @@ body {
   100% {
     opacity: 0;
   }
+}
+
+/* --- Stage transition ------------------------------------------------------
+   The page darkens, the whoosh plays, the next stage is revealed. One
+   overlay, one keyframe: in, hold, out. Reduced-motion collapses it to
+   nothing via the global animation kill. */
+.screen-fade {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: #04090e;
+  pointer-events: none;
+  opacity: 0;
+  animation: screen-fade 700ms steps(8, end) forwards;
+}
+@keyframes screen-fade {
+  0% { opacity: 0; }
+  30%, 60% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* --- Battle attack effects -------------------------------------------------
+   A bolt flies from the pal (bottom-left) to the foe (top-right). Colour
+   and shape come from the attacker's line; count and size from its form —
+   base, super, ultimate. */
+.attack-bolt {
+  position: absolute;
+  z-index: 6;
+  left: 18%;
+  bottom: 26%;
+  border: 2px solid var(--outline);
+  pointer-events: none;
+  opacity: 0;
+  animation: attack-fly 480ms steps(10, end) forwards;
+}
+.attack-bolt--fire {
+  background: linear-gradient(180deg, var(--ember-4), var(--ember-2));
+  transform: rotate(45deg);
+}
+.attack-bolt--water {
+  background: linear-gradient(180deg, var(--tide-4), var(--tide-2));
+  border-radius: 50%;
+}
+.attack-bolt--wood {
+  background: linear-gradient(180deg, var(--verdant-4), var(--verdant-2));
+  border-radius: 0 50% 0 50%;
+}
+.attack-bolt--brass {
+  background: linear-gradient(180deg, var(--accent-hi), var(--accent));
+  transform: rotate(45deg);
+}
+@keyframes attack-fly {
+  0% { opacity: 1; left: 18%; bottom: 26%; }
+  85% { opacity: 1; }
+  100% { opacity: 0; left: 74%; bottom: 62%; }
+}
+
+/* The felled opponent sinks and fades. */
+.foe-faint {
+  animation: foe-faint 700ms steps(7, end) forwards;
+}
+@keyframes foe-faint {
+  to {
+    transform: translateY(26px);
+    opacity: 0;
+  }
+}
+
+/* --- Landing runners -------------------------------------------------------
+   The cast sprints across the sand strip, trailed by speed lines, with
+   gusts of wind crossing the strip. Every class here is only applied when
+   reduced motion is off — an infinite traversal at a 0.001ms duration
+   would strobe, so the motion variant is gated in the component. */
+.runner {
+  position: absolute;
+  bottom: 26px;
+  left: -90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: runner-cross var(--runner-duration, 18s) linear infinite;
+  animation-delay: var(--runner-delay, 0s);
+}
+.runner::after {
+  content: "";
+  width: 72%;
+  height: 12px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: var(--ground-shadow);
+}
+@keyframes runner-cross {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(100vw + 180px)); }
+}
+.runner-sprite {
+  animation: runner-gait 0.34s steps(2, end) infinite;
+}
+@keyframes runner-gait {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.speed-lines {
+  position: absolute;
+  right: 100%;
+  margin-right: 6px;
+  top: 30%;
+  width: 34px;
+  height: 40%;
+  background: repeating-linear-gradient(
+    180deg,
+    var(--ground-shadow) 0 3px,
+    transparent 3px 12px
+  );
+  animation: speed-flicker 0.28s steps(2, end) infinite;
+}
+@keyframes speed-flicker {
+  0%, 100% { opacity: 0.9; transform: translateX(0); }
+  50% { opacity: 0.4; transform: translateX(-6px); }
+}
+.wind-gusts::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 140px,
+    rgba(255, 255, 255, 0.28) 140px 172px,
+    transparent 172px 300px
+  );
+  opacity: 0.5;
+  animation: wind-slide 2.4s linear infinite;
+  pointer-events: none;
+}
+@keyframes wind-slide {
+  from { transform: translateX(0); }
+  to { transform: translateX(-300px); }
 }
 
 /* Idle bob, so a pal on screen looks alive rather than pasted on. */

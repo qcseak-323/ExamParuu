@@ -15,7 +15,7 @@ import {
   computeStreak,
   computeRedemptionXp,
 } from "@/lib/gamification";
-import { PAL_SPECIES, stageForLevel, nextStage } from "@/lib/pals";
+import { PAL_SPECIES, stageForLevel, nextStage, formLabel } from "@/lib/pals";
 import { computeRegionBadges, deriveTrainerTitle } from "@/lib/regions";
 import { isProvingPassed } from "@/lib/gamification";
 import {
@@ -134,8 +134,8 @@ export default function ProgressClient({
           </div>
           <p className="mt-2 text-caption text-[var(--foreground-muted)]">
             {upcoming
-              ? `${upcoming.levelsAway} more level${upcoming.levelsAway === 1 ? "" : "s"} until ${displayName} evolves into ${upcoming.stage.name}.`
-              : `${displayName} has reached its final form.`}
+              ? `${upcoming.levelsAway} more level${upcoming.levelsAway === 1 ? "" : "s"} until ${displayName} evolves into ${upcoming.stage.name} (${formLabel(species.stages.findIndex((s) => s.name === upcoming.stage.name))}).`
+              : `${displayName} has reached its Ultimate form.`}
           </p>
         </div>
 
@@ -171,7 +171,7 @@ export default function ProgressClient({
       <section>
         <h2 className="mb-4 font-pixel text-title">Your Paruu</h2>
         <div className="pixel-panel grid grid-cols-2 gap-5 p-5 sm:grid-cols-3 lg:grid-cols-5">
-          {species.stages.map((s) => {
+          {species.stages.map((s, i) => {
             const reached = level >= s.minLevel;
             return (
               <div
@@ -189,10 +189,8 @@ export default function ProgressClient({
                 </p>
                 <p className="text-caption text-[var(--foreground-muted)]">
                   {reached
-                    ? s.name === stage.name
-                      ? `${species.label} line · with you now`
-                      : `${species.label} line`
-                    : `Evolves at Lv.${s.minLevel}`}
+                    ? `${formLabel(i)}${s.name === stage.name ? " · with you now" : ""}`
+                    : `${formLabel(i)} · evolves at Lv.${s.minLevel}`}
                 </p>
               </div>
             );

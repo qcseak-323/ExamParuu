@@ -22,6 +22,7 @@ import { fighterRoster, getGuardian, guardianFighter } from "@/lib/guardians";
 import { usePreferences } from "@/lib/preferences";
 import PixelSprite from "@/components/PixelSprite";
 import FighterSprite from "@/components/battle/FighterSprite";
+import { useBattleTransition } from "@/components/battle/BattleTransition";
 import MenuList, { type MenuOption } from "@/components/MenuList";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import HpBar from "@/components/battle/HpBar";
@@ -87,6 +88,9 @@ export default function GymLeaderClient({
   const [fighterId, setFighterId] = useState("starter");
   const fighter = roster.find((f) => f.id === fighterId) ?? roster[0];
   const palName = fighter.name;
+
+  const { run: runTransition, overlay: transitionOverlay } =
+    useBattleTransition();
 
   const [phase, setPhase] = useState<Phase>("briefing");
   const [paper, setPaper] = useState<Question[]>([]);
@@ -287,7 +291,7 @@ export default function GymLeaderClient({
           footer={
             <div className="flex flex-wrap gap-3">
               <button
-                onClick={beginExam}
+                onClick={() => runTransition(beginExam)}
                 className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
               >
                 Begin the challenge ▶
@@ -307,6 +311,8 @@ export default function GymLeaderClient({
           full-length paper isn&apos;t possible yet — treat this as a solid dress
           rehearsal rather than a simulation of the real exam.
         </p>
+
+        {transitionOverlay}
       </div>
     );
   }

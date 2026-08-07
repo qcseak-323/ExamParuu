@@ -235,6 +235,18 @@ export function relatedFlashcardsForQuestion(
   );
 }
 
+/**
+ * Microsoft Learn citation for a question's topic. We can't deep-link into
+ * Learn per question without hand-maintaining thousands of URLs, but Learn's
+ * own search on the taught section's heading lands on the right module in
+ * practice — and never rots the way a hardcoded path would.
+ */
+export function learnSearchUrlForQuestion(question: Question): string {
+  return `https://learn.microsoft.com/en-us/search/?terms=${encodeURIComponent(
+    teachingLabelForQuestion(question),
+  )}`;
+}
+
 /** Human-readable label for whatever a question points at. */
 export function teachingLabelForQuestion(question: Question): string {
   if (question.teaches) {

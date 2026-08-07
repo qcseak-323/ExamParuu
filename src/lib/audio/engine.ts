@@ -27,7 +27,8 @@ export type SfxName =
   | "damage"
   | "faint"
   | "levelUp"
-  | "text";
+  | "text"
+  | "transition";
 
 type ChannelState = {
   channel: Channel;
@@ -372,6 +373,11 @@ class ChiptuneEngine {
         break;
       case "faint":
         this.sweep(660, 90, now, 0.7, 0.22, "square");
+        break;
+      case "transition":
+        // The stage-change whoosh: a falling sweep under a noise wash.
+        this.noiseBurst(now, 0.28, 0.18, 600);
+        this.sweep(520, 110, now, 0.34, 0.2, "triangle");
         break;
       case "levelUp":
         [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, i) => {

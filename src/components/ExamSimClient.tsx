@@ -56,7 +56,10 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
   const [phase, setPhase] = useState<Phase>("briefing");
   const [paper, setPaper] = useState<Question[]>([]);
   const [index, setIndex] = useState(0);
-  const [results, setResults] = useState<QuizResultEntry[]>([]);
+  // One slot per paper question, null while unanswered. An array rather than
+  // an append-only list because the real exam lets you move around the paper
+  // and change answers — which the navigator below now allows too.
+  const [answers, setAnswers] = useState<(number | null)[]>([]);
   const [remainingMs, setRemainingMs] = useState(0);
   const [timedOut, setTimedOut] = useState(false);
 
@@ -93,23 +96,45 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
     return () => clearInterval(id);
   }, [phase]);
 
+  // Only answered questions become result entries — the review deck and XP
+  // keep seeing the shapes they always have. `at` is 0 in this render-time
+  // copy (render must stay pure); the persist effect stamps the real time.
+  const finalResults: QuizResultEntry[] = useMemo(
+    () =>
+      paper.flatMap((q, i) => {
+        const chosen = answers[i];
+        if (chosen === null || chosen === undefined) return [];
+        return [
+          {
+            questionId: q.id,
+            domain: q.domain,
+            correct: chosen === q.correctIndex,
+            chosenIndex: chosen,
+            at: 0,
+          },
+        ];
+      }),
+    [paper, answers],
+  );
+
   // Persist once, when the debrief is reached.
   useEffect(() => {
-    if (phase !== "debrief" || results.length === 0) return;
+    if (phase !== "debrief" || finalResults.length === 0) return;
+    const stamped = finalResults.map((r) => ({ ...r, at: Date.now() }));
     const attempt = {
       id: `${Date.now()}`,
       examCode,
       timestamp: Date.now(),
       domainFilter: EXAM_FILTER,
-      numQuestions: results.length,
-      correctCount: results.filter((r) => r.correct).length,
-      results,
+      numQuestions: stamped.length,
+      correctCount: stamped.filter((r) => r.correct).length,
+      results: stamped,
     };
     saveQuizAttempt(attempt);
     saveQuizAttemptToDb(attempt).catch((err) =>
       console.error("Failed to sync Proving result to account", err),
     );
-    // Keyed on phase alone: exactly once per run; results are frozen here.
+    // Keyed on phase alone: exactly once per run; answers are frozen here.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase]);
 
@@ -120,7 +145,7 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
     const built = buildExamPaper(examCode, attemptsUnused, bankSize);
     setPaper(built);
     setIndex(0);
-    setResults([]);
+    setAnswers(Array<number | null>(built.length).fill(null));
     setTimedOut(false);
     finishedRef.current = false;
     deadlineRef.current = Date.now() + totalMs;
@@ -130,28 +155,26 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
   }
 
   function answer(optionIndex: number) {
-    const question = paper[index];
-    const correct = optionIndex === question.correctIndex;
-    const next = [
-      ...results,
-      {
-        questionId: question.id,
-        domain: question.domain,
-        correct,
-        chosenIndex: optionIndex,
-        at: Date.now(),
-      },
-    ];
-    setResults(next);
+    setAnswers((prev) => {
+      const next = [...prev];
+      next[index] = optionIndex;
+      return next;
+    });
     // Silence is the format: no sounds that betray right or wrong.
     playSfx("cursor");
 
-    if (index + 1 >= paper.length) {
-      finishedRef.current = true;
-      setPhase("debrief");
-    } else {
+    // Move on like the real exam does; the navigator can bring you back.
+    // Answering the last question stays put — ending the paper is an
+    // explicit act, not a side effect.
+    if (index + 1 < paper.length) {
       setIndex((i) => i + 1);
     }
+  }
+
+  function endPaper() {
+    finishedRef.current = true;
+    playSfx("confirm");
+    setPhase("debrief");
   }
 
   if (!content || !exam) {
@@ -216,8 +239,11 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
     const options: MenuOption[] = question.options.map((option, i) => ({
       id: String(i),
       label: option,
+      hint: answers[index] === i ? "◀ your answer" : undefined,
     }));
     const lowTime = remainingMs < 5 * 60_000;
+    const answeredCount = answers.filter((a) => a !== null).length;
+    const unanswered = paper.length - answeredCount;
 
     return (
       <div className="mx-auto flex max-w-3xl flex-col gap-4">
@@ -246,16 +272,66 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
           options={options}
           onSelect={(id) => answer(Number(id))}
         />
+
+        {/* The review screen every real exam has: jump to any question,
+            change any answer, end the paper when you choose to. */}
+        <section className="pixel-panel p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-caption font-semibold uppercase tracking-[0.08em] text-[var(--foreground-muted)]">
+              Question navigator · {answeredCount}/{paper.length} answered
+            </p>
+            <button
+              type="button"
+              onClick={endPaper}
+              className="pixel-button rounded-md bg-[var(--accent)] px-4 py-1.5 text-caption font-semibold text-[var(--accent-foreground)]"
+            >
+              End exam{unanswered > 0 ? ` (${unanswered} unanswered)` : ""} ▶
+            </button>
+          </div>
+          <div
+            className="mt-3 grid grid-cols-8 gap-1.5 sm:grid-cols-10"
+            role="group"
+            aria-label="Jump to question"
+          >
+            {paper.map((q, i) => {
+              const answered = answers[i] !== null;
+              const current = i === index;
+              return (
+                <button
+                  key={q.id}
+                  type="button"
+                  aria-label={`Question ${i + 1}${answered ? ", answered" : ", unanswered"}`}
+                  aria-current={current ? "true" : undefined}
+                  onClick={() => {
+                    playSfx("cursor");
+                    setIndex(i);
+                  }}
+                  className={`min-h-9 rounded border-2 text-caption font-semibold ${
+                    current
+                      ? "border-[var(--focus)] ring-2 ring-[var(--focus)]"
+                      : "border-[var(--border)]"
+                  } ${
+                    answered
+                      ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
+                      : "bg-[var(--panel)] text-[var(--foreground-muted)]"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              );
+            })}
+          </div>
+        </section>
       </div>
     );
   }
 
   // --- Debrief: the score report -------------------------------------------
 
-  const correct = results.filter((r) => r.correct).length;
+  const correct = finalResults.filter((r) => r.correct).length;
   const score = scaledScore(correct, paper.length);
   const passed = score >= passMark;
-  const breakdown = scoreByDomain(examCode, results);
+  const breakdown = scoreByDomain(examCode, finalResults);
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
@@ -280,7 +356,7 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
         <p className="text-caption text-[var(--foreground-muted)]">
           {correct} of {paper.length} correct
           {timedOut
-            ? ` — the clock ended the paper with ${paper.length - results.length} unanswered`
+            ? ` — the clock ended the paper with ${paper.length - finalResults.length} unanswered`
             : ""}
         </p>
       </div>

@@ -115,7 +115,13 @@ export default function MenuList({
             disabled={isDisabled}
             tabIndex={isActive ? 0 : -1}
             onFocus={() => setActiveIndex(index)}
-            onMouseEnter={() => !isDisabled && setActiveIndex(index)}
+            onMouseEnter={() => {
+              if (isDisabled || index === activeIndex) return;
+              setActiveIndex(index);
+              // The selector blip follows the cursor however it moves —
+              // arrow keys already play it via focusIndex.
+              playSfx("cursor");
+            }}
             onKeyDown={(e) => handleKey(e, index)}
             onClick={() => {
               if (isDisabled) return;
@@ -124,6 +130,13 @@ export default function MenuList({
             }}
             className={`menu-item flex min-h-11 items-center gap-2 px-3 py-2.5 text-left text-body ${tone} ${
               isDisabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+            } ${
+              // The selector row fills bright gold. Tone rows (answer
+              // feedback) keep their own colours — a gold wash over a
+              // correct/wrong row would hide the verdict.
+              isActive && !isDisabled && (option.tone ?? "default") === "default"
+                ? "menu-item--gold"
+                : ""
             }`}
           >
             <span
@@ -136,7 +149,11 @@ export default function MenuList({
             </span>
             <span className="flex-1">{option.label}</span>
             {option.hint && (
-              <span className="shrink-0 text-caption text-[var(--foreground-muted)]">
+              <span
+                className={`shrink-0 text-caption ${
+                  isActive && !isDisabled ? "" : "text-[var(--foreground-muted)]"
+                }`}
+              >
                 {option.hint}
               </span>
             )}

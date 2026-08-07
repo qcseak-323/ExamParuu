@@ -18,6 +18,7 @@ import ProfessorPortrait from "@/components/ProfessorPortrait";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import MenuList from "@/components/MenuList";
 import { useSfx } from "@/components/AudioProvider";
+import { useBattleTransition } from "@/components/battle/BattleTransition";
 
 /**
  * First-run profile setup, played as a conversation with the professor.
@@ -57,6 +58,8 @@ export default function SetupClient({ email }: { email: string | null }) {
   const router = useRouter();
   const { update } = useSession();
   const playSfx = useSfx();
+  const { run: runTransition, overlay: transitionOverlay } =
+    useBattleTransition();
 
   const [step, setStep] = useState<Step>("intro");
   const [trainerAvatar, setTrainerAvatar] = useState<TrainerAvatar | null>(
@@ -403,7 +406,9 @@ export default function SetupClient({ email }: { email: string | null }) {
             }))}
             onSelect={(id) => {
               setPriorityExam(id);
-              commit(id);
+              // The stage-change beat: darken, whoosh, then the save runs
+              // while the screen is dark and the map is the reveal.
+              runTransition(() => commit(id));
             }}
           />
 
@@ -415,6 +420,8 @@ export default function SetupClient({ email }: { email: string | null }) {
           )}
         </>
       )}
+
+      {transitionOverlay}
     </div>
   );
 }

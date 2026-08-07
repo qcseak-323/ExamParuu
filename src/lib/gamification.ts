@@ -4,7 +4,7 @@ import type {
   Domain,
   LearningEvent,
 } from "./types";
-import { getExamContent } from "./content";
+import { getCatalogEntry, getExamContent } from "./content";
 import { countLessonsCompleted, countRepeatEngagements } from "./learning";
 
 const XP_PER_CORRECT_ANSWER = 10;
@@ -61,8 +61,28 @@ export function computeXp(
     computeBadgeXp(attempts) +
     countLessonsCompleted(events) * XP_PER_LESSON +
     countRepeatEngagements(events) * XP_PER_REPEAT_REVIEW +
-    computeStreakMilestoneXp(activityDates)
+    computeStreakMilestoneXp(activityDates) +
+    computeWildXp(events)
   );
+}
+
+/**
+ * XP for wild-question wins, scaled by the exam's Microsoft tier. Appended
+ * term, non-negative, derived from the append-only event log (day-scoped
+ * deterministic ids stop the same question paying twice in a day) — so the
+ * XP invariant above holds untouched.
+ */
+export function wildXpFor(examCode: string): number {
+  const level = getCatalogEntry(examCode)?.msLevel;
+  if (level === "Fundamentals") return 10;
+  if (level === "Associate") return 20;
+  return 30;
+}
+
+export function computeWildXp(events: LearningEvent[]): number {
+  return events
+    .filter((e) => e.kind === "wildWin")
+    .reduce((sum, e) => sum + wildXpFor(e.examCode), 0);
 }
 
 /**

@@ -20,7 +20,12 @@
 import { sprite, type SpriteMatrix, type SpritePalette } from "./sprite";
 import { isGymCleared } from "./gamification";
 import { catalog } from "./content";
-import { PAL_SPECIES, stageForLevel, type PalType } from "./pals";
+import {
+  PAL_SPECIES,
+  stageForLevel,
+  stageIndexForLevel,
+  type PalType,
+} from "./pals";
 import type { QuizAttempt } from "./types";
 
 // --- Placeholder silhouettes ------------------------------------------------
@@ -271,6 +276,10 @@ export type Fighter = {
   sheet: string | null;
   sprite: SpriteMatrix | null;
   palette: SpritePalette | null;
+  /** Attack-effect flavour: the starter's element, brass for guardians. */
+  fx: "fire" | "water" | "wood" | "brass";
+  /** 0 base · 1 super · 2 ultimate — scales the attack effect. */
+  formIndex: number;
 };
 
 export function starterFighter(
@@ -290,6 +299,8 @@ export function starterFighter(
     sheet: stage.image,
     sprite: null,
     palette: null,
+    fx: palType,
+    formIndex: stageIndexForLevel(palType, level),
   };
 }
 
@@ -303,6 +314,8 @@ export function guardianFighter(guardian: Guardian): Fighter {
     sheet: guardian.image,
     sprite: guardian.sprite,
     palette: guardian.palette,
+    fx: "brass",
+    formIndex: 1,
   };
 }
 
