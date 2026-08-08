@@ -599,7 +599,7 @@ body {
    dark lifts on it. Three variants, chosen at random per transition (see
    useBattleTransition) — the shape of the dark differs, the timing does not.
 
-   All three run 1200ms and are fully black between 32% and 64%, which is the
+   All three run 2000ms and are fully black between 28% and 64%, which is the
    window the caller swaps the stage in. Anything that changes those numbers
    has to change BLACKOUT_MS and BLACKOUT_DARK_MS in BattleTransition.tsx too.
 
@@ -625,7 +625,7 @@ body {
   right: 0;
   height: 0;
   background: #04090e;
-  animation: blackout-blinds 1200ms steps(8, end) forwards;
+  animation: blackout-blinds 2000ms steps(12, end) forwards;
 }
 .blackout--blinds .blackout-band--top {
   top: 0;
@@ -635,7 +635,7 @@ body {
 }
 @keyframes blackout-blinds {
   0% { height: 0; }
-  32%, 64% { height: 51%; }
+  28%, 64% { height: 51%; }
   100% { height: 0; }
 }
 
@@ -651,11 +651,11 @@ body {
   transform: translate(-50%, -50%);
   border-radius: 50%;
   box-shadow: 0 0 0 100vmax #04090e;
-  animation: blackout-iris 1200ms steps(8, end) forwards;
+  animation: blackout-iris 2000ms steps(12, end) forwards;
 }
 @keyframes blackout-iris {
   0% { width: 260vmax; height: 260vmax; }
-  32%, 64% { width: 0; height: 0; }
+  28%, 64% { width: 0; height: 0; }
   100% { width: 260vmax; height: 260vmax; }
 }
 
@@ -667,12 +667,12 @@ body {
   inset: 0;
   background: #04090e;
   opacity: 0;
-  animation: blackout-stagger 1200ms steps(1, end) forwards;
+  animation: blackout-stagger 2000ms steps(1, end) forwards;
 }
 @keyframes blackout-stagger {
-  0%, 6% { opacity: 0; }
-  7%, 16% { opacity: 0.8; }
-  17%, 27% { opacity: 0; }
+  0%, 5% { opacity: 0; }
+  6%, 14% { opacity: 0.8; }
+  15%, 24% { opacity: 0; }
   28%, 64% { opacity: 1; }
   65%, 88% { opacity: 0.5; }
   100% { opacity: 0; }
@@ -716,19 +716,24 @@ body {
 
 /* --- Battle entrance -------------------------------------------------------
    What the blackout lifts on: the trainer strides in from the left, the wild
-   Paruu from the right, and the banner names it once both have landed. Sits
-   below the blackout's z-index so a transition still covers it, and wears the
-   arena's own colours rather than the blackout's #04090e — the point of the
-   beat is that the dark has *gone*.
+   Paruu answers from the right, and the banner names it once both have
+   landed. Sits below the blackout's z-index so a transition still covers it,
+   and wears the arena's own colours rather than the blackout's #04090e — the
+   point of the beat is that the dark has *gone*.
 
-   The whole thing is a button so it can be skipped by keyboard as well as by
-   click; the resets below are what stop it looking like one.
+   Five seconds is a long time to hold a screen, so the beat is staggered
+   rather than simultaneous and the cast keeps breathing after it lands: the
+   two sides arrive 380ms apart, which reads as an exchange instead of a
+   symmetrical slide, and the idle bob starts as each one settles so the hold
+   is never a freeze-frame. The skip control is up the whole time.
 
    Timing (from mount, which the caller schedules at BLACKOUT_DARK_MS):
-     620ms  the blackout has cleared — the cast starts moving
-    1140ms  both have landed
-    1180ms  the banner reads
-    1750ms  BattleEntrance's own timer dismisses it
+      620ms  the blackout has cleared — the trainer starts moving
+     1240ms  the trainer lands and starts breathing
+     1000ms  the wild Paruu starts moving
+     1620ms  it lands and starts breathing
+     1700ms  the banner reads
+     5000ms  BattleEntrance's own timer dismisses it, unless skipped
 
    `animation-fill-mode: both` holds the cast off-screen through the delay.
 
@@ -737,7 +742,7 @@ body {
    file collapses animation-DURATION and leaves animation-DELAY alone, so a
    delayed animation sits in its delay phase filling *backwards* — the
    authored, off-screen state. The cast stayed at translateX(-525px) and the
-   banner never reached opacity 1 within the 650ms the entrance exists.
+   banner never reached opacity 1 within the time the entrance exists.
    Zeroing the delays is the actual fix; see the reduced-motion block below. */
 .battle-entrance {
   position: fixed;
@@ -749,11 +754,6 @@ body {
   justify-content: center;
   gap: 20px;
   overflow: hidden;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  appearance: none;
-  cursor: pointer;
   background: radial-gradient(
     circle at 50% 58%,
     var(--arena-top),
@@ -766,7 +766,7 @@ body {
    crossed a route. A cross-page blackout is rendered by the page it is
    leaving, so it unmounts the instant the new page commits, somewhere in the
    middle of its own keyframe. Without this the arena would cut in hard. The
-   fade runs exactly as long as the cast's delay, so the dark lifts and the
+   fade runs exactly as long as the trainer's delay, so the dark lifts and the
    cast walks on. */
 .battle-entrance::before {
   content: "";
@@ -781,6 +781,27 @@ body {
   to { opacity: 0; }
 }
 
+/* Top right, above the veil, and reachable from the keyboard: at five
+   seconds a skip is a requirement, not a courtesy. */
+.entrance-skip {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  right: 16px;
+  z-index: 2;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--foreground);
+  font-weight: 600;
+  cursor: pointer;
+  animation: entrance-banner 240ms steps(3, end) 300ms both;
+}
+.entrance-skip:hover {
+  background: var(--panel-raised);
+}
+
 .entrance-cast {
   position: relative;
   display: flex;
@@ -790,16 +811,17 @@ body {
   padding: 0 clamp(8px, 5vw, 48px);
 }
 .entrance-side {
-  animation-duration: 520ms;
-  animation-delay: 620ms;
+  animation-duration: 620ms;
   animation-timing-function: steps(8, end);
   animation-fill-mode: both;
 }
 .entrance-side--left {
   animation-name: entrance-from-left;
+  animation-delay: 620ms;
 }
 .entrance-side--right {
   animation-name: entrance-from-right;
+  animation-delay: 1000ms;
 }
 @keyframes entrance-from-left {
   from { transform: translateX(-140vw); }
@@ -809,10 +831,25 @@ body {
   from { transform: translateX(140vw); }
   to { transform: translateX(0); }
 }
+
+/* The breathing, on an inner wrapper because the slide already owns
+   `transform` on .entrance-side and the two would clobber each other. Each
+   side starts bobbing at the moment it lands. */
+.entrance-idle {
+  display: block;
+  animation: pal-bob 1.8s steps(2, end) infinite both;
+}
+.entrance-side--left .entrance-idle {
+  animation-delay: 1240ms;
+}
+.entrance-side--right .entrance-idle {
+  animation-delay: 1620ms;
+}
+
 .entrance-banner {
   position: relative;
   display: block;
-  animation: entrance-banner 280ms steps(4, end) 1180ms both;
+  animation: entrance-banner 280ms steps(4, end) 1700ms both;
 }
 @keyframes entrance-banner {
   from { opacity: 0; transform: translateY(10px); }
@@ -828,12 +865,16 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .entrance-side,
   .entrance-banner,
+  .entrance-skip,
+  .entrance-idle,
   .battle-entrance::before {
     animation-delay: 0s !important;
   }
 }
 html[data-reduced-motion="true"] .entrance-side,
 html[data-reduced-motion="true"] .entrance-banner,
+html[data-reduced-motion="true"] .entrance-skip,
+html[data-reduced-motion="true"] .entrance-idle,
 html[data-reduced-motion="true"] .battle-entrance::before {
   animation-delay: 0s !important;
 }

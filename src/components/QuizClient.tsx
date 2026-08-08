@@ -281,11 +281,13 @@ export default function QuizClient({
     [results],
   );
 
-  // Battle music while fighting; the fanfare takes over at the end. The
-  // entrance counts as fighting — the theme should already be going when the
-  // wild Paruu slides in, which is also what the blackout's cue hands off to.
+  // Three themes, one per beat: the standoff has its own, and BATTLE arriving
+  // underneath the first question is the release. The fanfare takes over at
+  // the end. This is the chain the blackout's cue hands off into — cue, then
+  // intro, then battle.
   useEffect(() => {
-    if (phase === "battle" || phase === "entering") setTrack("battle");
+    if (phase === "entering") setTrack("intro");
+    else if (phase === "battle") setTrack("battle");
     else if (phase === "setup") setTrack("town");
     return () => setTrack(null);
   }, [phase, setTrack]);

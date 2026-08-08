@@ -27,14 +27,19 @@ import { useSfx } from "@/components/AudioProvider";
  * transition still lands for someone who has turned one of the two off.
  */
 
-/** Must match the .blackout keyframes in globals.css. */
-export const BLACKOUT_MS = 1200;
 /**
- * When the stage is swapped. Sits inside the fully-black window (32%–64%,
- * i.e. 384ms–768ms) with room either side, so nothing of the swap is ever
+ * Must match the .blackout keyframes in globals.css AND the cue lengths in
+ * tracks.ts. All three move together: a cue shorter than the blackout leaves
+ * dead air in the dark, and a cue longer than it is still playing over the
+ * scene it was supposed to introduce.
+ */
+export const BLACKOUT_MS = 2000;
+/**
+ * When the stage is swapped. Sits inside the fully-black window (28%–64%,
+ * i.e. 560ms–1280ms) with room either side, so nothing of the swap is ever
  * on screen.
  */
-export const BLACKOUT_DARK_MS = 460;
+export const BLACKOUT_DARK_MS = 780;
 
 const VARIANTS = [
   { name: "blinds", cue: "ladder" },

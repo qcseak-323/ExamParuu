@@ -31,6 +31,7 @@ export type Track = {
 export type TrackName =
   | "town"
   | "battle"
+  | "intro"
   | "victory"
   | "defeat"
   | "starter";
@@ -114,6 +115,50 @@ const BATTLE: Track = {
   ],
 };
 
+/**
+ * The standoff. Plays for the length of the battle introduction only — the
+ * cast walking on, the banner naming the opponent — and hands over to BATTLE
+ * the moment the first question is drawn.
+ *
+ * Deliberately not a shortened BATTLE: this is the beat *before* the fight,
+ * so it holds instead of driving. The lead is two stabs and a rest over a
+ * pedal bass that will not resolve, and the drums keep time without a
+ * backbeat. BATTLE arriving underneath the first question is then a release,
+ * which is the whole job of an introduction.
+ *
+ * It loops because the introduction is skippable and can therefore end at any
+ * moment; a one-shot would leave silence for whatever was left of the hold.
+ */
+const INTRO: Track = {
+  bpm: 132,
+  loop: true,
+  channels: [
+    {
+      wave: "pulse",
+      gain: 0.2,
+      steps: [
+        ["A4", 0.5], [null, 0.5], ["A4", 0.5], [null, 0.5],
+        ["C5", 0.5], [null, 0.5], ["E5", 1],
+        ["D5", 0.5], [null, 0.5], ["D5", 0.5], [null, 0.5],
+        ["F5", 0.5], [null, 0.5], ["A5", 1],
+      ],
+    },
+    {
+      wave: "triangle",
+      gain: 0.3,
+      steps: [
+        ["A2", 1], ["A2", 1], ["A2", 1], ["A2", 1],
+        ["F2", 1], ["F2", 1], ["G2", 1], ["G2", 1],
+      ],
+    },
+    {
+      wave: "noise",
+      gain: 0.12,
+      steps: [["H", 1], ["H", 1], ["S", 1], ["H", 1]],
+    },
+  ],
+};
+
 /** Short fanfare after clearing a battle. Does not loop. */
 const VICTORY: Track = {
   bpm: 150,
@@ -182,6 +227,7 @@ const STARTER: Track = {
 export const TRACKS: Record<TrackName, Track> = {
   town: TOWN,
   battle: BATTLE,
+  intro: INTRO,
   victory: VICTORY,
   defeat: DEFEAT,
   starter: STARTER,
@@ -207,18 +253,21 @@ export function trackBeats(track: Track): number {
  * ducks whatever loop is running to silence, plays the cue over the top, and
  * lifts the loop back afterwards (see `playCue`). That is what lets the same
  * cue work when the screen is leaving the overworld for a battle — the town
- * loop drops out, the build takes over, and the battle theme is what comes
+ * loop drops out, the build takes over, and the intro theme is what comes
  * back up.
  *
  * All three intensify the same way an encounter should: note values halve as
- * the cue runs, so the last bar is four times the rate of the first, and the
+ * the cue runs, so the last bar is eight times the rate of the first, and the
  * percussion thickens underneath. They differ in *how* — a climbing run, a
  * hovering flutter, a hammering toll — so hearing one twice in a row is
  * obvious enough to be worth having three.
  *
- * Each runs about 1.2 seconds, matching the blackout keyframes in globals.css
- * — the build should resolve as the dark lifts, not after it. `cueDurationMs`
- * is how the engine knows when to hand the loop back.
+ * Each is exactly 8 beats at 240bpm = 2000ms, matching the blackout keyframes
+ * in globals.css. That pairing is not decorative: a cue shorter than the
+ * blackout leaves dead air in the dark, which is the whole reason the opening
+ * bars here are slow and sparse rather than the tempo simply being dropped.
+ * Lengthening the blackout means lengthening these. `cueDurationMs` is how
+ * the engine knows when to hand the loop back.
  */
 export type CueName = "ladder" | "flutter" | "toll";
 
@@ -234,29 +283,33 @@ const CUE_LADDER: Track = {
       wave: "pulse",
       gain: 0.26,
       steps: [
-        ["C4", 0.5], ["E4", 0.5], ["G4", 0.5], ["A#4", 0.5],
-        ["C5", 0.25], ["D5", 0.25], ["E5", 0.25], ["F#5", 0.25],
-        ["G#5", 0.25], ["A#5", 0.25],
-        ["C6", 0.125], ["C6", 0.125], ["C6", 0.125], ["C6", 0.125],
-        [null, 0.5],
+        ["C4", 1], ["E4", 1],
+        ["G4", 0.5], ["A#4", 0.5], ["C5", 0.5], ["D5", 0.5],
+        ["E5", 0.25], ["F#5", 0.25], ["G#5", 0.25], ["A#5", 0.25],
+        ["C6", 0.25], ["C6", 0.25], ["D6", 0.25], ["D6", 0.25],
+        ["E6", 0.125], ["E6", 0.125], ["E6", 0.125], ["E6", 0.125],
+        ["E6", 0.125], ["E6", 0.125], ["E6", 0.125], ["E6", 0.125],
+        [null, 1],
       ],
     },
     {
       wave: "triangle",
       gain: 0.34,
       steps: [
-        ["C2", 1], ["C2", 1],
+        ["C2", 2], ["C2", 1], ["C2", 1],
         ["C2", 0.5], ["C2", 0.5], ["C2", 0.5], ["C2", 0.5],
-        ["F1", 0.5], [null, 0.5],
+        ["F1", 1], ["C2", 1],
       ],
     },
     {
       wave: "noise",
       gain: 0.16,
       steps: [
+        ["H", 1], ["H", 1],
         ["H", 0.5], ["H", 0.5], ["H", 0.5], ["H", 0.5],
         ["S", 0.25], ["S", 0.25], ["S", 0.25], ["S", 0.25],
-        ["K", 0.5], ["K", 0.5],
+        ["S", 0.25], ["S", 0.25], ["S", 0.25], ["S", 0.25],
+        ["K", 0.5], ["K", 0.5], ["K", 0.5], ["K", 0.5],
       ],
     },
   ],
@@ -274,18 +327,23 @@ const CUE_FLUTTER: Track = {
       wave: "pulse",
       gain: 0.24,
       steps: [
-        ["E5", 0.25], ["A4", 0.25], ["E5", 0.25], ["A4", 0.25],
+        ["E5", 0.5], ["A4", 0.5], ["E5", 0.5], ["A4", 0.5],
         ["F5", 0.25], ["A#4", 0.25], ["F5", 0.25], ["A#4", 0.25],
-        ["G5", 0.125], ["C5", 0.125], ["G5", 0.125], ["C5", 0.125],
-        ["A5", 0.125], ["D5", 0.125], ["A5", 0.125], ["D5", 0.125],
-        ["A#5", 0.125], ["A#5", 0.125], ["C6", 0.25], [null, 0.5],
+        ["G5", 0.25], ["C5", 0.25], ["G5", 0.25], ["C5", 0.25],
+        ["A5", 0.25], ["D5", 0.25], ["A5", 0.25], ["D5", 0.25],
+        ["A#5", 0.125], ["D#5", 0.125], ["A#5", 0.125], ["D#5", 0.125],
+        ["A#5", 0.125], ["D#5", 0.125], ["A#5", 0.125], ["D#5", 0.125],
+        ["C6", 0.125], ["C6", 0.125], ["C6", 0.125], ["C6", 0.125],
+        ["C6", 0.125], ["C6", 0.125], ["C6", 0.125], ["C6", 0.125],
+        ["C6", 1],
       ],
     },
     {
       wave: "triangle",
       gain: 0.32,
       steps: [
-        ["A2", 1], ["A#2", 1], ["C3", 0.5], ["D3", 0.5],
+        ["A2", 2], ["A#2", 2],
+        ["C3", 1], ["D3", 1],
         ["E3", 0.5], ["F3", 0.5], ["A2", 1],
       ],
     },
@@ -293,9 +351,10 @@ const CUE_FLUTTER: Track = {
       wave: "noise",
       gain: 0.15,
       steps: [
-        ["H", 1], ["H", 0.5], ["H", 0.5],
-        ["H", 0.25], ["H", 0.25], ["H", 0.25], ["H", 0.25],
-        ["S", 0.25], ["S", 0.25], ["K", 0.5],
+        ["H", 1], ["H", 1], ["H", 1], ["H", 1],
+        ["H", 0.5], ["H", 0.5], ["H", 0.5], ["H", 0.5],
+        ["S", 0.25], ["S", 0.25], ["S", 0.25], ["S", 0.25],
+        ["K", 0.5], ["K", 0.5],
       ],
     },
   ],
@@ -314,29 +373,32 @@ const CUE_TOLL: Track = {
       wave: "pulse",
       gain: 0.26,
       steps: [
-        ["A4", 0.5], ["A4", 0.5],
-        ["A4", 0.25], ["A4", 0.25], ["A4", 0.25], ["A4", 0.25],
-        ["C5", 0.25], ["C5", 0.25],
-        ["D5", 0.125], ["D5", 0.125], ["D5", 0.125], ["D5", 0.125],
-        ["E5", 0.25], ["A5", 0.75],
+        ["A4", 1], ["A4", 1],
+        ["A4", 0.5], ["A4", 0.5], ["A4", 0.5], ["A4", 0.5],
+        ["C5", 0.5], ["C5", 0.5], ["D5", 0.5], ["D5", 0.5],
+        ["E5", 0.25], ["E5", 0.25], ["E5", 0.25], ["E5", 0.25],
+        ["A5", 1],
       ],
     },
     {
       wave: "sawtooth",
       gain: 0.2,
       steps: [
-        ["A3", 1], ["G3", 1], ["F3", 1],
-        ["E3", 0.5], ["D3", 0.5], ["A2", 0.75],
+        ["A3", 2], ["G3", 2],
+        ["F3", 1], ["E3", 1],
+        ["D3", 1], ["A2", 1],
       ],
     },
     {
       wave: "noise",
       gain: 0.18,
       steps: [
+        ["K", 1], ["K", 1],
         ["K", 0.5], ["K", 0.5], ["K", 0.5], ["K", 0.5],
         ["K", 0.25], ["K", 0.25], ["K", 0.25], ["K", 0.25],
+        ["K", 0.25], ["K", 0.25], ["K", 0.25], ["K", 0.25],
         ["S", 0.25], ["S", 0.25], ["S", 0.25], ["S", 0.25],
-        ["K", 0.75],
+        ["K", 1],
       ],
     },
   ],

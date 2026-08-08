@@ -12,25 +12,33 @@ import type { Fighter } from "@/lib/guardians";
 /**
  * What the blackout lifts on.
  *
- * The trainer strides in from the left, the wild Paruu from the right, and
- * once both have landed the banner names the thing you are about to fight.
- * Then it gets out of the way and the battle scene is underneath.
+ * The trainer strides in from the left, the wild Paruu answers from the
+ * right, and once both have landed the banner names the thing you are about
+ * to fight. Then it gets out of the way and the battle scene is underneath.
  *
  * The slide is delayed rather than immediate: this mounts while the screen is
  * still black (the caller starts it at BLACKOUT_DARK_MS) and the entrance is
- * worth nothing if it happens behind the dark. ENTRANCE_DELAY_MS holds the
- * cast off-screen until the blackout has essentially cleared, which is why it
- * is expressed in CSS as an animation-delay and not as another timer here —
- * one clock for the animation, one for the dismissal.
+ * worth nothing if it happens behind the dark. The delays live in CSS as
+ * animation-delay, not as timers here, so there is one clock for the
+ * choreography and one for the dismissal.
  *
- * `onDone` is what advances the battle, so it must fire whatever happens:
- * the timer below is the guarantee, and the skip button is the courtesy.
+ * At five seconds the skip stops being a courtesy and becomes a requirement,
+ * so it is a real button in the top right rather than a click-anywhere
+ * affordance — discoverable, reachable from the keyboard, and impossible to
+ * trigger by accident while watching.
+ *
+ * `onDone` is what advances the battle, so it must fire whatever happens: the
+ * timer below is the guarantee, the button is the escape.
  */
 
-/** Must match .entrance-side / .entrance-banner in globals.css. */
-const ENTRANCE_MS = 1750;
-/** Reduced motion kills the slide, so there is nothing to wait for. */
-const ENTRANCE_REDUCED_MS = 650;
+/** Must match the choreography in globals.css. */
+const ENTRANCE_MS = 5000;
+/**
+ * Reduced motion kills the slide and the bob, so nothing unfolds and there is
+ * nothing to watch — holding the full five seconds would be five seconds of a
+ * still image. The banner is already readable in a fraction of that.
+ */
+const ENTRANCE_REDUCED_MS = 2000;
 
 export default function BattleEntrance({
   fighter,
@@ -72,39 +80,43 @@ export default function BattleEntrance({
   }, [prefs.reducedMotion]);
 
   return (
-    <button
-      type="button"
-      onClick={onDone}
-      aria-label="Skip the encounter introduction"
-      className="battle-entrance"
-    >
-      {/* Spans, not a div and a p: a button only takes phrasing content, and
-          this whole overlay is a button so it can be skipped from the
-          keyboard. Both are given their block/flex display in CSS. */}
-      <span className="entrance-cast">
+    <div className="battle-entrance">
+      <button
+        type="button"
+        onClick={onDone}
+        className="entrance-skip text-caption uppercase tracking-[0.08em]"
+      >
+        Skip ▶▶
+      </button>
+
+      <div className="entrance-cast">
         <span className="entrance-side entrance-side--left">
-          {/* The trainer if they have a sprite, otherwise the Paruu they are
-              sending out — a profile from before the avatar step still gets
-              someone walking on from the left. */}
-          {avatarSheet ? (
-            <PalSprite sheet={avatarSheet} size={96} />
-          ) : (
-            <FighterSprite fighter={fighter} size={96} />
-          )}
+          <span className="entrance-idle">
+            {/* The trainer if they have a sprite, otherwise the Paruu they
+                are sending out — a profile from before the avatar step still
+                gets someone walking on from the left. */}
+            {avatarSheet ? (
+              <PalSprite sheet={avatarSheet} size={96} />
+            ) : (
+              <FighterSprite fighter={fighter} size={96} />
+            )}
+          </span>
         </span>
 
         <span className="entrance-side entrance-side--right">
-          <PixelSprite
-            sprite={GLITCHLING}
-            palette={GLITCHLING_PALETTE}
-            size={96}
-          />
+          <span className="entrance-idle">
+            <PixelSprite
+              sprite={GLITCHLING}
+              palette={GLITCHLING_PALETTE}
+              size={96}
+            />
+          </span>
         </span>
-      </span>
+      </div>
 
-      <span className="entrance-banner dialogue-text px-4 text-center text-[var(--foreground)]">
+      <p className="entrance-banner dialogue-text px-4 text-center text-[var(--foreground)]">
         {trainerName ? `${trainerName}! ` : ""}A wild {foeName} appeared!
-      </span>
-    </button>
+      </p>
+    </div>
   );
 }
