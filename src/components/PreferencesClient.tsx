@@ -2,7 +2,16 @@
 
 import { usePreferences, setPreference } from "@/lib/preferences";
 import type { Theme, TextScale } from "@/lib/preferences";
+import type { TrainerAvatar } from "@/lib/profile";
 import AccountDataSection from "@/components/AccountDataSection";
+import TrainerProfileSection from "@/components/TrainerProfileSection";
+
+type EditableProfile = {
+  currentName: string | null;
+  currentAvatar: TrainerAvatar | null;
+  currentNickname: string | null;
+  palName: string;
+};
 
 function ToggleRow({
   label,
@@ -35,20 +44,24 @@ function ToggleRow({
 
 export default function PreferencesClient({
   email,
+  profile,
 }: {
   email: string | null;
+  profile: EditableProfile | null;
 }) {
   const prefs = usePreferences();
 
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="font-pixel text-display">Preferences</h1>
+        <h1 className="font-pixel text-display">Options</h1>
         <p className="mt-3 max-w-xl text-body text-[var(--foreground-muted)]">
-          These settings apply everywhere, including inside battles, and are
-          saved on this device.
+          Your trainer is saved to your account; everything below it is saved
+          on this device and applies everywhere, including inside battles.
         </p>
       </div>
+
+      {profile && <TrainerProfileSection {...profile} />}
 
       <section>
         <h2 className="mb-3 font-pixel text-title">Theme</h2>

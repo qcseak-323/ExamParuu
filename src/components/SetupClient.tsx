@@ -17,7 +17,10 @@ import { useBattleTransition } from "@/components/battle/BattleTransition";
 
 /**
  * First-run profile setup, played as a conversation with the professor and
- * walked as a four-step wizard: trainer → Paruu → name → route.
+ * walked as a five-step wizard: trainer → Paruu → its nickname → your name
+ * → route. The two naming steps sit next to each other on purpose: the
+ * question "what do I call this thing" is asked once about the creature and
+ * once about you, and separating them is what stops the two being confused.
  *
  * Choosing no longer jumps straight to the next step. A pick fills the card
  * gold and stays there, and `Next` carries you forward — so a mis-tap is
@@ -29,7 +32,7 @@ import { useBattleTransition } from "@/components/battle/BattleTransition";
  * again, rather than being let into the app with a starter but no route.
  */
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
 
 const INTRO_LINES = [
   "Hello there! Welcome to the world of certification.",
@@ -39,6 +42,7 @@ const INTRO_LINES = [
 ];
 
 const MAX_NAME_LENGTH = 14;
+const MAX_NICKNAME_LENGTH = 14;
 
 /**
  * The route we nudge a brand-new trainer towards. AZ-900 is the broadest
@@ -67,19 +71,23 @@ export default function SetupClient({ email }: { email: string | null }) {
     null,
   );
   const [palType, setPalType] = useState<PalType | null>(null);
+  const [nickname, setNickname] = useState("");
   const [trainerName, setTrainerName] = useState("");
   const [priorityExam, setPriorityExam] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const playableExams = catalog.filter((exam) => exam.hasContent);
   const avatarOption = TRAINER_AVATARS.find((a) => a.id === trainerAvatar);
-  const species = palType ? PAL_SPECIES[palType] : null;
+  /** The chosen starter's base form — what the nickname step is naming. */
+  const starter = palType ? PAL_SPECIES[palType].stages[0] : null;
 
   /** Whether the current step has been answered. */
   function isStepReady(which: number): boolean {
     if (which === 1) return trainerAvatar !== null;
     if (which === 2) return palType !== null;
-    if (which === 3) return trainerName.trim().length > 0;
+    // The nickname is optional — a blank one means "call it what it is".
+    if (which === 3) return true;
+    if (which === 4) return trainerName.trim().length > 0;
     return priorityExam !== null;
   }
 
@@ -91,6 +99,7 @@ export default function SetupClient({ email }: { email: string | null }) {
     const result = await completeProfileSetup({
       trainerAvatar,
       palType,
+      nickname,
       trainerName,
       priorityExam,
     });
@@ -289,8 +298,56 @@ export default function SetupClient({ email }: { email: string | null }) {
         </>
       )}
 
-      {/* Step 3 — the trainer's own name --------------------------------- */}
-      {step === 3 && (
+      {/* Step 3 — what the Paruu gets called ----------------------------- */}
+      {step === 3 && starter && (
+        <>
+          <DialogueFrame>
+            <span className="dialogue-tab">Prof. Sequel</span>
+            <div className="flex items-center gap-3">
+              <ProfessorPortrait />
+              <p className="dialogue-text flex-1">
+                {starter.name} is yours. Would you like to give it a nickname?
+              </p>
+            </div>
+          </DialogueFrame>
+
+          <div className="flex flex-wrap items-center gap-5">
+            <div className="pal-idle shrink-0">
+              <PalSprite sheet={starter.image} size={96} />
+            </div>
+            <div className="pixel-panel grid min-w-[16rem] flex-1 gap-2 p-5">
+              <label
+                htmlFor="pal-nickname"
+                className="text-caption font-semibold uppercase tracking-[0.1em] text-[var(--foreground-muted)]"
+              >
+                Nickname{" "}
+                <span className="font-normal normal-case tracking-normal">
+                  (optional)
+                </span>
+              </label>
+              <input
+                id="pal-nickname"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") goNext();
+                }}
+                maxLength={MAX_NICKNAME_LENGTH}
+                autoFocus
+                placeholder={starter.name}
+                className="min-h-11 w-full rounded-md bg-[var(--panel-raised)] px-3 py-2 text-body"
+                style={{ border: "2px solid var(--border)" }}
+              />
+              <p className="text-caption text-[var(--foreground-muted)]">
+                Leave it blank and it stays {starter.name}.
+              </p>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Step 4 — the trainer's own name --------------------------------- */}
+      {step === 4 && (
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
@@ -329,8 +386,8 @@ export default function SetupClient({ email }: { email: string | null }) {
         </>
       )}
 
-      {/* Step 4 — the first route ---------------------------------------- */}
-      {step === 4 && (
+      {/* Step 5 — the first route ---------------------------------------- */}
+      {step === 5 && (
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
@@ -386,7 +443,11 @@ export default function SetupClient({ email }: { email: string | null }) {
 
           {/* Everything chosen so far, so the last step is also a review. */}
           <p className="text-caption text-[var(--foreground-muted)]">
-            {[avatarOption?.label, trainerName.trim(), species?.stages[0].name]
+            {[
+              avatarOption?.label,
+              trainerName.trim(),
+              nickname.trim() || starter?.name,
+            ]
               .filter(Boolean)
               .join(" · ")}
             {email ? ` · saving to ${email}` : ""}

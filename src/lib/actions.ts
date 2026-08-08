@@ -19,10 +19,13 @@ import type {
 // the rest of the app can keep reading from one place.
 
 const MAX_TRAINER_NAME_LENGTH = 14;
+const MAX_NICKNAME_LENGTH = 14;
 
 export type ProfileSetupInput = {
   trainerAvatar: TrainerAvatar;
   palType: PalType;
+  /** What the trainer calls their Paruu. Optional — falls back to the species. */
+  nickname: string | null;
   /** The trainer's own name — goes on the trainer card. */
   trainerName: string;
   priorityExam: string;
@@ -70,14 +73,24 @@ export async function completeProfileSetup(
     };
   }
 
+  const trimmedNickname = input.nickname?.trim() ?? "";
+  if (trimmedNickname.length > MAX_NICKNAME_LENGTH) {
+    return {
+      ok: false,
+      error: `Nicknames are up to ${MAX_NICKNAME_LENGTH} characters.`,
+    };
+  }
+
   // Conditional update: only writes where setup hasn't happened yet, so a
   // double-submit or replayed request can't reassign an existing profile.
   const result = await prisma.user.updateMany({
     where: { id: userId, examPal: null },
     data: {
       examPal: input.palType,
+      examPalName: trimmedNickname || null,
       // `name` is the Auth.js column, unused until now — the trainer's own
-      // name rather than the Paruu's, which is what the setup flow asks for.
+      // name rather than the Paruu's. Both are asked for; they are not the
+      // same thing and the flow keeps them a step apart.
       name: trimmedName,
       trainerAvatar: input.trainerAvatar,
       priorityExam: input.priorityExam,
@@ -93,6 +106,71 @@ export async function completeProfileSetup(
     // trainer in the app rather than on an error screen.
     if (existing?.examPal) return { ok: true };
     return { ok: false, error: "Couldn't save your profile. Try again." };
+  }
+
+  return { ok: true };
+}
+
+export type TrainerProfileEdit = {
+  trainerName: string;
+  trainerAvatar: TrainerAvatar;
+  nickname: string | null;
+};
+
+/**
+ * Edits the identity fields of an existing profile.
+ *
+ * Setup asks for these once, and until now the only way to change them was
+ * `restartJourney`, which wipes every attempt to do it. Profiles created
+ * before the avatar and trainer-name steps existed had no way to fill them
+ * in at all. This touches identity only — nothing here feeds XP, and the
+ * starter and pinned route are deliberately not editable, since both are
+ * choices the trainer lives with (the route can be re-pinned by clearing
+ * the journey, the starter by restarting it).
+ */
+export async function updateTrainerProfile(
+  input: TrainerProfileEdit,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) return { ok: false, error: "You need to be signed in." };
+
+  if (!isTrainerAvatar(input.trainerAvatar)) {
+    return { ok: false, error: "Pick one of the trainer sprites." };
+  }
+
+  const trimmedName = input.trainerName.trim();
+  if (trimmedName.length === 0) {
+    return { ok: false, error: "Every trainer needs a name." };
+  }
+  if (trimmedName.length > MAX_TRAINER_NAME_LENGTH) {
+    return {
+      ok: false,
+      error: `Trainer names are up to ${MAX_TRAINER_NAME_LENGTH} characters.`,
+    };
+  }
+
+  const trimmedNickname = input.nickname?.trim() ?? "";
+  if (trimmedNickname.length > MAX_NICKNAME_LENGTH) {
+    return {
+      ok: false,
+      error: `Nicknames are up to ${MAX_NICKNAME_LENGTH} characters.`,
+    };
+  }
+
+  // Only edits a profile that exists. Someone who hasn't finished setup is
+  // sent through setup, which is the only place a profile is created.
+  const result = await prisma.user.updateMany({
+    where: { id: userId, examPal: { not: null } },
+    data: {
+      name: trimmedName,
+      trainerAvatar: input.trainerAvatar,
+      examPalName: trimmedNickname || null,
+    },
+  });
+
+  if (result.count === 0) {
+    return { ok: false, error: "Finish trainer setup first." };
   }
 
   return { ok: true };
