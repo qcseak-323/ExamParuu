@@ -38,8 +38,9 @@ import { useSfx } from "@/components/AudioProvider";
  * anyway and they at least get an interactive page back.
  */
 
-/** Must match the cover keyframes in globals.css. */
+/** Must match the cover/reveal keyframes in globals.css. */
 const COVER_MS = 700;
+const REVEAL_MS = 700;
 const MIN_HOLD_MS = 350;
 const MAX_HOLD_MS = 4000;
 
@@ -129,6 +130,27 @@ export default function BlackoutProvider({
     setPrevReady(ready);
     if (ready) setState((s) => (s ? { ...s, phase: "revealing" } : s));
   }
+
+  /**
+   * The reveal must not depend on `animationend` alone.
+   *
+   * Chrome throttles CSS animations in a window that is not focused, which
+   * leaves the reveal parked at currentTime 0 — `running`, but never
+   * progressing, so the event never fires. Observed on the deployed build:
+   * tab away mid-transition and you come back to a screen that is still
+   * black, permanently. Nothing about a decorative overlay is worth that.
+   *
+   * So the clear is on a timer, and `onAnimationEnd` below is only the fast
+   * path for the normal case. Whichever lands first wins. The setState is in
+   * the timer callback rather than the effect body, which is what keeps
+   * `react-hooks/set-state-in-effect` satisfied.
+   */
+  const phase = state?.phase;
+  useEffect(() => {
+    if (phase !== "revealing") return;
+    const id = setTimeout(() => setState(null), REVEAL_MS + 150);
+    return () => clearTimeout(id);
+  }, [phase]);
 
   return (
     <BlackoutCtx.Provider value={{ run }}>
