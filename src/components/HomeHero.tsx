@@ -96,6 +96,30 @@ export default function HomeHero({ tiers }: { tiers: TierSummary[] }) {
             <span className="sky-prop sky-cloud--far sky-cloud-3" />
           </div>
         )}
+
+        {/* The treeline. Unlike the sky it is NOT suppressed under reduced
+            motion — it does not move, and the mangroves are the setting
+            rather than an effect. Rendered after the sky so the near rank
+            occludes the clouds. Positions are hand-placed rather than
+            random: React Compiler's purity rule forbids Math.random() in
+            render, and a horizon that reshuffles every render would be
+            worse than one that does not. */}
+        <div className="tree-line" aria-hidden="true">
+          <span className="tree tree--far tree--c" style={{ left: "6%" }} />
+          <span className="tree tree--far tree--b" style={{ left: "17%" }} />
+          <span className="tree tree--near tree--a" style={{ left: "2%" }} />
+          <span className="tree tree--far tree--a" style={{ left: "31%" }} />
+          <span className="tree tree--near tree--c" style={{ left: "22%" }} />
+          <span className="tree tree--far tree--c" style={{ left: "45%" }} />
+          <span className="tree tree--near tree--b" style={{ left: "38%" }} />
+          <span className="tree tree--far tree--b" style={{ left: "58%" }} />
+          <span className="tree tree--near tree--c" style={{ left: "52%" }} />
+          <span className="tree tree--far tree--a" style={{ left: "71%" }} />
+          <span className="tree tree--near tree--a" style={{ left: "66%" }} />
+          <span className="tree tree--far tree--c" style={{ left: "84%" }} />
+          <span className="tree tree--near tree--b" style={{ left: "80%" }} />
+          <span className="tree tree--far tree--b" style={{ left: "94%" }} />
+        </div>
         <div className="hero-content mx-auto grid max-w-5xl items-center gap-10 px-4 pb-20 pt-8 sm:pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
           <div>
             <p className="text-label font-semibold uppercase tracking-[0.14em] text-[var(--foreground-soft)]">

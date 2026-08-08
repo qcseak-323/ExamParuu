@@ -1454,12 +1454,89 @@ button.gym-marker-hit:hover {
   margin-top: -2rem; /* main's py-8 — the sky meets the nav */
   overflow: hidden;
   background:
-    /* mangrove mounds on the horizon */
-    radial-gradient(ellipse 42% 210px at 3% 100%, var(--hero-trees-far) 0 100%, transparent 101%),
-    radial-gradient(ellipse 44% 190px at 48% 100%, var(--hero-trees) 0 100%, transparent 101%),
-    radial-gradient(ellipse 40% 200px at 98% 100%, var(--hero-trees-far) 0 100%, transparent 101%),
+    /* The bank the treeline stands on. These were tall mangrove mounds doing
+       the whole job of "there are trees here"; now that real trees stand on
+       them they are flattened to low banks, because a 200px mound behind a
+       96px tree reads as a hill eating the forest. */
+    radial-gradient(ellipse 42% 96px at 3% 100%, var(--hero-trees-far) 0 100%, transparent 101%),
+    radial-gradient(ellipse 44% 78px at 48% 100%, var(--hero-trees) 0 100%, transparent 101%),
+    radial-gradient(ellipse 40% 88px at 98% 100%, var(--hero-trees-far) 0 100%, transparent 101%),
     /* sky */
     linear-gradient(180deg, var(--hero-sky-top), var(--hero-sky-bottom));
+}
+
+/* --- The treeline ---------------------------------------------------------
+
+   Real trees along the horizon, replacing the gradient mounds that used to
+   stand in for them.
+
+   Painted after .sky-layer in the DOM and at the same z-index, so the trees
+   occlude the clouds — a cloud drifting in front of a tree that is nearer to
+   the viewer is the one thing that would give the whole flat scene away.
+
+   Depth is size plus a colour shift, not blur: blurring pixel art destroys
+   the hard pixel boundary that makes it read as pixel art at all. The far
+   rank is darkened and desaturated toward the sky, which is what aerial
+   perspective actually does. */
+.tree-line {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 200px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.tree {
+  position: absolute;
+  bottom: 0;
+  display: block;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  image-rendering: pixelated;
+}
+
+/* Near rank: full size, full colour, sitting on the bank. */
+.tree--near { width: 96px; height: 96px; }
+/* Far rank: smaller, pushed back toward the sky's value. */
+.tree--far {
+  width: 48px;
+  height: 48px;
+  filter: brightness(0.78) saturate(0.72);
+}
+
+.tree--a { background-image: url("/scenery/v1/96/tree-1.png"); }
+.tree--b { background-image: url("/scenery/v1/96/tree-2.png"); }
+.tree--c { background-image: url("/scenery/v1/96/tree-3.png"); }
+.tree--far.tree--a { background-image: url("/scenery/v1/48/tree-1.png"); }
+.tree--far.tree--b { background-image: url("/scenery/v1/48/tree-2.png"); }
+.tree--far.tree--c { background-image: url("/scenery/v1/48/tree-3.png"); }
+
+/* Storm Watch. The banks behind the trees re-ink for free because they are
+   painted from --hero-trees; the tree PNGs cannot, so without this they stay
+   at full daylight green against a #0C161E sky and glow like cut-outs. That
+   is the same defect GYM_SPRITE has on the map — hardcoded colour that does
+   not follow the weather — and the reason to catch it here is that a raster
+   scenery layer will keep reintroducing it.
+
+   Darkened rather than swapped for a second asset set: three more PNGs per
+   theme buys nothing a filter cannot do, because the change wanted is
+   uniformly "less light", not different art. The far rank composes both its
+   depth shift and the storm into one declaration, since a second filter on
+   the same element would replace rather than stack. */
+[data-theme="dark"] .tree {
+  filter: brightness(0.5) saturate(0.62);
+}
+[data-theme="dark"] .tree--far {
+  filter: brightness(0.4) saturate(0.48);
+}
+
+/* Phones: the hero is short and the copy needs the room, so only the far
+   rank survives and it sits lower. */
+@media (max-width: 640px) {
+  .tree-line { height: 120px; }
+  .tree--near { width: 64px; height: 64px; }
+  .tree--far { width: 40px; height: 40px; }
 }
 
 .hero-water-strip {

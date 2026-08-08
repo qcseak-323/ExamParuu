@@ -23,7 +23,7 @@ import { fileURLToPath } from "node:url";
 import { decodePNG, encodePNG } from "../art/lib/png.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const W = 880, BAND = 260;
+const W = 880, BAND = 300;
 
 const hex = (h) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
 
@@ -31,7 +31,7 @@ const THEMES = [
   { name: "Low Tide", top: "#9FD8DE", bottom: "#DCE8E1", trees: "#3E8455", far: "#1F4A34",
     rim: [28, 68, 80, 0.55], celestial: "sun", clouds: ["cloud-1", "cloud-2", "cloud-2"] },
   { name: "Storm Watch", top: "#0C161E", bottom: "#1B2E3B", trees: "#1F4A34", far: "#12202B",
-    rim: [6, 14, 20, 0.6], celestial: "moon", clouds: ["cloud-1.dark", "cloud-2.dark", "cloud-2.dark"] },
+    rim: [6, 14, 20, 0.6], dark: true, celestial: "moon", clouds: ["cloud-1.dark", "cloud-2.dark", "cloud-2.dark"] },
 ];
 
 const load = (name, size) =>
@@ -97,9 +97,10 @@ const bands = THEMES.map((t) => {
     }
   }
 
-  // Mangrove mounds: the same three ellipses .hero-canvas paints.
+  // The banks: the same three ellipses .hero-canvas paints, at the reduced
+  // heights the treeline needs.
   for (const [cx, rx, ry, col] of [
-    [0.03, 0.42, 110, t.far], [0.48, 0.44, 96, t.trees], [0.98, 0.40, 104, t.far],
+    [0.03, 0.42, 96, t.far], [0.48, 0.44, 78, t.trees], [0.98, 0.40, 88, t.far],
   ]) {
     const [mr, mg, mb] = hex(col);
     const ecx = cx * W, erx = rx * W;
@@ -112,6 +113,37 @@ const bands = THEMES.map((t) => {
         }
       }
     }
+  }
+
+  // The treeline, drawn before the sky props so the ordering matches the
+  // page: far rank darkened and desaturated, near rank at full colour.
+  const TREES = [
+    ["c", 0.06, 48], ["b", 0.17, 48], ["a", 0.02, 96], ["a", 0.31, 48],
+    ["c", 0.22, 96], ["c", 0.45, 48], ["b", 0.38, 96], ["b", 0.58, 48],
+    ["c", 0.52, 96], ["a", 0.71, 48], ["a", 0.66, 96], ["c", 0.84, 48],
+    ["b", 0.80, 96], ["b", 0.94, 48],
+  ];
+  const TREE_FILE = { a: "tree-1", b: "tree-2", c: "tree-3" };
+  for (const [kind, lx, size] of TREES) {
+    const img = load(TREE_FILE[kind], size);
+    let s = scaleNN(img.pixels, img.width, img.height, size, size);
+    // The same brightness()/saturate() pairs the CSS applies: depth on the
+    // far rank, and the storm on both ranks when the weather turns.
+    const [bright, sat] = t.dark
+      ? (size === 48 ? [0.4, 0.48] : [0.5, 0.62])
+      : (size === 48 ? [0.78, 0.72] : [1, 1]);
+    if (bright !== 1 || sat !== 1) {
+      s = s.slice();
+      for (let i = 0; i < s.length; i += 4) {
+        if (s[i + 3] === 0) continue;
+        const l = 0.2126 * s[i] + 0.7152 * s[i + 1] + 0.0722 * s[i + 2];
+        for (let c = 0; c < 3; c++) {
+          s[i + c] = Math.max(0, Math.min(255,
+            Math.round((l + (s[i + c] - l) * sat) * bright)));
+        }
+      }
+    }
+    blit(px, W, BAND, s, size, size, Math.round(lx * W), BAND - size);
   }
 
   // Left half bare, right half rimmed — the comparison is the point.
