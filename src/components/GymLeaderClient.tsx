@@ -274,6 +274,7 @@ export default function GymLeaderClient({
                 label: f.name,
                 hint: f.hint,
               }))}
+              selectedId={fighter.id}
               onSelect={setFighterId}
             />
           </section>

@@ -5,6 +5,7 @@ import type { Theme, TextScale } from "@/lib/preferences";
 import type { TrainerAvatar } from "@/lib/profile";
 import AccountDataSection from "@/components/AccountDataSection";
 import TrainerProfileSection from "@/components/TrainerProfileSection";
+import MenuList from "@/components/MenuList";
 
 type EditableProfile = {
   currentName: string | null;
@@ -63,23 +64,23 @@ export default function PreferencesClient({
 
       {profile && <TrainerProfileSection {...profile} />}
 
+      {/* Theme and text size are selections, so they wear the selector like
+          every other selection in the app: gold ring under the cursor, gold
+          fill on the one in force. They used to be ad-hoc button rows whose
+          "on" state was a brass fill that looked like a primary action
+          rather than a current setting. */}
       <section>
         <h2 className="mb-3 font-pixel text-title">Theme</h2>
-        <div className="flex gap-3">
-          {(["bright", "dark"] as Theme[]).map((theme) => (
-            <button
-              key={theme}
-              onClick={() => setPreference("theme", theme)}
-              className={`pixel-button rounded-md px-4 py-2 text-body capitalize ${
-                prefs.theme === theme
-                  ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
-                  : "bg-[var(--panel)]"
-              }`}
-            >
-              {theme}
-            </button>
-          ))}
-        </div>
+        <MenuList
+          ariaLabel="Choose a theme"
+          columns={2}
+          options={[
+            { id: "bright", label: "Low Tide", hint: "Bright" },
+            { id: "dark", label: "Storm Watch", hint: "Dark" },
+          ]}
+          selectedId={prefs.theme}
+          onSelect={(id) => setPreference("theme", id as Theme)}
+        />
       </section>
 
       <section className="flex flex-col gap-3">
@@ -100,21 +101,17 @@ export default function PreferencesClient({
 
       <section>
         <h2 className="mb-3 font-pixel text-title">Text size</h2>
-        <div className="flex gap-3">
-          {(["sm", "md", "lg"] as TextScale[]).map((scale) => (
-            <button
-              key={scale}
-              onClick={() => setPreference("textScale", scale)}
-              className={`pixel-button rounded-md px-4 py-2 text-body uppercase ${
-                prefs.textScale === scale
-                  ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
-                  : "bg-[var(--panel)]"
-              }`}
-            >
-              {scale}
-            </button>
-          ))}
-        </div>
+        <MenuList
+          ariaLabel="Choose a text size"
+          columns={2}
+          options={[
+            { id: "sm", label: "Small", hint: "15px" },
+            { id: "md", label: "Medium", hint: "16px" },
+            { id: "lg", label: "Large", hint: "19px" },
+          ]}
+          selectedId={prefs.textScale}
+          onSelect={(id) => setPreference("textScale", id as TextScale)}
+        />
       </section>
 
       <section className="flex flex-col gap-3">
