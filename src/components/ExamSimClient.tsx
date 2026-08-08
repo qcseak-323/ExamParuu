@@ -194,21 +194,34 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
           The Proving · {exam.code.toUpperCase()}
         </h1>
 
+        {/* The terms of the paper, as chips. They used to be a paragraph of
+            the professor's dialogue, where they were read once and forgotten. */}
+        <div className="flex flex-wrap gap-2">
+          {[
+            `${bankSize} questions`,
+            `${Math.round(totalMs / 60_000)} minutes`,
+            `${passMark} to pass`,
+            "No feedback until the end",
+          ].map((fact) => (
+            <span
+              key={fact}
+              className="rounded-md border-2 border-[var(--border)] bg-[var(--panel)] px-2 py-1 text-caption font-semibold"
+            >
+              {fact}
+            </span>
+          ))}
+        </div>
+
         <DialogueBox
           speaker="Prof. Sequel"
           portrait={<ProfessorPortrait />}
           lines={[
-            "This one isn't a training bout. The Proving runs the way the real paper runs.",
-            `${bankSize} questions. ${Math.round(totalMs / 60_000)} minutes. No hints, no explanations, no second tries mid-paper — and anything you leave unanswered when the clock ends counts against you.`,
-            `Scoring is the real scale too: 100 to 1000, with ${passMark} to pass. Pass, and you carry the ${exam.code.toUpperCase()} seal.`,
-            "Walk in when you're ready. I'll be here with the score report when you walk out.",
+            "This one runs the way the real paper runs. Unanswered questions count against you.",
+            "I'll be here with the score report when you walk out.",
           ]}
           footer={
-            <div className="flex flex-wrap gap-3">
-              <button
-                onClick={begin}
-                className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
-              >
+            <div className="flex flex-wrap items-center gap-3">
+              <button onClick={begin} className="start-button tap-target">
                 Begin the Proving ▶
               </button>
               <Link
@@ -222,9 +235,8 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
         />
 
         <p className="text-caption text-[var(--foreground-muted)]">
-          The paper draws our entire {bankSize}-question bank, weighted the way
-          Microsoft weights the real blueprint. The real exam draws from a much
-          larger pool — treat a pass here as readiness, not a guarantee.
+          A pass here means readiness, not a guarantee — the real exam draws
+          from a larger pool.
         </p>
       </div>
     );
@@ -363,20 +375,20 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
 
       <DialogueFrame>
         <span className="dialogue-tab">Prof. Sequel</span>
-        <div className="flex items-end gap-3">
+        <div className="flex items-center gap-3">
           <ProfessorPortrait />
-          <p className="flex-1 text-body">
+          <p className="dialogue-text flex-1">
             {passed
-              ? "That's a real pass, under real conditions. Book the exam while it's fresh — you're ready for the genuine article."
+              ? "A real pass, under real conditions. Book the exam while it's fresh."
               : timedOut
-                ? "The clock is half the exam. Your accuracy may be fine — your pace isn't yet. Run the dungeon for pace, then come back."
-                : "Not this time — and better to learn that here than at a testing centre. The report below says exactly where the marks went."}
+                ? "The clock is half the exam. Run the dungeon for pace, then come back."
+                : "Not this time. The report below says where the marks went."}
           </p>
         </div>
       </DialogueFrame>
 
       <section>
-        <h2 className="mb-3 font-pixel text-title">Performance by skills area</h2>
+        <h2 className="mb-3 font-pixel text-title">By skills area</h2>
         <div className="flex flex-col gap-3">
           {breakdown.map((d) => {
             const ratio = d.total === 0 ? 0 : d.correct / d.total;

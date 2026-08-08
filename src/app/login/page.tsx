@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { sendSignInLink } from "@/lib/authActions";
+import ProfessorPortrait from "@/components/ProfessorPortrait";
 
 export const metadata = { title: "Log in — ExamParuu" };
 
@@ -42,12 +44,14 @@ export default async function LoginPage({
 
   return (
     <div className="mx-auto flex max-w-sm flex-col gap-6">
-      <div>
-        <h1 className="font-pixel text-display">Log in</h1>
+      <div className="text-center">
+        <div className="flex justify-center">
+          <ProfessorPortrait />
+        </div>
+        <h1 className="font-pixel mt-2 text-display">Log in</h1>
         <p className="mt-3 text-body text-[var(--foreground-muted)]">
-          Enter your email and we&apos;ll send you a sign-in link — no password
-          needed. New here? The same link creates your trainer profile, and
-          you&apos;ll pick your first Paruu on the way in.
+          We&apos;ll email you a sign-in link — no password. New trainers pick
+          their first Paruu on the way in.
         </p>
       </div>
 
@@ -66,13 +70,17 @@ export default async function LoginPage({
           required
           className="min-h-11 rounded-md border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-body"
         />
-        <button
-          type="submit"
-          className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
-        >
+        <button type="submit" className="start-button tap-target">
           Send sign-in link
         </button>
       </form>
+
+      <p className="text-center text-caption text-[var(--foreground-muted)]">
+        Free, no paywall.{" "}
+        <Link href="/" className="underline hover:text-[var(--accent-ink)]">
+          Back to the shore
+        </Link>
+      </p>
     </div>
   );
 }

@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Instrument_Sans, Jersey_25 } from "next/font/google";
+import {
+  Geist_Mono,
+  Instrument_Sans,
+  Jersey_25,
+  Pixelify_Sans,
+} from "next/font/google";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import PreferencesEffect from "@/components/PreferencesEffect";
@@ -28,6 +33,14 @@ const jersey = Jersey_25({
   subsets: ["latin"],
 });
 
+/* The dialogue face. Jersey 25 is the display face for headings, but a whole
+   spoken line reads better in Pixelify Sans — same pixel character, rounder
+   letterforms, far more legible at the size the text window uses. */
+const pixelify = Pixelify_Sans({
+  variable: "--font-pixelify",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "ExamParuu — Microsoft Certification Practice",
   description:
@@ -42,7 +55,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${instrumentSans.variable} ${geistMono.variable} ${jersey.variable} h-full antialiased`}
+      className={`${instrumentSans.variable} ${geistMono.variable} ${jersey.variable} ${pixelify.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       {/* Deliberately a raw <script> in <head>, not next/script. It has to run

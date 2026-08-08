@@ -21,26 +21,26 @@ export default function Home() {
         {[
           {
             step: "01",
-            title: "Battle exam-style questions",
-            body: "Every correct answer lands a hit and earns XP for your companion.",
+            title: "Battle real questions",
+            body: "Correct answers land hits and earn XP.",
             glyph: "rotate-45 bg-[var(--verdant-2)]",
           },
           {
             step: "02",
-            title: "Wrong answers become lessons",
-            body: "Miss one and the explanation opens — the next question doesn't exist until you've read it.",
+            title: "Wrong answers open lessons",
+            body: "Read the lesson to unlock the next question.",
             glyph: "rounded-[3px] bg-[var(--ember-2)]",
           },
           {
             step: "03",
-            title: "Cards come back before you forget",
-            body: "Spaced-repetition flashcards resurface each fact right on schedule.",
+            title: "Cards return on schedule",
+            body: "Spaced repetition, timed before you forget.",
             glyph: "rounded-full bg-[var(--tide-2)]",
           },
           {
             step: "04",
-            title: "Walk into the exam ready",
-            body: "Your companion's level mirrors your readiness across the official skills outline. Max it out, then book the real thing.",
+            title: "Walk in ready",
+            body: "Max your companion's level, then book the real thing.",
             glyph: "rotate-45 bg-[var(--accent)]",
           },
         ].map(({ step, title, body, glyph }) => (
@@ -64,11 +64,11 @@ export default function Home() {
         ))}
       </section>
 
-      {/* Derived from the catalog so new content lists itself. The full
+      {/* The exams themselves are listed as chips in the hero; the full
           non-affiliation disclaimer lives in the global footer. */}
       <p className="prose-measure mx-auto text-center text-caption text-[var(--foreground-muted)]">
-        Free, no paywall. Email sign-in.{" "}
-        {examCodes.map((c) => c.toUpperCase()).join(" · ")}.
+        Free, no paywall. Email sign-in. Independent — not affiliated with
+        Microsoft.
       </p>
     </div>
   );

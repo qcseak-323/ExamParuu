@@ -173,15 +173,17 @@ export default function DialogueBox({
         className="cursor-pointer select-none"
         role="presentation"
       >
-        {/* items-end so a portrait stands on the box's floor beside the text. */}
-        <div className="flex items-end gap-3">
+        {/* The portrait sits centred beside the line rather than standing on
+            the floor — with a centred, larger line the two now read as one
+            band of speech. */}
+        <div className="flex items-center gap-3">
           {portrait}
           {/* aria-live announces the whole line, not the partially typed one.
               The line is set in the pixel display face at the title step —
               the smallest size the face is allowed — and centred, so the
               box reads like a game's text window rather than a paragraph. */}
           <p
-            className="min-h-[3lh] flex-1 self-center text-center font-pixel text-title"
+            className="dialogue-text min-h-[3lh] flex-1"
             aria-live="polite"
             aria-atomic="true"
           >

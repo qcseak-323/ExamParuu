@@ -142,7 +142,9 @@ export default function MenuList({
             <span
               aria-hidden="true"
               className={`font-pixel text-label leading-none ${
-                isActive && !isDisabled ? "opacity-100" : "opacity-0"
+                isActive && !isDisabled
+                  ? "selector-blink opacity-100"
+                  : "opacity-0"
               }`}
             >
               ▶

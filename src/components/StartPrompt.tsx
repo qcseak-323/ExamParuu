@@ -36,7 +36,7 @@ const CONTINUE_TO = "/catalog";
  * picking an exam.
  */
 export default function StartPrompt({
-  label = "START",
+  label = "Play",
 }: {
   label?: string;
 }) {
@@ -95,14 +95,13 @@ export default function StartPrompt({
 
   return (
     <>
-      {/* The one brass action on the screen: a single pixel-face word, big.
-          Jersey 25 at the display step — well above the face's title-step
-          floor — so the button reads like a cartridge's START screen. */}
+      {/* The one brass action on the screen: a single pixel-face word, big
+          enough that it reads like a cartridge's title screen. */}
       <button
         ref={startRef}
         type="button"
         onClick={handleStart}
-        className="start-button tap-target w-full px-12 py-2 font-pixel text-display tracking-[0.06em] sm:w-auto"
+        className="start-button start-button--word tap-target w-full sm:w-auto"
       >
         {label}
       </button>
@@ -122,11 +121,10 @@ export default function StartPrompt({
           >
             <DialogueFrame>
               <span className="dialogue-tab">Prof. Sequel</span>
-              <div className="flex items-end gap-3">
+              <div className="flex items-center gap-3">
                 <ProfessorPortrait />
-                <p id={`${emailId}-title`} className="flex-1 text-body">
-                  Before you set out — where should I send your trainer card?
-                  I&apos;ll email you a link. No password to remember.
+                <p id={`${emailId}-title`} className="dialogue-text flex-1">
+                  Where should I send your trainer card?
                 </p>
               </div>
 

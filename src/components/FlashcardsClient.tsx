@@ -139,8 +139,7 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
       <div>
         <h1 className="font-pixel text-display">Flashcards</h1>
         <p className="mt-3 max-w-xl text-body text-[var(--foreground-muted)]">
-          Click a card to flip it, then mark whether you knew it. Mastery is
-          saved on this device so you can focus on what you don&apos;t know yet.
+          Flip a card, then mark whether you knew it.
         </p>
       </div>
 
@@ -167,7 +166,7 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
             checked={onlyLearning}
             onChange={(e) => handleOnlyLearningChange(e.target.checked)}
           />
-          Only show cards I don&apos;t know yet
+          Only cards I don&apos;t know
         </label>
 
         <button
@@ -207,21 +206,21 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
             {flipped ? card.back : card.front}
           </button>
           <p className="text-caption text-[var(--foreground-muted)]">
-            Click the card to {flipped ? "hide" : "reveal"} the answer
+            Tap the card to {flipped ? "hide" : "reveal"} the answer
           </p>
 
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <button
               onClick={() => mark("learning")}
-              className="rounded-md border border-[var(--warning)] px-4 py-2 text-body font-medium text-[var(--warning)] hover:bg-[var(--warning)]/10"
+              className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium text-[var(--warning)]"
             >
               Still learning
             </button>
             <button
               onClick={() => mark("known")}
-              className="rounded-md border border-[var(--success)] px-4 py-2 text-body font-medium text-[var(--success)] hover:bg-[var(--success)]/10"
+              className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
             >
-              I knew it
+              I knew it ▶
             </button>
           </div>
         </div>

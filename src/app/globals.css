@@ -126,6 +126,13 @@
   --font-pixel: var(--font-jersey);
 }
 
+/* The gold the cursor is made of. Brighter than brass on purpose: brass is
+   hardware, gold is the thing you are pointing at. Ink on it measures ~11:1. */
+:root {
+  --gold: #ffc53d;
+  --gold-hi: #ffe08a;
+}
+
 /* --- Type scale ----------------------------------------------------------
    Display face is Jersey 25 — still pixel, but tall and legible. It never
    appears below the title step (1.5rem), so it clears the 14px floor with
@@ -160,9 +167,13 @@
    it for the body sans so no long text is ever set in a pixel font. */
 :root {
   --font-display: var(--font-pixel);
+  /* Spoken lines get Pixelify Sans — pixel character, rounder letterforms,
+     and legible at the size the text window sets them. */
+  --font-dialogue: var(--font-pixelify);
 }
 html[data-readable-font="true"] {
   --font-display: var(--font-sans);
+  --font-dialogue: var(--font-sans);
 }
 
 html[data-text-scale="sm"] {
@@ -230,6 +241,17 @@ body {
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+/* A spoken line in the text window: pixel face, big, centred. 1.75rem is
+   well clear of the 14px floor and scales with the text-size preference. */
+.dialogue-text {
+  font-family: var(--font-dialogue), var(--font-display), monospace;
+  font-size: 1.75rem;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-wrap: pretty;
 }
 
 .pixelated {
@@ -355,16 +377,44 @@ body {
     animation: dialogue-blink 900ms steps(1, end) infinite;
   }
 
-  /* The selector's gold fill: the active/selected row is a bright brass
-     plate, like the cursor row on a handheld menu. Ink text on the gold
-     gradient stays ≥5:1. */
-  .menu-item--gold {
-    background: linear-gradient(180deg, #f2c14e, var(--accent-hi));
-    color: var(--outline);
+  /* A big card that is itself the choice — the trainer avatars and the
+     starter Paruu. Hovering rings it in gold; the brass pill inside says
+     what pressing it does. */
+  .select-card {
+    position: relative;
+    background: var(--panel);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 2px 2px 0 var(--stamp);
+    cursor: pointer;
+    color: var(--foreground);
+    text-align: center;
   }
-  .menu-item--gold .text-caption,
-  .menu-item--gold [class*="foreground-muted"] {
-    color: var(--outline);
+  .select-card:hover:not(:disabled),
+  .select-card:focus-visible {
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 4px var(--gold),
+      2px 2px 0 var(--stamp);
+  }
+  .select-card:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 4px var(--gold);
+  }
+  /* The brass pill inside the card. Not a nested button — the whole card is
+     the control, so this is a label wearing the hardware. */
+  .select-card-pick {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 22px;
+    background-image: linear-gradient(180deg, var(--accent-hi), var(--accent));
+    color: var(--accent-foreground);
+    border: 2px solid var(--outline);
+    border-radius: 8px;
+    box-shadow: 2px 2px 0 var(--stamp);
+    font-weight: 600;
   }
 
   /* Menu rows: inset chart rows on the panel surface. */
@@ -382,6 +432,23 @@ body {
   .menu-item:active:not(:disabled) {
     transform: translate(2px, 2px);
     box-shadow: none;
+  }
+
+  /* The selector's gold fill: the row under the cursor is a bright gold
+     plate ringed in the same gold, like the cursor row on a handheld menu.
+     Ink on gold measures ~11:1. MUST stay after `.menu-item` — same
+     specificity, so source order is what decides which one wins. */
+  .menu-item--gold {
+    background: linear-gradient(180deg, var(--gold-hi), var(--gold));
+    color: var(--outline);
+    border-color: var(--outline);
+    box-shadow:
+      0 0 0 4px var(--gold),
+      2px 2px 0 var(--stamp);
+  }
+  .menu-item--gold .text-caption,
+  .menu-item--gold [class*="foreground-muted"] {
+    color: var(--outline);
   }
 
   /* Storm-glass meter: liquid in a tube. */
@@ -421,6 +488,17 @@ body {
   }
   .hp-fill--xp {
     background: linear-gradient(180deg, var(--tide-3), var(--tide-2));
+  }
+}
+
+/* The cursor arrow pulses rather than sitting still, so the eye finds the
+   selected row without having to read it. */
+.selector-blink {
+  animation: selector-blink 640ms steps(2, end) infinite;
+}
+@keyframes selector-blink {
+  50% {
+    opacity: 0.3;
   }
 }
 
@@ -820,6 +898,17 @@ button.gym-marker-hit:hover {
 .start-button:active {
   transform: translate(2px, 2px);
   box-shadow: none;
+}
+
+/* The one-word cartridge action. Deliberately outsized — on the landing
+   page it is the only thing to press. */
+.start-button--word {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-size: 2.75rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  min-height: 84px;
+  padding-inline: 3.5rem;
 }
 
 .start-overlay {

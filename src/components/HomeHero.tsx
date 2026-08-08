@@ -78,7 +78,7 @@ export default function HomeHero({ examCodes }: { examCodes: string[] }) {
         <div className="mx-auto grid max-w-5xl items-center gap-10 px-4 pb-20 pt-8 sm:pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
           <div>
             <p className="text-label font-semibold uppercase tracking-[0.14em] text-[var(--foreground-soft)]">
-              Free Microsoft cert prep · no paywall
+              Free Microsoft cert prep
             </p>
 
             {signedIn ? (
@@ -87,9 +87,7 @@ export default function HomeHero({ examCodes }: { examCodes: string[] }) {
                   Welcome back, trainer.
                 </h1>
                 <p className="prose-measure mt-4 text-body-lg text-[var(--foreground-muted)]">
-                  {palName} is waiting on the flats. Pick up your route where
-                  you left it — every battle is still a real practice
-                  question.
+                  {palName} is waiting on the flats.
                 </p>
               </>
             ) : (
@@ -100,15 +98,14 @@ export default function HomeHero({ examCodes }: { examCodes: string[] }) {
                   Pass the exam.
                 </h1>
                 <p className="prose-measure mt-4 text-body-lg text-[var(--foreground-muted)]">
-                  A creature-raising game where every battle is a real
-                  practice question. Correct answers land hits and level your
-                  companion — playing is revising.
+                  Every battle is a real practice question. Correct answers
+                  level your companion.
                 </p>
               </>
             )}
 
             <div className="mt-6 flex flex-wrap items-center gap-5">
-              <StartPrompt label={signedIn ? "CONTINUE" : "START"} />
+              <StartPrompt label={signedIn ? "Continue" : "Play"} />
               <Link
                 href="/catalog"
                 className="tap-target text-body font-semibold underline hover:text-[var(--accent-ink)]"
@@ -117,11 +114,7 @@ export default function HomeHero({ examCodes }: { examCodes: string[] }) {
               </Link>
             </div>
 
-            <p className="mt-3 text-caption text-[var(--foreground-soft)]">
-              No paywall · Email sign-in · {examCodes.length} exams covered
-            </p>
-
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className="mt-5 flex flex-wrap gap-2">
               {examCodes.map((code) => (
                 <span
                   key={code}
@@ -223,14 +216,12 @@ export default function HomeHero({ examCodes }: { examCodes: string[] }) {
           on the constant dark ink — ≥4.5:1 in both themes. */}
       <section className="equation-strip full-bleed">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-8 gap-y-1 px-4 py-4 text-center text-caption font-semibold uppercase tracking-[0.1em]">
-          <span className="text-[var(--verdant-3)]">
-            Correct answer = hit + XP
-          </span>
+          <span className="text-[var(--verdant-3)]">Correct = hit + XP</span>
           <span aria-hidden="true" className="opacity-40">
             ◆
           </span>
           <span className="text-[var(--ember-4)]">
-            Wrong answer = a lesson you must read
+            Wrong = a lesson you must read
           </span>
           <span aria-hidden="true" className="opacity-40">
             ◆

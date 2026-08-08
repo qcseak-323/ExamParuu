@@ -72,11 +72,10 @@ export default function CatalogClient({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="font-pixel text-display">Region map</h1>
+        <h1 className="font-pixel text-display">Dungeon</h1>
         <p className="mt-3 max-w-2xl text-body text-[var(--foreground-muted)]">
-          Six regions, one per Microsoft exam series — redrawn for the 2026
-          portfolio. Choose a region, then a dungeon inside it. Clear every
-          dungeon in a region to earn its badge.
+          Pick a region, then a dungeon. Clear every dungeon in a region for
+          its badge.
         </p>
       </div>
 
@@ -124,9 +123,9 @@ export default function CatalogClient({
 
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
-            <div className="flex items-end gap-3">
+            <div className="flex items-center gap-3">
               <ProfessorPortrait />
-              <p className="flex-1 text-body">{selected.professorLine}</p>
+              <p className="dialogue-text flex-1">{selected.professorLine}</p>
             </div>
           </DialogueFrame>
 

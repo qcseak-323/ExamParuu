@@ -19,13 +19,13 @@ export const TRAINER_AVATARS: {
     id: "boy",
     sheet: "trainer-boy",
     label: "Boy trainer",
-    hint: "Cap and satchel, ready for the tide flats",
+    hint: "Cap and satchel",
   },
   {
     id: "girl",
     sheet: "trainer-girl",
     label: "Girl trainer",
-    hint: "Storm coat and compass, ready for the mangroves",
+    hint: "Storm coat and compass",
   },
 ];
 

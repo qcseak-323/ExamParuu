@@ -52,28 +52,31 @@ export default async function ExamOverviewPage({
           {exam.summary}
         </p>
 
-        <dl className="mt-4 grid max-w-md grid-cols-2 gap-x-6 gap-y-2 text-body">
-          <dt className="text-[var(--foreground-muted)]">Duration</dt>
-          <dd>{exam.durationMinutes ? `${exam.durationMinutes} minutes` : "Not yet verified"}</dd>
-          <dt className="text-[var(--foreground-muted)]">Passing score</dt>
-          <dd>{exam.passingScore ?? "Not yet verified"}</dd>
-          <dt className="text-[var(--foreground-muted)]">Catalog verified</dt>
-          <dd>{exam.catalogVerifiedAt ?? "Not yet verified"}</dd>
-        </dl>
-
-        {exam.sourceUrl && (
-          <p className="mt-3 text-caption text-[var(--foreground-muted)]">
-            Official page:{" "}
-            <a
-              href={exam.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="underline hover:text-[var(--accent-ink)]"
-            >
-              learn.microsoft.com
-            </a>
-          </p>
-        )}
+        {/* The facts that matter, on one line instead of a definition list:
+            how much practice there is, how long the real paper runs, what it
+            takes to pass, and where the blueprint came from. */}
+        <p className="mt-3 text-caption text-[var(--foreground-muted)]">
+          {[
+            content ? `${content.questions.length} questions in the bank` : null,
+            exam.durationMinutes ? `${exam.durationMinutes}-minute Proving` : null,
+            exam.passingScore ? `${exam.passingScore} to pass` : null,
+          ]
+            .filter(Boolean)
+            .join(" · ")}
+          {exam.sourceUrl && (
+            <>
+              {" · "}
+              <a
+                href={exam.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="underline hover:text-[var(--accent-ink)]"
+              >
+                official page ↗
+              </a>
+            </>
+          )}
+        </p>
       </div>
 
       {!exam.hasContent && (
@@ -90,29 +93,21 @@ export default async function ExamOverviewPage({
         <>
           <ReviewCallout examCode={exam.code} />
 
+          {/* One line per skills area with its blueprint weight. The
+              subtopics under each used to be listed here; they belong to the
+              study guide, and this page is meant to be scanned. */}
           <section>
             <h2 className="mb-4 font-pixel text-title">Skills areas</h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {content.outline.domains.map((domain) => (
-                <div key={domain.id} className="pixel-panel p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-body font-medium">{domain.name}</h3>
-                    <span className="shrink-0 rounded bg-black/5 px-2 py-0.5 text-caption dark:bg-white/10">
-                      {domain.weight}
-                    </span>
-                  </div>
-                  {/* subtopics have been authored in every outline file since
-                      the start and rendered nowhere until now. */}
-                  {domain.subtopics.length > 0 && (
-                    <ul className="mt-2 flex flex-col gap-1 text-caption text-[var(--foreground-muted)]">
-                      {domain.subtopics.map((subtopic) => (
-                        <li key={subtopic} className="flex gap-2">
-                          <span aria-hidden="true">·</span>
-                          <span>{subtopic}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                <div
+                  key={domain.id}
+                  className="pixel-panel flex items-center justify-between gap-3 px-4 py-3"
+                >
+                  <h3 className="text-body font-medium">{domain.name}</h3>
+                  <span className="shrink-0 rounded border-2 border-[var(--border)] px-2 py-0.5 text-caption font-semibold">
+                    {domain.weight}
+                  </span>
                 </div>
               ))}
             </div>
@@ -127,8 +122,7 @@ export default async function ExamOverviewPage({
             <div className="pixel-panel flex flex-col gap-3 p-6">
               <h2 className="font-pixel text-title">Practice Mode</h2>
               <p className="text-body text-[var(--foreground-muted)]">
-                No clock. Wrong answers open a lesson on the spot, and tricky
-                vocabulary comes back as flashcards until it sticks.
+                No clock. Wrong answers open a lesson on the spot.
               </p>
               <div className="mt-auto flex flex-wrap gap-3 pt-2">
                 <Link
@@ -155,12 +149,7 @@ export default async function ExamOverviewPage({
             <div className="pixel-panel flex flex-col gap-3 p-6">
               <h2 className="font-pixel text-title">Exam Mode</h2>
               <p className="text-body text-[var(--foreground-muted)]">
-                The clock is running. The Proving replicates the real exam —
-                {exam.durationMinutes
-                  ? ` ${exam.durationMinutes} minutes,`
-                  : ""}{" "}
-                no feedback until the score report. The dungeon is a shorter
-                timed mock guarding this route.
+                The clock runs. No feedback until the score report.
               </p>
               <div className="mt-auto flex flex-wrap gap-3 pt-2">
                 <Link
@@ -179,14 +168,12 @@ export default async function ExamOverviewPage({
             </div>
           </section>
 
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href={`/exams/${exam.code}/progress`}
-              className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
-            >
-              View progress
-            </Link>
-          </div>
+          <Link
+            href={`/exams/${exam.code}/progress`}
+            className="tap-target w-fit text-caption underline hover:text-[var(--accent-ink)]"
+          >
+            View progress on this route →
+          </Link>
         </>
       )}
     </div>

@@ -116,9 +116,10 @@ export default function SetupClient({ email }: { email: string | null }) {
         )}
       </div>
 
-      {/* The three pals stay on screen from selection onwards so the dialogue
-          always has something to refer to. */}
-      {(step === "pal" || step === "palConfirm" || step === "nickname") && (
+      {/* The three pals stay on screen after the pick so the dialogue always
+          has something to refer to. The pick itself is made on the big cards
+          below, so this display doesn't render during that step. */}
+      {(step === "palConfirm" || step === "nickname") && (
         <div className="grid gap-4 sm:grid-cols-3">
           {PAL_TYPES.map((type) => {
             const candidate = PAL_SPECIES[type];
@@ -170,57 +171,44 @@ export default function SetupClient({ email }: { email: string | null }) {
         />
       )}
 
+      {/* Both picks work the same way: the professor asks, and the big cards
+          are themselves the answer. There is no second list of the same
+          options underneath — the card IS the button. */}
       {step === "avatar" && (
         <>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {TRAINER_AVATARS.map((avatar) => {
-              const isChosen = trainerAvatar === avatar.id;
-              return (
-                <div
-                  key={avatar.id}
-                  className={`pixel-panel flex flex-col items-center gap-2 p-4 text-center ${
-                    isChosen ? "ring-4 ring-[var(--accent)]" : ""
-                  }`}
-                >
-                  <PalSprite
-                    sheet={avatar.sheet}
-                    size={96}
-                    title={avatar.label}
-                  />
-                  <p className="text-body font-bold tracking-wide uppercase">
-                    {avatar.label}
-                  </p>
-                  <p className="text-caption text-[var(--foreground-muted)]">
-                    {avatar.hint}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
-            <div className="flex items-end gap-3">
+            <div className="flex items-center gap-3">
               <ProfessorPortrait />
-              <p className="flex-1 text-body">
-                Now — are you a boy, or a girl? This is how you&apos;ll appear
-                on your trainer card and out on the Belt.
+              <p className="dialogue-text flex-1">
+                Are you a boy, or a girl? This is how you&apos;ll appear out on
+                the Belt.
               </p>
             </div>
           </DialogueFrame>
 
-          <MenuList
-            ariaLabel="Choose your trainer"
-            options={TRAINER_AVATARS.map((avatar) => ({
-              id: avatar.id,
-              label: avatar.label,
-              hint: avatar.hint,
-            }))}
-            onSelect={(id) => {
-              setTrainerAvatar(id as TrainerAvatar);
-              setStep("pal");
-            }}
-          />
+          <div className="grid gap-4 sm:grid-cols-2">
+            {TRAINER_AVATARS.map((avatar) => (
+              <button
+                key={avatar.id}
+                type="button"
+                onMouseEnter={() => playSfx("cursor")}
+                onClick={() => {
+                  playSfx("confirm");
+                  setTrainerAvatar(avatar.id);
+                  setStep("pal");
+                }}
+                className="select-card flex flex-col items-center gap-2 p-6"
+              >
+                <PalSprite sheet={avatar.sheet} size={96} />
+                <span className="font-pixel text-title">{avatar.label}</span>
+                <span className="text-caption text-[var(--foreground-muted)]">
+                  {avatar.hint}
+                </span>
+                <span className="select-card-pick mt-2">Choose ▶</span>
+              </button>
+            ))}
+          </div>
         </>
       )}
 
@@ -228,27 +216,49 @@ export default function SetupClient({ email }: { email: string | null }) {
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
-            <div className="flex items-end gap-3">
+            <div className="flex items-center gap-3">
               <ProfessorPortrait />
-              <p className="flex-1 text-body">
-                First — which one will it be? Take your time. This one stays
-                with you.
+              <p className="dialogue-text flex-1">
+                Which one will it be? This one stays with you.
               </p>
             </div>
           </DialogueFrame>
 
-          <MenuList
-            ariaLabel="Choose your starter Paruu"
-            options={PAL_TYPES.map((type) => ({
-              id: type,
-              label: `${PAL_SPECIES[type].stages[0].name} — ${PAL_SPECIES[type].label}`,
-              hint: PAL_SPECIES[type].tagline,
-            }))}
-            onSelect={(id) => {
-              setPalType(id as PalType);
-              setStep("palConfirm");
-            }}
-          />
+          <div className="grid gap-4 sm:grid-cols-3">
+            {PAL_TYPES.map((type) => {
+              const candidate = PAL_SPECIES[type];
+              const [first] = candidate.stages;
+              return (
+                <button
+                  key={type}
+                  type="button"
+                  onMouseEnter={() => playSfx("cursor")}
+                  onClick={() => {
+                    playSfx("confirm");
+                    setPalType(type);
+                    setStep("palConfirm");
+                  }}
+                  className="select-card flex flex-col items-center gap-2 p-6"
+                >
+                  <PalSprite sheet={first.image} size={96} />
+                  <span className="font-pixel text-title">{first.name}</span>
+                  <span aria-hidden="true" className="flex gap-1">
+                    {(["a", "b", "c", "d"] as const).map((k) => (
+                      <span
+                        key={k}
+                        className="h-[11px] w-[11px] rounded-[3px]"
+                        style={{ background: candidate.palette[k] }}
+                      />
+                    ))}
+                  </span>
+                  <span className="text-caption text-[var(--foreground-muted)]">
+                    {candidate.tagline}
+                  </span>
+                  <span className="select-card-pick mt-2">Choose ▶</span>
+                </button>
+              );
+            })}
+          </div>
         </>
       )}
 
@@ -256,12 +266,11 @@ export default function SetupClient({ email }: { email: string | null }) {
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
-            <div className="flex items-end gap-3">
+            <div className="flex items-center gap-3">
               <ProfessorPortrait />
-              <div className="flex-1">
-                <p className="text-body">{species.description}</p>
-                <p className="mt-3 text-body">So, you want {starter.name}?</p>
-              </div>
+              {/* The menu below already asks the question — the professor
+                  just says what the creature is. */}
+              <p className="dialogue-text flex-1">{species.description}</p>
             </div>
           </DialogueFrame>
 
@@ -288,10 +297,10 @@ export default function SetupClient({ email }: { email: string | null }) {
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
-            <div className="flex items-end gap-3">
+            <div className="flex items-center gap-3">
               <ProfessorPortrait />
-              <p className="flex-1 text-body">
-                {starter.name} is yours. Would you like to give it a nickname?
+              <p className="dialogue-text flex-1">
+                {starter.name} is yours. A nickname?
               </p>
             </div>
           </DialogueFrame>
@@ -333,16 +342,14 @@ export default function SetupClient({ email }: { email: string | null }) {
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
-            <div className="flex items-end gap-3">
+            <div className="flex items-center gap-3">
               <ProfessorPortrait />
               <div className="flex-1">
-                <p className="text-body">
-                  Now then. How much ground have you covered with Microsoft
-                  certification exams so far?
+                <p className="dialogue-text">
+                  How much ground have you covered so far?
                 </p>
-                <p className="mt-2 text-caption text-[var(--foreground-muted)]">
-                  Nothing is locked either way — this only changes the advice I
-                  give you.
+                <p className="mt-2 text-center text-caption text-[var(--foreground-muted)]">
+                  Nothing is locked either way — this only changes my advice.
                 </p>
               </div>
             </div>
@@ -376,15 +383,14 @@ export default function SetupClient({ email }: { email: string | null }) {
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
-            <div className="flex items-end gap-3">
+            <div className="flex items-center gap-3">
               <ProfessorPortrait />
               <div className="flex-1">
-                <p className="text-body">
-                  Last thing. Which route do you want to walk first? I&apos;ll
-                  pin it on your map — you can still visit any of the others.
+                <p className="dialogue-text">
+                  Which route first? I&apos;ll pin it on your map.
                 </p>
                 {email && (
-                  <p className="mt-2 text-caption text-[var(--foreground-muted)]">
+                  <p className="mt-2 text-center text-caption text-[var(--foreground-muted)]">
                     Saving to {email}.
                   </p>
                 )}
