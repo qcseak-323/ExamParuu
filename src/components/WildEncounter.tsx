@@ -28,8 +28,17 @@ const MIN_DELAY_MS = 25_000;
 const MAX_DELAY_MS = 70_000;
 const COOLDOWN_MS = 45_000;
 
-/** Battle surfaces where a wild question must never interrupt. */
-const BATTLE_SEGMENTS = /\/(quiz|gym|exam)(\/|$)/;
+/**
+ * Surfaces where a wild question must never interrupt.
+ *
+ * `path` is here for a different reason than the battle routes. A learning
+ * path already interrupts you on purpose — a checkpoint every few cards is
+ * the whole mechanic — so a timed wild question landing on top of one is two
+ * interruptions competing, and the drag-and-drop formats are precisely the
+ * ones a clock in the corner makes unusable. Observed on production: a wild
+ * question opened over an in-progress match grid.
+ */
+const BATTLE_SEGMENTS = /\/(quiz|gym|exam|path)(\/|$)/;
 
 function timeLimitMs(examCode: string): number {
   const level = getCatalogEntry(examCode)?.msLevel;

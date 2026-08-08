@@ -152,7 +152,7 @@ export default function LearningPathClient({
             label: m.title,
             hint: moduleIsDone(events, examCode, m)
               ? "✓ done"
-              : `${m.cardIds.length} cards`,
+              : `${m.cardIds.length} card${m.cardIds.length === 1 ? "" : "s"}`,
             disabled: m.cardIds.length === 0,
           }))}
           onSelect={(moduleId) =>
