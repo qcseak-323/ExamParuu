@@ -43,7 +43,10 @@ export default function BattleEntrance({
   fighter: Fighter;
   trainerAvatar: string | null;
   trainerName: string | null;
-  /** The wild opponent, named the way the battle scene names it. */
+  /**
+   * The opponent as a sentence fragment — this goes after "A wild", so pass
+   * "DP-600", never the HP bar's "WILD DP-600" nameplate.
+   */
   foeName: string;
   onDone: () => void;
 }) {

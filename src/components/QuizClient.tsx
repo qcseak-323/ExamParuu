@@ -465,12 +465,30 @@ export default function QuizClient({
     );
   }
 
+  /**
+   * The HP bar's label, which is shouty and carries its own "WILD" because it
+   * is a nameplate, not a sentence.
+   */
   const foeName =
     domainFilter === REVIEW_FILTER
       ? "YOUR WEAK SPOTS"
       : domainFilter === "all"
         ? `WILD ${examCode.toUpperCase()}`
         : `WILD ${getDomainName(examCode, domainFilter).toUpperCase()}`;
+
+  /**
+   * The same opponent as something you can put in a sentence. The entrance
+   * banner says "A wild ___ appeared!", and handing it `foeName` produced
+   * "A wild WILD DP-600 appeared!" on production. Built from the same source
+   * rather than by stripping a prefix off the label — the label is free to
+   * change its shouting without silently breaking the sentence.
+   */
+  const foeSubject =
+    domainFilter === REVIEW_FILTER
+      ? "weak spot"
+      : domainFilter === "all"
+        ? examCode.toUpperCase()
+        : getDomainName(examCode, domainFilter);
 
   // --- Setup ---------------------------------------------------------------
 
@@ -595,7 +613,7 @@ export default function QuizClient({
           fighter={fighter}
           trainerAvatar={trainerAvatar}
           trainerName={trainerName}
-          foeName={foeName}
+          foeName={foeSubject}
           onDone={() => startBattle(pending.only, pending.count)}
         />
         {transitionOverlay}
