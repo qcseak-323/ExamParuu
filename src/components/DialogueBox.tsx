@@ -179,9 +179,10 @@ export default function DialogueBox({
         <div className="flex items-center gap-3">
           {portrait}
           {/* aria-live announces the whole line, not the partially typed one.
-              The line is set in the pixel display face at the title step —
-              the smallest size the face is allowed — and centred, so the
-              box reads like a game's text window rather than a paragraph. */}
+              The line is set in the pixel face at --dialogue-size (26/28/34px
+              across the text-size preference, always a whole number of pixels
+              so the face stays on its grid) and centred, so the box reads like
+              a game's text window rather than a paragraph. */}
           <p
             className="dialogue-text min-h-[3lh] flex-1"
             aria-live="polite"

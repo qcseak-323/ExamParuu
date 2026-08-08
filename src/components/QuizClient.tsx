@@ -225,21 +225,13 @@ export default function QuizClient({
   );
 
   /**
-   * `?wild=5` — how the setup wizard hands off. A new trainer's first act
-   * should be a battle, not another menu, so this route skips the setup phase
-   * entirely and opens on the encounter.
-   *
-   * Read as a plain derivation, not in an effect: `useState` below takes it as
-   * an initial value, and a battle that auto-starts from an effect would have
-   * to setState in one, which the React Compiler rules forbid.
+   * Practice mode always opens on its setup phase. It used to accept `?wild=N`
+   * from the setup wizard and skip straight into an auto-started battle, but
+   * that staged a *wild* encounter inside practice mode — the one place wild
+   * questions are never supposed to appear (WildEncounter's BATTLE_SEGMENTS).
+   * Setup now opens the learning path instead and this was its only caller.
    */
-  const wildRequest = Number(searchParams.get("wild"));
-  const wildCount =
-    Number.isInteger(wildRequest) && wildRequest > 0 && wildRequest <= 50
-      ? wildRequest
-      : null;
-
-  const [phase, setPhase] = useState<Phase>(wildCount ? "entering" : "setup");
+  const [phase, setPhase] = useState<Phase>("setup");
   /**
    * What the encounter now playing is going to draw, held across the entrance
    * so the questions aren't shuffled until the beat is over. `only` is the
@@ -248,7 +240,7 @@ export default function QuizClient({
   const [pending, setPending] = useState<{
     only: Question[] | null;
     count: number | null;
-  }>({ only: null, count: wildCount });
+  }>({ only: null, count: null });
   const [domainFilter, setDomainFilter] = useState<string>(initialDomain);
   const [countChoice, setCountChoice] =
     useState<(typeof COUNT_OPTIONS)[number]>(10);
@@ -324,7 +316,8 @@ export default function QuizClient({
   //
   // `only` runs a battle against a specific set — used by the redemption round,
   // which re-fights exactly the questions just missed. `forcedCount` overrides
-  // the length picker, which is how `?wild=5` gets a five-question run.
+  // the length picker; `?wild=N` was its only caller and is gone, so it is
+  // currently always null and kept as the seam for a fixed-length battle.
   function startBattle(only: Question[] | null, forcedCount: number | null) {
     const wanted =
       forcedCount ??

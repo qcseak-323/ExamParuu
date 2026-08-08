@@ -167,23 +167,51 @@
    it for the body sans so no long text is ever set in a pixel font. */
 :root {
   --font-display: var(--font-pixel);
-  /* Spoken lines get Pixelify Sans — pixel character, rounder letterforms,
-     and legible at the size the text window sets them. */
-  --font-dialogue: var(--font-pixelify);
+  /* Spoken lines get the same pixel face as headings — one pixel face in the
+     app, not two. What makes it readable as a whole sentence rather than a
+     heading is the sizing and tracking below, not a different family. */
+  --font-dialogue: var(--font-pixel);
 }
 html[data-readable-font="true"] {
   --font-display: var(--font-sans);
   --font-dialogue: var(--font-sans);
 }
 
+/* Dialogue is the one size in this file quoted in px rather than rem, and it
+   is deliberate. A pixel face only renders crisply when its computed size is a
+   whole number of CSS pixels; 1.75rem against these three roots gives
+   26.25 / 28 / 33.25px, so two of the three scales resampled every stem and
+   the text window read as blurry at exactly the size it is meant to be read
+   at. These three values are the same steps rounded onto the grid — the
+   text-size preference is still honoured, it just stops landing between
+   pixels. The :root value is the md default, in case the pre-paint script in
+   lib/preferencesScript.ts ever fails to set the attribute. */
+:root {
+  --dialogue-size: 28px;
+}
 html[data-text-scale="sm"] {
   font-size: 15px;
+  --dialogue-size: 26px;
 }
 html[data-text-scale="md"] {
   font-size: 16px;
+  --dialogue-size: 28px;
 }
 html[data-text-scale="lg"] {
   font-size: 19px;
+  --dialogue-size: 34px;
+}
+
+/* The one combination that runs away: Large text on a phone. 34px centred in a
+   343px frame pushed a long line from seven to eight rows and the frame from
+   342px to 420px — the box stops being a text window and becomes the page.
+   30px is still comfortably above the md step, and still on the pixel grid.
+   Only --dialogue-size is clamped; the root stays 19px so every other piece of
+   text keeps the size the trainer asked for. */
+@media (max-width: 430px) {
+  html[data-text-scale="lg"] {
+    --dialogue-size: 30px;
+  }
 }
 
 /* High contrast — same weather, harder ink. Mirrors the design source. */
@@ -243,13 +271,17 @@ body {
   text-transform: uppercase;
 }
 
-/* A spoken line in the text window: pixel face, big, centred. 1.75rem is
-   well clear of the 14px floor and scales with the text-size preference. */
+/* A spoken line in the text window: pixel face, big, centred. --dialogue-size
+   is 26/28/34px across the text-size preference, always far clear of the 14px
+   floor. The tracking and leading are looser than a heading's because Jersey 25
+   is condensed and single-weight — with no bolder cut to reach for, space
+   between the letters and between the lines is the whole legibility budget for
+   a full sentence. */
 .dialogue-text {
-  font-family: var(--font-dialogue), var(--font-display), monospace;
-  font-size: 1.75rem;
-  line-height: 1.3;
-  letter-spacing: 0.02em;
+  font-family: var(--font-dialogue), var(--font-display), sans-serif;
+  font-size: var(--dialogue-size);
+  line-height: 1.4;
+  letter-spacing: 0.045em;
   text-align: center;
   text-wrap: pretty;
 }

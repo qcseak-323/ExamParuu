@@ -118,7 +118,7 @@ export default function PreferencesClient({
         <h2 className="font-pixel text-title">Accessibility</h2>
         <ToggleRow
           label="Readable font everywhere"
-          description="Replaces the pixel display font in headings and navigation with the regular sans-serif font."
+          description="Replaces the pixel font everywhere it appears — headings, navigation, and every line of character dialogue — with the regular sans-serif font."
           checked={prefs.readableFont}
           onChange={(v) => setPreference("readableFont", v)}
         />

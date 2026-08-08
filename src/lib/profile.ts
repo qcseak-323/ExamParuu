@@ -82,21 +82,21 @@ export const FAMILIARITY_OPTIONS: {
     label: "Fundamental",
     hint: "New to this series",
     response:
-      "Then we start at the shoreline. Read a lesson before you battle it and the questions will feel far less strange.",
+      "Then we start at the shoreline. Take the paths in the order they're listed and read every module — the checkpoints will make the words stick.",
   },
   {
     id: "intermediate",
     label: "Intermediate",
     hint: "I've worked with it before",
     response:
-      "Good — the vocabulary won't slow you down. Battle first, then let the missed-question review find your gaps.",
+      "Good — the vocabulary won't slow you down. Start with the path whose title you're least sure of; the checkpoints will tell you soon enough if you were right.",
   },
   {
     id: "advanced",
     label: "Advanced",
     hint: "I know this series well",
     response:
-      "Then you know the drill. Go straight to full-length battles and treat anything under 70% as a topic to revisit.",
+      "Then you know the drill. Use the checkpoints as a survey rather than a lesson, and treat any path you can't clear cleanly as a topic to revisit.",
   },
 ];
 

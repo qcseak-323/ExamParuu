@@ -41,15 +41,22 @@ import { useBattleTransition } from "@/components/battle/BattleTransition";
  * who abandons setup halfway has no profile at all and gets the whole flow
  * again, rather than being let into the app with a starter but no route.
  *
- * "Set sail" does not land on the map. It saves, blacks out, and drops the
- * trainer straight into a five-question wild battle on the route they picked
- * — the first thing a new trainer does is fight, not read a menu.
+ * "Set sail" does not land on the map. It saves, blacks out, and opens the
+ * learning path for the route they picked — the taught mode, not a menu of
+ * modes and not a battle.
+ *
+ * It used to hand off to a five-question wild battle (`/quiz?wild=5`). That
+ * was a wild encounter staged inside practice mode, which is the one place
+ * wild questions are supposed never to appear — see WildEncounter's
+ * BATTLE_SEGMENTS. A trainer who has just told us how well they know this
+ * series should be shown where the teaching is, not thrown at the bank.
+ *
+ * It lands on the path *picker*, not inside a path. Familiarity still gates
+ * nothing (lib/profile.ts) — it chooses Prof. Sequel's wording on the way out,
+ * and the trainer chooses where to start.
  */
 
 const TOTAL_STEPS = 6;
-
-/** Length of the wild battle that setup hands off to. */
-const FIRST_BATTLE_QUESTIONS = 5;
 
 const INTRO_LINES = [
   "Hello there! Welcome to the world of certification.",
@@ -145,9 +152,7 @@ export default function SetupClient({ email }: { email: string | null }) {
     // finished here, so the dark is covering a navigation and nothing else.
     // `saving` stays true through it, which keeps the footer disabled.
     runTransition(() => {
-      router.replace(
-        `/exams/${priorityExam}/quiz?wild=${FIRST_BATTLE_QUESTIONS}`,
-      );
+      router.replace(`/exams/${priorityExam}/path`);
       router.refresh();
     });
   }
@@ -534,7 +539,7 @@ export default function SetupClient({ email }: { email: string | null }) {
 
           {/* The answer earns a reply rather than just a filled card — this
               is a conversation, and it is the last thing said before the
-              screen goes dark on the first battle. */}
+              screen goes dark on the learning path. */}
           {familiarityOption && (
             <DialogueFrame>
               <span className="dialogue-tab">Prof. Sequel</span>
@@ -545,8 +550,7 @@ export default function SetupClient({ email }: { email: string | null }) {
                     production rendered "…find your gaps.Now — something's". */}
                 <p className="dialogue-text flex-1">
                   {familiarityOption.response}{" "}
-                  Now — something&apos;s rustling in the grass. Let&apos;s see
-                  what you can do.
+                  Come on — I&apos;ll show you the way in.
                 </p>
               </div>
             </DialogueFrame>

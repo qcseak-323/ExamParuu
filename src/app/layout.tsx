@@ -1,10 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Geist_Mono,
-  Instrument_Sans,
-  Jersey_25,
-  Pixelify_Sans,
-} from "next/font/google";
+import { Geist_Mono, Instrument_Sans, Jersey_25 } from "next/font/google";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import PreferencesEffect from "@/components/PreferencesEffect";
@@ -16,8 +11,10 @@ import { PREFERENCES_INIT_SCRIPT } from "@/lib/preferencesScript";
 import "./globals.css";
 
 /* The Monsoon Belt faces: Instrument Sans for body, Jersey 25 as the pixel
-   display face — still pixel, but tall enough to hold up at every size it
-   is allowed to appear at (nothing below the title step). */
+   face — it carries both headings and spoken dialogue, so there is exactly one
+   pixel face in the app. It is tall enough to hold up at every size it is
+   allowed to appear at: nothing below the title step in a heading, and
+   dialogue sets it larger still (--dialogue-size, globals.css). */
 const instrumentSans = Instrument_Sans({
   variable: "--font-instrument",
   subsets: ["latin"],
@@ -31,14 +28,6 @@ const geistMono = Geist_Mono({
 const jersey = Jersey_25({
   variable: "--font-jersey",
   weight: "400",
-  subsets: ["latin"],
-});
-
-/* The dialogue face. Jersey 25 is the display face for headings, but a whole
-   spoken line reads better in Pixelify Sans — same pixel character, rounder
-   letterforms, far more legible at the size the text window uses. */
-const pixelify = Pixelify_Sans({
-  variable: "--font-pixelify",
   subsets: ["latin"],
 });
 
@@ -56,7 +45,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${instrumentSans.variable} ${geistMono.variable} ${jersey.variable} ${pixelify.variable} h-full antialiased`}
+      className={`${instrumentSans.variable} ${geistMono.variable} ${jersey.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       {/* Deliberately a raw <script> in <head>, not next/script. It has to run
