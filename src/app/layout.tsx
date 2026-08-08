@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import PreferencesEffect from "@/components/PreferencesEffect";
 import AuthProvider from "@/components/AuthProvider";
 import AudioProvider from "@/components/AudioProvider";
+import BlackoutProvider from "@/components/battle/BlackoutProvider";
 import ProgressSync from "@/components/ProgressSync";
 import { PREFERENCES_INIT_SCRIPT } from "@/lib/preferencesScript";
 import "./globals.css";
@@ -71,13 +72,17 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <AuthProvider>
           <AudioProvider>
-            <PreferencesEffect />
-            <ProgressSync />
-            <Nav />
-            <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
-              {children}
-            </main>
-            <Footer />
+            {/* Above the router on purpose: the blackout has to outlive the
+                page it is covering, or it dies mid-navigation. */}
+            <BlackoutProvider>
+              <PreferencesEffect />
+              <ProgressSync />
+              <Nav />
+              <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
+                {children}
+              </main>
+              <Footer />
+            </BlackoutProvider>
           </AudioProvider>
         </AuthProvider>
       </body>

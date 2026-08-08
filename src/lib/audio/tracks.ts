@@ -376,8 +376,8 @@ const CUE_FLUTTER: Track = {
 
 /**
  * The heaviest of the three: one note hammered at a doubling rate under a
- * falling bass. Pairs with the stagger blackout, whose false start lands on
- * the second toll.
+ * falling bass. Pairs with the dissolve blackout — the heaviest build under
+ * the plainest cover, so the weight is all in the ear.
  */
 const CUE_TOLL: Track = {
   bpm: 240,

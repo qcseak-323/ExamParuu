@@ -617,21 +617,24 @@ body {
 }
 
 /* --- Blackout transition ---------------------------------------------------
-   The stage-change beat: the screen goes to black while an intensifying cue
-   builds underneath, the next stage is swapped in behind the dark, and the
-   dark lifts on it. Three variants, chosen at random per transition (see
-   useBattleTransition) — the shape of the dark differs, the timing does not.
+   Cover, hold, reveal — three phases, driven by `data-phase` on the overlay
+   rather than by one fixed-length keyframe.
 
-   All three run 2000ms and are fully black between 28% and 64%, which is the
-   window the caller swaps the stage in. Anything that changes those numbers
-   has to change BLACKOUT_MS and BLACKOUT_DARK_MS in BattleTransition.tsx too.
+   That split is the fix for two reported bugs with a single cause: the dark
+   used to be a timed animation racing a navigation of unknown length, so a
+   fast page commit cut it short (a flash) and a slow one let it expire over
+   the page it was supposed to be leaving. The hold has no duration here; it
+   ends when BlackoutProvider says the next screen is ready.
 
-   Reduced motion collapses every variant to nothing via the global animation
-   kill at the foot of this file; the hook shortens its own timers to match,
-   so the stage still changes — just without the theatre.
+   None of the three variants reverses direction. An earlier one deliberately
+   let the dark grab, release, then take the screen, which read as flickering
+   rather than as tension — so every variant now moves one way only: onto the
+   screen, then off it.
 
-   #04090e is deliberately a literal and not a token: this is the absence of
-   the screen, and it must not flip with the theme. */
+   COVER_MS in BlackoutProvider must match the cover durations below.
+
+   #04090e is deliberately a literal, not a token: this is the absence of the
+   screen and it must not flip with the theme. */
 .blackout {
   position: fixed;
   inset: 0;
@@ -648,18 +651,24 @@ body {
   right: 0;
   height: 0;
   background: #04090e;
-  animation: blackout-blinds 2000ms steps(12, end) forwards;
 }
-.blackout--blinds .blackout-band--top {
-  top: 0;
+.blackout--blinds .blackout-band--top { top: 0; }
+.blackout--blinds .blackout-band--bottom { bottom: 0; }
+.blackout--blinds[data-phase="covering"] .blackout-band {
+  animation: blinds-in 700ms steps(8, end) forwards;
 }
-.blackout--blinds .blackout-band--bottom {
-  bottom: 0;
+.blackout--blinds[data-phase="holding"] .blackout-band { height: 51%; }
+.blackout--blinds[data-phase="revealing"] .blackout-band {
+  height: 51%;
+  animation: blinds-out 700ms steps(8, end) forwards;
 }
-@keyframes blackout-blinds {
-  0% { height: 0; }
-  28%, 64% { height: 51%; }
-  100% { height: 0; }
+@keyframes blinds-in {
+  from { height: 0; }
+  to { height: 51%; }
+}
+@keyframes blinds-out {
+  from { height: 51%; }
+  to { height: 0; }
 }
 
 /* Iris — a circle closes to a point. The dark is the box-shadow spreading
@@ -669,72 +678,54 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 260vmax;
-  height: 260vmax;
+  width: 0;
+  height: 0;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   box-shadow: 0 0 0 100vmax #04090e;
-  animation: blackout-iris 2000ms steps(12, end) forwards;
 }
-@keyframes blackout-iris {
-  0% { width: 260vmax; height: 260vmax; }
-  28%, 64% { width: 0; height: 0; }
-  100% { width: 260vmax; height: 260vmax; }
+.blackout--iris[data-phase="covering"] .blackout-iris {
+  animation: iris-in 700ms steps(8, end) forwards;
+}
+.blackout--iris[data-phase="holding"] .blackout-iris {
+  width: 0;
+  height: 0;
+}
+.blackout--iris[data-phase="revealing"] .blackout-iris {
+  animation: iris-out 700ms steps(8, end) forwards;
+}
+@keyframes iris-in {
+  from { width: 260vmax; height: 260vmax; }
+  to { width: 0; height: 0; }
+}
+@keyframes iris-out {
+  from { width: 0; height: 0; }
+  to { width: 260vmax; height: 260vmax; }
 }
 
-/* Stagger — the dark grabs once, lets go, then takes the screen. Exactly one
-   false start on purpose: two would put the flash rate over three per second,
-   which is the line photosensitivity guidance draws. */
-.blackout--stagger .blackout-stagger {
+/* Dissolve — a straight stepped fade. Replaces a variant that used to flash
+   once before committing; see the note at the top. */
+.blackout--dissolve .blackout-dissolve {
   position: absolute;
   inset: 0;
   background: #04090e;
   opacity: 0;
-  animation: blackout-stagger 2000ms steps(1, end) forwards;
 }
-@keyframes blackout-stagger {
-  0%, 5% { opacity: 0; }
-  6%, 14% { opacity: 0.8; }
-  15%, 24% { opacity: 0; }
-  28%, 64% { opacity: 1; }
-  65%, 88% { opacity: 0.5; }
-  100% { opacity: 0; }
+.blackout--dissolve[data-phase="covering"] .blackout-dissolve {
+  animation: dissolve-in 700ms steps(6, end) forwards;
 }
-
-/* --- Battle attack effects -------------------------------------------------
-   A bolt flies from the pal (bottom-left) to the foe (top-right). Colour
-   and shape come from the attacker's line; count and size from its form —
-   base, super, ultimate. */
-.attack-bolt {
-  position: absolute;
-  z-index: 6;
-  left: 18%;
-  bottom: 26%;
-  border: 2px solid var(--outline);
-  pointer-events: none;
-  opacity: 0;
-  animation: attack-fly 480ms steps(10, end) forwards;
+.blackout--dissolve[data-phase="holding"] .blackout-dissolve { opacity: 1; }
+.blackout--dissolve[data-phase="revealing"] .blackout-dissolve {
+  opacity: 1;
+  animation: dissolve-out 700ms steps(6, end) forwards;
 }
-.attack-bolt--fire {
-  background: linear-gradient(180deg, var(--ember-4), var(--ember-2));
-  transform: rotate(45deg);
+@keyframes dissolve-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
-.attack-bolt--water {
-  background: linear-gradient(180deg, var(--tide-4), var(--tide-2));
-  border-radius: 50%;
-}
-.attack-bolt--wood {
-  background: linear-gradient(180deg, var(--verdant-4), var(--verdant-2));
-  border-radius: 0 50% 0 50%;
-}
-.attack-bolt--brass {
-  background: linear-gradient(180deg, var(--accent-hi), var(--accent));
-  transform: rotate(45deg);
-}
-@keyframes attack-fly {
-  0% { opacity: 1; left: 18%; bottom: 26%; }
-  85% { opacity: 1; }
-  100% { opacity: 0; left: 74%; bottom: 62%; }
+@keyframes dissolve-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 /* --- Battle entrance -------------------------------------------------------
