@@ -734,8 +734,12 @@ export default function QuizClient({
                   key={i}
                   className={`attack-bolt attack-bolt--${fighter.fx}`}
                   style={{
-                    width: `${16 + fighter.formIndex * 5}px`,
-                    height: `${16 + fighter.formIndex * 5}px`,
+                    /* 16 / 24 / 32 — each divides the 96px source exactly
+                       (6x, 4x, 3x). The old 5px step gave 16/21/26, and a
+                       fractional nearest-neighbour scale drops pixel rows
+                       unevenly, which shimmers most on a moving sprite. */
+                    width: `${16 + fighter.formIndex * 8}px`,
+                    height: `${16 + fighter.formIndex * 8}px`,
                     animationDelay: `${i * 90}ms`,
                   }}
                 />

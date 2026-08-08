@@ -11,6 +11,17 @@
     "cloud-1.dark": "v2",
     "cloud-2.dark": "v2"
   },
+  "fx": {
+    "bolt-fire": "v1",
+    "bolt-water": "v1",
+    "bolt-wood": "v1",
+    "bolt-brass": "v2",
+    "spark-hit": "v1",
+    "dust-faint": "v2",
+    "gust-1": "v1",
+    "gust-2": "v2",
+    "speed-line": "v2"
+  },
   "_dropped": {
     "cloud-3.dark": "Removed 2026-08-08. Both candidates read as jellyfish/mushrooms rather than thunderheads — the 'towering' prompt pulled the shape into a stalk with a canopy.",
     "cloud-3": "Dropped with its counterpart. A day cloud with no .dark variant falls back to itself on Storm Watch, i.e. a bright white cloud in a storm. Two fully-paired shapes beats three half-paired ones."

@@ -98,7 +98,14 @@ const sections = [...groups.entries()].map(([subject, items]) => {
   </section>`;
 }).join("\n");
 
-const html = `<title>Scenery candidates &mdash; batch 1</title>
+/* Batch label. The <title> names the artifact when this is published and the
+   tag always wins over the publish parameter, so it has to be derived — a
+   hardcoded one silently mislabels every later batch. */
+const BATCH_NO = { scenery: 1, fx: 2 };
+const heading = `${batch[0].toUpperCase()}${batch.slice(1)} candidates` +
+  (BATCH_NO[batch] ? ` &mdash; batch ${BATCH_NO[batch]}` : "");
+
+const html = `<title>${heading}</title>
 <style>
   :root {
     /* Neutrals biased to brine rather than a plain grey, and brass lifted
@@ -196,7 +203,7 @@ const html = `<title>Scenery candidates &mdash; batch 1</title>
 
 <div class="wrap">
   <header>
-    <h1>Scenery candidates &mdash; batch 1</h1>
+    <h1>${heading}</h1>
     <div class="rule"></div>
     <p>Two candidates per subject, each shown after the real 16-colour cut, on both app
     surfaces. Judge the small one: 48px is where most of these ship. Tap a card to pick it,

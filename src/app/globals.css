@@ -970,41 +970,91 @@ html[data-reduced-motion="true"] .battle-entrance::before {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
 }
+/* Drawn speed lines, trailing a runner. Was a repeating-linear-gradient of
+   flat bars; the art tapers, which is what made the gradient version read as
+   a barcode rather than as motion. 48px at 1:1 from the 48 source. */
 .speed-lines {
   position: absolute;
   right: 100%;
   margin-right: 6px;
   top: 30%;
-  width: 34px;
-  height: 40%;
-  background: repeating-linear-gradient(
-    180deg,
-    var(--ground-shadow) 0 3px,
-    transparent 3px 12px
-  );
+  width: 48px;
+  height: 48px;
+  background-image: url("/scenery/v1/48/speed-line.png");
+  background-size: 48px 48px;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
   animation: speed-flicker 0.28s steps(2, end) infinite;
 }
+
+/* The art is solid dark ink, which was right for the sand it crosses on Low
+   Tide (#E0DDD1) and invisible on Storm Watch (#081019). The gradient this
+   replaced used var(--ground-shadow) and re-inked itself for free; a raster
+   cannot, and this is the trade the whole scenery layer makes.
+
+   Flattened to a white silhouette rather than swapped for a second asset:
+   brightness(0) collapses every colour to black and invert(1) lifts it to
+   white, so the shape is preserved exactly and no second generation is
+   needed. That only works because these lines are a single flat ink — do not
+   copy it onto anything with real colour in it.
+
+   Only `filter` is set here: speed-flicker animates opacity between 0.9 and
+   0.4, so any opacity declared on this rule is dead. Checked, not assumed —
+   computed opacity read back as the keyframe's 0.9. */
+[data-theme="dark"] .speed-lines {
+  filter: brightness(0) invert(1);
+}
+
 @keyframes speed-flicker {
   0%, 100% { opacity: 0.9; transform: translateX(0); }
   50% { opacity: 0.4; transform: translateX(-6px); }
 }
-.wind-gusts::before {
+
+/* Two gusts crossing the sand, rather than one tiled band.
+   The old version was a repeating-linear-gradient sliding by exactly its own
+   period, which is seamless but reads as a moving stripe pattern. Real art
+   cannot tile that way — a gust is a discrete object, not a texture — so it
+   became two elements at different heights and speeds, the same treatment the
+   sky clouds get. ::before and ::after rather than new DOM: .wind-gusts is a
+   conditional class on .hero-sand-strip and nothing else claims its
+   pseudo-elements.
+
+   Rimmed, because gust-1 quantised to 9 colours over 8% of its canvas — it is
+   the palest asset in the set and the sand it crosses is #E0DDD1.
+
+   No animation-delay: the class is only applied when reduced motion is off,
+   but the two speeds already give the variety a delay would have. */
+.wind-gusts::before,
+.wind-gusts::after {
   content: "";
   position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    90deg,
-    transparent 0 140px,
-    rgba(255, 255, 255, 0.28) 140px 172px,
-    transparent 172px 300px
-  );
-  opacity: 0.5;
-  animation: wind-slide 2.4s linear infinite;
+  left: 0;
+  width: 48px;
+  height: 48px;
+  background-size: 48px 48px;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  opacity: 0.75;
   pointer-events: none;
+  filter:
+    drop-shadow(1px 0 0 var(--scn-rim))
+    drop-shadow(-1px 0 0 var(--scn-rim))
+    drop-shadow(0 1px 0 var(--scn-rim))
+    drop-shadow(0 -1px 0 var(--scn-rim));
 }
-@keyframes wind-slide {
-  from { transform: translateX(0); }
-  to { transform: translateX(-300px); }
+.wind-gusts::before {
+  top: 14px;
+  background-image: url("/scenery/v1/48/gust-1.png");
+  animation: gust-blow 7s linear infinite;
+}
+.wind-gusts::after {
+  top: 66px;
+  background-image: url("/scenery/v1/48/gust-2.png");
+  animation: gust-blow 11s linear infinite;
+}
+@keyframes gust-blow {
+  from { transform: translateX(-72px); }
+  to { transform: translateX(calc(100vw + 72px)); }
 }
 
 /* Idle bob, so a pal on screen looks alive rather than pasted on. */
@@ -1023,6 +1073,55 @@ html[data-reduced-motion="true"] .battle-entrance::before {
 
 /* Battle arena: ruled chart paper, not a painted sky. The creatures are the
    only saturated thing on it, which is the point. */
+/* --- The attack ----------------------------------------------------------
+
+   `.attack-bolt` was rendered by QuizClient from the day the battle shipped
+   and defined NOWHERE. The spans got inline width, height and animationDelay
+   and nothing else: no background, no position, no keyframes. Every attack in
+   the game has been invisible. This is the rule that was missing.
+
+   The element carries its own size and delay inline (count and size follow
+   the attacker's form — base, super, ultimate), so this sets everything else.
+
+   `animation-delay` is inline and `forwards` is used here, both of which the
+   sky block forbids. It is safe in this one place for a specific reason: the
+   whole group is wrapped in `hitTarget === "foe" && !prefs.reducedMotion` in
+   the JSX, so under reduced motion these elements are never rendered at all
+   and there is nothing to strand. Rule 4 rather than rule 1 — suppression,
+   not accommodation. Do not lift this pattern into CSS-gated animation. */
+
+.attack-bolt {
+  position: absolute;
+  left: 16%;
+  bottom: 18%;
+  background-image: var(--fx-bolt);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  /* steps() rather than a smooth ease: a projectile that slides continuously
+     reads as a DOM element moving, one that snaps reads as a game. */
+  animation: attack-bolt-fly 420ms steps(8, end) forwards;
+}
+
+/* Colour follows the attacker's line; brass is the guardians'. The four
+   values match `Fighter.fx` in guardians.ts exactly. */
+.attack-bolt--fire  { --fx-bolt: url("/scenery/v1/96/bolt-fire.png"); }
+.attack-bolt--water { --fx-bolt: url("/scenery/v1/96/bolt-water.png"); }
+.attack-bolt--wood  { --fx-bolt: url("/scenery/v1/96/bolt-wood.png"); }
+.attack-bolt--brass { --fx-bolt: url("/scenery/v1/96/bolt-brass.png"); }
+
+/* left/bottom rather than translate: percentages on a transform resolve
+   against the element's own box (16-32px here), while on left/bottom they
+   resolve against .battle-scene, which is the distance actually wanted. The
+   scene is only a few hundred px wide and this runs for 420ms on at most
+   three elements, so the layout cost is irrelevant. */
+@keyframes attack-bolt-fly {
+  0%   { left: 16%; bottom: 18%; opacity: 0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { left: 72%; bottom: 58%; opacity: 0; }
+}
+
 .battle-scene {
   position: relative;
   overflow: hidden;
@@ -1059,7 +1158,64 @@ html[data-reduced-motion="true"] .battle-entrance::before {
   z-index: 1;
 }
 
-/* Damage feedback: the sprite flickers, the frame jolts. */
+/* Damage feedback: the sprite flickers, the frame jolts, and now something
+   actually lands on it. `.sprite-hit` and the faint classes are applied to
+   .battle-platform, whose ::before is the ground shadow and whose ::after was
+   free — so the spark and the dust need no new DOM and no JSX change.
+
+   The sprite itself is z-index 1 (see .battle-platform > img above), so an
+   unlayered ::after would paint underneath it. Both are raised above.
+
+   Neither carries animation-delay, and both are reachable only while a
+   transient state class is applied — the JSX gates every one of these on
+   !prefs.reducedMotion, so under reduced motion they never exist. */
+.sprite-hit::after,
+.sprite-faint::after,
+.foe-faint::after {
+  content: "";
+  position: absolute;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* The impact, on the struck sprite. 48px at 1:1. */
+.sprite-hit::after {
+  top: 12%;
+  left: 44%;
+  width: 48px;
+  height: 48px;
+  background-image: url("/scenery/v1/48/spark-hit.png");
+  background-size: 48px 48px;
+  animation: spark-pop 420ms steps(4, end) forwards;
+}
+@keyframes spark-pop {
+  0% { transform: scale(0.4); opacity: 0; }
+  30% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+/* Dust where the fainting sprite lands. Declared after the spark so that on
+   a killing blow — where .sprite-hit and .foe-faint are both applied to the
+   same element — the dust wins the ::after rather than the two fighting. */
+.sprite-faint::after,
+.foe-faint::after {
+  bottom: -10px;
+  left: 50%;
+  width: 96px;
+  height: 96px;
+  margin-left: -48px;
+  background-image: url("/scenery/v1/96/dust-faint.png");
+  background-size: 96px 96px;
+  animation: dust-settle 700ms steps(6, end) forwards;
+}
+@keyframes dust-settle {
+  0% { transform: scale(0.5) translateY(6px); opacity: 0; }
+  35% { transform: scale(1) translateY(0); opacity: 0.95; }
+  100% { transform: scale(1.25) translateY(-2px); opacity: 0; }
+}
+
 .sprite-hit {
   animation: sprite-flicker 420ms steps(1, end);
 }
