@@ -7,11 +7,13 @@
  * seals — so this system needed no schema change and cannot violate the XP
  * invariant in gamification.ts.
  *
- * Art status: every guardian has PixelLab raster art (`image`, sheets at
- * /pals/{32,48,128}) generated 2026-08-07 via 02 - Tooling/guardians.mjs —
- * fresh seeds, same recipe as the professor. The matrix silhouettes remain
- * as the uncaught "???" display (GUARDIAN_SILHOUETTE) and as the fallback
- * FighterSprite renders if a sheet is ever missing.
+ * Art status: every guardian has PixelLab raster art (`image`), generated
+ * 2026-08-07 with fresh seeds, same recipe as the professor. The masters live
+ * in art/masters/128 and the served tiers are built from them by
+ * scripts/build-tiers.mjs; `SheetId` in lib/assets.ts is the list of what
+ * exists. The matrix silhouettes remain as the uncaught "???" display
+ * (GUARDIAN_SILHOUETTE) and as the fallback FighterSprite renders if a sheet
+ * is ever missing.
  *
  * Everything here is original — creatures, names, sprites — nothing derived
  * from any existing game's assets, same rule as pals.ts.
@@ -27,6 +29,7 @@ import {
   type PalType,
 } from "./pals";
 import type { QuizAttempt } from "./types";
+import type { SheetId } from "./assets";
 
 // --- Placeholder silhouettes ------------------------------------------------
 
@@ -105,7 +108,7 @@ export type Guardian = {
   /** Placeholder matrix, rendered until `image` exists. */
   sprite: SpriteMatrix;
   /** Raster sheet under /pals once PixelLab art is generated, else null. */
-  image: string | null;
+  image: SheetId | null;
 };
 
 export const GUARDIANS: Record<string, Guardian> = {
@@ -273,7 +276,7 @@ export type Fighter = {
   move: string;
   /** One-line pitch for the picker. */
   hint: string;
-  sheet: string | null;
+  sheet: SheetId | null;
   sprite: SpriteMatrix | null;
   palette: SpritePalette | null;
   /** Attack-effect flavour: the starter's element, brass for guardians. */

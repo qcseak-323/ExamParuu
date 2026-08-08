@@ -7,7 +7,9 @@
     "build": "prisma migrate deploy && next build",
     "build:app": "next build",
     "start": "next start",
-    "lint": "eslint",
+    "lint": "eslint && node scripts/verify-assets.mjs",
+    "art:tiers": "node scripts/build-tiers.mjs",
+    "art:verify": "node scripts/verify-assets.mjs",
     "postinstall": "prisma generate"
   },
   "dependencies": {

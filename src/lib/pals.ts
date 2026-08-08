@@ -16,6 +16,7 @@ import {
   type SpriteMatrix,
   type SpritePalette,
 } from "./sprite";
+import type { SheetId } from "./assets";
 
 export type PalType = "fire" | "water" | "wood";
 
@@ -284,7 +285,7 @@ export type PalStage = {
   /** Legacy matrix, kept only until every call site renders the raster art. */
   sprite: SpriteMatrix;
   /** Sheet name under /pals for PalSprite, e.g. "fire-1". */
-  image: string;
+  image: SheetId;
   /** Minimum trainer level required to reach this stage. */
   minLevel: number;
 };

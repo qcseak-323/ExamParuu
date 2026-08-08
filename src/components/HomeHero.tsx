@@ -7,6 +7,7 @@ import { trainerAvatarSheet } from "@/lib/profile";
 import { computeXp, computeLevel } from "@/lib/gamification";
 import { useQuizAttempts, useFlashcardProgress } from "@/lib/storage";
 import { usePreferences } from "@/lib/preferences";
+import type { SheetId } from "@/lib/assets";
 import PalSprite from "@/components/PalSprite";
 import StartPrompt from "@/components/StartPrompt";
 import BattleDemo from "@/components/BattleDemo";
@@ -29,7 +30,7 @@ function Runner({
   duration,
   delay,
 }: {
-  sheet: string;
+  sheet: SheetId;
   size: number;
   duration: string;
   delay: string;

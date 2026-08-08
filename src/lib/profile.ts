@@ -6,12 +6,14 @@
  * self-assessment would punish people for being honest about being new.
  */
 
+import type { SheetId } from "./assets";
+
 export type TrainerAvatar = "boy" | "girl";
 
 export const TRAINER_AVATARS: {
   id: TrainerAvatar;
   /** Sheet name under /pals for PalSprite. */
-  sheet: string;
+  sheet: SheetId;
   label: string;
   hint: string;
 }[] = [
@@ -33,7 +35,7 @@ export function isTrainerAvatar(value: unknown): value is TrainerAvatar {
   return value === "boy" || value === "girl";
 }
 
-export function trainerAvatarSheet(value: string | null): string | null {
+export function trainerAvatarSheet(value: string | null): SheetId | null {
   return TRAINER_AVATARS.find((a) => a.id === value)?.sheet ?? null;
 }
 
