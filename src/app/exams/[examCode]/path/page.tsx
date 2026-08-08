@@ -23,17 +23,29 @@ export async function generateMetadata({
 
 export default async function LearningPathPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ examCode: string }>;
+  searchParams: Promise<{ path?: string }>;
 }) {
   const { examCode } = await params;
+  const { path } = await searchParams;
   await requireTrainer(`/exams/${examCode}/path`);
   if (!getCatalogEntry(examCode)) notFound();
+
+  const paths = getLearningPaths(examCode);
+
+  // `?path=<id>` opens straight onto that path's modules — how the overview
+  // page's Learning Path selector deep-links. Resolved here rather than with
+  // useSearchParams in the client so the correct screen is in the very first
+  // render and there is no flash of the path picker.
+  const initialPathId = paths.some((p) => p.id === path) ? path : null;
 
   return (
     <LearningPathClient
       examCode={examCode}
-      paths={getLearningPaths(examCode)}
+      paths={paths}
+      initialPathId={initialPathId ?? null}
     />
   );
 }

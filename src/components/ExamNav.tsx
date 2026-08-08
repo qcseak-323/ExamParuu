@@ -3,11 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+// Ordered to match the three modes on the overview page — path, then
+// practice, then exam — so the tab strip and the panels tell the same story.
 const SECTIONS = [
   { segment: "", label: "Overview" },
+  { segment: "path", label: "Learning path" },
   { segment: "study", label: "Lessons" },
-  { segment: "quiz", label: "Battle" },
   { segment: "flashcards", label: "Flashcards" },
+  { segment: "quiz", label: "Battle" },
   { segment: "gym", label: "Dungeon" },
   { segment: "exam", label: "The Proving" },
   { segment: "progress", label: "Progress" },

@@ -42,11 +42,18 @@ type Stage =
 export default function LearningPathClient({
   examCode,
   paths,
+  initialPathId = null,
 }: {
   examCode: string;
   paths: LearningPath[];
+  /** From `?path=`, already validated server-side. Opens straight onto it. */
+  initialPathId?: string | null;
 }) {
-  const [stage, setStage] = useState<Stage>({ kind: "paths" });
+  const [stage, setStage] = useState<Stage>(
+    initialPathId
+      ? { kind: "modules", pathId: initialPathId }
+      : { kind: "paths" },
+  );
   const { run: runTransition, overlay: transitionOverlay } =
     useBattleTransition();
   const events = useLearningEvents();
