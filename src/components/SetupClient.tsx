@@ -540,9 +540,13 @@ export default function SetupClient({ email }: { email: string | null }) {
               <span className="dialogue-tab">Prof. Sequel</span>
               <div className="flex items-center gap-3">
                 <ProfessorPortrait />
+                {/* The explicit {" "} is load-bearing: JSX drops the space
+                    between an expression and the text that follows it, and
+                    production rendered "…find your gaps.Now — something's". */}
                 <p className="dialogue-text flex-1">
-                  {familiarityOption.response} Now — something&apos;s rustling
-                  in the grass. Let&apos;s see what you can do.
+                  {familiarityOption.response}{" "}
+                  Now — something&apos;s rustling in the grass. Let&apos;s see
+                  what you can do.
                 </p>
               </div>
             </DialogueFrame>
