@@ -1,0 +1,273 @@
+{
+  "examCode": "DP-600",
+  "note": "Learning path and module titles mirror the structure published on Microsoft Learn. All teaching content is original to ExamParuu.",
+  "paths": [
+    {
+      "id": "plan-implement-manage",
+      "title": "Get started with Microsoft Fabric",
+      "domainId": "plan-implement-manage",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/get-started-fabric/",
+      "modules": [
+        {
+          "id": "plan-implement-manage-m1",
+          "title": "Introduction to end-to-end analytics using Microsoft Fabric",
+          "sectionIds": [
+            "fabric-capacities-and-licensing"
+          ],
+          "cardIds": [
+            "fc-pim-01",
+            "fc-pim-09"
+          ]
+        },
+        {
+          "id": "plan-implement-manage-m2",
+          "title": "Get started with lakehouses in Microsoft Fabric",
+          "sectionIds": [
+            "onelake-and-workspaces"
+          ],
+          "cardIds": [
+            "fc-pim-02",
+            "fc-pim-10"
+          ]
+        },
+        {
+          "id": "plan-implement-manage-m3",
+          "title": "Get started with data warehouses in Microsoft Fabric",
+          "sectionIds": [
+            "domains-and-governance"
+          ],
+          "cardIds": [
+            "fc-pim-03"
+          ]
+        },
+        {
+          "id": "plan-implement-manage-m4",
+          "title": "Get started with Real-Time Intelligence in Microsoft Fabric",
+          "sectionIds": [
+            "application-lifecycle-management"
+          ],
+          "cardIds": [
+            "fc-pim-04"
+          ]
+        },
+        {
+          "id": "plan-implement-manage-m5",
+          "title": "Get started with data science in Microsoft Fabric",
+          "sectionIds": [
+            "monitoring-and-administration"
+          ],
+          "cardIds": [
+            "fc-pim-05"
+          ]
+        },
+        {
+          "id": "plan-implement-manage-m6",
+          "title": "Get started with SQL Database in Microsoft Fabric",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-pim-06"
+          ]
+        },
+        {
+          "id": "plan-implement-manage-m7",
+          "title": "Design semantic models for scale in Microsoft Fabric",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-pim-07"
+          ]
+        },
+        {
+          "id": "plan-implement-manage-m8",
+          "title": "Understand Microsoft Fabric IQ fundamentals",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-pim-08"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prepare-serve-data",
+      "title": "Design and transform analytics data in Microsoft Fabric",
+      "domainId": "prepare-serve-data",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/design-transform-analytics-data/",
+      "modules": [
+        {
+          "id": "prepare-serve-data-m1",
+          "title": "Choose data stores in Microsoft Fabric",
+          "sectionIds": [
+            "choosing-the-right-storage-item-lakehouse-vs-warehouse"
+          ],
+          "cardIds": [
+            "fc-psd-01",
+            "fc-psd-06"
+          ]
+        },
+        {
+          "id": "prepare-serve-data-m2",
+          "title": "Design dimensional models for analytics in Microsoft Fabric",
+          "sectionIds": [
+            "ingesting-data-pipelines-dataflows-gen2-and-notebooks"
+          ],
+          "cardIds": [
+            "fc-psd-02",
+            "fc-psd-07"
+          ]
+        },
+        {
+          "id": "prepare-serve-data-m3",
+          "title": "Transform data using Dataflows Gen2 in Microsoft Fabric",
+          "sectionIds": [
+            "medallion-architecture"
+          ],
+          "cardIds": [
+            "fc-psd-03",
+            "fc-psd-08"
+          ]
+        },
+        {
+          "id": "prepare-serve-data-m4",
+          "title": "Transform data using notebooks in Microsoft Fabric",
+          "sectionIds": [
+            "performance-and-storage-optimization"
+          ],
+          "cardIds": [
+            "fc-psd-04",
+            "fc-psd-09"
+          ]
+        },
+        {
+          "id": "prepare-serve-data-m5",
+          "title": "Transform data using T-SQL in Microsoft Fabric",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-psd-05",
+            "fc-psd-10"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "semantic-models",
+      "title": "Design and manage semantic models in Microsoft Fabric",
+      "domainId": "semantic-models",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/design-manage-semantic-models-fabric/",
+      "modules": [
+        {
+          "id": "semantic-models-m1",
+          "title": "Create DAX calculations in semantic models",
+          "sectionIds": [
+            "designing-semantic-models"
+          ],
+          "cardIds": [
+            "fc-sm-01",
+            "fc-sm-06"
+          ]
+        },
+        {
+          "id": "semantic-models-m2",
+          "title": "Design semantic models for scale in Microsoft Fabric",
+          "sectionIds": [
+            "storage-modes"
+          ],
+          "cardIds": [
+            "fc-sm-02",
+            "fc-sm-07"
+          ]
+        },
+        {
+          "id": "semantic-models-m3",
+          "title": "Optimize semantic model performance",
+          "sectionIds": [
+            "securing-and-governing-models"
+          ],
+          "cardIds": [
+            "fc-sm-03",
+            "fc-sm-08"
+          ]
+        },
+        {
+          "id": "semantic-models-m4",
+          "title": "Enforce semantic model security",
+          "sectionIds": [
+            "lifecycle-and-performance"
+          ],
+          "cardIds": [
+            "fc-sm-04",
+            "fc-sm-09"
+          ]
+        },
+        {
+          "id": "semantic-models-m5",
+          "title": "Manage the semantic model development lifecycle",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-sm-05",
+            "fc-sm-10"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "explore-analyze",
+      "title": "Explore analytics data stores in Microsoft Fabric",
+      "domainId": "explore-analyze",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/explore-analytics-data-stores/",
+      "modules": [
+        {
+          "id": "explore-analyze-m1",
+          "title": "Introduction to end-to-end analytics using Microsoft Fabric",
+          "sectionIds": [
+            "exploratory-analytics-with-notebooks-and-sql"
+          ],
+          "cardIds": [
+            "fc-ea-01",
+            "fc-ea-06"
+          ]
+        },
+        {
+          "id": "explore-analyze-m2",
+          "title": "Discover and connect to data in OneLake",
+          "sectionIds": [
+            "real-time-intelligence-and-kql"
+          ],
+          "cardIds": [
+            "fc-ea-02",
+            "fc-ea-07"
+          ]
+        },
+        {
+          "id": "explore-analyze-m3",
+          "title": "Get started with lakehouses in Microsoft Fabric",
+          "sectionIds": [
+            "visualizing-and-delivering-insights"
+          ],
+          "cardIds": [
+            "fc-ea-03",
+            "fc-ea-08"
+          ]
+        },
+        {
+          "id": "explore-analyze-m4",
+          "title": "Get started with data warehouses in Microsoft Fabric",
+          "sectionIds": [
+            "ai-assisted-analysis-and-automated-alerting"
+          ],
+          "cardIds": [
+            "fc-ea-04",
+            "fc-ea-09"
+          ]
+        },
+        {
+          "id": "explore-analyze-m5",
+          "title": "Get started with Real-Time Intelligence in Microsoft Fabric",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-ea-05",
+            "fc-ea-10"
+          ]
+        }
+      ]
+    }
+  ]
+}

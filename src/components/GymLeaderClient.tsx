@@ -272,7 +272,7 @@ export default function GymLeaderClient({
               options={roster.map((f) => ({
                 id: f.id,
                 label: f.name,
-                hint: fighter.id === f.id ? "◀ selected" : f.hint,
+                hint: f.hint,
               }))}
               onSelect={setFighterId}
             />

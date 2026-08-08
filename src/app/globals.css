@@ -450,10 +450,25 @@ body {
     box-shadow: none;
   }
 
-  /* The selector's gold fill: the row under the cursor is a bright gold
-     plate ringed in the same gold, like the cursor row on a handheld menu.
-     Ink on gold measures ~11:1. MUST stay after `.menu-item` — same
-     specificity, so source order is what decides which one wins. */
+  /* The selector has two states and they mean different things.
+
+     Pointing at a row is provisional — a gold RING, no fill, so the row
+     underneath is still legible as itself. Committing to one FILLS it gold,
+     and that fill stays put after the cursor moves on, which is what makes a
+     menu answer "what did I pick?" without the user having to remember.
+
+     Ink on gold measures ~11:1, and gold is theme-constant, so both states
+     are safe in either weather.
+
+     Both MUST stay after `.menu-item` — same specificity, so source order is
+     what decides which one wins. This bit the project once already. */
+  .menu-item--cursor {
+    border-color: var(--gold);
+    box-shadow:
+      0 0 0 3px var(--gold),
+      2px 2px 0 var(--stamp);
+  }
+
   .menu-item--gold {
     background: linear-gradient(180deg, var(--gold-hi), var(--gold));
     color: var(--outline);

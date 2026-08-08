@@ -1,0 +1,157 @@
+{
+  "examCode": "DP-900",
+  "note": "Learning path and module titles mirror the structure published on Microsoft Learn. All teaching content is original to ExamParuu.",
+  "paths": [
+    {
+      "id": "core-data-concepts",
+      "title": "Introduction to Microsoft Azure Data core data concepts",
+      "domainId": "core-data-concepts",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/azure-data-fundamentals-explore-core-data-concepts/",
+      "modules": [
+        {
+          "id": "core-data-concepts-m1",
+          "title": "Explore core data concepts",
+          "sectionIds": [
+            "representing-data",
+            "data-roles"
+          ],
+          "cardIds": [
+            "fc-dp9-cd-01",
+            "fc-dp9-cd-03",
+            "fc-dp9-cd-05",
+            "fc-dp9-cd-07",
+            "fc-dp9-cd-09"
+          ]
+        },
+        {
+          "id": "core-data-concepts-m2",
+          "title": "Explore data roles and services",
+          "sectionIds": [
+            "stores-and-workloads"
+          ],
+          "cardIds": [
+            "fc-dp9-cd-02",
+            "fc-dp9-cd-04",
+            "fc-dp9-cd-06",
+            "fc-dp9-cd-08",
+            "fc-dp9-cd-10"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "relational-data",
+      "title": "Introduction to Microsoft Azure Data relational data in Azure",
+      "domainId": "relational-data",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/azure-data-fundamentals-explore-relational-data/",
+      "modules": [
+        {
+          "id": "relational-data-m1",
+          "title": "Explore fundamental relational data concepts",
+          "sectionIds": [
+            "relational-concepts"
+          ],
+          "cardIds": [
+            "fc-dp9-rd-01",
+            "fc-dp9-rd-03",
+            "fc-dp9-rd-05",
+            "fc-dp9-rd-07",
+            "fc-dp9-rd-09"
+          ]
+        },
+        {
+          "id": "relational-data-m2",
+          "title": "Explore relational database services in Azure",
+          "sectionIds": [
+            "azure-relational-services"
+          ],
+          "cardIds": [
+            "fc-dp9-rd-02",
+            "fc-dp9-rd-04",
+            "fc-dp9-rd-06",
+            "fc-dp9-rd-08",
+            "fc-dp9-rd-10"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nonrelational-data",
+      "title": "Introduction to Microsoft Azure Data non-relational data in Azure",
+      "domainId": "nonrelational-data",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/azure-data-fundamentals-explore-non-relational-data/",
+      "modules": [
+        {
+          "id": "nonrelational-data-m1",
+          "title": "Explore Azure Storage for nonrelational data",
+          "sectionIds": [
+            "azure-storage-capabilities"
+          ],
+          "cardIds": [
+            "fc-dp9-nr-01",
+            "fc-dp9-nr-03",
+            "fc-dp9-nr-05"
+          ]
+        },
+        {
+          "id": "nonrelational-data-m2",
+          "title": "Explore fundamentals of Azure Cosmos DB",
+          "sectionIds": [
+            "cosmos-db"
+          ],
+          "cardIds": [
+            "fc-dp9-nr-02",
+            "fc-dp9-nr-04",
+            "fc-dp9-nr-06"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "analytics-workload",
+      "title": "Introduction to Microsoft Azure Data analytics in Azure",
+      "domainId": "analytics-workload",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/azure-data-fundamentals-explore-data-warehouse-analytics/",
+      "modules": [
+        {
+          "id": "analytics-workload-m1",
+          "title": "Explore fundamentals of large-scale analytics",
+          "sectionIds": [
+            "large-scale-analytics"
+          ],
+          "cardIds": [
+            "fc-dp9-aw-01",
+            "fc-dp9-aw-04",
+            "fc-dp9-aw-07",
+            "fc-dp9-aw-10"
+          ]
+        },
+        {
+          "id": "analytics-workload-m2",
+          "title": "Explore fundamentals of real-time analytics",
+          "sectionIds": [
+            "real-time-analytics"
+          ],
+          "cardIds": [
+            "fc-dp9-aw-02",
+            "fc-dp9-aw-05",
+            "fc-dp9-aw-08",
+            "fc-dp9-aw-11"
+          ]
+        },
+        {
+          "id": "analytics-workload-m3",
+          "title": "Explore fundamentals of data visualization",
+          "sectionIds": [
+            "power-bi"
+          ],
+          "cardIds": [
+            "fc-dp9-aw-03",
+            "fc-dp9-aw-06",
+            "fc-dp9-aw-09"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -504,30 +504,25 @@ export default function QuizClient({
           reviewSummary.dueCount > 0
             ? `⚠ Review — ${reviewSummary.dueCount} question${reviewSummary.dueCount === 1 ? "" : "s"} due`
             : "Review — nothing due yet",
+        // No "◀ selected" hint any more: the sticky gold fill says which row
+        // is chosen, and saying it twice was noise.
         hint:
-          domainFilter === REVIEW_FILTER
-            ? "◀ selected"
-            : reviewSummary.dueCount === 0
-              ? "Battle a route first"
-              : undefined,
+          reviewSummary.dueCount === 0 ? "Battle a route first" : undefined,
         disabled: reviewSummary.dueCount === 0,
       },
       {
         id: "all",
         label: "All skills areas",
-        hint: domainFilter === "all" ? "◀ selected" : undefined,
       },
       ...content.outline.domains.map((d) => ({
         id: d.id,
         label: d.name,
-        hint: domainFilter === d.id ? "◀ selected" : undefined,
       })),
     ];
 
     const countOptions: MenuOption[] = COUNT_OPTIONS.map((c) => ({
       id: String(c),
       label: c === "all" ? `All (${availableCount})` : `${c} questions`,
-      hint: String(countChoice) === String(c) ? "◀ selected" : undefined,
     }));
 
     return (
@@ -556,8 +551,9 @@ export default function QuizClient({
                   options={roster.map((f) => ({
                     id: f.id,
                     label: f.name,
-                    hint: fighter.id === f.id ? "◀ selected" : f.hint,
+                    hint: f.hint,
                   }))}
+                  selectedId={fighter.id}
                   onSelect={setFighterId}
                 />
               </div>
@@ -570,6 +566,7 @@ export default function QuizClient({
           <MenuList
             ariaLabel="Choose a skills area"
             options={domainOptions}
+            selectedId={domainFilter}
             onSelect={setDomainFilter}
           />
         </section>
@@ -580,6 +577,7 @@ export default function QuizClient({
             ariaLabel="Choose how many questions"
             columns={2}
             options={countOptions}
+            selectedId={String(countChoice)}
             onSelect={(id) =>
               setCountChoice(
                 id === "all"

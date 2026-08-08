@@ -4,36 +4,43 @@ import dp600Outline from "../../content/dp-600/outline.json";
 import dp600Questions from "../../content/dp-600/questions.json";
 import dp600Flashcards from "../../content/dp-600/flashcards.json";
 import dp600StudyGuide from "../../content/dp-600/study-guide.json";
+import dp600Path from "../../content/dp-600/learning-path.json";
 
 import ab900Outline from "../../content/ab-900/outline.json";
 import ab900Questions from "../../content/ab-900/questions.json";
 import ab900Flashcards from "../../content/ab-900/flashcards.json";
 import ab900StudyGuide from "../../content/ab-900/study-guide.json";
+import ab900Path from "../../content/ab-900/learning-path.json";
 
 import az900Outline from "../../content/az-900/outline.json";
 import az900Questions from "../../content/az-900/questions.json";
 import az900Flashcards from "../../content/az-900/flashcards.json";
 import az900StudyGuide from "../../content/az-900/study-guide.json";
+import az900Path from "../../content/az-900/learning-path.json";
 
 import ai901Outline from "../../content/ai-901/outline.json";
 import ai901Questions from "../../content/ai-901/questions.json";
 import ai901Flashcards from "../../content/ai-901/flashcards.json";
 import ai901StudyGuide from "../../content/ai-901/study-guide.json";
+import ai901Path from "../../content/ai-901/learning-path.json";
 
 import dp900Outline from "../../content/dp-900/outline.json";
 import dp900Questions from "../../content/dp-900/questions.json";
 import dp900Flashcards from "../../content/dp-900/flashcards.json";
 import dp900StudyGuide from "../../content/dp-900/study-guide.json";
+import dp900Path from "../../content/dp-900/learning-path.json";
 
 import sc900Outline from "../../content/sc-900/outline.json";
 import sc900Questions from "../../content/sc-900/questions.json";
 import sc900Flashcards from "../../content/sc-900/flashcards.json";
 import sc900StudyGuide from "../../content/sc-900/study-guide.json";
+import sc900Path from "../../content/sc-900/learning-path.json";
 
 import pl900Outline from "../../content/pl-900/outline.json";
 import pl900Questions from "../../content/pl-900/questions.json";
 import pl900Flashcards from "../../content/pl-900/flashcards.json";
 import pl900StudyGuide from "../../content/pl-900/study-guide.json";
+import pl900Path from "../../content/pl-900/learning-path.json";
 
 import type {
   Outline,
@@ -42,6 +49,7 @@ import type {
   StudyGuideDomain,
   StudyGuideSection,
   CatalogEntry,
+  ExamLearningPath,
 } from "./types";
 
 export const catalog = catalogData as CatalogEntry[];
@@ -51,6 +59,7 @@ type ExamContent = {
   questions: Question[];
   flashcards: Flashcard[];
   studyGuide: StudyGuideDomain[];
+  learningPath: ExamLearningPath;
 };
 
 const examRegistry: Record<string, ExamContent> = {
@@ -59,42 +68,49 @@ const examRegistry: Record<string, ExamContent> = {
     questions: dp600Questions as Question[],
     flashcards: dp600Flashcards as Flashcard[],
     studyGuide: dp600StudyGuide as StudyGuideDomain[],
+    learningPath: dp600Path as ExamLearningPath,
   },
   "ab-900": {
     outline: ab900Outline as Outline,
     questions: ab900Questions as Question[],
     flashcards: ab900Flashcards as Flashcard[],
     studyGuide: ab900StudyGuide as StudyGuideDomain[],
+    learningPath: ab900Path as ExamLearningPath,
   },
   "az-900": {
     outline: az900Outline as Outline,
     questions: az900Questions as Question[],
     flashcards: az900Flashcards as Flashcard[],
     studyGuide: az900StudyGuide as StudyGuideDomain[],
+    learningPath: az900Path as ExamLearningPath,
   },
   "ai-901": {
     outline: ai901Outline as Outline,
     questions: ai901Questions as Question[],
     flashcards: ai901Flashcards as Flashcard[],
     studyGuide: ai901StudyGuide as StudyGuideDomain[],
+    learningPath: ai901Path as ExamLearningPath,
   },
   "dp-900": {
     outline: dp900Outline as Outline,
     questions: dp900Questions as Question[],
     flashcards: dp900Flashcards as Flashcard[],
     studyGuide: dp900StudyGuide as StudyGuideDomain[],
+    learningPath: dp900Path as ExamLearningPath,
   },
   "sc-900": {
     outline: sc900Outline as Outline,
     questions: sc900Questions as Question[],
     flashcards: sc900Flashcards as Flashcard[],
     studyGuide: sc900StudyGuide as StudyGuideDomain[],
+    learningPath: sc900Path as ExamLearningPath,
   },
   "pl-900": {
     outline: pl900Outline as Outline,
     questions: pl900Questions as Question[],
     flashcards: pl900Flashcards as Flashcard[],
     studyGuide: pl900StudyGuide as StudyGuideDomain[],
+    learningPath: pl900Path as ExamLearningPath,
   },
 };
 

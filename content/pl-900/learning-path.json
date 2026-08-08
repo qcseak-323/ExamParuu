@@ -1,0 +1,185 @@
+{
+  "examCode": "PL-900",
+  "note": "Learning path and module titles mirror the structure published on Microsoft Learn. All teaching content is original to ExamParuu.",
+  "paths": [
+    {
+      "id": "business-value",
+      "title": "Describe the business value of Microsoft Power Platform",
+      "domainId": "business-value",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/describe-business-value-microsoft-power-platform/",
+      "modules": [
+        {
+          "id": "business-value-m1",
+          "title": "Describe the business value of Microsoft Power Platform services",
+          "sectionIds": [
+            "platform-business-value"
+          ],
+          "cardIds": [
+            "fc-pl9-bv-01",
+            "fc-pl9-bv-03"
+          ]
+        },
+        {
+          "id": "business-value-m2",
+          "title": "Describe the business value of extending business solutions by using Microsoft Power Platform",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-pl9-bv-02",
+            "fc-pl9-bv-04"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "environment",
+      "title": "Manage the Microsoft Power Platform environment",
+      "domainId": "environment",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/manage-microsoft-power-platform-environment/",
+      "modules": [
+        {
+          "id": "environment-m1",
+          "title": "Describe Microsoft Dataverse",
+          "sectionIds": [
+            "dataverse-fundamentals"
+          ],
+          "cardIds": [
+            "fc-pl9-en-01",
+            "fc-pl9-en-03",
+            "fc-pl9-en-05",
+            "fc-pl9-en-07"
+          ]
+        },
+        {
+          "id": "environment-m2",
+          "title": "Describe Power Platform governance and administration",
+          "sectionIds": [
+            "admin-and-governance"
+          ],
+          "cardIds": [
+            "fc-pl9-en-02",
+            "fc-pl9-en-04",
+            "fc-pl9-en-06",
+            "fc-pl9-en-08"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "power-apps",
+      "title": "Demonstrate the capabilities of Microsoft Power Apps",
+      "domainId": "power-apps",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/demonstrate-capabilities-power-apps/",
+      "modules": [
+        {
+          "id": "power-apps-m1",
+          "title": "Identify basic Microsoft Power Apps capabilities",
+          "sectionIds": [
+            "power-apps-types"
+          ],
+          "cardIds": [
+            "fc-pl9-pa-01",
+            "fc-pl9-pa-04"
+          ]
+        },
+        {
+          "id": "power-apps-m2",
+          "title": "Build a canvas app",
+          "sectionIds": [
+            "building-apps-with-ai"
+          ],
+          "cardIds": [
+            "fc-pl9-pa-02",
+            "fc-pl9-pa-05"
+          ]
+        },
+        {
+          "id": "power-apps-m3",
+          "title": "Build a model-driven app",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-pl9-pa-03"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "power-automate",
+      "title": "Demonstrate the capabilities of Microsoft Power Automate",
+      "domainId": "power-automate",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/demonstrate-capabilities-microsoft-power-automate/",
+      "modules": [
+        {
+          "id": "power-automate-m1",
+          "title": "Identify Microsoft Power Automate components",
+          "sectionIds": [
+            "flow-use-cases"
+          ],
+          "cardIds": [
+            "fc-pl9-au-01",
+            "fc-pl9-au-03",
+            "fc-pl9-au-05"
+          ]
+        },
+        {
+          "id": "power-automate-m2",
+          "title": "Build a Microsoft Power Automate flow",
+          "sectionIds": [
+            "building-flows"
+          ],
+          "cardIds": [
+            "fc-pl9-au-02",
+            "fc-pl9-au-04",
+            "fc-pl9-au-06"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "copilot-studio-agents",
+      "title": "Create agents in Microsoft Copilot Studio",
+      "domainId": "copilot-studio-agents",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/create-extend-custom-copilots-microsoft-copilot-studio/",
+      "modules": [
+        {
+          "id": "copilot-studio-agents-m1",
+          "title": "Get started with Microsoft Copilot Studio",
+          "sectionIds": [
+            "building-agents"
+          ],
+          "cardIds": [
+            "fc-pl9-cs-01",
+            "fc-pl9-cs-05"
+          ]
+        },
+        {
+          "id": "copilot-studio-agents-m2",
+          "title": "Design agent conversations using topics",
+          "sectionIds": [
+            "managing-agents"
+          ],
+          "cardIds": [
+            "fc-pl9-cs-02",
+            "fc-pl9-cs-06"
+          ]
+        },
+        {
+          "id": "copilot-studio-agents-m3",
+          "title": "Build intelligent agents in Microsoft Copilot Studio",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-pl9-cs-03",
+            "fc-pl9-cs-07"
+          ]
+        },
+        {
+          "id": "copilot-studio-agents-m4",
+          "title": "Add structured automation to agents in Microsoft Copilot Studio",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-pl9-cs-04"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "examCode": "AI-901",
+  "note": "Learning path and module titles mirror the structure published on Microsoft Learn. All teaching content is original to ExamParuu.",
+  "paths": [
+    {
+      "id": "ai-concepts",
+      "title": "Identify AI concepts and capabilities",
+      "domainId": "ai-concepts",
+      "msLearnUrl": null,
+      "modules": [
+        {
+          "id": "ai-concepts-m1",
+          "title": "The six responsible AI principles",
+          "sectionIds": [
+            "responsible-ai-principles"
+          ],
+          "cardIds": [
+            "fc-ai-co-01",
+            "fc-ai-co-05",
+            "fc-ai-co-09",
+            "fc-ai-co-13",
+            "fc-ai-co-17"
+          ]
+        },
+        {
+          "id": "ai-concepts-m2",
+          "title": "How generative models work, and choosing one",
+          "sectionIds": [
+            "generative-models-and-configuration"
+          ],
+          "cardIds": [
+            "fc-ai-co-02",
+            "fc-ai-co-06",
+            "fc-ai-co-10",
+            "fc-ai-co-14"
+          ]
+        },
+        {
+          "id": "ai-concepts-m3",
+          "title": "Identifying AI workloads",
+          "sectionIds": [
+            "identifying-ai-workloads"
+          ],
+          "cardIds": [
+            "fc-ai-co-03",
+            "fc-ai-co-07",
+            "fc-ai-co-11",
+            "fc-ai-co-15"
+          ]
+        },
+        {
+          "id": "ai-concepts-m4",
+          "title": "Speech, vision, and information extraction",
+          "sectionIds": [
+            "speech-vision-and-extraction"
+          ],
+          "cardIds": [
+            "fc-ai-co-04",
+            "fc-ai-co-08",
+            "fc-ai-co-12",
+            "fc-ai-co-16"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "foundry-implementation",
+      "title": "Implement AI solutions by using Microsoft Foundry",
+      "domainId": "foundry-implementation",
+      "msLearnUrl": null,
+      "modules": [
+        {
+          "id": "foundry-implementation-m1",
+          "title": "Prompts, and deploying models in Foundry",
+          "sectionIds": [
+            "prompts-and-model-deployment"
+          ],
+          "cardIds": [
+            "fc-ai-fd-01",
+            "fc-ai-fd-06",
+            "fc-ai-fd-11",
+            "fc-ai-fd-16",
+            "fc-ai-fd-21"
+          ]
+        },
+        {
+          "id": "foundry-implementation-m2",
+          "title": "Chat clients and agents",
+          "sectionIds": [
+            "chat-clients-and-agents"
+          ],
+          "cardIds": [
+            "fc-ai-fd-02",
+            "fc-ai-fd-07",
+            "fc-ai-fd-12",
+            "fc-ai-fd-17",
+            "fc-ai-fd-22"
+          ]
+        },
+        {
+          "id": "foundry-implementation-m3",
+          "title": "Text and speech solutions",
+          "sectionIds": [
+            "text-and-speech-in-foundry"
+          ],
+          "cardIds": [
+            "fc-ai-fd-03",
+            "fc-ai-fd-08",
+            "fc-ai-fd-13",
+            "fc-ai-fd-18",
+            "fc-ai-fd-23"
+          ]
+        },
+        {
+          "id": "foundry-implementation-m4",
+          "title": "Vision and image generation",
+          "sectionIds": [
+            "vision-and-image-generation"
+          ],
+          "cardIds": [
+            "fc-ai-fd-04",
+            "fc-ai-fd-09",
+            "fc-ai-fd-14",
+            "fc-ai-fd-19"
+          ]
+        },
+        {
+          "id": "foundry-implementation-m5",
+          "title": "Information extraction with Content Understanding",
+          "sectionIds": [
+            "content-understanding"
+          ],
+          "cardIds": [
+            "fc-ai-fd-05",
+            "fc-ai-fd-10",
+            "fc-ai-fd-15",
+            "fc-ai-fd-20"
+          ]
+        }
+      ]
+    }
+  ]
+}

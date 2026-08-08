@@ -4,7 +4,7 @@ import { getCatalogEntry, getExamContent } from "@/lib/content";
 import { getDisplayTier, getRetroLabel } from "@/lib/levels";
 import { requireTrainer } from "@/lib/session";
 import ReviewCallout from "@/components/ReviewCallout";
-import TransitionLink from "@/components/battle/TransitionLink";
+import ModePanels from "@/components/ModePanels";
 
 // No generateStaticParams: these routes are behind a session check now, so
 // they render per request and can't be prerendered at build time.
@@ -94,6 +94,13 @@ export default async function ExamOverviewPage({
         <>
           <ReviewCallout examCode={exam.code} />
 
+          {/* The two ways to play, above the blueprint. Choosing what to do
+              is why someone opens this page; the skills-area weights are
+              reference they scroll to afterwards, so the order used to be
+              backwards. Each box is now one action with a selector behind
+              it — see ModePanels. */}
+          <ModePanels examCode={exam.code} />
+
           {/* One line per skills area with its blueprint weight. The
               subtopics under each used to be listed here; they belong to the
               study guide, and this page is meant to be scanned. */}
@@ -115,63 +122,6 @@ export default async function ExamOverviewPage({
             <p className="mt-3 text-caption text-[var(--foreground-muted)]">
               {content.outline.note}
             </p>
-          </section>
-
-          {/* The two ways to play, side by side. Practice is the learning
-              loop with no clock; Exam is everything with a timer on it.
-
-              Every one of these five is a way into a battle or a lesson, so
-              every one of them blacks out on the way — TransitionLink, not
-              Link. The progress link below stays a plain Link: looking at
-              your own numbers is not entering a stage. */}
-          <section className="grid gap-4 lg:grid-cols-2">
-            <div className="pixel-panel flex flex-col gap-3 p-6">
-              <h2 className="font-pixel text-title">Practice Mode</h2>
-              <p className="text-body text-[var(--foreground-muted)]">
-                No clock. Wrong answers open a lesson on the spot.
-              </p>
-              <div className="mt-auto flex flex-wrap gap-3 pt-2">
-                <TransitionLink
-                  href={`/exams/${exam.code}/quiz`}
-                  className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
-                >
-                  Start practice battle
-                </TransitionLink>
-                <TransitionLink
-                  href={`/exams/${exam.code}/study`}
-                  className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
-                >
-                  Study guide
-                </TransitionLink>
-                <TransitionLink
-                  href={`/exams/${exam.code}/flashcards`}
-                  className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
-                >
-                  Flashcards
-                </TransitionLink>
-              </div>
-            </div>
-
-            <div className="pixel-panel flex flex-col gap-3 p-6">
-              <h2 className="font-pixel text-title">Exam Mode</h2>
-              <p className="text-body text-[var(--foreground-muted)]">
-                The clock runs. No feedback until the score report.
-              </p>
-              <div className="mt-auto flex flex-wrap gap-3 pt-2">
-                <TransitionLink
-                  href={`/exams/${exam.code}/exam`}
-                  className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
-                >
-                  The Proving — real format
-                </TransitionLink>
-                <TransitionLink
-                  href={`/exams/${exam.code}/gym`}
-                  className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
-                >
-                  Challenge the dungeon
-                </TransitionLink>
-              </div>
-            </div>
           </section>
 
           <Link

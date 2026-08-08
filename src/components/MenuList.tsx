@@ -20,6 +20,14 @@ type Props = {
   columns?: 1 | 2;
   disabled?: boolean;
   ariaLabel: string;
+  /**
+   * The committed choice, which stays filled gold after the cursor moves on.
+   *
+   * Optional: menus that act on selection immediately (the battle's answer
+   * list, the study route's lesson list) have no lasting choice to show and
+   * simply leave it unset.
+   */
+  selectedId?: string | null;
 };
 
 // Semantic tones come from the theme's own tokens rather than raw Tailwind
@@ -39,6 +47,12 @@ const TONE_CLASS: Record<NonNullable<MenuOption["tone"]>, string> = {
  * A cursor-driven menu: a ▶ marks the current option and the arrow keys move
  * it, which is the interaction the whole era ran on.
  *
+ * Two gold states, and they are not the same thing. The cursor draws a gold
+ * *ring* — provisional, "this is what you would pick". A committed choice is
+ * *filled* gold and stays filled once the cursor moves away, so the menu
+ * keeps answering "what did I pick?" on its own. Previously the cursor itself
+ * filled gold, which made a hover look identical to a decision.
+ *
  * These are real <button>s with a roving tabindex rather than divs with key
  * handlers, so the retro presentation costs nothing in screen-reader or
  * keyboard support — the cursor simply follows native focus.
@@ -49,6 +63,7 @@ export default function MenuList({
   columns = 1,
   disabled = false,
   ariaLabel,
+  selectedId = null,
 }: Props) {
   const playSfx = useSfx();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -103,6 +118,11 @@ export default function MenuList({
         const isActive = index === cursorIndex;
         const tone = TONE_CLASS[option.tone ?? "default"];
         const isDisabled = disabled || option.disabled;
+        const plain = (option.tone ?? "default") === "default";
+        // Tone rows carry answer feedback; a gold wash over a correct/wrong
+        // row would hide the verdict, so neither gold state applies to them.
+        const isPicked = plain && !isDisabled && option.id === selectedId;
+        const isCursor = plain && !isDisabled && isActive && !isPicked;
 
         return (
           <button
@@ -112,6 +132,7 @@ export default function MenuList({
             }}
             role="menuitem"
             type="button"
+            aria-current={isPicked ? "true" : undefined}
             disabled={isDisabled}
             tabIndex={isActive ? 0 : -1}
             onFocus={() => setActiveIndex(index)}
@@ -130,30 +151,25 @@ export default function MenuList({
             }}
             className={`menu-item flex min-h-11 items-center gap-2 px-3 py-2.5 text-left text-body ${tone} ${
               isDisabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
-            } ${
-              // The selector row fills bright gold. Tone rows (answer
-              // feedback) keep their own colours — a gold wash over a
-              // correct/wrong row would hide the verdict.
-              isActive && !isDisabled && (option.tone ?? "default") === "default"
-                ? "menu-item--gold"
-                : ""
-            }`}
+            } ${isPicked ? "menu-item--gold" : isCursor ? "menu-item--cursor" : ""}`}
           >
             <span
               aria-hidden="true"
               className={`font-pixel text-label leading-none ${
-                isActive && !isDisabled
-                  ? "selector-blink opacity-100"
-                  : "opacity-0"
+                isPicked
+                  ? "opacity-100"
+                  : isActive && !isDisabled
+                    ? "selector-blink opacity-100"
+                    : "opacity-0"
               }`}
             >
-              ▶
+              {isPicked ? "✓" : "▶"}
             </span>
             <span className="flex-1">{option.label}</span>
             {option.hint && (
               <span
                 className={`shrink-0 text-caption ${
-                  isActive && !isDisabled ? "" : "text-[var(--foreground-muted)]"
+                  isPicked ? "" : "text-[var(--foreground-muted)]"
                 }`}
               >
                 {option.hint}

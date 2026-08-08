@@ -62,8 +62,24 @@ export function computeXp(
     countLessonsCompleted(events) * XP_PER_LESSON +
     countRepeatEngagements(events) * XP_PER_REPEAT_REVIEW +
     computeStreakMilestoneXp(activityDates) +
-    computeWildXp(events)
+    computeWildXp(events) +
+    computeModuleXp(events)
   );
+}
+
+/**
+ * XP for learning-path modules completed. Appended term — nothing above was
+ * touched — non-negative, and derived from the same append-only log with
+ * day-scoped deterministic ids, so re-running a module cannot pay twice in a
+ * day. The invariant documented above holds unchanged.
+ *
+ * Worth more than a lesson read because a module is a lesson plus the
+ * checkpoints that prove it landed.
+ */
+export const XP_PER_MODULE = 25;
+
+export function computeModuleXp(events: LearningEvent[]): number {
+  return events.filter((e) => e.kind === "moduleDone").length * XP_PER_MODULE;
 }
 
 /**

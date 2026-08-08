@@ -91,9 +91,79 @@ export type QuizAttempt = {
   results: QuizResultEntry[];
 };
 
+/**
+ * One module of a learning path — the unit a trainer actually sits down to
+ * do. Titles mirror Microsoft Learn (see 02 - Tooling/learning-paths.mjs);
+ * the content behind them is this project's own.
+ *
+ * A module can legitimately have no sections: Microsoft Learn sometimes
+ * splits a domain into more modules than we have written passages for, and a
+ * module that is pure flashcard drill is still a module. It can never
+ * usefully have no cards, which is what the generator warns about.
+ */
+export type LearningModule = {
+  id: string;
+  title: string;
+  sectionIds: string[];
+  cardIds: string[];
+};
+
+export type LearningPath = {
+  id: string;
+  title: string;
+  domainId: string;
+  /** Null when Microsoft Learn publishes no matching path — see the tool. */
+  msLearnUrl: string | null;
+  modules: LearningModule[];
+};
+
+export type ExamLearningPath = {
+  examCode: string;
+  note: string;
+  paths: LearningPath[];
+};
+
+/**
+ * A checkpoint challenge, drawn between bites of flashcards.
+ *
+ * Every variant is DERIVED from content that already exists — the flashcards
+ * and question bank the exam already ships — rather than authored separately.
+ * That is deliberate: a challenge format that needs its own content per module
+ * would mean 23 new hand-written items for DP-600 alone, and would rot the
+ * moment a card changed. Deriving them means every exam got these for free
+ * and they stay in step with the cards automatically.
+ */
+export type Challenge =
+  | {
+      kind: "recall";
+      id: string;
+      prompt: string;
+      options: string[];
+      correctIndex: number;
+      explanation: string;
+    }
+  | {
+      kind: "match";
+      id: string;
+      prompt: string;
+      /** Terms in display order; the trainer drags a definition onto each. */
+      pairs: { termId: string; term: string; definition: string }[];
+    }
+  | {
+      kind: "multi";
+      id: string;
+      prompt: string;
+      options: { id: string; label: string; correct: boolean }[];
+    };
+
 export type FlashcardStatus = "known" | "learning";
 
-export type LearningEventKind = "lesson" | "cardReview" | "wildWin";
+export type LearningEventKind =
+  | "lesson"
+  | "cardReview"
+  | "wildWin"
+  /** One learning-path module completed. Day-scoped like the rest. */
+  | "moduleDone";
 
 /**
  * An append-only record of a learning action.

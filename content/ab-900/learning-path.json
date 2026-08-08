@@ -1,0 +1,166 @@
+{
+  "examCode": "AB-900",
+  "note": "Learning path and module titles mirror the structure published on Microsoft Learn. All teaching content is original to ExamParuu.",
+  "paths": [
+    {
+      "id": "core-features",
+      "title": "Explore Microsoft 365 Copilot and agent administration",
+      "domainId": "core-features",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/explore-microsoft-365-copilot-agent-administration/",
+      "modules": [
+        {
+          "id": "core-features-m1",
+          "title": "Explore Microsoft 365 Copilot and agents",
+          "sectionIds": [
+            "core-objects-across-the-admin-centers"
+          ],
+          "cardIds": [
+            "fc-ab-cf-01",
+            "fc-ab-cf-04",
+            "fc-ab-cf-07"
+          ]
+        },
+        {
+          "id": "core-features-m2",
+          "title": "Perform basic administrative tasks for Microsoft 365 Copilot",
+          "sectionIds": [
+            "zero-trust-and-authentication"
+          ],
+          "cardIds": [
+            "fc-ab-cf-02",
+            "fc-ab-cf-05",
+            "fc-ab-cf-08"
+          ]
+        },
+        {
+          "id": "core-features-m3",
+          "title": "Perform basic administrative tasks for Microsoft 365 Copilot agents",
+          "sectionIds": [
+            "microsoft-entra-id-security-features"
+          ],
+          "cardIds": [
+            "fc-ab-cf-03",
+            "fc-ab-cf-06",
+            "fc-ab-cf-09"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data-protection-governance",
+      "title": "Secure and govern Microsoft 365 Copilot interactions with Microsoft Purview",
+      "domainId": "data-protection-governance",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/purview-secure-govern-copilot-interactions/",
+      "modules": [
+        {
+          "id": "data-protection-governance-m1",
+          "title": "Understand How to Secure AI Data with Microsoft Purview",
+          "sectionIds": [
+            "microsoft-purview-at-a-glance"
+          ],
+          "cardIds": [
+            "fc-ab-dp-01",
+            "fc-ab-dp-08"
+          ]
+        },
+        {
+          "id": "data-protection-governance-m2",
+          "title": "Conduct investigations with Microsoft Purview Audit",
+          "sectionIds": [
+            "data-protection-implications-of-copilot"
+          ],
+          "cardIds": [
+            "fc-ab-dp-02",
+            "fc-ab-dp-09"
+          ]
+        },
+        {
+          "id": "data-protection-governance-m3",
+          "title": "Create and configure sensitivity labels with Microsoft Purview",
+          "sectionIds": [
+            "identifying-and-responding-to-risk"
+          ],
+          "cardIds": [
+            "fc-ab-dp-03"
+          ]
+        },
+        {
+          "id": "data-protection-governance-m4",
+          "title": "Create and manage data loss prevention policies",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-ab-dp-04"
+          ]
+        },
+        {
+          "id": "data-protection-governance-m5",
+          "title": "Create and manage Insider Risk Management policies",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-ab-dp-05"
+          ]
+        },
+        {
+          "id": "data-protection-governance-m6",
+          "title": "Detect and address communication risks with Microsoft Purview Communication Compliance",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-ab-dp-06"
+          ]
+        },
+        {
+          "id": "data-protection-governance-m7",
+          "title": "Secure Microsoft 365 Copilot interactions with Microsoft Purview",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-ab-dp-07"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "copilot-agent-admin",
+      "title": "Explore Microsoft 365 Copilot and agent administration",
+      "domainId": "copilot-agent-admin",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/explore-microsoft-365-copilot-agent-administration/",
+      "modules": [
+        {
+          "id": "copilot-agent-admin-m1",
+          "title": "Explore Microsoft 365 Copilot and agents",
+          "sectionIds": [
+            "copilot-capabilities-and-licensing"
+          ],
+          "cardIds": [
+            "fc-ab-ca-01",
+            "fc-ab-ca-04",
+            "fc-ab-ca-07"
+          ]
+        },
+        {
+          "id": "copilot-agent-admin-m2",
+          "title": "Perform basic administrative tasks for Microsoft 365 Copilot",
+          "sectionIds": [
+            "administering-copilot"
+          ],
+          "cardIds": [
+            "fc-ab-ca-02",
+            "fc-ab-ca-05",
+            "fc-ab-ca-08"
+          ]
+        },
+        {
+          "id": "copilot-agent-admin-m3",
+          "title": "Perform basic administrative tasks for Microsoft 365 Copilot agents",
+          "sectionIds": [
+            "administering-agents"
+          ],
+          "cardIds": [
+            "fc-ab-ca-03",
+            "fc-ab-ca-06",
+            "fc-ab-ca-09"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "examCode": "AZ-900",
+  "note": "Learning path and module titles mirror the structure published on Microsoft Learn. All teaching content is original to ExamParuu.",
+  "paths": [
+    {
+      "id": "cloud-concepts",
+      "title": "Introduction to Cloud Infrastructure: Describe cloud concepts",
+      "domainId": "cloud-concepts",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/microsoft-azure-fundamentals-describe-cloud-concepts/",
+      "modules": [
+        {
+          "id": "cloud-concepts-m1",
+          "title": "Describe cloud computing",
+          "sectionIds": [
+            "what-cloud-computing-is",
+            "cloud-service-types"
+          ],
+          "cardIds": [
+            "fc-az-cc-01",
+            "fc-az-cc-04",
+            "fc-az-cc-07",
+            "fc-az-cc-10"
+          ]
+        },
+        {
+          "id": "cloud-concepts-m2",
+          "title": "Describe the benefits of using cloud services",
+          "sectionIds": [
+            "cloud-models-and-use-cases"
+          ],
+          "cardIds": [
+            "fc-az-cc-02",
+            "fc-az-cc-05",
+            "fc-az-cc-08",
+            "fc-az-cc-11"
+          ]
+        },
+        {
+          "id": "cloud-concepts-m3",
+          "title": "Describe cloud service types",
+          "sectionIds": [
+            "benefits-of-the-cloud"
+          ],
+          "cardIds": [
+            "fc-az-cc-03",
+            "fc-az-cc-06",
+            "fc-az-cc-09"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "architecture-services",
+      "title": "Introduction to Cloud Infrastructure: Describe Azure architecture and services",
+      "domainId": "architecture-services",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/azure-fundamentals-describe-azure-architecture-services/",
+      "modules": [
+        {
+          "id": "architecture-services-m1",
+          "title": "Describe the core architectural components of Azure",
+          "sectionIds": [
+            "regions-zones-and-datacenters"
+          ],
+          "cardIds": [
+            "fc-az-as-01",
+            "fc-az-as-06",
+            "fc-az-as-11",
+            "fc-az-as-16"
+          ]
+        },
+        {
+          "id": "architecture-services-m2",
+          "title": "Describe Azure compute services",
+          "sectionIds": [
+            "resources-subscriptions-management-groups"
+          ],
+          "cardIds": [
+            "fc-az-as-02",
+            "fc-az-as-07",
+            "fc-az-as-12",
+            "fc-az-as-17"
+          ]
+        },
+        {
+          "id": "architecture-services-m3",
+          "title": "Describe Azure networking services",
+          "sectionIds": [
+            "compute-and-networking"
+          ],
+          "cardIds": [
+            "fc-az-as-03",
+            "fc-az-as-08",
+            "fc-az-as-13",
+            "fc-az-as-18"
+          ]
+        },
+        {
+          "id": "architecture-services-m4",
+          "title": "Describe Azure storage services",
+          "sectionIds": [
+            "storage-services"
+          ],
+          "cardIds": [
+            "fc-az-as-04",
+            "fc-az-as-09",
+            "fc-az-as-14",
+            "fc-az-as-19"
+          ]
+        },
+        {
+          "id": "architecture-services-m5",
+          "title": "Describe Azure identity, access, and security",
+          "sectionIds": [
+            "identity-access-and-security"
+          ],
+          "cardIds": [
+            "fc-az-as-05",
+            "fc-az-as-10",
+            "fc-az-as-15",
+            "fc-az-as-20"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "management-governance",
+      "title": "Introduction to Cloud Infrastructure: Describe Azure management and governance",
+      "domainId": "management-governance",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/describe-azure-management-governance/",
+      "modules": [
+        {
+          "id": "management-governance-m1",
+          "title": "Describe cost management in Azure",
+          "sectionIds": [
+            "cost-management"
+          ],
+          "cardIds": [
+            "fc-az-mg-01",
+            "fc-az-mg-05",
+            "fc-az-mg-09"
+          ]
+        },
+        {
+          "id": "management-governance-m2",
+          "title": "Describe features and tools in Azure for governance and compliance",
+          "sectionIds": [
+            "governance-and-compliance"
+          ],
+          "cardIds": [
+            "fc-az-mg-02",
+            "fc-az-mg-06",
+            "fc-az-mg-10"
+          ]
+        },
+        {
+          "id": "management-governance-m3",
+          "title": "Describe features and tools for managing and deploying Azure resources",
+          "sectionIds": [
+            "deploying-and-managing-resources"
+          ],
+          "cardIds": [
+            "fc-az-mg-03",
+            "fc-az-mg-07"
+          ]
+        },
+        {
+          "id": "management-governance-m4",
+          "title": "Describe monitoring tools in Azure",
+          "sectionIds": [
+            "monitoring-tools"
+          ],
+          "cardIds": [
+            "fc-az-mg-04",
+            "fc-az-mg-08"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -120,41 +120,55 @@ const BATTLE: Track = {
  * cast walking on, the banner naming the opponent — and hands over to BATTLE
  * the moment the first question is drawn.
  *
- * Deliberately not a shortened BATTLE: this is the beat *before* the fight,
- * so it holds instead of driving. The lead is two stabs and a rest over a
- * pedal bass that will not resolve, and the drums keep time without a
- * backbeat. BATTLE arriving underneath the first question is then a release,
- * which is the whole job of an introduction.
+ * INTRO and BATTLE are one piece of music in two arrangements, and that is a
+ * correction. The first version of this was its own composition at 132bpm
+ * against BATTLE's 168, and the handover was audibly a cut: the tempo lurched
+ * and the phrase broke mid-bar. Nothing about *that* is fixable by adjusting
+ * when the switch happens — two tempi cannot be crossfaded into one.
  *
- * It loops because the introduction is skippable and can therefore end at any
- * moment; a one-shot would leave silence for whatever was left of the hold.
+ * So this now shares BATTLE's tempo (168), its key (A minor) and its exact
+ * bass movement — Am · Am · F · G · Am · Am · E · E, two beats each, the same
+ * sixteen-beat cycle. All that differs is the arrangement: the lead is held
+ * single notes with rests between instead of a running melody, and the
+ * percussion is hats with no backbeat. When BATTLE takes over, the bass and
+ * the pulse continue underneath and the fight *fills in* — the snare arrives,
+ * the melody starts running — rather than a new song starting.
+ *
+ * It loops because the introduction is skippable and can end at any moment; a
+ * one-shot would leave silence for whatever was left of the hold. Both loops
+ * being sixteen beats at one tempo also means the handover always lands on a
+ * downbeat, whenever it happens.
  */
 const INTRO: Track = {
-  bpm: 132,
+  bpm: 168,
   loop: true,
   channels: [
     {
       wave: "pulse",
-      gain: 0.2,
+      gain: 0.19,
       steps: [
-        ["A4", 0.5], [null, 0.5], ["A4", 0.5], [null, 0.5],
-        ["C5", 0.5], [null, 0.5], ["E5", 1],
-        ["D5", 0.5], [null, 0.5], ["D5", 0.5], [null, 0.5],
-        ["F5", 0.5], [null, 0.5], ["A5", 1],
+        ["E5", 1], [null, 1], ["E5", 1], [null, 1],
+        ["F5", 1], [null, 1], ["E5", 1], [null, 1],
+        ["A4", 1], [null, 1], ["C5", 1], [null, 1],
+        ["E5", 2], [null, 2],
       ],
     },
     {
+      // Identical to BATTLE's bass line. This is the thread the handover
+      // rides on — change one and change both.
       wave: "triangle",
       gain: 0.3,
       steps: [
-        ["A2", 1], ["A2", 1], ["A2", 1], ["A2", 1],
-        ["F2", 1], ["F2", 1], ["G2", 1], ["G2", 1],
+        ["A2", 2], ["A2", 2], ["F2", 2], ["G2", 2],
+        ["A2", 2], ["A2", 2], ["E2", 2], ["E2", 2],
       ],
     },
     {
+      // Hats only: the backbeat is what BATTLE brings, so withholding the
+      // snare here is what gives the switch something to add.
       wave: "noise",
-      gain: 0.12,
-      steps: [["H", 1], ["H", 1], ["S", 1], ["H", 1]],
+      gain: 0.1,
+      steps: [["H", 1], [null, 1], ["H", 1], [null, 1]],
     },
   ],
 };
