@@ -45,15 +45,14 @@ const MAX_NAME_LENGTH = 14;
 const MAX_NICKNAME_LENGTH = 14;
 
 /**
- * The route we nudge a brand-new trainer towards. AZ-900 is the broadest
- * entry point in Microsoft's own portfolio, which makes it the honest
- * default — it is a suggestion, never a restriction.
+ * How a route is titled: the exam series and the product it certifies —
+ * "AZ · Azure". Someone choosing where to start is picking a technology,
+ * not memorising an exam number, and the number is on the route page.
  */
-const SUGGESTED_EXAM = "az-900";
-
-/** The in-world region name for an exam, e.g. "The Azure Archipelago". */
-function worldNameFor(series: string): string | null {
-  return REGIONS.find((region) => region.id === series)?.worldName ?? null;
+function routeTitleFor(series: string): string {
+  const region = REGIONS.find((r) => r.id === series);
+  const upper = series.toUpperCase();
+  return region ? `${upper} · ${region.productName}` : upper;
 }
 
 export default function SetupClient({ email }: { email: string | null }) {
@@ -78,8 +77,9 @@ export default function SetupClient({ email }: { email: string | null }) {
 
   const playableExams = catalog.filter((exam) => exam.hasContent);
   const avatarOption = TRAINER_AVATARS.find((a) => a.id === trainerAvatar);
-  /** The chosen starter's base form — what the nickname step is naming. */
-  const starter = palType ? PAL_SPECIES[palType].stages[0] : null;
+  /** The chosen line, and its base form — what the nickname step is naming. */
+  const species = palType ? PAL_SPECIES[palType] : null;
+  const starter = species?.stages[0] ?? null;
 
   /** Whether the current step has been answered. */
   function isStepReady(which: number): boolean {
@@ -219,7 +219,10 @@ export default function SetupClient({ email }: { email: string | null }) {
             </div>
           </DialogueFrame>
 
-          <div className="grid items-start gap-4 sm:grid-cols-3">
+          {/* No `items-start`: the cards stretch to one another's height, so
+              a longer tagline can't leave the row ragged. The pick pill is
+              pushed to the bottom with mt-auto so all three line up. */}
+          <div className="grid gap-4 sm:grid-cols-3">
             {PAL_TYPES.map((type) => {
               const candidate = PAL_SPECIES[type];
               const [first] = candidate.stages;
@@ -253,48 +256,47 @@ export default function SetupClient({ email }: { email: string | null }) {
                   <span className="text-caption text-[var(--foreground-muted)]">
                     {candidate.tagline}
                   </span>
-                  <span className="select-card-pick mt-2">
+                  <span className="select-card-pick mt-auto">
                     {picked ? "Chosen ✓" : "Choose ▶"}
                   </span>
-
-                  {/* What it becomes. Shown only once chosen, so the step
-                      stays a choice between three creatures rather than a
-                      wall of nine. Later forms are silhouettes: the shape is
-                      a promise, the name is not given away. */}
-                  {picked && (
-                    <span className="evo">
-                      <span className="text-caption font-semibold uppercase tracking-[0.1em]">
-                        {candidate.label} line
-                      </span>
-                      <span className="evo-row">
-                        {candidate.stages.map((stage, i) => (
-                          <span key={stage.name} className="contents">
-                            {i > 0 && (
-                              <span className="evo-arrow" aria-hidden="true">
-                                ▶
-                              </span>
-                            )}
-                            <span
-                              className={`evo-form ${i > 0 ? "evo-form--locked" : ""}`}
-                            >
-                              <PalSprite sheet={stage.image} size={48} />
-                              <b className="text-caption leading-tight">
-                                {i === 0 ? stage.name : "???"}
-                              </b>
-                              <small className="text-caption leading-tight">
-                                {formLabel(i).replace(" form", "")}
-                                {i === 0 ? " · now" : ` · Lv ${stage.minLevel}`}
-                              </small>
-                            </span>
-                          </span>
-                        ))}
-                      </span>
-                    </span>
-                  )}
                 </button>
               );
             })}
           </div>
+
+          {/* What it becomes — its own panel under the row, where there is
+              width for three labelled forms. Later ones are silhouettes: the
+              shape is a promise, the name is not given away. */}
+          {palType && species && (
+            <div className="pixel-panel p-5">
+              <p className="text-center text-caption font-semibold uppercase tracking-[0.1em] text-[var(--foreground-muted)]">
+                {species.label} line
+              </p>
+              <div className="evo-row mt-3">
+                {species.stages.map((stage, i) => (
+                  <span key={stage.name} className="contents">
+                    {i > 0 && (
+                      <span className="evo-arrow" aria-hidden="true">
+                        ▶
+                      </span>
+                    )}
+                    <span
+                      className={`evo-form ${i > 0 ? "evo-form--locked" : ""}`}
+                    >
+                      <PalSprite sheet={stage.image} size={64} />
+                      <span className="text-caption font-semibold leading-tight">
+                        {i === 0 ? stage.name : "???"}
+                      </span>
+                      <span className="text-caption leading-tight text-[var(--foreground-muted)]">
+                        {formLabel(i).replace(" form", "")}
+                        {i === 0 ? " · now" : ` · Lv ${stage.minLevel}`}
+                      </span>
+                    </span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </>
       )}
 
@@ -403,7 +405,6 @@ export default function SetupClient({ email }: { email: string | null }) {
             {playableExams.map((exam) => {
               const picked = priorityExam === exam.code;
               const guardian = getGuardian(exam.code);
-              const world = worldNameFor(exam.series);
 
               return (
                 <button
@@ -424,18 +425,12 @@ export default function SetupClient({ email }: { email: string | null }) {
                   )}
                   <span className="min-w-0 flex-1">
                     <span className="block text-body font-medium">
-                      {exam.code.toUpperCase()}
-                      {world ? ` · ${world}` : ""}
+                      {routeTitleFor(exam.series)}
                     </span>
                     <span className="block text-caption text-[var(--foreground-muted)]">
                       {exam.summary}
                     </span>
                   </span>
-                  {exam.code === SUGGESTED_EXAM && (
-                    <span className="shrink-0 rounded-full border-2 border-[var(--outline)] bg-[var(--accent-hi)] px-2 py-0.5 text-caption font-semibold text-[var(--outline)]">
-                      ★ Suggested
-                    </span>
-                  )}
                 </button>
               );
             })}

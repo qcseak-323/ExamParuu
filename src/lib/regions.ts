@@ -17,6 +17,9 @@ export type Region = {
   id: ExamSeries;
   /** The real-world series name, e.g. "Azure (AZ)". */
   name: string;
+  /** The Microsoft product the series certifies against, e.g. "Azure". Used
+   *  wherever a series is named to a trainer who is choosing what to study. */
+  productName: string;
   /** The in-world place name shown on the map. */
   worldName: string;
   tagline: string;
@@ -33,6 +36,7 @@ export const REGIONS: Region[] = [
   {
     id: "az",
     name: "Azure (AZ)",
+    productName: "Azure",
     worldName: "The Azure Archipelago",
     tagline: "Cloud foundations, administration, and architecture.",
     professorLine:
@@ -44,6 +48,7 @@ export const REGIONS: Region[] = [
   {
     id: "ai",
     name: "AI & Machine Learning (AI)",
+    productName: "Azure AI",
     worldName: "The Lightning Shoals",
     tagline: "Generative AI, agents, and machine learning operations.",
     professorLine:
@@ -55,6 +60,7 @@ export const REGIONS: Region[] = [
   {
     id: "dp",
     name: "Data & Analytics (DP)",
+    productName: "Azure Data & Fabric",
     worldName: "The Datastream Delta",
     tagline: "Fabric, SQL, Databricks, and analytics engineering.",
     professorLine:
@@ -66,6 +72,7 @@ export const REGIONS: Region[] = [
   {
     id: "sc",
     name: "Security (SC)",
+    productName: "Microsoft Security",
     worldName: "The Bastion Cliffs",
     tagline: "Security operations, identity, and Zero Trust architecture.",
     professorLine:
@@ -77,6 +84,7 @@ export const REGIONS: Region[] = [
   {
     id: "ab",
     name: "Copilot & Agents (AB)",
+    productName: "Microsoft 365 Copilot",
     worldName: "Agent Atoll",
     tagline: "Copilot, AI agents, and the Microsoft 365 estate.",
     professorLine:
@@ -88,6 +96,7 @@ export const REGIONS: Region[] = [
   {
     id: "pl",
     name: "Power Platform (PL)",
+    productName: "Power Platform",
     worldName: "The Maker Mangroves",
     tagline: "Low-code apps, automation, and Power BI analytics.",
     professorLine:

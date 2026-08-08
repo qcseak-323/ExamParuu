@@ -531,39 +531,36 @@ body {
 
 /* --- Trainer setup: evolution preview and wizard nav ----------------------- */
 
-/* The line a starter grows into, revealed on the card once it is chosen.
-   It only ever sits on the picked (gold) card, so a white wash is the right
-   surface in both themes — gold does not change with the weather. */
-.evo {
-  display: grid;
-  gap: 8px;
-  width: 100%;
-  margin-top: 14px;
-  padding: 12px 10px;
-  border: 2px solid var(--outline);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.34);
-}
+/* The line a starter grows into. It lives in its own panel BELOW the three
+   cards, not inside the chosen one: a card that grows when picked leaves the
+   row ragged, and three labelled columns never fit inside one card's width —
+   "Ultimate · Lv 10" alone is wider than a third of a card. */
 .evo-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
 }
 .evo-form {
   display: grid;
   justify-items: center;
   gap: 2px;
-  flex: 1;
+  flex: 1 1 0;
   min-width: 0;
+  max-width: 7rem;
+  text-align: center;
 }
 /* A form not yet reached is a silhouette — the shape is a promise, the
    name is not given away. */
 .evo-form--locked img {
   filter: brightness(0) saturate(0) opacity(0.5);
 }
+/* The arrow sits against the sprites, not the middle of the whole column —
+   the labels below vary in height and would drag it off-centre. */
 .evo-arrow {
   flex: none;
+  align-self: flex-start;
+  margin-top: 22px;
   font-size: 11px;
   line-height: 1;
 }
