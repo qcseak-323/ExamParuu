@@ -52,7 +52,15 @@ function Runner({
   );
 }
 
-export default function HomeHero({ examCodes }: { examCodes: string[] }) {
+export type TierSummary = {
+  label: string;
+  /** The first few exam codes in the tier, playable ones first. */
+  codes: string[];
+  /** How many exams the tier holds in total. */
+  total: number;
+};
+
+export default function HomeHero({ tiers }: { tiers: TierSummary[] }) {
   const { data: session, status } = useSession();
   const attempts = useQuizAttempts();
   const flashcardProgress = useFlashcardProgress();
@@ -104,24 +112,42 @@ export default function HomeHero({ examCodes }: { examCodes: string[] }) {
               </>
             )}
 
-            <div className="mt-6 flex flex-wrap items-center gap-5">
+            {/* One action, as wide as the column, with the secondary way in
+                stacked under it rather than competing beside it. */}
+            <div className="mt-6">
               <StartPrompt label={signedIn ? "Continue" : "Play"} />
-              <Link
-                href="/catalog"
-                className="tap-target text-body font-semibold underline hover:text-[var(--accent-ink)]"
-              >
-                Browse exams →
-              </Link>
+              <div className="mt-3">
+                <Link
+                  href="/catalog"
+                  className="tap-target text-body font-semibold underline hover:text-[var(--accent-ink)]"
+                >
+                  Browse exams →
+                </Link>
+              </div>
             </div>
 
-            <div className="mt-5 flex flex-wrap gap-2">
-              {examCodes.map((code) => (
-                <span
-                  key={code}
-                  className="rounded-md border-2 border-[var(--border)] bg-[var(--panel)] px-2 py-1 text-caption font-semibold"
-                >
-                  {code.toUpperCase()}
-                </span>
+            {/* The catalog's real depth: three tiers, a few codes each, and
+                the count of what else is in there. */}
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              {tiers.map((tier) => (
+                <div key={tier.label} className="pixel-panel p-4">
+                  <p className="font-pixel text-title">{tier.label}</p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {tier.codes.map((code) => (
+                      <span
+                        key={code}
+                        className="rounded border-2 border-[var(--border)] bg-[var(--panel-raised)] px-1.5 py-0.5 text-caption font-semibold"
+                      >
+                        {code}
+                      </span>
+                    ))}
+                  </div>
+                  {tier.total > tier.codes.length && (
+                    <p className="mt-2 text-caption text-[var(--foreground-muted)]">
+                      +{tier.total - tier.codes.length} more
+                    </p>
+                  )}
+                </div>
               ))}
             </div>
           </div>

@@ -2,6 +2,31 @@ import { catalog } from "@/lib/content";
 import HomeHero from "@/components/HomeHero";
 
 /**
+ * The catalog's depth, as three tiers. The hero used to list the seven
+ * playable exam codes as flat chips, which read as "seven exams" — the
+ * portfolio is thirty, and the tiers are how Microsoft itself groups them.
+ * Playable exams sort first so each box leads with one you can start today.
+ */
+const TIERS: { label: string; levels: string[] }[] = [
+  { label: "Fundamentals", levels: ["Fundamentals"] },
+  { label: "Intermediate", levels: ["Associate"] },
+  { label: "Advanced", levels: ["Expert", "Specialty"] },
+];
+
+function tierSummaries() {
+  return TIERS.map(({ label, levels }) => {
+    const exams = catalog
+      .filter((exam) => levels.includes(exam.msLevel))
+      .sort((a, b) => Number(b.hasContent) - Number(a.hasContent));
+    return {
+      label,
+      codes: exams.slice(0, 3).map((exam) => exam.code.toUpperCase()),
+      total: exams.length,
+    };
+  });
+}
+
+/**
  * The home page, Landing v2: a playable hero (copy + one real demo battle),
  * the scene strips, the equation strip, then the loop in four numbered
  * cards. Everything else the app can do is gated behind an account, so
@@ -10,11 +35,9 @@ import HomeHero from "@/components/HomeHero";
  * them.
  */
 export default function Home() {
-  const examCodes = catalog.filter((e) => e.hasContent).map((e) => e.code);
-
   return (
     <div className="flex flex-col gap-10">
-      <HomeHero examCodes={examCodes} />
+      <HomeHero tiers={tierSummaries()} />
 
       {/* The loop, in four numbered beats. */}
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
