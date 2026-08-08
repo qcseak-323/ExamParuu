@@ -160,6 +160,43 @@ export default function Nav() {
             </Link>
           )}
 
+          {/* Weather and sound sit on the bar itself, not in the menu: they
+              are the two things people reach for mid-session, and a toggle
+              you have to open a menu to find may as well not be there. */}
+          <button
+            type="button"
+            aria-pressed={dark}
+            title={dark ? "Switch to Low Tide (light)" : "Switch to Storm Watch (dark)"}
+            onClick={() => {
+              setPreference("theme", dark ? "bright" : "dark");
+              playSfx("confirm");
+            }}
+            className="pixel-button min-h-11 min-w-11 rounded-md bg-[var(--panel)] text-body-lg"
+          >
+            <span aria-hidden="true">{dark ? "☾" : "☀"}</span>
+            <span className="sr-only">
+              {dark ? "Storm Watch on — switch to Low Tide" : "Low Tide on — switch to Storm Watch"}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            aria-pressed={prefs.bgmEnabled}
+            title={prefs.bgmEnabled ? "Turn music off" : "Turn music on"}
+            onClick={() => {
+              // The click that turns music on is itself the gesture that
+              // unlocks audio, so the blip lands only when switching on.
+              setPreference("bgmEnabled", !prefs.bgmEnabled);
+              if (!prefs.bgmEnabled) playSfx("confirm");
+            }}
+            className="pixel-button min-h-11 min-w-11 rounded-md bg-[var(--panel)] text-body-lg"
+          >
+            <span aria-hidden="true">{prefs.bgmEnabled ? "♪" : "🔇"}</span>
+            <span className="sr-only">
+              {prefs.bgmEnabled ? "Music on — turn off" : "Music off — turn on"}
+            </span>
+          </button>
+
           <button
             ref={buttonRef}
             type="button"
@@ -171,7 +208,11 @@ export default function Nav() {
               playSfx(open ? "back" : "cursor");
               setOpen((o) => !o);
             }}
-            className="pixel-button min-h-11 min-w-11 rounded-md bg-[var(--panel)] text-body-lg"
+            className={`pixel-button min-h-11 min-w-11 rounded-md bg-[var(--panel)] text-body-lg ${
+              // Signed out the menu holds only the action, which is already
+              // on the bar from sm up — an empty menu button is a dead end.
+              signedIn ? "" : "sm:hidden"
+            }`}
           >
             <span aria-hidden="true">☰</span>
           </button>
@@ -206,40 +247,6 @@ export default function Nav() {
                     {link.label}
                   </Link>
                 ))}
-
-              {signedIn && (
-                <hr className="my-1 border-0 border-t-2 border-dashed border-[var(--line)]" />
-              )}
-
-              <button
-                type="button"
-                onClick={() => {
-                  setPreference("theme", dark ? "bright" : "dark");
-                  playSfx("confirm");
-                }}
-                className="tap-target justify-start rounded-md px-3 py-2 text-left text-body hover:bg-[var(--panel-raised)]"
-              >
-                <span aria-hidden="true" className="mr-2">
-                  {dark ? "☾" : "☀"}
-                </span>
-                Weather — {dark ? "Storm Watch" : "Low Tide"}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  // The click that turns music on is itself the gesture that
-                  // unlocks audio, so the blip lands only when switching on.
-                  setPreference("bgmEnabled", !prefs.bgmEnabled);
-                  if (!prefs.bgmEnabled) playSfx("confirm");
-                }}
-                className="tap-target justify-start rounded-md px-3 py-2 text-left text-body hover:bg-[var(--panel-raised)]"
-              >
-                <span aria-hidden="true" className="mr-2">
-                  ♪
-                </span>
-                Sound — {prefs.bgmEnabled ? "on" : "off"}
-              </button>
 
               {signedIn && (
                 <>
