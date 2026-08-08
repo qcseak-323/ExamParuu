@@ -1,5 +1,13 @@
 import { noteToFreq } from "./notes";
-import { TRACKS, type Channel, type Track, type TrackName } from "./tracks";
+import {
+  TRACKS,
+  TRANSITION_CUES,
+  cueDurationMs,
+  type Channel,
+  type CueName,
+  type Track,
+  type TrackName,
+} from "./tracks";
 
 /**
  * A small chiptune engine built on Web Audio.
@@ -42,6 +50,7 @@ class ChiptuneEngine {
   private ctx: AudioContext | null = null;
   private masterGain: GainNode | null = null;
   private musicGain: GainNode | null = null;
+  private cueGain: GainNode | null = null;
   private sfxGain: GainNode | null = null;
   private noiseBuffer: AudioBuffer | null = null;
   private pulseWave: PeriodicWave | null = null;
@@ -81,6 +90,12 @@ class ChiptuneEngine {
     this.musicGain = ctx.createGain();
     this.musicGain.gain.value = this.musicEnabled ? 1 : 0;
     this.musicGain.connect(this.masterGain);
+
+    // Blackout cues sit beside the loop rather than inside it, so ducking the
+    // music to silence for the length of a cue doesn't duck the cue with it.
+    this.cueGain = ctx.createGain();
+    this.cueGain.gain.value = this.musicEnabled ? 1 : 0;
+    this.cueGain.connect(this.masterGain);
 
     this.sfxGain = ctx.createGain();
     this.sfxGain.gain.value = this.sfxEnabled ? 1 : 0;
@@ -137,13 +152,18 @@ class ChiptuneEngine {
 
   setMusicEnabled(enabled: boolean): void {
     this.musicEnabled = enabled;
-    if (this.musicGain && this.ctx) {
+    if (this.ctx) {
       // A short ramp instead of a hard set — an instantaneous gain change on
-      // a sounding oscillator is a click.
+      // a sounding oscillator is a click. `cancelScheduledValues` also throws
+      // away any pending un-duck from a cue that is still in flight, so
+      // switching the music off mid-blackout stays off.
       const now = this.ctx.currentTime;
-      this.musicGain.gain.cancelScheduledValues(now);
-      this.musicGain.gain.setValueAtTime(this.musicGain.gain.value, now);
-      this.musicGain.gain.linearRampToValueAtTime(enabled ? 1 : 0, now + 0.08);
+      for (const node of [this.musicGain, this.cueGain]) {
+        if (!node) continue;
+        node.gain.cancelScheduledValues(now);
+        node.gain.setValueAtTime(node.gain.value, now);
+        node.gain.linearRampToValueAtTime(enabled ? 1 : 0, now + 0.08);
+      }
     }
     if (!enabled) this.stopTrack();
   }
@@ -234,6 +254,57 @@ class ChiptuneEngine {
     }
 
     if (this.states.every((s) => s.done)) this.stopTrack();
+  }
+
+  // --- Blackout cues ------------------------------------------------------
+
+  /**
+   * Plays one of the intensifying builds that sound under a blackout.
+   *
+   * A cue is short and fully known up front, so unlike a track it is
+   * scheduled in one pass with no lookahead timer — at a second and a half
+   * there is nothing to stream. While it runs, the looping track is ducked to
+   * silence and lifted back at the end, which is what makes the build read as
+   * *the* music for the length of the transition rather than a layer on top
+   * of the overworld theme.
+   *
+   * Counts as music, not an effect: it is gated on the BGM preference and
+   * routed past the sfx bus entirely.
+   */
+  playCue(name: CueName): void {
+    if (!this.musicEnabled) return;
+
+    const ctx = this.ensureContext();
+    if (!ctx || ctx.state !== "running" || !this.cueGain || !this.musicGain) {
+      return;
+    }
+
+    const cue = TRANSITION_CUES[name];
+    const start = ctx.currentTime + 0.02;
+    const secondsPerBeat = 60 / cue.bpm;
+
+    for (const channel of cue.channels) {
+      let at = start;
+      for (const [pitch, beats] of channel.steps) {
+        const duration = beats * secondsPerBeat;
+        if (pitch !== null) {
+          this.playVoice(channel, pitch, at, duration, this.cueGain);
+        }
+        at += duration;
+      }
+    }
+
+    // Duck the loop under the cue, then lift it. The lift starts slightly
+    // before the cue's tail so the two cross rather than leaving a hole —
+    // which matters most on the transition *into* a battle, where what comes
+    // back up is the battle theme.
+    const ends = start + cueDurationMs(name) / 1000;
+    const gain = this.musicGain.gain;
+    gain.cancelScheduledValues(ctx.currentTime);
+    gain.setValueAtTime(gain.value, ctx.currentTime);
+    gain.linearRampToValueAtTime(0, ctx.currentTime + 0.09);
+    gain.setValueAtTime(0, Math.max(ends - 0.25, ctx.currentTime + 0.1));
+    gain.linearRampToValueAtTime(1, ends + 0.05);
   }
 
   private playVoice(

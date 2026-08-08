@@ -197,3 +197,159 @@ export function trackBeats(track: Track): number {
     0,
   );
 }
+
+// --- Blackout cues ----------------------------------------------------------
+
+/**
+ * The three musical builds that play under a blackout transition.
+ *
+ * A cue is a Track that never loops and is never "the music": the engine
+ * ducks whatever loop is running to silence, plays the cue over the top, and
+ * lifts the loop back afterwards (see `playCue`). That is what lets the same
+ * cue work when the screen is leaving the overworld for a battle — the town
+ * loop drops out, the build takes over, and the battle theme is what comes
+ * back up.
+ *
+ * All three intensify the same way an encounter should: note values halve as
+ * the cue runs, so the last bar is four times the rate of the first, and the
+ * percussion thickens underneath. They differ in *how* — a climbing run, a
+ * hovering flutter, a hammering toll — so hearing one twice in a row is
+ * obvious enough to be worth having three.
+ *
+ * Each runs about 1.2 seconds, matching the blackout keyframes in globals.css
+ * — the build should resolve as the dark lifts, not after it. `cueDurationMs`
+ * is how the engine knows when to hand the loop back.
+ */
+export type CueName = "ladder" | "flutter" | "toll";
+
+/**
+ * A chromatic climb that accelerates into a pair of low slams. Pairs with the
+ * blinds blackout: the run rises, the bands close on the slam.
+ */
+const CUE_LADDER: Track = {
+  bpm: 240,
+  loop: false,
+  channels: [
+    {
+      wave: "pulse",
+      gain: 0.26,
+      steps: [
+        ["C4", 0.5], ["E4", 0.5], ["G4", 0.5], ["A#4", 0.5],
+        ["C5", 0.25], ["D5", 0.25], ["E5", 0.25], ["F#5", 0.25],
+        ["G#5", 0.25], ["A#5", 0.25],
+        ["C6", 0.125], ["C6", 0.125], ["C6", 0.125], ["C6", 0.125],
+        [null, 0.5],
+      ],
+    },
+    {
+      wave: "triangle",
+      gain: 0.34,
+      steps: [
+        ["C2", 1], ["C2", 1],
+        ["C2", 0.5], ["C2", 0.5], ["C2", 0.5], ["C2", 0.5],
+        ["F1", 0.5], [null, 0.5],
+      ],
+    },
+    {
+      wave: "noise",
+      gain: 0.16,
+      steps: [
+        ["H", 0.5], ["H", 0.5], ["H", 0.5], ["H", 0.5],
+        ["S", 0.25], ["S", 0.25], ["S", 0.25], ["S", 0.25],
+        ["K", 0.5], ["K", 0.5],
+      ],
+    },
+  ],
+};
+
+/**
+ * The hovering one: a two-note flutter that tightens and climbs a step at a
+ * time. Pairs with the iris blackout — it circles before it closes.
+ */
+const CUE_FLUTTER: Track = {
+  bpm: 240,
+  loop: false,
+  channels: [
+    {
+      wave: "pulse",
+      gain: 0.24,
+      steps: [
+        ["E5", 0.25], ["A4", 0.25], ["E5", 0.25], ["A4", 0.25],
+        ["F5", 0.25], ["A#4", 0.25], ["F5", 0.25], ["A#4", 0.25],
+        ["G5", 0.125], ["C5", 0.125], ["G5", 0.125], ["C5", 0.125],
+        ["A5", 0.125], ["D5", 0.125], ["A5", 0.125], ["D5", 0.125],
+        ["A#5", 0.125], ["A#5", 0.125], ["C6", 0.25], [null, 0.5],
+      ],
+    },
+    {
+      wave: "triangle",
+      gain: 0.32,
+      steps: [
+        ["A2", 1], ["A#2", 1], ["C3", 0.5], ["D3", 0.5],
+        ["E3", 0.5], ["F3", 0.5], ["A2", 1],
+      ],
+    },
+    {
+      wave: "noise",
+      gain: 0.15,
+      steps: [
+        ["H", 1], ["H", 0.5], ["H", 0.5],
+        ["H", 0.25], ["H", 0.25], ["H", 0.25], ["H", 0.25],
+        ["S", 0.25], ["S", 0.25], ["K", 0.5],
+      ],
+    },
+  ],
+};
+
+/**
+ * The heaviest of the three: one note hammered at a doubling rate under a
+ * falling bass. Pairs with the stagger blackout, whose false start lands on
+ * the second toll.
+ */
+const CUE_TOLL: Track = {
+  bpm: 240,
+  loop: false,
+  channels: [
+    {
+      wave: "pulse",
+      gain: 0.26,
+      steps: [
+        ["A4", 0.5], ["A4", 0.5],
+        ["A4", 0.25], ["A4", 0.25], ["A4", 0.25], ["A4", 0.25],
+        ["C5", 0.25], ["C5", 0.25],
+        ["D5", 0.125], ["D5", 0.125], ["D5", 0.125], ["D5", 0.125],
+        ["E5", 0.25], ["A5", 0.75],
+      ],
+    },
+    {
+      wave: "sawtooth",
+      gain: 0.2,
+      steps: [
+        ["A3", 1], ["G3", 1], ["F3", 1],
+        ["E3", 0.5], ["D3", 0.5], ["A2", 0.75],
+      ],
+    },
+    {
+      wave: "noise",
+      gain: 0.18,
+      steps: [
+        ["K", 0.5], ["K", 0.5], ["K", 0.5], ["K", 0.5],
+        ["K", 0.25], ["K", 0.25], ["K", 0.25], ["K", 0.25],
+        ["S", 0.25], ["S", 0.25], ["S", 0.25], ["S", 0.25],
+        ["K", 0.75],
+      ],
+    },
+  ],
+};
+
+export const TRANSITION_CUES: Record<CueName, Track> = {
+  ladder: CUE_LADDER,
+  flutter: CUE_FLUTTER,
+  toll: CUE_TOLL,
+};
+
+/** How long a cue sounds, in milliseconds — its longest channel. */
+export function cueDurationMs(name: CueName): number {
+  const cue = TRANSITION_CUES[name];
+  return (trackBeats(cue) / cue.bpm) * 60_000;
+}

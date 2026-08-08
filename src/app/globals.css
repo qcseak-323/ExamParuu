@@ -593,22 +593,88 @@ body {
   background: var(--accent);
 }
 
-/* --- Stage transition ------------------------------------------------------
-   The page darkens, the whoosh plays, the next stage is revealed. One
-   overlay, one keyframe: in, hold, out. Reduced-motion collapses it to
-   nothing via the global animation kill. */
-.screen-fade {
+/* --- Blackout transition ---------------------------------------------------
+   The stage-change beat: the screen goes to black while an intensifying cue
+   builds underneath, the next stage is swapped in behind the dark, and the
+   dark lifts on it. Three variants, chosen at random per transition (see
+   useBattleTransition) — the shape of the dark differs, the timing does not.
+
+   All three run 1200ms and are fully black between 32% and 64%, which is the
+   window the caller swaps the stage in. Anything that changes those numbers
+   has to change BLACKOUT_MS and BLACKOUT_DARK_MS in BattleTransition.tsx too.
+
+   Reduced motion collapses every variant to nothing via the global animation
+   kill at the foot of this file; the hook shortens its own timers to match,
+   so the stage still changes — just without the theatre.
+
+   #04090e is deliberately a literal and not a token: this is the absence of
+   the screen, and it must not flip with the theme. */
+.blackout {
   position: fixed;
   inset: 0;
   z-index: 90;
-  background: #04090e;
+  overflow: hidden;
   pointer-events: none;
-  opacity: 0;
-  animation: screen-fade 700ms steps(8, end) forwards;
 }
-@keyframes screen-fade {
-  0% { opacity: 0; }
-  30%, 60% { opacity: 1; }
+
+/* Blinds — bands sweep shut from the top and bottom edges. They meet at 51%
+   apiece so the seam closes over itself instead of leaving a hairline. */
+.blackout--blinds .blackout-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  background: #04090e;
+  animation: blackout-blinds 1200ms steps(8, end) forwards;
+}
+.blackout--blinds .blackout-band--top {
+  top: 0;
+}
+.blackout--blinds .blackout-band--bottom {
+  bottom: 0;
+}
+@keyframes blackout-blinds {
+  0% { height: 0; }
+  32%, 64% { height: 51%; }
+  100% { height: 0; }
+}
+
+/* Iris — a circle closes to a point. The dark is the box-shadow spreading
+   out of the circle rather than a fill, which is what lets a *shrinking*
+   element cover a growing area. */
+.blackout--iris .blackout-iris {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 260vmax;
+  height: 260vmax;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 100vmax #04090e;
+  animation: blackout-iris 1200ms steps(8, end) forwards;
+}
+@keyframes blackout-iris {
+  0% { width: 260vmax; height: 260vmax; }
+  32%, 64% { width: 0; height: 0; }
+  100% { width: 260vmax; height: 260vmax; }
+}
+
+/* Stagger — the dark grabs once, lets go, then takes the screen. Exactly one
+   false start on purpose: two would put the flash rate over three per second,
+   which is the line photosensitivity guidance draws. */
+.blackout--stagger .blackout-stagger {
+  position: absolute;
+  inset: 0;
+  background: #04090e;
+  opacity: 0;
+  animation: blackout-stagger 1200ms steps(1, end) forwards;
+}
+@keyframes blackout-stagger {
+  0%, 6% { opacity: 0; }
+  7%, 16% { opacity: 0.8; }
+  17%, 27% { opacity: 0; }
+  28%, 64% { opacity: 1; }
+  65%, 88% { opacity: 0.5; }
   100% { opacity: 0; }
 }
 
@@ -646,6 +712,130 @@ body {
   0% { opacity: 1; left: 18%; bottom: 26%; }
   85% { opacity: 1; }
   100% { opacity: 0; left: 74%; bottom: 62%; }
+}
+
+/* --- Battle entrance -------------------------------------------------------
+   What the blackout lifts on: the trainer strides in from the left, the wild
+   Paruu from the right, and the banner names it once both have landed. Sits
+   below the blackout's z-index so a transition still covers it, and wears the
+   arena's own colours rather than the blackout's #04090e — the point of the
+   beat is that the dark has *gone*.
+
+   The whole thing is a button so it can be skipped by keyboard as well as by
+   click; the resets below are what stop it looking like one.
+
+   Timing (from mount, which the caller schedules at BLACKOUT_DARK_MS):
+     620ms  the blackout has cleared — the cast starts moving
+    1140ms  both have landed
+    1180ms  the banner reads
+    1750ms  BattleEntrance's own timer dismisses it
+
+   `animation-fill-mode: both` holds the cast off-screen through the delay.
+
+   It is NOT enough on its own under reduced motion, which is worth spelling
+   out because it looks like it should be. The global kill at the foot of this
+   file collapses animation-DURATION and leaves animation-DELAY alone, so a
+   delayed animation sits in its delay phase filling *backwards* — the
+   authored, off-screen state. The cast stayed at translateX(-525px) and the
+   banner never reached opacity 1 within the 650ms the entrance exists.
+   Zeroing the delays is the actual fix; see the reduced-motion block below. */
+.battle-entrance {
+  position: fixed;
+  inset: 0;
+  z-index: 85;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  appearance: none;
+  cursor: pointer;
+  background: radial-gradient(
+    circle at 50% 58%,
+    var(--arena-top),
+    var(--arena-bottom)
+  );
+}
+
+/* The entrance lifts its own veil, and this is not belt-and-braces over the
+   blackout — it is the only thing covering the seam when the transition
+   crossed a route. A cross-page blackout is rendered by the page it is
+   leaving, so it unmounts the instant the new page commits, somewhere in the
+   middle of its own keyframe. Without this the arena would cut in hard. The
+   fade runs exactly as long as the cast's delay, so the dark lifts and the
+   cast walks on. */
+.battle-entrance::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #04090e;
+  pointer-events: none;
+  animation: entrance-lift 620ms steps(6, end) forwards;
+}
+@keyframes entrance-lift {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.entrance-cast {
+  position: relative;
+  display: flex;
+  width: min(100%, 44rem);
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 clamp(8px, 5vw, 48px);
+}
+.entrance-side {
+  animation-duration: 520ms;
+  animation-delay: 620ms;
+  animation-timing-function: steps(8, end);
+  animation-fill-mode: both;
+}
+.entrance-side--left {
+  animation-name: entrance-from-left;
+}
+.entrance-side--right {
+  animation-name: entrance-from-right;
+}
+@keyframes entrance-from-left {
+  from { transform: translateX(-140vw); }
+  to { transform: translateX(0); }
+}
+@keyframes entrance-from-right {
+  from { transform: translateX(140vw); }
+  to { transform: translateX(0); }
+}
+.entrance-banner {
+  position: relative;
+  display: block;
+  animation: entrance-banner 280ms steps(4, end) 1180ms both;
+}
+@keyframes entrance-banner {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* The entrance's delays exist to sequence it against the blackout. With no
+   motion there is no sequence to keep — everything should simply be there,
+   including the banner, which is the only place the encounter is named in
+   words. Scoped to the entrance rather than folded into the global kill:
+   other delays on this page (the landing runners, the staggered attack
+   bolts) are gated elsewhere and are not mine to re-time here. */
+@media (prefers-reduced-motion: reduce) {
+  .entrance-side,
+  .entrance-banner,
+  .battle-entrance::before {
+    animation-delay: 0s !important;
+  }
+}
+html[data-reduced-motion="true"] .entrance-side,
+html[data-reduced-motion="true"] .entrance-banner,
+html[data-reduced-motion="true"] .battle-entrance::before {
+  animation-delay: 0s !important;
 }
 
 /* The felled opponent sinks and fades. */

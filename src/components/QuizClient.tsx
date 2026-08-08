@@ -23,6 +23,7 @@ import { fighterRoster } from "@/lib/guardians";
 import { usePreferences } from "@/lib/preferences";
 import PixelSprite from "@/components/PixelSprite";
 import FighterSprite from "@/components/battle/FighterSprite";
+import BattleEntrance from "@/components/battle/BattleEntrance";
 import { useBattleTransition } from "@/components/battle/BattleTransition";
 import MenuList, { type MenuOption } from "@/components/MenuList";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
@@ -65,7 +66,7 @@ function damagePerWrongFor(questionCount: number): number {
   return Math.ceil(PLAYER_MAX_HP / (allowed + 1));
 }
 
-type Phase = "setup" | "battle" | "finished";
+type Phase = "setup" | "entering" | "battle" | "finished";
 type Turn = "asking" | "resolved";
 type Outcome = "victory" | "defeat" | "survived" | "fled";
 
@@ -184,10 +185,15 @@ export default function QuizClient({
   examCode,
   palType,
   palNickname,
+  trainerAvatar,
+  trainerName,
 }: {
   examCode: string;
   palType: PalType;
   palNickname: string | null;
+  /** Both are for the entrance beat only — nothing here branches on them. */
+  trainerAvatar: string | null;
+  trainerName: string | null;
 }) {
   const content = getExamContent(examCode);
   const searchParams = useSearchParams();
@@ -218,7 +224,31 @@ export default function QuizClient({
     [examCode, allAttempts],
   );
 
-  const [phase, setPhase] = useState<Phase>("setup");
+  /**
+   * `?wild=5` — how the setup wizard hands off. A new trainer's first act
+   * should be a battle, not another menu, so this route skips the setup phase
+   * entirely and opens on the encounter.
+   *
+   * Read as a plain derivation, not in an effect: `useState` below takes it as
+   * an initial value, and a battle that auto-starts from an effect would have
+   * to setState in one, which the React Compiler rules forbid.
+   */
+  const wildRequest = Number(searchParams.get("wild"));
+  const wildCount =
+    Number.isInteger(wildRequest) && wildRequest > 0 && wildRequest <= 50
+      ? wildRequest
+      : null;
+
+  const [phase, setPhase] = useState<Phase>(wildCount ? "entering" : "setup");
+  /**
+   * What the encounter now playing is going to draw, held across the entrance
+   * so the questions aren't shuffled until the beat is over. `only` is the
+   * redemption round's fixed set; `count` overrides the length picker.
+   */
+  const [pending, setPending] = useState<{
+    only: Question[] | null;
+    count: number | null;
+  }>({ only: null, count: wildCount });
   const [domainFilter, setDomainFilter] = useState<string>(initialDomain);
   const [countChoice, setCountChoice] =
     useState<(typeof COUNT_OPTIONS)[number]>(10);
@@ -251,9 +281,11 @@ export default function QuizClient({
     [results],
   );
 
-  // Battle music while fighting; the fanfare takes over at the end.
+  // Battle music while fighting; the fanfare takes over at the end. The
+  // entrance counts as fighting — the theme should already be going when the
+  // wild Paruu slides in, which is also what the blackout's cue hands off to.
   useEffect(() => {
-    if (phase === "battle") setTrack("battle");
+    if (phase === "battle" || phase === "entering") setTrack("battle");
     else if (phase === "setup") setTrack("town");
     return () => setTrack(null);
   }, [phase, setTrack]);
@@ -271,14 +303,30 @@ export default function QuizClient({
       ? reviewSummary.dueCount
       : getQuestionsByDomain(examCode, domainFilter).length;
 
-  // Not memoized: it is only ever called from a click handler, and wrapping it
-  // opted the whole component out of the React Compiler's optimization.
+  /**
+   * Announce the encounter. The draw is deliberately NOT done here: the
+   * entrance plays first and `startBattle` runs off the back of it, so the
+   * questions are shuffled at the moment the battle actually begins.
+   *
+   * Every way into a battle goes through this, and every one of them is
+   * already wrapped in a blackout — so the full beat is dark, cue, cast, fight.
+   */
+  function beginBattle(only?: Question[], count?: number) {
+    setPending({ only: only ?? null, count: count ?? null });
+    setPhase("entering");
+  }
+
+  // Not memoized: it is only ever called from a click handler or the
+  // entrance's own timer, and wrapping it opted the whole component out of
+  // the React Compiler's optimization.
   //
   // `only` runs a battle against a specific set — used by the redemption round,
-  // which re-fights exactly the questions just missed.
-  function startBattle(only?: Question[]) {
+  // which re-fights exactly the questions just missed. `forcedCount` overrides
+  // the length picker, which is how `?wild=5` gets a five-question run.
+  function startBattle(only: Question[] | null, forcedCount: number | null) {
     const wanted =
-      countChoice === "all" ? Number.MAX_SAFE_INTEGER : countChoice;
+      forcedCount ??
+      (countChoice === "all" ? Number.MAX_SAFE_INTEGER : countChoice);
 
     let pool: Question[];
     if (only) {
@@ -523,7 +571,7 @@ export default function QuizClient({
         </section>
 
         <button
-          onClick={() => runTransition(() => startBattle())}
+          onClick={() => runTransition(() => beginBattle())}
           disabled={availableCount === 0}
           className="pixel-button tap-target w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)] disabled:opacity-50"
         >
@@ -532,6 +580,26 @@ export default function QuizClient({
 
         {transitionOverlay}
       </div>
+    );
+  }
+
+  // --- Entrance ------------------------------------------------------------
+
+  // Nothing else renders: the entrance covers the screen, and the questions
+  // for this run have not been drawn yet — that happens in `startBattle`,
+  // which is what the entrance calls when it is done.
+  if (phase === "entering") {
+    return (
+      <>
+        <BattleEntrance
+          fighter={fighter}
+          trainerAvatar={trainerAvatar}
+          trainerName={trainerName}
+          foeName={foeName}
+          onDone={() => startBattle(pending.only, pending.count)}
+        />
+        {transitionOverlay}
+      </>
     );
   }
 
@@ -866,7 +934,7 @@ export default function QuizClient({
               all, so a missed question was simply a dead end. */}
           <div className="flex flex-wrap gap-3">
             <button
-              onClick={() => runTransition(() => startBattle(missed))}
+              onClick={() => runTransition(() => beginBattle(missed))}
               className="pixel-button tap-target rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
             >
               Redemption round ({missed.length}) ▶
@@ -914,7 +982,7 @@ export default function QuizClient({
 
       <div className="flex flex-wrap gap-3">
         <button
-          onClick={() => runTransition(() => startBattle())}
+          onClick={() => runTransition(() => beginBattle())}
           className="pixel-button tap-target rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
         >
           Battle again

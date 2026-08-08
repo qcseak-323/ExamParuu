@@ -1,7 +1,7 @@
 /**
  * Trainer profile answers collected during first-run setup.
  *
- * Expertise is self-reported and deliberately does not gate anything — it
+ * Familiarity is self-reported and deliberately does not gate anything — it
  * only changes the wording of guidance. Locking content behind a
  * self-assessment would punish people for being honest about being new.
  */
@@ -37,47 +37,67 @@ export function trainerAvatarSheet(value: string | null): string | null {
   return TRAINER_AVATARS.find((a) => a.id === value)?.sheet ?? null;
 }
 
-export type ExpertiseLevel = "new" | "some" | "certified";
+/**
+ * How well the trainer already knows the exam series they picked.
+ *
+ * Asked *after* the route, and about that route specifically — "how well do
+ * you know AZ · Azure", not "how experienced are you". That is why the three
+ * answers borrow the certification tier words rather than the generic
+ * beginner/intermediate/expert ladder: they name a level of the thing in
+ * front of you.
+ *
+ * Stored in the existing `User.expertise` column. It has been nullable text
+ * since the first migration and nothing has ever branched on its contents, so
+ * this needed no migration against the shared database — which is the whole
+ * reason the column was left in place when the old question was dropped.
+ * Values written before V0.07 ("new" | "some" | "certified") are still in
+ * there; `familiarityLabel` returns null for them rather than guessing.
+ */
+export type Familiarity = "fundamental" | "intermediate" | "advanced";
 
-export const EXPERTISE_LEVELS: ExpertiseLevel[] = ["new", "some", "certified"];
+export const FAMILIARITY_LEVELS: Familiarity[] = [
+  "fundamental",
+  "intermediate",
+  "advanced",
+];
 
-export function isExpertiseLevel(value: unknown): value is ExpertiseLevel {
+export function isFamiliarity(value: unknown): value is Familiarity {
   return (
     typeof value === "string" &&
-    EXPERTISE_LEVELS.includes(value as ExpertiseLevel)
+    FAMILIARITY_LEVELS.includes(value as Familiarity)
   );
 }
 
-export const EXPERTISE_OPTIONS: {
-  id: ExpertiseLevel;
+export const FAMILIARITY_OPTIONS: {
+  id: Familiarity;
   label: string;
   hint: string;
   /** Shown back to the trainer after they pick. */
   response: string;
 }[] = [
   {
-    id: "new",
-    label: "Brand new to this",
-    hint: "Never sat a Microsoft exam",
+    id: "fundamental",
+    label: "Fundamental",
+    hint: "New to this series",
     response:
-      "Everyone starts somewhere. Read the study guide for a route before you battle it, and the questions will feel far less strange.",
+      "Then we start at the shoreline. Read a lesson before you battle it and the questions will feel far less strange.",
   },
   {
-    id: "some",
-    label: "I've studied before",
-    hint: "Some experience, not certified yet",
+    id: "intermediate",
+    label: "Intermediate",
+    hint: "I've worked with it before",
     response:
-      "Good — you'll know the vocabulary already. Battle first, then use the missed-question review to find the gaps.",
+      "Good — the vocabulary won't slow you down. Battle first, then let the missed-question review find your gaps.",
   },
   {
-    id: "certified",
-    label: "Already certified",
-    hint: "Hold one or more certifications",
+    id: "advanced",
+    label: "Advanced",
+    hint: "I know this series well",
     response:
       "Then you know the drill. Go straight to full-length battles and treat anything under 70% as a topic to revisit.",
   },
 ];
 
-export function expertiseLabel(value: string | null): string | null {
-  return EXPERTISE_OPTIONS.find((o) => o.id === value)?.label ?? null;
+export function familiarityLabel(value: string | null): string | null {
+  return FAMILIARITY_OPTIONS.find((o) => o.id === value)?.label ?? null;
 }

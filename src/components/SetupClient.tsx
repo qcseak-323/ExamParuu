@@ -4,7 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { PAL_SPECIES, PAL_TYPES, formLabel, type PalType } from "@/lib/pals";
-import { TRAINER_AVATARS, type TrainerAvatar } from "@/lib/profile";
+import {
+  FAMILIARITY_OPTIONS,
+  TRAINER_AVATARS,
+  type Familiarity,
+  type TrainerAvatar,
+} from "@/lib/profile";
 import { completeProfileSetup } from "@/lib/actions";
 import { catalog } from "@/lib/content";
 import { REGIONS } from "@/lib/regions";
@@ -17,10 +22,15 @@ import { useBattleTransition } from "@/components/battle/BattleTransition";
 
 /**
  * First-run profile setup, played as a conversation with the professor and
- * walked as a five-step wizard: trainer → Paruu → its nickname → your name
- * → route. The two naming steps sit next to each other on purpose: the
- * question "what do I call this thing" is asked once about the creature and
- * once about you, and separating them is what stops the two being confused.
+ * walked as a six-step wizard: trainer → Paruu → its nickname → your name
+ * → route → how well you know it. The two naming steps sit next to each
+ * other on purpose: the question "what do I call this thing" is asked once
+ * about the creature and once about you, and separating them is what stops
+ * the two being confused.
+ *
+ * Familiarity is asked *last*, straight after the route, because it is a
+ * question about that route — "how well do you know AZ · Azure" only means
+ * something once there is an answer to point at.
  *
  * Choosing no longer jumps straight to the next step. A pick fills the card
  * gold and stays there, and `Next` carries you forward — so a mis-tap is
@@ -30,9 +40,16 @@ import { useBattleTransition } from "@/components/battle/BattleTransition";
  * Nothing is written until "Set sail" — see `completeProfileSetup`. A trainer
  * who abandons setup halfway has no profile at all and gets the whole flow
  * again, rather than being let into the app with a starter but no route.
+ *
+ * "Set sail" does not land on the map. It saves, blacks out, and drops the
+ * trainer straight into a five-question wild battle on the route they picked
+ * — the first thing a new trainer does is fight, not read a menu.
  */
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
+
+/** Length of the wild battle that setup hands off to. */
+const FIRST_BATTLE_QUESTIONS = 5;
 
 const INTRO_LINES = [
   "Hello there! Welcome to the world of certification.",
@@ -73,10 +90,15 @@ export default function SetupClient({ email }: { email: string | null }) {
   const [nickname, setNickname] = useState("");
   const [trainerName, setTrainerName] = useState("");
   const [priorityExam, setPriorityExam] = useState<string | null>(null);
+  const [familiarity, setFamiliarity] = useState<Familiarity | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const playableExams = catalog.filter((exam) => exam.hasContent);
   const avatarOption = TRAINER_AVATARS.find((a) => a.id === trainerAvatar);
+  const chosenExam = playableExams.find((exam) => exam.code === priorityExam);
+  const familiarityOption = FAMILIARITY_OPTIONS.find(
+    (o) => o.id === familiarity,
+  );
   /** The chosen line, and its base form — what the nickname step is naming. */
   const species = palType ? PAL_SPECIES[palType] : null;
   const starter = species?.stages[0] ?? null;
@@ -88,11 +110,12 @@ export default function SetupClient({ email }: { email: string | null }) {
     // The nickname is optional — a blank one means "call it what it is".
     if (which === 3) return true;
     if (which === 4) return trainerName.trim().length > 0;
-    return priorityExam !== null;
+    if (which === 5) return priorityExam !== null;
+    return familiarity !== null;
   }
 
-  async function commit() {
-    if (!trainerAvatar || !palType || !priorityExam) return;
+  async function setSail() {
+    if (!trainerAvatar || !palType || !priorityExam || !familiarity) return;
     setSaving(true);
     setError(null);
 
@@ -102,6 +125,7 @@ export default function SetupClient({ email }: { email: string | null }) {
       nickname,
       trainerName,
       priorityExam,
+      familiarity,
     });
 
     if (!result.ok) {
@@ -115,16 +139,23 @@ export default function SetupClient({ email }: { email: string | null }) {
     // guard on the next page will see it — otherwise requireTrainer bounces
     // straight back here.
     await update();
-    router.replace("/catalog");
-    router.refresh();
+
+    // Only now the blackout. Running it around the save instead would mean
+    // the dark lifting on whatever the network was still doing — the save is
+    // finished here, so the dark is covering a navigation and nothing else.
+    // `saving` stays true through it, which keeps the footer disabled.
+    runTransition(() => {
+      router.replace(
+        `/exams/${priorityExam}/quiz?wild=${FIRST_BATTLE_QUESTIONS}`,
+      );
+      router.refresh();
+    });
   }
 
   function goNext() {
     if (!isStepReady(step) || saving) return;
     if (step === TOTAL_STEPS) {
-      // The stage-change beat: darken, whoosh, then the save runs while the
-      // screen is dark and the map is the reveal.
-      runTransition(() => void commit());
+      void setSail();
       return;
     }
     playSfx("confirm");
@@ -436,7 +467,7 @@ export default function SetupClient({ email }: { email: string | null }) {
             })}
           </div>
 
-          {/* Everything chosen so far, so the last step is also a review. */}
+          {/* Everything chosen so far, so the route step is also a review. */}
           <p className="text-caption text-[var(--foreground-muted)]">
             {[
               avatarOption?.label,
@@ -447,6 +478,75 @@ export default function SetupClient({ email }: { email: string | null }) {
               .join(" · ")}
             {email ? ` · saving to ${email}` : ""}
           </p>
+        </>
+      )}
+
+      {/* Step 6 — how well they know that route ------------------------- */}
+      {step === 6 && (
+        <>
+          <DialogueFrame>
+            <span className="dialogue-tab">Prof. Sequel</span>
+            <div className="flex items-center gap-3">
+              <ProfessorPortrait />
+              <p className="dialogue-text flex-1">
+                {/* Named, not implied: the question is about the series they
+                    picked one step ago, and asking it in the abstract is how
+                    you get an answer about the wrong thing. */}
+                {chosenExam
+                  ? `How well do you know ${routeTitleFor(chosenExam.series)}?`
+                  : "And how well do you know that series?"}
+              </p>
+            </div>
+          </DialogueFrame>
+
+          <div
+            className="grid gap-4 sm:grid-cols-3"
+            role="group"
+            aria-label="How well you know this series"
+          >
+            {FAMILIARITY_OPTIONS.map((option) => {
+              const picked = familiarity === option.id;
+              return (
+                <button
+                  key={option.id}
+                  type="button"
+                  aria-pressed={picked}
+                  onMouseEnter={() => playSfx("cursor")}
+                  onClick={() => {
+                    playSfx("confirm");
+                    setFamiliarity(option.id);
+                  }}
+                  className={`select-card flex flex-col items-center gap-2 p-6 ${
+                    picked ? "select-card--picked" : ""
+                  }`}
+                >
+                  <span className="font-pixel text-title">{option.label}</span>
+                  <span className="text-caption text-[var(--foreground-muted)]">
+                    {option.hint}
+                  </span>
+                  <span className="select-card-pick mt-auto">
+                    {picked ? "Chosen ✓" : "Choose ▶"}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* The answer earns a reply rather than just a filled card — this
+              is a conversation, and it is the last thing said before the
+              screen goes dark on the first battle. */}
+          {familiarityOption && (
+            <DialogueFrame>
+              <span className="dialogue-tab">Prof. Sequel</span>
+              <div className="flex items-center gap-3">
+                <ProfessorPortrait />
+                <p className="dialogue-text flex-1">
+                  {familiarityOption.response} Now — something&apos;s rustling
+                  in the grass. Let&apos;s see what you can do.
+                </p>
+              </div>
+            </DialogueFrame>
+          )}
         </>
       )}
 

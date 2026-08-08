@@ -4,7 +4,12 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { findFlashcardExamCode, getCatalogEntry } from "@/lib/content";
 import { isPalType, type PalType } from "@/lib/pals";
-import { isTrainerAvatar, type TrainerAvatar } from "@/lib/profile";
+import {
+  isFamiliarity,
+  isTrainerAvatar,
+  type Familiarity,
+  type TrainerAvatar,
+} from "@/lib/profile";
 import type {
   QuizAttempt,
   QuizResultEntry,
@@ -29,6 +34,8 @@ export type ProfileSetupInput = {
   /** The trainer's own name — goes on the trainer card. */
   trainerName: string;
   priorityExam: string;
+  /** How well they already know the series they just picked. */
+  familiarity: Familiarity;
 };
 
 /**
@@ -60,6 +67,9 @@ export async function completeProfileSetup(
   }
   if (!getCatalogEntry(input.priorityExam)) {
     return { ok: false, error: "That isn't an exam we cover." };
+  }
+  if (!isFamiliarity(input.familiarity)) {
+    return { ok: false, error: "Tell us how well you know that series." };
   }
 
   const trimmedName = input.trainerName.trim();
@@ -94,6 +104,9 @@ export async function completeProfileSetup(
       name: trimmedName,
       trainerAvatar: input.trainerAvatar,
       priorityExam: input.priorityExam,
+      // The long-dormant column, back in use — see profile.ts for why this
+      // holds a familiarity now and not the old expertise answer.
+      expertise: input.familiarity,
     },
   });
 

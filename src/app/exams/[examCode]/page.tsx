@@ -4,6 +4,7 @@ import { getCatalogEntry, getExamContent } from "@/lib/content";
 import { getDisplayTier, getRetroLabel } from "@/lib/levels";
 import { requireTrainer } from "@/lib/session";
 import ReviewCallout from "@/components/ReviewCallout";
+import TransitionLink from "@/components/battle/TransitionLink";
 
 // No generateStaticParams: these routes are behind a session check now, so
 // they render per request and can't be prerendered at build time.
@@ -117,7 +118,12 @@ export default async function ExamOverviewPage({
           </section>
 
           {/* The two ways to play, side by side. Practice is the learning
-              loop with no clock; Exam is everything with a timer on it. */}
+              loop with no clock; Exam is everything with a timer on it.
+
+              Every one of these five is a way into a battle or a lesson, so
+              every one of them blacks out on the way — TransitionLink, not
+              Link. The progress link below stays a plain Link: looking at
+              your own numbers is not entering a stage. */}
           <section className="grid gap-4 lg:grid-cols-2">
             <div className="pixel-panel flex flex-col gap-3 p-6">
               <h2 className="font-pixel text-title">Practice Mode</h2>
@@ -125,24 +131,24 @@ export default async function ExamOverviewPage({
                 No clock. Wrong answers open a lesson on the spot.
               </p>
               <div className="mt-auto flex flex-wrap gap-3 pt-2">
-                <Link
+                <TransitionLink
                   href={`/exams/${exam.code}/quiz`}
                   className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
                 >
                   Start practice battle
-                </Link>
-                <Link
+                </TransitionLink>
+                <TransitionLink
                   href={`/exams/${exam.code}/study`}
                   className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
                 >
                   Study guide
-                </Link>
-                <Link
+                </TransitionLink>
+                <TransitionLink
                   href={`/exams/${exam.code}/flashcards`}
                   className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
                 >
                   Flashcards
-                </Link>
+                </TransitionLink>
               </div>
             </div>
 
@@ -152,18 +158,18 @@ export default async function ExamOverviewPage({
                 The clock runs. No feedback until the score report.
               </p>
               <div className="mt-auto flex flex-wrap gap-3 pt-2">
-                <Link
+                <TransitionLink
                   href={`/exams/${exam.code}/exam`}
                   className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
                 >
                   The Proving — real format
-                </Link>
-                <Link
+                </TransitionLink>
+                <TransitionLink
                   href={`/exams/${exam.code}/gym`}
                   className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
                 >
                   Challenge the dungeon
-                </Link>
+                </TransitionLink>
               </div>
             </div>
           </section>

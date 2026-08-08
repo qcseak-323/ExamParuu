@@ -5,6 +5,7 @@ import type { Domain, StudyGuideDomain } from "@/lib/types";
 import { estimateMinutes, hasCompletedLesson } from "@/lib/learning";
 import { useLearningEvents } from "@/lib/storage";
 import MenuList from "@/components/MenuList";
+import { useBattleTransition } from "@/components/battle/BattleTransition";
 
 /**
  * The lesson index for one exam.
@@ -12,6 +13,10 @@ import MenuList from "@/components/MenuList";
  * Client-side because the ✓ ticks come from the learning log in local
  * storage. The prose itself still lives on the server-rendered page below —
  * this is navigation, not content.
+ *
+ * Opening a lesson blacks out the same way entering a battle does: a route
+ * is a route. The menu pushes rather than linking, so this uses the hook
+ * directly instead of TransitionLink.
  */
 export default function StudyRouteClient({
   examCode,
@@ -24,6 +29,8 @@ export default function StudyRouteClient({
 }) {
   const router = useRouter();
   const events = useLearningEvents();
+  const { run: runTransition, overlay: transitionOverlay } =
+    useBattleTransition();
 
   const total = guide.reduce((sum, d) => sum + d.sections.length, 0);
   const done = guide.reduce(
@@ -91,12 +98,16 @@ export default function StudyRouteClient({
                   : `~${estimateMinutes(section.paragraphs)} min`,
               }))}
               onSelect={(sectionId) =>
-                router.push(`/exams/${examCode}/study/${sectionId}`)
+                runTransition(() =>
+                  router.push(`/exams/${examCode}/study/${sectionId}`),
+                )
               }
             />
           </section>
         );
       })}
+
+      {transitionOverlay}
     </div>
   );
 }

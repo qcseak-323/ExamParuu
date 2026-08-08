@@ -22,6 +22,8 @@ export default async function QuizPage({
         examCode={examCode}
         palType={trainer.examPal}
         palNickname={trainer.examPalName}
+        trainerAvatar={trainer.trainerAvatar}
+        trainerName={trainer.trainerName}
       />
     </Suspense>
   );
