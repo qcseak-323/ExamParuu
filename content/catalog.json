@@ -64,7 +64,7 @@
     "status": "GA",
     "durationMinutes": 45,
     "passingScore": 700,
-    "summary": "Generative AI, Copilot fundamentals, and modern AI agents on Azure — the 2026 replacement for AI-900.",
+    "summary": "Generative AI, Copilot fundamentals, and modern AI agents on Azure.",
     "hasContent": true,
     "catalogVerifiedAt": "2026-08-07",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/"
