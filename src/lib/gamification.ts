@@ -3,6 +3,7 @@ import type {
   FlashcardStatus,
   Domain,
   LearningEvent,
+  LearningPath,
 } from "./types";
 import { getCatalogEntry, getExamContent } from "./content";
 import { countLessonsCompleted, countRepeatEngagements } from "./learning";
@@ -63,7 +64,27 @@ export function computeXp(
     countRepeatEngagements(events) * XP_PER_REPEAT_REVIEW +
     computeStreakMilestoneXp(activityDates) +
     computeWildXp(events) +
-    computeModuleXp(events)
+    computeModuleXp(events) +
+    computeModulePerfectXp(events)
+  );
+}
+
+/**
+ * XP for flawless module runs — every checkpoint in the sitting answered
+ * perfectly. Appended term, non-negative, count × constant over the same
+ * append-only log as `computeModuleXp`, whose safety argument transfers
+ * verbatim: day-scoped deterministic ids stop farming, nothing derives from
+ * `computeStreak`, so the invariant above holds unchanged.
+ *
+ * A bonus on top of the module's 25, not a replacement — precision is worth
+ * more than persistence, never instead of it.
+ */
+export const XP_PER_MODULE_PERFECT = 10;
+
+export function computeModulePerfectXp(events: LearningEvent[]): number {
+  return (
+    events.filter((e) => e.kind === "modulePerfect").length *
+    XP_PER_MODULE_PERFECT
   );
 }
 
@@ -283,6 +304,30 @@ export function isGymCleared(
       a.domainFilter === "mock" &&
       a.numQuestions > 0 &&
       a.correctCount / a.numQuestions >= 0.7,
+  );
+}
+
+/**
+ * "Path sealed" for one learning path: every module in it has ever been
+ * completed. Derived, never stored, exactly like `isGymCleared` above — an
+ * "ever" predicate over the whole event log, never a current-run count, so
+ * a seal once earned cannot be lost. Display-only: it feeds the path list,
+ * not XP, so the invariant above is untouched. This is the learning path's
+ * own collectible; the dungeon stays the only route to a guardian.
+ */
+export function isPathCleared(
+  examCode: string,
+  path: LearningPath,
+  events: LearningEvent[],
+): boolean {
+  if (path.modules.length === 0) return false;
+  return path.modules.every((m) =>
+    events.some(
+      (e) =>
+        e.examCode === examCode &&
+        e.kind === "moduleDone" &&
+        e.refId === m.id,
+    ),
   );
 }
 

@@ -154,6 +154,43 @@ export type Challenge =
       id: string;
       prompt: string;
       options: { id: string; label: string; correct: boolean }[];
+    }
+  | {
+      /**
+       * Spot the term from another skills area. Same answer shape as recall;
+       * a separate kind because the question is about the authored `domain`
+       * field, not the question bank — it works on any module, however few
+       * cards it has.
+       */
+      kind: "oddOne";
+      id: string;
+      prompt: string;
+      options: string[];
+      correctIndex: number;
+      explanation: string;
+    }
+  | {
+      /**
+       * Sort terms into their skills areas. The generalisation of match:
+       * slot identity (`bucketId`) is distinct from the item, so a bucket
+       * holds many items where a match slot holds exactly one.
+       */
+      kind: "sort";
+      id: string;
+      prompt: string;
+      buckets: { id: string; label: string }[];
+      items: { id: string; label: string; bucketId: string }[];
+    }
+  | {
+      /**
+       * Judge each term/definition pairing true or false. The fastest reps
+       * of the set, and the only paired format that works on a one-card
+       * module — the pair needs one real card plus a borrowed definition.
+       */
+      kind: "swipe";
+      id: string;
+      prompt: string;
+      cards: { id: string; term: string; definition: string; matches: boolean }[];
     };
 
 export type FlashcardStatus = "known" | "learning";
@@ -163,7 +200,9 @@ export type LearningEventKind =
   | "cardReview"
   | "wildWin"
   /** One learning-path module completed. Day-scoped like the rest. */
-  | "moduleDone";
+  | "moduleDone"
+  /** Every checkpoint in a module run answered perfectly. Day-scoped. */
+  | "modulePerfect";
 
 /**
  * An append-only record of a learning action.

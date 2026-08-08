@@ -1,4 +1,4 @@
-import { getExamContent } from "./content";
+import { getDomainName, getExamContent, getFlashcardsByDomain } from "./content";
 import { shuffle } from "./shuffle";
 import type {
   Challenge,
@@ -29,6 +29,12 @@ export const CARDS_PER_BITE = 3;
 /** Distractor count for the match-up grid, capped so it stays draggable. */
 const MATCH_SIZE = 4;
 const MULTI_SIZE = 5;
+/** Wrong-answer count for reverse recall — same shape as a bank question. */
+const REVERSE_DISTRACTORS = 3;
+/** Cards per sort bucket, capped so two buckets still fit one screen. */
+const SORT_PER_BUCKET = 3;
+/** Swipe deck size — enough for a rhythm, short enough to stay a checkpoint. */
+const SWIPE_SIZE = 5;
 
 export function getLearningPaths(examCode: string): LearningPath[] {
   return getExamContent(examCode)?.learningPath.paths ?? [];
@@ -71,15 +77,13 @@ export function pathModules(path: LearningPath): LearningModule[] {
  */
 function buildRecall(
   examCode: string,
+  path: LearningPath | undefined,
   mod: LearningModule,
   seenIds: Set<string>,
 ): Challenge | null {
   const content = getExamContent(examCode);
   if (!content) return null;
 
-  const path = content.learningPath.paths.find((p) =>
-    p.modules.some((m) => m.id === mod.id),
-  );
   const inModule = content.questions.filter(
     (q) => q.teaches && mod.sectionIds.includes(q.teaches),
   );
@@ -105,11 +109,68 @@ function buildRecall(
 }
 
 /**
- * Match each term to its definition. Built from the module's own cards, which
- * is why it needs no authoring: a flashcard IS a term/definition pair.
+ * Recall flipped: definition shown, term asked. Needs exactly one module card
+ * plus borrowed fronts, which makes it the format that reaches the modules
+ * match and multi structurally cannot — the one-card ones.
+ *
+ * Emits `kind: "recall"` on purpose: the answer shape is identical, so the
+ * component, scoring and XP paths all serve it with zero changes. Only the
+ * `reverse-` id records which builder produced it.
  */
-function buildMatch(cards: Flashcard[], nonce: number): Challenge | null {
-  const picked = shuffle(cards).slice(0, MATCH_SIZE);
+function buildReverse(
+  examCode: string,
+  path: LearningPath | undefined,
+  cards: Flashcard[],
+  nonce: number,
+): Challenge | null {
+  const card = shuffle(cards)[0];
+  if (!card) return null;
+
+  // Same-domain fronts make the wrong answers near-misses; the exam-wide
+  // fallback only exists for a domain too small to supply three.
+  const inDomain = getFlashcardsByDomain(examCode, path?.domainId ?? "");
+  const examWide = getExamContent(examCode)?.flashcards ?? [];
+  const fronts: string[] = [];
+  for (const c of [...shuffle(inDomain), ...shuffle(examWide)]) {
+    if (c.front === card.front || fronts.includes(c.front)) continue;
+    fronts.push(c.front);
+    if (fronts.length === REVERSE_DISTRACTORS) break;
+  }
+  if (fronts.length < REVERSE_DISTRACTORS) return null;
+
+  const options = shuffle([card.front, ...fronts]);
+  return {
+    kind: "recall",
+    id: `reverse-${card.id}-${nonce}`,
+    prompt: `Which term does this describe? “${card.back}”`,
+    options,
+    correctIndex: options.indexOf(card.front),
+    explanation: `${card.front} — ${card.back}`,
+  };
+}
+
+/**
+ * Match each term to its definition. Built from the module's own cards, which
+ * is why it needs no authoring: a flashcard IS a term/definition pair. Small
+ * modules top the grid up from their domain, so the just-read cards are still
+ * among the pairs but no longer have to fill the grid alone.
+ */
+function buildMatch(
+  examCode: string,
+  path: LearningPath | undefined,
+  cards: Flashcard[],
+  nonce: number,
+): Challenge | null {
+  let picked = shuffle(cards).slice(0, MATCH_SIZE);
+  if (picked.length < MATCH_SIZE) {
+    const pickedIds = new Set(picked.map((c) => c.id));
+    const topUp = shuffle(
+      getFlashcardsByDomain(examCode, path?.domainId ?? "").filter(
+        (c) => !pickedIds.has(c.id),
+      ),
+    );
+    picked = [...picked, ...topUp].slice(0, MATCH_SIZE);
+  }
   if (picked.length < 2) return null;
 
   return {
@@ -132,6 +193,8 @@ function buildMatch(cards: Flashcard[], nonce: number): Challenge | null {
  */
 function buildMulti(
   examCode: string,
+  path: LearningPath | undefined,
+  mod: LearningModule,
   cards: Flashcard[],
   nonce: number,
   moduleTitle: string,
@@ -140,11 +203,18 @@ function buildMulti(
   const mine = shuffle(cards).slice(0, 3);
   if (mine.length < 2) return null;
 
-  const mineIds = new Set(mine.map((c) => c.id));
-  const others = shuffle(all.filter((c) => !mineIds.has(c.id))).slice(
-    0,
-    Math.max(2, MULTI_SIZE - mine.length),
+  // Distractors must exclude EVERY module card, not just the picked ones —
+  // the prompt asserts module membership, and an unpicked module card shown
+  // as `correct: false` would mark a true answer wrong. Same-domain cards
+  // from *other* modules are the ideal distractors: near-misses rather than
+  // obvious throwaways, and still genuinely outside the module.
+  const moduleIds = new Set(mod.cardIds);
+  const inDomain = getFlashcardsByDomain(examCode, path?.domainId ?? "").filter(
+    (c) => !moduleIds.has(c.id),
   );
+  const pool =
+    inDomain.length > 0 ? inDomain : all.filter((c) => !moduleIds.has(c.id));
+  const others = shuffle(pool).slice(0, Math.max(2, MULTI_SIZE - mine.length));
   if (others.length === 0) return null;
 
   return {
@@ -159,9 +229,176 @@ function buildMulti(
 }
 
 /**
+ * Which of these is from another skills area? Correctness is guaranteed by
+ * the authored `Flashcard.domain` field rather than any heuristic, and three
+ * same-domain fronts are all it needs — so it reaches any module.
+ */
+function buildOddOne(
+  examCode: string,
+  path: LearningPath | undefined,
+  cards: Flashcard[],
+  nonce: number,
+): Challenge | null {
+  const domainId = path?.domainId;
+  if (!domainId) return null;
+
+  // Module cards first so the just-read terms anchor the trio, topped up
+  // from the domain when the module alone cannot supply three.
+  const inDomain: Flashcard[] = [];
+  const seenFronts = new Set<string>();
+  for (const c of [
+    ...shuffle(cards),
+    ...shuffle(getFlashcardsByDomain(examCode, domainId)),
+  ]) {
+    if (seenFronts.has(c.front)) continue;
+    seenFronts.add(c.front);
+    inDomain.push(c);
+    if (inDomain.length === 3) break;
+  }
+  if (inDomain.length < 3) return null;
+
+  const odd = shuffle(
+    (getExamContent(examCode)?.flashcards ?? []).filter(
+      (c) => c.domain !== domainId,
+    ),
+  )[0];
+  if (!odd) return null;
+
+  const domainName = getDomainName(examCode, domainId);
+  const options = shuffle([...inDomain.map((c) => c.front), odd.front]);
+  return {
+    kind: "oddOne",
+    id: `oddone-${odd.id}-${nonce}`,
+    prompt: `Three of these belong to “${domainName}”. Which one does not?`,
+    options,
+    correctIndex: options.indexOf(odd.front),
+    explanation: `${odd.front} belongs to “${getDomainName(examCode, odd.domain)}” — the rest are “${domainName}”.`,
+  };
+}
+
+/**
+ * Sort terms into their skills areas. Drawn from the whole exam because the
+ * point is telling domains apart; the module's own domain is always one of
+ * the buckets so the checkpoint still touches what was just read.
+ */
+function buildSort(
+  examCode: string,
+  path: LearningPath | undefined,
+  nonce: number,
+): Challenge | null {
+  const all = getExamContent(examCode)?.flashcards ?? [];
+  const byDomain = new Map<string, Flashcard[]>();
+  for (const c of all) {
+    byDomain.set(c.domain, [...(byDomain.get(c.domain) ?? []), c]);
+  }
+
+  // A bucket with one card is a giveaway, so a domain must bring two.
+  const eligible = [...byDomain.keys()].filter(
+    (d) => (byDomain.get(d)?.length ?? 0) >= 2,
+  );
+  if (eligible.length < 2) return null;
+
+  const own = path?.domainId;
+  const first =
+    own && eligible.includes(own) ? own : shuffle(eligible)[0];
+  const second = shuffle(eligible.filter((d) => d !== first))[0];
+
+  const items = [first, second].flatMap((d) =>
+    shuffle(byDomain.get(d) ?? [])
+      .slice(0, SORT_PER_BUCKET)
+      .map((c) => ({ id: c.id, label: c.front, bucketId: d })),
+  );
+
+  return {
+    kind: "sort",
+    id: `sort-${first}-${second}-${nonce}`,
+    prompt: "Sort each term into the skills area it belongs to.",
+    buckets: [first, second].map((d) => ({
+      id: d,
+      label: getDomainName(examCode, d),
+    })),
+    items: shuffle(items),
+  };
+}
+
+/**
+ * A deck of term/definition pairings, each judged true or false. Wrong
+ * definitions come from the same domain — that is what makes each card a
+ * judgement rather than a giveaway — and correctness is pure data: the
+ * definition either is the card's own or it is not.
+ */
+function buildSwipe(
+  examCode: string,
+  path: LearningPath | undefined,
+  cards: Flashcard[],
+  nonce: number,
+): Challenge | null {
+  const inDomain = getFlashcardsByDomain(examCode, path?.domainId ?? "");
+  const deck: Flashcard[] = [];
+  const seen = new Set<string>();
+  for (const c of [...shuffle(cards), ...shuffle(inDomain)]) {
+    if (seen.has(c.id)) continue;
+    seen.add(c.id);
+    deck.push(c);
+    if (deck.length === SWIPE_SIZE) break;
+  }
+  if (deck.length < 2) return null;
+
+  // Donors of wrong definitions. Domain-local when it can be; a domain too
+  // small to lend one falls back to the whole exam rather than bailing.
+  const donors =
+    inDomain.length >= 2 ? inDomain : (getExamContent(examCode)?.flashcards ?? []);
+
+  // Half the deck lies, decided up front and shuffled — per-card coin flips
+  // could deal an all-true deck, which teaches nothing.
+  const lies = shuffle(deck.map((_, i) => i % 2 === 1));
+  return {
+    kind: "swipe",
+    id: `swipe-${deck[0].id}-${nonce}`,
+    prompt: "Does the definition match the term?",
+    cards: deck.map((c, i) => {
+      const wrong = lies[i]
+        ? shuffle(donors.filter((d) => d.id !== c.id && d.back !== c.back))[0]
+        : undefined;
+      return wrong
+        ? { id: c.id, term: c.front, definition: wrong.back, matches: false }
+        : { id: c.id, term: c.front, definition: c.back, matches: true };
+    }),
+  };
+}
+
+/**
+ * Which builder produces a checkpoint — distinct from `Challenge["kind"]`
+ * because reverse recall deliberately emits a plain `recall` challenge.
+ */
+type BuilderKind =
+  | "recall"
+  | "reverse"
+  | "match"
+  | "multi"
+  | "oddOne"
+  | "sort"
+  | "swipe";
+
+const BUILDER_ORDER: BuilderKind[] = [
+  "recall",
+  "reverse",
+  "match",
+  "multi",
+  "oddOne",
+  "sort",
+  "swipe",
+];
+
+/**
  * The checkpoint after a bite of cards. Rotates format by position so a module
  * never asks the same shape twice in a row — variety is doing real work here,
  * because the interruption only holds attention while it is still a surprise.
+ *
+ * Seeded by the module's ordinal as well as the checkpoint: most modules are
+ * short enough to fire only one or two checkpoints, so a fixed starting
+ * format meant a whole exam of first-checkpoints all landing on recall.
+ * Offsetting by position in the path walks the rotation across modules.
  */
 export function buildChallenge(
   examCode: string,
@@ -170,21 +407,36 @@ export function buildChallenge(
   checkpointIndex: number,
   seenIds: Set<string>,
 ): Challenge | null {
-  const order: Challenge["kind"][] = ["recall", "match", "multi"];
-  const rotation = order[checkpointIndex % order.length];
+  const path = getExamContent(examCode)?.learningPath.paths.find((p) =>
+    p.modules.some((m) => m.id === mod.id),
+  );
+  const moduleOrdinal = Math.max(
+    0,
+    path?.modules.findIndex((m) => m.id === mod.id) ?? 0,
+  );
 
-  const attempts: Challenge["kind"][] = [
+  const rotation =
+    BUILDER_ORDER[(moduleOrdinal + checkpointIndex) % BUILDER_ORDER.length];
+  const attempts: BuilderKind[] = [
     rotation,
-    ...order.filter((k) => k !== rotation),
+    ...BUILDER_ORDER.filter((k) => k !== rotation),
   ];
 
   for (const kind of attempts) {
     const built =
       kind === "recall"
-        ? buildRecall(examCode, mod, seenIds)
-        : kind === "match"
-          ? buildMatch(cards, checkpointIndex)
-          : buildMulti(examCode, cards, checkpointIndex, mod.title);
+        ? buildRecall(examCode, path, mod, seenIds)
+        : kind === "reverse"
+          ? buildReverse(examCode, path, cards, checkpointIndex)
+          : kind === "match"
+            ? buildMatch(examCode, path, cards, checkpointIndex)
+            : kind === "multi"
+              ? buildMulti(examCode, path, mod, cards, checkpointIndex, mod.title)
+              : kind === "oddOne"
+                ? buildOddOne(examCode, path, cards, checkpointIndex)
+                : kind === "sort"
+                  ? buildSort(examCode, path, checkpointIndex)
+                  : buildSwipe(examCode, path, cards, checkpointIndex);
     if (built) return built;
   }
   return null;

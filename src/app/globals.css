@@ -1302,6 +1302,53 @@ button.gym-marker-hit:hover {
 .xp-pop {
   animation: xp-pop 0.5s ease forwards;
 }
+
+/* --- Swipe deck ------------------------------------------------------------
+   The checkpoint card being judged. The drag transform is inline (it follows
+   the pointer), so only the release needs CSS: a spring back below the
+   threshold, a fling out past it. No animation-delay anywhere here on
+   purpose — the reduced-motion kill collapses durations but NOT delays, and
+   a delayed fill-backwards animation strands the element at its authored
+   offset (that bug has happened once already; see the entrance notes). */
+.swipe-stack {
+  position: relative;
+}
+.swipe-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 9rem;
+  justify-content: center;
+  padding: 1.5rem;
+  /* Horizontal drags belong to the card; vertical ones stay the page's. */
+  touch-action: pan-y;
+  user-select: none;
+  transition: transform 160ms ease;
+}
+.swipe-card--leaving {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.swipe-card--exit-left {
+  animation: swipe-exit-left 240ms ease-in forwards;
+}
+.swipe-card--exit-right {
+  animation: swipe-exit-right 240ms ease-in forwards;
+}
+@keyframes swipe-exit-left {
+  to {
+    transform: translateX(-130%) rotate(-10deg);
+    opacity: 0;
+  }
+}
+@keyframes swipe-exit-right {
+  to {
+    transform: translateX(130%) rotate(10deg);
+    opacity: 0;
+  }
+}
 :root,
 :root[data-theme="bright"] {
   --hero-sky-top: #9FD8DE;

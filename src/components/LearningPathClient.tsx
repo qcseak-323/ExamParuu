@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { getExamContent } from "@/lib/content";
 import {
@@ -9,13 +9,14 @@ import {
   moduleCards,
   shardsFor,
 } from "@/lib/learningPath";
+import { isPathCleared } from "@/lib/gamification";
 import { buildEvent } from "@/lib/learning";
 import { recordLearningEvent, useLearningEvents } from "@/lib/storage";
 import { saveLearningEventToDb } from "@/lib/actions";
 import MenuList from "@/components/MenuList";
 import ChallengeCard from "@/components/path/ChallengeCard";
 import { DialogueFrame } from "@/components/DialogueBox";
-import { useSfx } from "@/components/AudioProvider";
+import { useSfx, useTrackControl } from "@/components/AudioProvider";
 import { useBattleTransition } from "@/components/battle/BattleTransition";
 import type { Challenge, LearningModule, LearningPath } from "@/lib/types";
 
@@ -88,6 +89,7 @@ export default function LearningPathClient({
             const done = p.modules.filter((m) =>
               moduleIsDone(events, examCode, m),
             ).length;
+            const sealed = isPathCleared(examCode, p, events);
             return (
               <button
                 key={p.id}
@@ -98,6 +100,15 @@ export default function LearningPathClient({
                 <span className="text-body font-medium">{p.title}</span>
                 <span className="text-caption text-[var(--foreground-muted)]">
                   {p.modules.length} modules · {done} done
+                  {/* The seal is a text marker, not a border/box-shadow
+                      modifier — those need a `:hover`-qualified twin to
+                      survive `.menu-item:hover:not(:disabled)`. */}
+                  {sealed && (
+                    <span className="font-semibold text-[var(--accent-ink)]">
+                      {" "}
+                      · ★ path sealed
+                    </span>
+                  )}
                 </span>
               </button>
             );
@@ -214,6 +225,7 @@ function ModuleRunner({
   overlay: React.ReactNode;
 }) {
   const playSfx = useSfx();
+  const setTrack = useTrackControl();
   const cards = useMemo(() => moduleCards(examCode, mod), [examCode, mod]);
   const sections = useMemo(() => {
     const guide = getExamContent(examCode)?.studyGuide ?? [];
@@ -230,6 +242,15 @@ function ModuleRunner({
   const [shards, setShards] = useState(0);
   const [streak, setStreak] = useState(0);
   const [best, setBest] = useState(0);
+  /** Still true only while every checkpoint so far came back perfect. */
+  const [flawless, setFlawless] = useState(true);
+  /** A run with no checkpoints at all has proven nothing — not "perfect". */
+  const [served, setServed] = useState(false);
+  /** The last checkpoint's reward, re-popped by keying on its checkpoint. */
+  const [lastGain, setLastGain] = useState<{
+    amount: number;
+    checkpoint: number;
+  } | null>(null);
 
   // Drawn lazily per checkpoint so each one is fresh, and held in state so a
   // re-render doesn't reshuffle the challenge under the trainer's hands.
@@ -241,6 +262,16 @@ function ModuleRunner({
     Math.ceil(cards.length / CARDS_PER_BITE),
   );
 
+  // The victory beat for finishing a module — same effect shape as the
+  // battle screens' track switching, so leaving the runner mid-fanfare
+  // still silences it via the cleanup.
+  const done = step.kind === "done";
+  useEffect(() => {
+    if (!done) return;
+    setTrack("victory");
+    return () => setTrack(null);
+  }, [done, setTrack]);
+
   function advanceFromCard(index: number) {
     playSfx("confirm");
     setRevealed(false);
@@ -251,6 +282,7 @@ function ModuleRunner({
       const checkpoint = Math.floor((next - 1) / CARDS_PER_BITE);
       const built = buildChallenge(examCode, mod, cards, checkpoint, seen);
       if (built) {
+        setServed(true);
         setChallenge(built);
         setStep({ kind: "challenge", checkpoint });
         return;
@@ -263,7 +295,7 @@ function ModuleRunner({
     // straight to "done" without completing it is how a module could be read
     // and never counted.
     if (next >= cards.length) {
-      completeModule();
+      completeModule(flawless && served);
       setStep({ kind: "done" });
       return;
     }
@@ -274,29 +306,49 @@ function ModuleRunner({
     const gained = shardsFor(correct, total);
     setShards((s) => s + gained);
     const perfect = correct === total;
+    if (!perfect) setFlawless(false);
     setStreak((s) => {
       const next = perfect ? s + 1 : 0;
       setBest((b) => Math.max(b, next));
       return next;
+    });
+    setLastGain({
+      amount: gained,
+      checkpoint: step.kind === "challenge" ? step.checkpoint : 0,
     });
     playSfx(perfect ? "levelUp" : "confirm");
 
     const nextCardIndex = (step.kind === "challenge" ? step.checkpoint + 1 : 1) * CARDS_PER_BITE;
     setChallenge(null);
     if (nextCardIndex >= cards.length) {
-      completeModule();
+      // `flawless` cannot be read alone here: this checkpoint's own verdict
+      // hasn't committed to state yet, and it is the one most likely to have
+      // broken the run. Fold it in locally instead.
+      completeModule(flawless && perfect);
       setStep({ kind: "done" });
     } else {
       setStep({ kind: "card", index: nextCardIndex });
     }
   }
 
-  function completeModule() {
+  function completeModule(perfectRun: boolean) {
     const event = buildEvent("moduleDone", examCode, mod.id);
     if (recordLearningEvent(event)) {
       saveLearningEventToDb(event).catch((err) =>
         console.error("Failed to sync module completion", err),
       );
+    }
+    // A flawless run records a second, separate event. Its `kind:` prefix
+    // keeps the id distinct from moduleDone's, and day-scoping caps farming.
+    // A duplicate (recordLearningEvent → false) deliberately gates nothing:
+    // the done screen still celebrates a repeat run.
+    if (perfectRun) {
+      const bonus = buildEvent("modulePerfect", examCode, mod.id);
+      if (recordLearningEvent(bonus)) {
+        saveLearningEventToDb(bonus).catch((err) =>
+          console.error("Failed to sync perfect-run bonus", err),
+        );
+      }
     }
   }
 
@@ -317,9 +369,34 @@ function ModuleRunner({
         >
           ◀ {path.title}
         </button>
-        <span className="text-caption text-[var(--foreground-muted)]">
-          ◆ {shards} shards{streak > 1 ? ` · ${streak}× streak` : ""}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="relative text-caption text-[var(--foreground-muted)]">
+            {/* Re-keyed per checkpoint so the pop restarts; the checkpoint
+                index is the key on purpose — no Date.now() in render. */}
+            {lastGain && (
+              <span
+                key={lastGain.checkpoint}
+                aria-hidden="true"
+                className="xp-pop absolute -top-4 right-0 text-caption font-bold text-[var(--success)]"
+              >
+                +{lastGain.amount} ◆
+              </span>
+            )}
+            ◆ {shards} shards{streak > 1 ? ` · ${streak}× streak` : ""}
+          </span>
+          {/* 15 = shardsFor's ceiling per checkpoint: 10 base + 5 perfect. */}
+          <div className="hp-track w-20 shrink-0" aria-hidden="true">
+            <div
+              className="hp-fill hp-fill--xp"
+              style={{
+                width: `${Math.min(
+                  100,
+                  Math.round((shards / (totalCheckpoints * 15)) * 100),
+                )}%`,
+              }}
+            />
+          </div>
+        </div>
       </div>
 
       <div>
