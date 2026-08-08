@@ -17,6 +17,8 @@ import type { TrainerAvatar } from "@/lib/profile";
 export type Trainer = {
   id: string;
   email: string | null;
+  /** The trainer's own name, chosen at setup (Auth.js's `name` column). */
+  trainerName: string | null;
   examPal: PalType;
   examPalName: string | null;
   /** Null for profiles created before the avatar step existed. */
@@ -29,6 +31,7 @@ export type Trainer = {
 export type SignedInUser = {
   id: string;
   email: string | null;
+  trainerName: string | null;
   examPal: PalType | null;
   examPalName: string | null;
   trainerAvatar: TrainerAvatar | null;
@@ -52,6 +55,7 @@ export async function requireUser(returnTo?: string): Promise<SignedInUser> {
   return {
     id: session.user.id,
     email: session.user.email ?? null,
+    trainerName: session.user.name ?? null,
     examPal: session.user.examPal,
     examPalName: session.user.examPalName,
     trainerAvatar: session.user.trainerAvatar,
@@ -74,6 +78,7 @@ export async function requireTrainer(returnTo?: string): Promise<Trainer> {
   return {
     id: user.id,
     email: user.email,
+    trainerName: user.trainerName,
     examPal: user.examPal,
     examPalName: user.examPalName,
     trainerAvatar: user.trainerAvatar,

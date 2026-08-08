@@ -3,55 +3,53 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { PAL_SPECIES, PAL_TYPES, type PalType } from "@/lib/pals";
-import {
-  EXPERTISE_OPTIONS,
-  TRAINER_AVATARS,
-  type ExpertiseLevel,
-  type TrainerAvatar,
-} from "@/lib/profile";
+import { PAL_SPECIES, PAL_TYPES, formLabel, type PalType } from "@/lib/pals";
+import { TRAINER_AVATARS, type TrainerAvatar } from "@/lib/profile";
 import { completeProfileSetup } from "@/lib/actions";
 import { catalog } from "@/lib/content";
-import { getRetroLabel, getDisplayTier } from "@/lib/levels";
+import { REGIONS } from "@/lib/regions";
+import { getGuardian } from "@/lib/guardians";
 import PalSprite from "@/components/PalSprite";
 import ProfessorPortrait from "@/components/ProfessorPortrait";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
-import MenuList from "@/components/MenuList";
 import { useSfx } from "@/components/AudioProvider";
 import { useBattleTransition } from "@/components/battle/BattleTransition";
 
 /**
- * First-run profile setup, played as a conversation with the professor.
+ * First-run profile setup, played as a conversation with the professor and
+ * walked as a four-step wizard: trainer → Paruu → name → route.
  *
- * Nothing is written until the final step — see `completeProfileSetup`. A
- * trainer who abandons setup halfway has no profile at all and gets the whole
- * flow again, rather than being let into the app with a starter but no route.
+ * Choosing no longer jumps straight to the next step. A pick fills the card
+ * gold and stays there, and `Next` carries you forward — so a mis-tap is
+ * corrected by tapping the other card rather than by backing out of a screen
+ * you never meant to leave. `Back` re-opens any earlier answer.
+ *
+ * Nothing is written until "Set sail" — see `completeProfileSetup`. A trainer
+ * who abandons setup halfway has no profile at all and gets the whole flow
+ * again, rather than being let into the app with a starter but no route.
  */
-type Step =
-  | "intro"
-  | "avatar"
-  | "pal"
-  | "palConfirm"
-  | "nickname"
-  | "expertise"
-  | "expertiseReply"
-  | "route"
-  | "saving";
+
+const TOTAL_STEPS = 4;
 
 const INTRO_LINES = [
   "Hello there! Welcome to the world of certification.",
   "My name is Prof. Sequel. I study the exams people take to prove what they know.",
   "This world is inhabited by creatures called Paruu. They study alongside you, and they grow stronger the more you practise.",
-  "Before you set out, let's get you sorted — a partner, a sense of where you're starting from, and a route to walk first.",
+  "Before you set out, let's get you sorted.",
 ];
 
-/** Small progress readout, so the flow doesn't feel open-ended. */
-const STEP_ORDER: Step[] = ["avatar", "pal", "expertise", "route"];
-function stepNumber(step: Step): number {
-  if (step === "intro" || step === "avatar") return 1;
-  if (step === "pal" || step === "palConfirm" || step === "nickname") return 2;
-  if (step === "expertise" || step === "expertiseReply") return 3;
-  return 4;
+const MAX_NAME_LENGTH = 14;
+
+/**
+ * The route we nudge a brand-new trainer towards. AZ-900 is the broadest
+ * entry point in Microsoft's own portfolio, which makes it the honest
+ * default — it is a suggestion, never a restriction.
+ */
+const SUGGESTED_EXAM = "az-900";
+
+/** The in-world region name for an exam, e.g. "The Azure Archipelago". */
+function worldNameFor(series: string): string | null {
+  return REGIONS.find((region) => region.id === series)?.worldName ?? null;
 }
 
 export default function SetupClient({ email }: { email: string | null }) {
@@ -61,38 +59,45 @@ export default function SetupClient({ email }: { email: string | null }) {
   const { run: runTransition, overlay: transitionOverlay } =
     useBattleTransition();
 
-  const [step, setStep] = useState<Step>("intro");
+  const [intro, setIntro] = useState(true);
+  const [step, setStep] = useState(1);
+  const [saving, setSaving] = useState(false);
+
   const [trainerAvatar, setTrainerAvatar] = useState<TrainerAvatar | null>(
     null,
   );
   const [palType, setPalType] = useState<PalType | null>(null);
-  const [nickname, setNickname] = useState("");
-  const [expertise, setExpertise] = useState<ExpertiseLevel | null>(null);
+  const [trainerName, setTrainerName] = useState("");
   const [priorityExam, setPriorityExam] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const species = palType ? PAL_SPECIES[palType] : null;
-  const starter = species?.stages[0] ?? null;
-  const expertiseOption = EXPERTISE_OPTIONS.find((o) => o.id === expertise);
-
   const playableExams = catalog.filter((exam) => exam.hasContent);
+  const avatarOption = TRAINER_AVATARS.find((a) => a.id === trainerAvatar);
+  const species = palType ? PAL_SPECIES[palType] : null;
 
-  async function commit(chosenExam: string) {
-    if (!trainerAvatar || !palType || !expertise) return;
-    setStep("saving");
+  /** Whether the current step has been answered. */
+  function isStepReady(which: number): boolean {
+    if (which === 1) return trainerAvatar !== null;
+    if (which === 2) return palType !== null;
+    if (which === 3) return trainerName.trim().length > 0;
+    return priorityExam !== null;
+  }
+
+  async function commit() {
+    if (!trainerAvatar || !palType || !priorityExam) return;
+    setSaving(true);
     setError(null);
 
     const result = await completeProfileSetup({
       trainerAvatar,
       palType,
-      nickname: nickname.trim() || null,
-      expertise,
-      priorityExam: chosenExam,
+      trainerName,
+      priorityExam,
     });
 
     if (!result.ok) {
       setError(result.error);
-      setStep("route");
+      setSaving(false);
       return;
     }
 
@@ -105,76 +110,49 @@ export default function SetupClient({ email }: { email: string | null }) {
     router.refresh();
   }
 
-  return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6">
-      <div className="flex items-baseline justify-between">
+  function goNext() {
+    if (!isStepReady(step) || saving) return;
+    if (step === TOTAL_STEPS) {
+      // The stage-change beat: darken, whoosh, then the save runs while the
+      // screen is dark and the map is the reveal.
+      runTransition(() => void commit());
+      return;
+    }
+    playSfx("confirm");
+    setStep((s) => s + 1);
+  }
+
+  function goBack() {
+    if (step === 1 || saving) return;
+    playSfx("back");
+    setStep((s) => s - 1);
+  }
+
+  if (intro) {
+    return (
+      <div className="mx-auto flex max-w-3xl flex-col gap-6">
         <h1 className="font-pixel text-display">Trainer setup</h1>
-        {step !== "intro" && (
-          <p className="text-caption text-[var(--foreground-muted)]">
-            Step {stepNumber(step)} of {STEP_ORDER.length}
-          </p>
-        )}
-      </div>
-
-      {/* The three pals stay on screen after the pick so the dialogue always
-          has something to refer to. The pick itself is made on the big cards
-          below, so this display doesn't render during that step. */}
-      {(step === "palConfirm" || step === "nickname") && (
-        <div className="grid gap-4 sm:grid-cols-3">
-          {PAL_TYPES.map((type) => {
-            const candidate = PAL_SPECIES[type];
-            const [first] = candidate.stages;
-            const isChosen = palType === type;
-            const dimmed = palType !== null && !isChosen;
-
-            return (
-              <div
-                key={type}
-                className={`pixel-panel flex flex-col items-center gap-2 p-4 text-center ${
-                  dimmed ? "opacity-40" : ""
-                } ${isChosen ? "ring-4 ring-[var(--accent)]" : ""}`}
-              >
-                <div className={isChosen ? "pal-idle" : ""}>
-                  <PalSprite
-                    sheet={first.image}
-                    size={96}
-                    title={`${first.name}, the ${candidate.label}-line starter`}
-                  />
-                </div>
-                <p className="flex items-center gap-2 text-body font-bold tracking-wide uppercase">
-                  {first.name}
-                  <span aria-hidden="true" className="flex gap-1">
-                    {(["a", "b", "c", "d"] as const).map((k) => (
-                      <span
-                        key={k}
-                        className="h-[11px] w-[11px] rounded-[3px]"
-                        style={{ background: candidate.palette[k] }}
-                      />
-                    ))}
-                  </span>
-                </p>
-                <p className="text-caption text-[var(--foreground-muted)]">
-                  {candidate.tagline}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {step === "intro" && (
         <DialogueBox
           speaker="Prof. Sequel"
           portrait={<ProfessorPortrait size="lg" />}
           lines={INTRO_LINES}
-          onDone={() => setStep("avatar")}
+          onDone={() => setIntro(false)}
         />
-      )}
+      </div>
+    );
+  }
 
-      {/* Both picks work the same way: the professor asks, and the big cards
-          are themselves the answer. There is no second list of the same
-          options underneath — the card IS the button. */}
-      {step === "avatar" && (
+  return (
+    <div className="mx-auto flex max-w-3xl flex-col gap-6">
+      <div className="flex items-baseline justify-between">
+        <h1 className="font-pixel text-display">Trainer setup</h1>
+        <p className="text-caption text-[var(--foreground-muted)]">
+          Step {step} of {TOTAL_STEPS}
+        </p>
+      </div>
+
+      {/* Step 1 — the trainer ------------------------------------------- */}
+      {step === 1 && (
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
@@ -187,32 +165,40 @@ export default function SetupClient({ email }: { email: string | null }) {
             </div>
           </DialogueFrame>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            {TRAINER_AVATARS.map((avatar) => (
-              <button
-                key={avatar.id}
-                type="button"
-                onMouseEnter={() => playSfx("cursor")}
-                onClick={() => {
-                  playSfx("confirm");
-                  setTrainerAvatar(avatar.id);
-                  setStep("pal");
-                }}
-                className="select-card flex flex-col items-center gap-2 p-6"
-              >
-                <PalSprite sheet={avatar.sheet} size={96} />
-                <span className="font-pixel text-title">{avatar.label}</span>
-                <span className="text-caption text-[var(--foreground-muted)]">
-                  {avatar.hint}
-                </span>
-                <span className="select-card-pick mt-2">Choose ▶</span>
-              </button>
-            ))}
+          <div className="grid items-start gap-4 sm:grid-cols-2">
+            {TRAINER_AVATARS.map((avatar) => {
+              const picked = trainerAvatar === avatar.id;
+              return (
+                <button
+                  key={avatar.id}
+                  type="button"
+                  aria-pressed={picked}
+                  onMouseEnter={() => playSfx("cursor")}
+                  onClick={() => {
+                    playSfx("confirm");
+                    setTrainerAvatar(avatar.id);
+                  }}
+                  className={`select-card flex flex-col items-center gap-2 p-6 ${
+                    picked ? "select-card--picked" : ""
+                  }`}
+                >
+                  <PalSprite sheet={avatar.sheet} size={96} />
+                  <span className="font-pixel text-title">{avatar.label}</span>
+                  <span className="text-caption text-[var(--foreground-muted)]">
+                    {avatar.hint}
+                  </span>
+                  <span className="select-card-pick mt-2">
+                    {picked ? "Chosen ✓" : "Choose ▶"}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </>
       )}
 
-      {step === "pal" && (
+      {/* Step 2 — the Paruu, and the line it grows into ------------------ */}
+      {step === 2 && (
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
@@ -224,21 +210,25 @@ export default function SetupClient({ email }: { email: string | null }) {
             </div>
           </DialogueFrame>
 
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid items-start gap-4 sm:grid-cols-3">
             {PAL_TYPES.map((type) => {
               const candidate = PAL_SPECIES[type];
               const [first] = candidate.stages;
+              const picked = palType === type;
+
               return (
                 <button
                   key={type}
                   type="button"
+                  aria-pressed={picked}
                   onMouseEnter={() => playSfx("cursor")}
                   onClick={() => {
                     playSfx("confirm");
                     setPalType(type);
-                    setStep("palConfirm");
                   }}
-                  className="select-card flex flex-col items-center gap-2 p-6"
+                  className={`select-card flex flex-col items-center gap-2 p-6 ${
+                    picked ? "select-card--picked" : ""
+                  }`}
                 >
                   <PalSprite sheet={first.image} size={96} />
                   <span className="font-pixel text-title">{first.name}</span>
@@ -246,7 +236,7 @@ export default function SetupClient({ email }: { email: string | null }) {
                     {(["a", "b", "c", "d"] as const).map((k) => (
                       <span
                         key={k}
-                        className="h-[11px] w-[11px] rounded-[3px]"
+                        className="h-[11px] w-[11px] border border-[var(--outline)]"
                         style={{ background: candidate.palette[k] }}
                       />
                     ))}
@@ -254,7 +244,44 @@ export default function SetupClient({ email }: { email: string | null }) {
                   <span className="text-caption text-[var(--foreground-muted)]">
                     {candidate.tagline}
                   </span>
-                  <span className="select-card-pick mt-2">Choose ▶</span>
+                  <span className="select-card-pick mt-2">
+                    {picked ? "Chosen ✓" : "Choose ▶"}
+                  </span>
+
+                  {/* What it becomes. Shown only once chosen, so the step
+                      stays a choice between three creatures rather than a
+                      wall of nine. Later forms are silhouettes: the shape is
+                      a promise, the name is not given away. */}
+                  {picked && (
+                    <span className="evo">
+                      <span className="text-caption font-semibold uppercase tracking-[0.1em]">
+                        {candidate.label} line
+                      </span>
+                      <span className="evo-row">
+                        {candidate.stages.map((stage, i) => (
+                          <span key={stage.name} className="contents">
+                            {i > 0 && (
+                              <span className="evo-arrow" aria-hidden="true">
+                                ▶
+                              </span>
+                            )}
+                            <span
+                              className={`evo-form ${i > 0 ? "evo-form--locked" : ""}`}
+                            >
+                              <PalSprite sheet={stage.image} size={48} />
+                              <b className="text-caption leading-tight">
+                                {i === 0 ? stage.name : "???"}
+                              </b>
+                              <small className="text-caption leading-tight">
+                                {formLabel(i).replace(" form", "")}
+                                {i === 0 ? " · now" : ` · Lv ${stage.minLevel}`}
+                              </small>
+                            </span>
+                          </span>
+                        ))}
+                      </span>
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -262,170 +289,142 @@ export default function SetupClient({ email }: { email: string | null }) {
         </>
       )}
 
-      {step === "palConfirm" && species && starter && (
-        <>
-          <DialogueFrame>
-            <span className="dialogue-tab">Prof. Sequel</span>
-            <div className="flex items-center gap-3">
-              <ProfessorPortrait />
-              {/* The menu below already asks the question — the professor
-                  just says what the creature is. */}
-              <p className="dialogue-text flex-1">{species.description}</p>
-            </div>
-          </DialogueFrame>
-
-          <MenuList
-            ariaLabel={`Confirm ${starter.name}`}
-            options={[
-              { id: "yes", label: `Yes — ${starter.name} it is` },
-              { id: "no", label: "No, let me look again" },
-            ]}
-            onSelect={(id) => {
-              if (id === "yes") {
-                setStep("nickname");
-              } else {
-                playSfx("back");
-                setPalType(null);
-                setStep("pal");
-              }
-            }}
-          />
-        </>
-      )}
-
-      {step === "nickname" && starter && (
+      {/* Step 3 — the trainer's own name --------------------------------- */}
+      {step === 3 && (
         <>
           <DialogueFrame>
             <span className="dialogue-tab">Prof. Sequel</span>
             <div className="flex items-center gap-3">
               <ProfessorPortrait />
               <p className="dialogue-text flex-1">
-                {starter.name} is yours. A nickname?
+                And your name? It goes on the trainer card.
               </p>
             </div>
           </DialogueFrame>
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              playSfx("confirm");
-              setStep("expertise");
-            }}
-            className="flex flex-col gap-3"
-          >
-            <label htmlFor="nickname" className="text-body font-medium">
-              Nickname{" "}
-              <span className="font-normal text-[var(--foreground-muted)]">
-                (optional)
-              </span>
+          <div className="pixel-panel grid max-w-md gap-2 p-5">
+            <label
+              htmlFor="trainer-name"
+              className="text-caption font-semibold uppercase tracking-[0.1em] text-[var(--foreground-muted)]"
+            >
+              Trainer name
             </label>
             <input
-              id="nickname"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              maxLength={14}
-              placeholder={starter.name}
-              className="w-full max-w-xs rounded-md bg-[var(--panel)] px-3 py-2 text-body"
+              id="trainer-name"
+              value={trainerName}
+              onChange={(e) => setTrainerName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") goNext();
+              }}
+              maxLength={MAX_NAME_LENGTH}
+              autoFocus
+              placeholder={`Up to ${MAX_NAME_LENGTH} letters`}
+              className="min-h-11 w-full rounded-md bg-[var(--panel-raised)] px-3 py-2 text-body"
               style={{ border: "2px solid var(--border)" }}
             />
-            <button
-              type="submit"
-              className="pixel-button w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
-            >
-              Next ▶
-            </button>
-          </form>
-        </>
-      )}
-
-      {step === "expertise" && (
-        <>
-          <DialogueFrame>
-            <span className="dialogue-tab">Prof. Sequel</span>
-            <div className="flex items-center gap-3">
-              <ProfessorPortrait />
-              <div className="flex-1">
-                <p className="dialogue-text">
-                  How much ground have you covered so far?
-                </p>
-                <p className="mt-2 text-center text-caption text-[var(--foreground-muted)]">
-                  Nothing is locked either way — this only changes my advice.
-                </p>
-              </div>
-            </div>
-          </DialogueFrame>
-
-          <MenuList
-            ariaLabel="Choose your experience level"
-            options={EXPERTISE_OPTIONS.map((o) => ({
-              id: o.id,
-              label: o.label,
-              hint: o.hint,
-            }))}
-            onSelect={(id) => {
-              setExpertise(id as ExpertiseLevel);
-              setStep("expertiseReply");
-            }}
-          />
-        </>
-      )}
-
-      {step === "expertiseReply" && expertiseOption && (
-        <DialogueBox
-          speaker="Prof. Sequel"
-          portrait={<ProfessorPortrait />}
-          lines={[expertiseOption.response]}
-          onDone={() => setStep("route")}
-        />
-      )}
-
-      {(step === "route" || step === "saving") && (
-        <>
-          <DialogueFrame>
-            <span className="dialogue-tab">Prof. Sequel</span>
-            <div className="flex items-center gap-3">
-              <ProfessorPortrait />
-              <div className="flex-1">
-                <p className="dialogue-text">
-                  Which route first? I&apos;ll pin it on your map.
-                </p>
-                {email && (
-                  <p className="mt-2 text-center text-caption text-[var(--foreground-muted)]">
-                    Saving to {email}.
-                  </p>
-                )}
-              </div>
-            </div>
-          </DialogueFrame>
-
-          {error && (
-            <p className="text-body text-[var(--danger)]">{error}</p>
-          )}
-
-          <MenuList
-            ariaLabel="Choose the exam to prioritise"
-            disabled={step === "saving"}
-            options={playableExams.map((exam) => ({
-              id: exam.code,
-              label: `${exam.code.toUpperCase()} — ${exam.title}`,
-              hint: `${getRetroLabel(exam.msLevel)} · ${getDisplayTier(exam.msLevel)}`,
-            }))}
-            onSelect={(id) => {
-              setPriorityExam(id);
-              // The stage-change beat: darken, whoosh, then the save runs
-              // while the screen is dark and the map is the reveal.
-              runTransition(() => commit(id));
-            }}
-          />
-
-          {step === "saving" && (
-            <p className="text-body text-[var(--foreground-muted)]">
-              Setting up your trainer card
-              {priorityExam ? ` for ${priorityExam.toUpperCase()}` : ""}…
+            <p className="text-caption text-[var(--foreground-muted)]">
+              Shown on your trainer card and every score report.
             </p>
-          )}
+          </div>
         </>
       )}
+
+      {/* Step 4 — the first route ---------------------------------------- */}
+      {step === 4 && (
+        <>
+          <DialogueFrame>
+            <span className="dialogue-tab">Prof. Sequel</span>
+            <div className="flex items-center gap-3">
+              <ProfessorPortrait />
+              <p className="dialogue-text flex-1">
+                Last thing — where do we start?
+              </p>
+            </div>
+          </DialogueFrame>
+
+          <div className="grid gap-2" role="group" aria-label="Choose a route">
+            {playableExams.map((exam) => {
+              const picked = priorityExam === exam.code;
+              const guardian = getGuardian(exam.code);
+              const world = worldNameFor(exam.series);
+
+              return (
+                <button
+                  key={exam.code}
+                  type="button"
+                  aria-pressed={picked}
+                  onMouseEnter={() => playSfx("cursor")}
+                  onClick={() => {
+                    playSfx("confirm");
+                    setPriorityExam(exam.code);
+                  }}
+                  className={`menu-item flex items-center gap-3 px-3 py-3 text-left ${
+                    picked ? "menu-item--gold" : ""
+                  }`}
+                >
+                  {guardian?.image && (
+                    <PalSprite sheet={guardian.image} size={48} />
+                  )}
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-body font-medium">
+                      {exam.code.toUpperCase()}
+                      {world ? ` · ${world}` : ""}
+                    </span>
+                    <span className="block text-caption text-[var(--foreground-muted)]">
+                      {exam.summary}
+                    </span>
+                  </span>
+                  {exam.code === SUGGESTED_EXAM && (
+                    <span className="shrink-0 rounded-full border-2 border-[var(--outline)] bg-[var(--accent-hi)] px-2 py-0.5 text-caption font-semibold text-[var(--outline)]">
+                      ★ Suggested
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Everything chosen so far, so the last step is also a review. */}
+          <p className="text-caption text-[var(--foreground-muted)]">
+            {[avatarOption?.label, trainerName.trim(), species?.stages[0].name]
+              .filter(Boolean)
+              .join(" · ")}
+            {email ? ` · saving to ${email}` : ""}
+          </p>
+        </>
+      )}
+
+      {error && <p className="text-body text-[var(--danger)]">{error}</p>}
+
+      <nav className="setup-nav" aria-label="Setup steps">
+        <button
+          type="button"
+          onClick={goBack}
+          disabled={step === 1 || saving}
+          className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
+        >
+          ◀ Back
+        </button>
+
+        <span className="step-dots" aria-hidden="true">
+          {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
+            <i key={i} className={i < step ? "on" : ""} />
+          ))}
+        </span>
+
+        <button
+          type="button"
+          onClick={goNext}
+          disabled={!isStepReady(step) || saving}
+          className="start-button tap-target px-8"
+        >
+          {saving
+            ? "Setting sail…"
+            : step === TOTAL_STEPS
+              ? "Set sail ▶"
+              : "Next ▶"}
+        </button>
+      </nav>
 
       {transitionOverlay}
     </div>

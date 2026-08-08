@@ -401,6 +401,22 @@ body {
     transform: translate(2px, 2px);
     box-shadow: 0 0 0 4px var(--gold);
   }
+  /* The committed choice: the card fills gold and holds it. Gold is
+     theme-constant, so the ink on it reads the same in both weathers. */
+  .select-card--picked,
+  .select-card--picked:hover:not(:disabled) {
+    background: linear-gradient(180deg, var(--gold-hi), var(--gold));
+    color: var(--outline);
+    border-color: var(--outline);
+    box-shadow:
+      0 0 0 4px var(--gold),
+      2px 2px 0 var(--stamp);
+  }
+  .select-card--picked .text-caption,
+  .select-card--picked [class*="foreground-muted"] {
+    color: var(--outline);
+  }
+
   /* The brass pill inside the card. Not a nested button — the whole card is
      the control, so this is a label wearing the hardware. */
   .select-card-pick {
@@ -511,6 +527,73 @@ body {
   100% {
     opacity: 0;
   }
+}
+
+/* --- Trainer setup: evolution preview and wizard nav ----------------------- */
+
+/* The line a starter grows into, revealed on the card once it is chosen.
+   It only ever sits on the picked (gold) card, so a white wash is the right
+   surface in both themes — gold does not change with the weather. */
+.evo {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 12px 10px;
+  border: 2px solid var(--outline);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.34);
+}
+.evo-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.evo-form {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+/* A form not yet reached is a silhouette — the shape is a promise, the
+   name is not given away. */
+.evo-form--locked img {
+  filter: brightness(0) saturate(0) opacity(0.5);
+}
+.evo-arrow {
+  flex: none;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.setup-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 2px dashed var(--line);
+  padding-top: 20px;
+}
+.setup-nav button[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+.step-dots {
+  display: flex;
+  gap: 8px;
+}
+.step-dots i {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--border);
+  background: var(--well);
+}
+.step-dots i.on {
+  background: var(--accent);
 }
 
 /* --- Stage transition ------------------------------------------------------

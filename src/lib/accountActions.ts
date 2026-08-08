@@ -164,6 +164,9 @@ export async function restartJourney(): Promise<
         trainerAvatar: null,
         expertise: null,
         priorityExam: null,
+        // The trainer's own name is part of the profile setup asks for, so
+        // a restart has to release it too or step 3 arrives pre-filled.
+        name: null,
       },
     }),
   ]);

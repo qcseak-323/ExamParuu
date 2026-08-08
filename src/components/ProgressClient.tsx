@@ -36,11 +36,13 @@ export default function ProgressClient({
   palType,
   palNickname,
   trainerAvatar,
+  trainerName,
   email,
 }: {
   palType: PalType;
   palNickname: string | null;
   trainerAvatar: TrainerAvatar | null;
+  trainerName: string | null;
   email: string | null;
 }) {
   const attempts = useQuizAttempts();
@@ -85,7 +87,9 @@ export default function ProgressClient({
   return (
     <div className="flex flex-col gap-10">
       <div>
-        <h1 className="font-pixel text-display">Trainer card</h1>
+        <h1 className="font-pixel text-display">
+          {trainerName ?? "Trainer card"}
+        </h1>
         {/* Standing in the Belt, derived from clears/badges/seals. */}
         <p className="mt-1 text-label font-semibold uppercase tracking-[0.1em] text-[var(--accent-ink)]">
           {deriveTrainerTitle(attempts)}
@@ -101,7 +105,7 @@ export default function ProgressClient({
               size={96}
               title="Your trainer"
             />
-            <p className="font-pixel text-label">You</p>
+            <p className="font-pixel text-label">{trainerName ?? "You"}</p>
           </div>
         )}
 

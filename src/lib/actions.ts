@@ -4,11 +4,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { findFlashcardExamCode, getCatalogEntry } from "@/lib/content";
 import { isPalType, type PalType } from "@/lib/pals";
-import {
-  isExpertiseLevel,
-  isTrainerAvatar,
-  type TrainerAvatar,
-} from "@/lib/profile";
+import { isTrainerAvatar, type TrainerAvatar } from "@/lib/profile";
 import type {
   QuizAttempt,
   QuizResultEntry,
@@ -22,13 +18,13 @@ import type {
 // -in users the database is the durable copy, mirrored into local storage so
 // the rest of the app can keep reading from one place.
 
-const MAX_NICKNAME_LENGTH = 14;
+const MAX_TRAINER_NAME_LENGTH = 14;
 
 export type ProfileSetupInput = {
   trainerAvatar: TrainerAvatar;
   palType: PalType;
-  nickname: string | null;
-  expertise: string;
+  /** The trainer's own name — goes on the trainer card. */
+  trainerName: string;
   priorityExam: string;
 };
 
@@ -59,18 +55,18 @@ export async function completeProfileSetup(
   if (!isTrainerAvatar(input.trainerAvatar)) {
     return { ok: false, error: "Pick one of the trainer sprites." };
   }
-  if (!isExpertiseLevel(input.expertise)) {
-    return { ok: false, error: "Pick one of the experience levels." };
-  }
   if (!getCatalogEntry(input.priorityExam)) {
     return { ok: false, error: "That isn't an exam we cover." };
   }
 
-  const trimmed = input.nickname?.trim() ?? "";
-  if (trimmed.length > MAX_NICKNAME_LENGTH) {
+  const trimmedName = input.trainerName.trim();
+  if (trimmedName.length === 0) {
+    return { ok: false, error: "Every trainer needs a name." };
+  }
+  if (trimmedName.length > MAX_TRAINER_NAME_LENGTH) {
     return {
       ok: false,
-      error: `Nicknames are up to ${MAX_NICKNAME_LENGTH} characters.`,
+      error: `Trainer names are up to ${MAX_TRAINER_NAME_LENGTH} characters.`,
     };
   }
 
@@ -80,9 +76,10 @@ export async function completeProfileSetup(
     where: { id: userId, examPal: null },
     data: {
       examPal: input.palType,
-      examPalName: trimmed || null,
+      // `name` is the Auth.js column, unused until now — the trainer's own
+      // name rather than the Paruu's, which is what the setup flow asks for.
+      name: trimmedName,
       trainerAvatar: input.trainerAvatar,
-      expertise: input.expertise,
       priorityExam: input.priorityExam,
     },
   });

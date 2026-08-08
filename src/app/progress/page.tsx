@@ -11,6 +11,7 @@ export default async function ProgressPage() {
       palType={trainer.examPal}
       palNickname={trainer.examPalName}
       trainerAvatar={trainer.trainerAvatar}
+      trainerName={trainer.trainerName}
       email={trainer.email}
     />
   );
