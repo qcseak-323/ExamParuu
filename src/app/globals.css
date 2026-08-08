@@ -462,14 +462,22 @@ body {
 
      Both MUST stay after `.menu-item` — same specificity, so source order is
      what decides which one wins. This bit the project once already. */
-  .menu-item--cursor {
+  /* The `:hover` variants are not duplication — they are the fix for a real
+     bug. `.menu-item:hover:not(:disabled)` scores 0,3,0 and overwrites
+     box-shadow; a bare `.menu-item--cursor` scores 0,1,0 and loses. The gold
+     ring was therefore invisible exactly when the pointer was on the row,
+     which is the only time it has a job. Same trap as the source-order one
+     below, different mechanism: specificity, not order. */
+  .menu-item--cursor,
+  .menu-item--cursor:hover:not(:disabled) {
     border-color: var(--gold);
     box-shadow:
       0 0 0 3px var(--gold),
       2px 2px 0 var(--stamp);
   }
 
-  .menu-item--gold {
+  .menu-item--gold,
+  .menu-item--gold:hover:not(:disabled) {
     background: linear-gradient(180deg, var(--gold-hi), var(--gold));
     color: var(--outline);
     border-color: var(--outline);
