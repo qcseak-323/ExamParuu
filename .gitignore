@@ -44,3 +44,10 @@ next-env.d.ts
 .env*
 
 /src/generated/prisma
+
+# Generated art review pages. Rebuilt by art/gen/contact-sheet.mjs and
+# art/gen/review-artifact.mjs from the candidate PNGs beside them, and they
+# embed every candidate as a data URI — sheet.html alone is ~1.5MB. The
+# candidates are the artefact worth keeping; these are a view of them.
+art/gen/out/**/sheet.html
+art/gen/out/**/review.html

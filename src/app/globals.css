@@ -1389,6 +1389,28 @@ button.gym-marker-hit:hover {
   --hero-trees-far: #1F4A34;
   --hero-water: #4FA3B8;
   --hero-bank: #E0DDD1;
+
+  /* Scenery art. Declared as custom properties rather than picked by a React
+     component on purpose: preferencesScript.ts stamps data-theme before first
+     paint, so the winning url() resolves on the very first frame — and because
+     a custom property value is not resolved as a URL until it is *used*, the
+     losing theme's PNG is never even requested. A component reading the theme
+     from localStorage cannot match that; it would render the wrong asset on
+     the server pass and swap after hydration, which for full-bleed scenery is
+     a visible flash of the whole background. */
+  --scn-cloud-a: url("/scenery/v1/96/cloud-1.png");
+  --scn-cloud-b: url("/scenery/v1/96/cloud-2.png");
+  --scn-cloud-far: url("/scenery/v1/48/cloud-2.png");
+  --scn-celestial: url("/scenery/v1/96/sun.png");
+
+  /* The day art is near-white on a pale sky — measured at 1.03:1 for the sun
+     against --hero-sky-bottom, i.e. the same luminance as what it sits on.
+     Rather than regenerate it darker (a white cloud on a bright sky is a
+     contrast problem no prompt fixes), it gets an outline, which is what
+     pixel art does anyway. Same drop-shadow idiom .pal-raster uses to stop
+     the cast melting into the dark theme; the direction of the problem is
+     reversed, so the rim is dark rather than light. */
+  --scn-rim: rgba(28, 68, 80, 0.55);
 }
 :root[data-theme="dark"] {
   --hero-sky-top: #0C161E;
@@ -1397,6 +1419,109 @@ button.gym-marker-hit:hover {
   --hero-trees-far: #12202B;
   --hero-water: #173B52;
   --hero-bank: #081019;
+
+  /* Storm Watch is weather, not night: the clouds are the storm the rain is
+     already falling from, so the .dark variants are bruised thunderheads
+     rather than the same clouds after dark. The celestial body does swap to
+     the moon. Measured 2.26–2.95:1 against the storm sky, so these need far
+     less help than the day set. */
+  --scn-cloud-a: url("/scenery/v1/96/cloud-1.dark.png");
+  --scn-cloud-b: url("/scenery/v1/96/cloud-2.dark.png");
+  --scn-cloud-far: url("/scenery/v1/48/cloud-2.dark.png");
+  --scn-celestial: url("/scenery/v1/96/moon.png");
+
+  --scn-rim: rgba(6, 14, 20, 0.6);
+}
+
+/* --- Sky props ------------------------------------------------------------
+
+   Clouds and the sun/moon, layered over the sky gradient. They sit BELOW the
+   mangrove mounds in stacking order but above the flat sky, which is why they
+   are real elements rather than more background layers on .hero-canvas: the
+   mounds are painted by that same shorthand, and a cloud cannot be both above
+   the sky and below the trees inside one background property.
+
+   The gradient stays underneath regardless. If a PNG 404s or is still in
+   flight the scene degrades to exactly what shipped before any of this art
+   existed, so the whole scenery layer is progressive enhancement. */
+
+.sky-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* The copy has to outrank the sky. An absolutely positioned child paints over
+   static in-flow siblings whatever their source order, so without this the
+   clouds would drift across the headline. Raising the content rather than
+   pushing the sky to a negative z-index is deliberate: .hero-canvas is
+   position:relative with z-index:auto and therefore does NOT open a stacking
+   context, so a negative child would slide behind the parent's own background
+   gradient and vanish completely. */
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.sky-prop {
+  position: absolute;
+  display: block;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  image-rendering: pixelated;
+  /* The outline that makes pale art readable. Four offsets rather than a
+     blur: a blurred shadow on pixel art reads as a smudge at the edges and
+     defeats the point of the hard pixel boundary. */
+  filter:
+    drop-shadow(1px 0 0 var(--scn-rim))
+    drop-shadow(-1px 0 0 var(--scn-rim))
+    drop-shadow(0 1px 0 var(--scn-rim))
+    drop-shadow(0 -1px 0 var(--scn-rim));
+}
+
+/* The sun or moon, depending on the weather. Parked rather than drifting —
+   it is the one fixed thing in the sky and moving it would read as time
+   passing, which is a claim the page is not making. */
+.sky-celestial {
+  width: 96px;
+  height: 96px;
+  top: 26px;
+  right: 7%;
+  background-image: var(--scn-celestial);
+}
+
+.sky-cloud { background-image: var(--scn-cloud-a); }
+.sky-cloud--b { background-image: var(--scn-cloud-b); }
+.sky-cloud--far {
+  background-image: var(--scn-cloud-far);
+  opacity: 0.7;
+}
+
+/* Three drifting bands. Sizes and speeds differ so the sky has depth: the
+   far band is smaller, fainter and slower.
+
+   NOTE: no animation-delay anywhere in this block, deliberately. The global
+   reduced-motion kill collapses animation-duration but NOT animation-delay,
+   so a delayed drift would sit in its delay phase filling backwards — parked
+   at its authored offset, which for a cloud means stranded mid-screen or off
+   the edge entirely. Variety comes from differing durations and starting
+   positions instead. Same trap documented at .entrance-* and the swipe deck. */
+.sky-cloud-1 { width: 128px; height: 71px; top: 34px;  animation: cloud-drift 96s linear infinite; }
+.sky-cloud-2 { width: 96px;  height: 52px; top: 96px;  animation: cloud-drift 132s linear infinite; }
+.sky-cloud-3 { width: 64px;  height: 35px; top: 64px;  animation: cloud-drift 168s linear infinite; }
+
+@keyframes cloud-drift {
+  from { transform: translateX(-140px); }
+  to   { transform: translateX(calc(100vw + 140px)); }
+}
+
+/* Phones: the hero is short, so drop the lowest band and pull the celestial
+   body in from the edge where the headline would otherwise collide with it. */
+@media (max-width: 640px) {
+  .sky-cloud-3 { display: none; }
+  .sky-celestial { width: 64px; height: 64px; top: 18px; right: 5%; }
 }
 
 /* Rain over the scene on Storm Watch only — the hairline treatment. */

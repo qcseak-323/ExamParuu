@@ -84,7 +84,19 @@ export default function HomeHero({ tiers }: { tiers: TierSummary[] }) {
   return (
     <div>
       <section className="hero-canvas full-bleed">
-        <div className="mx-auto grid max-w-5xl items-center gap-10 px-4 pb-20 pt-8 sm:pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+        {/* Sky props sit over the gradient and under the copy. Suppressed
+            entirely under reduced motion rather than merely frozen: a still
+            cloud earns nothing, and not rendering it means the PNG is never
+            fetched. Same call HomeHero already makes for the runners. */}
+        {!still && (
+          <div className="sky-layer" aria-hidden="true">
+            <span className="sky-prop sky-celestial" />
+            <span className="sky-prop sky-cloud sky-cloud-1" />
+            <span className="sky-prop sky-cloud--b sky-cloud-2" />
+            <span className="sky-prop sky-cloud--far sky-cloud-3" />
+          </div>
+        )}
+        <div className="hero-content mx-auto grid max-w-5xl items-center gap-10 px-4 pb-20 pt-8 sm:pt-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
           <div>
             <p className="text-label font-semibold uppercase tracking-[0.14em] text-[var(--foreground-soft)]">
               Free Microsoft cert prep

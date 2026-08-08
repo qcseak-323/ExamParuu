@@ -1,0 +1,18 @@
+{
+  "_comment": "Chosen candidate per subject, per batch. The record of what was picked and why a given PNG is in public/. Re-runnable: scripts/build-scenery.mjs reads this, so reinstalling is never a manual copy.",
+  "scenery": {
+    "sun": "v1",
+    "moon": "v1",
+    "tree-1": "v1",
+    "tree-2": "v2",
+    "tree-3": "v2",
+    "cloud-1": "v1",
+    "cloud-2": "v1",
+    "cloud-1.dark": "v2",
+    "cloud-2.dark": "v2"
+  },
+  "_dropped": {
+    "cloud-3.dark": "Removed 2026-08-08. Both candidates read as jellyfish/mushrooms rather than thunderheads — the 'towering' prompt pulled the shape into a stalk with a canopy.",
+    "cloud-3": "Dropped with its counterpart. A day cloud with no .dark variant falls back to itself on Storm Watch, i.e. a bright white cloud in a storm. Two fully-paired shapes beats three half-paired ones."
+  }
+}
