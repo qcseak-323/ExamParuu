@@ -36,13 +36,27 @@ import { useSfx } from "@/components/AudioProvider";
  * MAX_HOLD_MS is the safety valve: a navigation that never settles must not
  * leave someone staring at a black screen forever, so the reveal happens
  * anyway and they at least get an interactive page back.
+ *
+ * `action` may be async, and the hold covers it. That is what lets setup do
+ * its profile save behind the dark instead of in front of it — see
+ * SetupClient. Two things track it, deliberately: the action is awaited inside
+ * `startTransition` so anything it schedules after an await (the navigation)
+ * is still in the transition's scope, and `awaiting` records the promise
+ * separately so the hold cannot end early even if the transition settles
+ * first. Either alone would be a screen that reveals mid-save.
  */
 
 /** Must match the cover/reveal keyframes in globals.css. */
 const COVER_MS = 700;
 const REVEAL_MS = 700;
 const MIN_HOLD_MS = 350;
-const MAX_HOLD_MS = 4000;
+/**
+ * Has to clear the slowest legitimate action, not just a slow navigation.
+ * Setup's save plus its session refetch runs to about four seconds, so the
+ * old 4000 would have cut the handoff short — the valve firing on healthy
+ * work is the bug it exists to prevent, pointed the other way.
+ */
+const MAX_HOLD_MS = 8000;
 
 const VARIANTS = [
   { name: "blinds", cue: "ladder" },
@@ -54,7 +68,8 @@ type Variant = (typeof VARIANTS)[number];
 type Phase = "covering" | "holding" | "revealing";
 type Blackout = { variant: Variant; phase: Phase };
 
-type BlackoutContextValue = { run: (action: () => void) => void };
+type BlackoutAction = () => void | Promise<void>;
+type BlackoutContextValue = { run: (action: BlackoutAction) => void };
 
 const BlackoutCtx = createContext<BlackoutContextValue | null>(null);
 
@@ -74,6 +89,8 @@ export default function BlackoutProvider({
   const prefs = usePreferences();
   const [state, setState] = useState<Blackout | null>(null);
   const [minHoldDone, setMinHoldDone] = useState(false);
+  /** True while an async action's promise is still in flight. */
+  const [awaiting, setAwaiting] = useState(false);
   const [isPending, startTransition] = useTransition();
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -96,13 +113,23 @@ export default function BlackoutProvider({
 
       timers.current.forEach(clearTimeout);
       setMinHoldDone(false);
+      setAwaiting(false);
       setState({ variant: drawn, phase: "covering" });
 
       timers.current = [
         setTimeout(() => {
           // Inside a transition so `isPending` tracks it. For an in-page
           // action this settles almost at once and MIN_HOLD carries the beat.
-          startTransition(() => action());
+          // `finally`, not `then`: a save that throws must still lift the dark,
+          // or a failed action leaves a permanently black screen.
+          setAwaiting(true);
+          startTransition(async () => {
+            try {
+              await action();
+            } finally {
+              setAwaiting(false);
+            }
+          });
           setState((s) => (s ? { ...s, phase: "holding" } : s));
           timers.current.push(
             setTimeout(() => setMinHoldDone(true), minHoldMs),
@@ -124,7 +151,7 @@ export default function BlackoutProvider({
   // during render — the sanctioned pattern here, because
   // `react-hooks/set-state-in-effect` forbids doing this in an effect body.
   const ready =
-    state?.phase === "holding" && !isPending && minHoldDone;
+    state?.phase === "holding" && !isPending && !awaiting && minHoldDone;
   const [prevReady, setPrevReady] = useState(false);
   if (ready !== prevReady) {
     setPrevReady(ready);

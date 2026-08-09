@@ -121,37 +121,50 @@ export default function SetupClient({ email }: { email: string | null }) {
     return familiarity !== null;
   }
 
-  async function setSail() {
+  function setSail() {
     if (!trainerAvatar || !palType || !priorityExam || !familiarity) return;
     setSaving(true);
     setError(null);
 
-    const result = await completeProfileSetup({
-      trainerAvatar,
-      palType,
-      nickname,
-      trainerName,
-      priorityExam,
-      familiarity,
-    });
+    /*
+     * The save happens *behind* the dark, not in front of it.
+     *
+     * It used to run first and start the blackout afterwards, on the reasoning
+     * that the dark should only ever cover a navigation. The cost was about
+     * four seconds of completely motionless screen between pressing the button
+     * and anything happening — the save plus the session refetch, with nothing
+     * to look at but a disabled footer.
+     *
+     * The blackout can hold for as long as its action takes (see
+     * BlackoutProvider), so the same wait now happens with the screen already
+     * dark and a cue playing. The original worry does not apply: the hold does
+     * not end until this promise settles, so the dark still cannot lift on
+     * unfinished work.
+     */
+    runTransition(async () => {
+      const result = await completeProfileSetup({
+        trainerAvatar,
+        palType,
+        nickname,
+        trainerName,
+        priorityExam,
+        familiarity,
+      });
 
-    if (!result.ok) {
-      setError(result.error);
-      setSaving(false);
-      return;
-    }
+      // Returning without navigating lets the dark lift back onto setup with
+      // the error shown, which is the right place to correct it.
+      if (!result.ok) {
+        setError(result.error);
+        setSaving(false);
+        return;
+      }
 
-    playSfx("levelUp");
-    // The profile lives on the session, so it has to be refetched before the
-    // guard on the next page will see it — otherwise requireTrainer bounces
-    // straight back here.
-    await update();
+      playSfx("levelUp");
+      // The profile lives on the session, so it has to be refetched before the
+      // guard on the next page will see it — otherwise requireTrainer bounces
+      // straight back here.
+      await update();
 
-    // Only now the blackout. Running it around the save instead would mean
-    // the dark lifting on whatever the network was still doing — the save is
-    // finished here, so the dark is covering a navigation and nothing else.
-    // `saving` stays true through it, which keeps the footer disabled.
-    runTransition(() => {
       router.replace(`/exams/${priorityExam}/path`);
       router.refresh();
     });
