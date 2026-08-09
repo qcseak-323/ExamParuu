@@ -54,7 +54,8 @@ const PATH_UIDS = {
     "sci-concepts": "learn.wwl.describe-concepts-of-security-compliance-identity",
     entra: "learn.wwl.describe-capabilities-of-microsoft-identity-access-management-solutions",
     "security-solutions": "learn.wwl.describe-capabilities-of-microsoft-security-solutions",
-    "compliance-solutions": null,
+    "compliance-solutions":
+      "learn.wwl.describe-capabilities-of-microsoft-compliance-solutions",
   },
   "pl-900": {
     "business-value": "learn-bizapps.power-platform-business-value-path",
@@ -74,9 +75,12 @@ const PATH_UIDS = {
     "semantic-models": "learn.wwl.design-manage-semantic-models-fabric",
     "explore-analyze": "learn.wwl.explore-analytics-data-stores",
   },
+  // Both come from the AI-901 exam page's own `learn_item` list, which pins
+  // exactly these two paths — and they line up one-to-one with the two
+  // skills-measured areas rather than needing an editorial split.
   "ai-901": {
-    "ai-concepts": null,
-    "foundry-implementation": null,
+    "ai-concepts": "learn.ai-technical-concepts",
+    "foundry-implementation": "learn.wwl.get-started-ai-apps-agents",
   },
 };
 

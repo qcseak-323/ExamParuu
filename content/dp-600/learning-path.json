@@ -16,7 +16,8 @@
           ],
           "cardIds": [
             "fc-pim-01",
-            "fc-pim-09"
+            "fc-pim-09",
+            "fc-pim-17"
           ]
         },
         {
@@ -27,7 +28,8 @@
           ],
           "cardIds": [
             "fc-pim-02",
-            "fc-pim-10"
+            "fc-pim-10",
+            "fc-pim-18"
           ]
         },
         {
@@ -37,7 +39,9 @@
             "domains-and-governance"
           ],
           "cardIds": [
-            "fc-pim-03"
+            "fc-pim-03",
+            "fc-pim-11",
+            "fc-pim-19"
           ]
         },
         {
@@ -47,7 +51,9 @@
             "application-lifecycle-management"
           ],
           "cardIds": [
-            "fc-pim-04"
+            "fc-pim-04",
+            "fc-pim-12",
+            "fc-pim-20"
           ]
         },
         {
@@ -57,7 +63,9 @@
             "monitoring-and-administration"
           ],
           "cardIds": [
-            "fc-pim-05"
+            "fc-pim-05",
+            "fc-pim-13",
+            "fc-pim-21"
           ]
         },
         {
@@ -65,7 +73,9 @@
           "title": "Get started with SQL Database in Microsoft Fabric",
           "sectionIds": [],
           "cardIds": [
-            "fc-pim-06"
+            "fc-pim-06",
+            "fc-pim-14",
+            "fc-pim-22"
           ]
         },
         {
@@ -73,7 +83,9 @@
           "title": "Design semantic models for scale in Microsoft Fabric",
           "sectionIds": [],
           "cardIds": [
-            "fc-pim-07"
+            "fc-pim-07",
+            "fc-pim-15",
+            "fc-pim-23"
           ]
         },
         {
@@ -81,7 +93,9 @@
           "title": "Understand Microsoft Fabric IQ fundamentals",
           "sectionIds": [],
           "cardIds": [
-            "fc-pim-08"
+            "fc-pim-08",
+            "fc-pim-16",
+            "fc-pim-24"
           ]
         }
       ]
@@ -100,7 +114,8 @@
           ],
           "cardIds": [
             "fc-psd-01",
-            "fc-psd-06"
+            "fc-psd-06",
+            "fc-psd-11"
           ]
         },
         {
@@ -111,7 +126,8 @@
           ],
           "cardIds": [
             "fc-psd-02",
-            "fc-psd-07"
+            "fc-psd-07",
+            "fc-psd-12"
           ]
         },
         {
@@ -122,7 +138,8 @@
           ],
           "cardIds": [
             "fc-psd-03",
-            "fc-psd-08"
+            "fc-psd-08",
+            "fc-psd-13"
           ]
         },
         {
@@ -133,7 +150,8 @@
           ],
           "cardIds": [
             "fc-psd-04",
-            "fc-psd-09"
+            "fc-psd-09",
+            "fc-psd-14"
           ]
         },
         {
@@ -142,7 +160,8 @@
           "sectionIds": [],
           "cardIds": [
             "fc-psd-05",
-            "fc-psd-10"
+            "fc-psd-10",
+            "fc-psd-15"
           ]
         }
       ]
@@ -161,7 +180,8 @@
           ],
           "cardIds": [
             "fc-sm-01",
-            "fc-sm-06"
+            "fc-sm-06",
+            "fc-sm-11"
           ]
         },
         {
@@ -172,7 +192,8 @@
           ],
           "cardIds": [
             "fc-sm-02",
-            "fc-sm-07"
+            "fc-sm-07",
+            "fc-sm-12"
           ]
         },
         {
@@ -183,7 +204,8 @@
           ],
           "cardIds": [
             "fc-sm-03",
-            "fc-sm-08"
+            "fc-sm-08",
+            "fc-sm-13"
           ]
         },
         {
@@ -194,7 +216,8 @@
           ],
           "cardIds": [
             "fc-sm-04",
-            "fc-sm-09"
+            "fc-sm-09",
+            "fc-sm-14"
           ]
         },
         {
@@ -203,7 +226,8 @@
           "sectionIds": [],
           "cardIds": [
             "fc-sm-05",
-            "fc-sm-10"
+            "fc-sm-10",
+            "fc-sm-15"
           ]
         }
       ]
@@ -222,7 +246,8 @@
           ],
           "cardIds": [
             "fc-ea-01",
-            "fc-ea-06"
+            "fc-ea-06",
+            "fc-ea-11"
           ]
         },
         {
@@ -233,7 +258,8 @@
           ],
           "cardIds": [
             "fc-ea-02",
-            "fc-ea-07"
+            "fc-ea-07",
+            "fc-ea-12"
           ]
         },
         {
@@ -244,7 +270,8 @@
           ],
           "cardIds": [
             "fc-ea-03",
-            "fc-ea-08"
+            "fc-ea-08",
+            "fc-ea-13"
           ]
         },
         {
@@ -255,7 +282,8 @@
           ],
           "cardIds": [
             "fc-ea-04",
-            "fc-ea-09"
+            "fc-ea-09",
+            "fc-ea-14"
           ]
         },
         {
@@ -264,7 +292,8 @@
           "sectionIds": [],
           "cardIds": [
             "fc-ea-05",
-            "fc-ea-10"
+            "fc-ea-10",
+            "fc-ea-15"
           ]
         }
       ]

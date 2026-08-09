@@ -70,6 +70,104 @@
     "back": "Stops or restarts billing and compute for an F SKU capacity on demand, without losing any content, useful for cost control during idle periods."
   },
   {
+    "id": "fc-pim-11",
+    "examCode": "dp-600",
+    "domain": "plan-implement-manage",
+    "front": "Capacity Unit (CU)",
+    "back": "The unit of compute a Fabric capacity is sold in. Every operation — a query, a refresh, a pipeline run — consumes CU-seconds, and the SKU number is the CUs available per second."
+  },
+  {
+    "id": "fc-pim-12",
+    "examCode": "dp-600",
+    "domain": "plan-implement-manage",
+    "front": "Smoothing",
+    "back": "Fabric spreads a job's capacity cost over a longer window rather than charging it all at the moment it runs, so a short spike does not immediately exhaust the capacity."
+  },
+  {
+    "id": "fc-pim-13",
+    "examCode": "dp-600",
+    "domain": "plan-implement-manage",
+    "front": "Bursting",
+    "back": "Letting an operation temporarily draw more compute than the SKU nominally allows so it finishes faster. The extra usage is still charged, smoothed across the following window."
+  },
+  {
+    "id": "fc-pim-14",
+    "examCode": "dp-600",
+    "domain": "plan-implement-manage",
+    "front": "Throttling",
+    "back": "What happens when a capacity's smoothed usage stays over budget: requests are delayed, then rejected. The tiers escalate from interactive delay to interactive rejection to background rejection."
+  },
+  {
+    "id": "fc-pim-15",
+    "examCode": "dp-600",
+    "domain": "plan-implement-manage",
+    "front": "Trial capacity",
+    "back": "A time-limited full-feature Fabric capacity for evaluation. Useful for learning, but content on it must be moved to a paid capacity before the trial ends or it becomes inaccessible."
+  },
+  {
+    "id": "fc-pim-16",
+    "examCode": "dp-600",
+    "domain": "plan-implement-manage",
+    "front": "Workspace",
+    "back": "The container that holds Fabric items and binds them to one capacity. It is the unit that roles, deployment pipelines, and Git integration all attach to."
+  },
+  {
+    "id": "fc-pim-17",
+    "examCode": "dp-600",
+    "domain": "plan-implement-manage",
+    "front": "Fabric item",
+    "back": "Any single artefact inside a workspace — a lakehouse, warehouse, notebook, pipeline, semantic model, report. Items are what workspace roles grant access to and what pipelines deploy."
+  },
+  {
+    "id": "fc-pim-18",
+    "examCode": "dp-600",
+    "domain": "plan-implement-manage",
+    "front": "OneLake file explorer",
+    "back": "A Windows tool that surfaces OneLake as a folder in File Explorer, so lakehouse files can be browsed and edited without going through the portal."
+  },
+  {
+    "id": "fc-pim-19",
+    "examCode": "dp-600",
+    "domain": "plan-implement-manage",
+    "front": "Endorsement: Promoted vs Certified",
+    "back": "Two labels marking trustworthy content. Anyone with write access can Promote an item; only a restricted group defined by the tenant admin can Certify one, which is the stronger signal."
+  },
+  {
+    "id": "fc-pim-20",
+    "examCode": "dp-600",
+    "domain": "plan-implement-manage",
+    "front": "Sensitivity label",
+    "back": "A Microsoft Purview Information Protection classification applied to a Fabric item. It travels with the data through downstream items and exports, so a label on a model reaches the reports built from it."
+  },
+  {
+    "id": "fc-pim-21",
+    "examCode": "dp-600",
+    "domain": "plan-implement-manage",
+    "front": "Lineage view",
+    "back": "A workspace diagram showing how items feed each other — source through lakehouse, model, report. Used to trace where a figure came from and to judge the blast radius of a change."
+  },
+  {
+    "id": "fc-pim-22",
+    "examCode": "dp-600",
+    "domain": "plan-implement-manage",
+    "front": "Deployment rules",
+    "back": "Per-stage overrides in a deployment pipeline that repoint parameters — data source connections, parameters — as content moves to Test or Production, so the same item reads different sources per stage."
+  },
+  {
+    "id": "fc-pim-23",
+    "examCode": "dp-600",
+    "domain": "plan-implement-manage",
+    "front": "Admin monitoring workspace",
+    "back": "A tenant-level workspace holding usage and audit semantic models, available to admins for reporting on activity across the tenant."
+  },
+  {
+    "id": "fc-pim-24",
+    "examCode": "dp-600",
+    "domain": "plan-implement-manage",
+    "front": "Activity log",
+    "back": "The tenant-wide record of user and system operations on Fabric items. Queried for audit and adoption analysis; distinct from the Monitoring hub, which tracks item runs."
+  },
+  {
     "id": "fc-psd-01",
     "examCode": "dp-600",
     "domain": "prepare-serve-data",
@@ -138,6 +236,41 @@
     "domain": "prepare-serve-data",
     "front": "SQL analytics endpoint",
     "back": "A read-only T-SQL endpoint automatically generated for every Lakehouse, letting you query Delta tables without writing Spark code."
+  },
+  {
+    "id": "fc-psd-11",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "front": "Data pipeline (Fabric)",
+    "back": "An orchestration item that sequences activities — Copy, notebook, dataflow, stored procedure — with control flow, scheduling, and per-activity success and failure paths."
+  },
+  {
+    "id": "fc-psd-12",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "front": "Delta Lake",
+    "back": "The open table format OneLake stores everything in: Parquet data files plus a transaction log that provides ACID writes, time travel, and schema enforcement."
+  },
+  {
+    "id": "fc-psd-13",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "front": "Managed vs external table",
+    "back": "A managed table's data and metadata are both owned by the lakehouse, so dropping it deletes the files. An external table only registers metadata over files that live elsewhere, so dropping it leaves the data."
+  },
+  {
+    "id": "fc-psd-14",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "front": "Cross-database query",
+    "back": "Querying across warehouses and lakehouse SQL analytics endpoints in the same workspace with three-part names, without copying data between them."
+  },
+  {
+    "id": "fc-psd-15",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "front": "Fast Copy (Dataflow Gen2)",
+    "back": "A Dataflow Gen2 setting that pushes large ingests through the pipeline copy engine instead of the mashup engine, trading some transformation flexibility for throughput."
   },
   {
     "id": "fc-sm-01",
@@ -210,6 +343,41 @@
     "back": "A Power BI Desktop tool that records how long each visual takes for DAX query execution and rendering, used to diagnose slow reports."
   },
   {
+    "id": "fc-sm-11",
+    "examCode": "dp-600",
+    "domain": "semantic-models",
+    "front": "Composite model",
+    "back": "A model combining tables from more than one storage mode or source — for example an Import dimension beside a DirectQuery fact — so each table can use the mode that suits it."
+  },
+  {
+    "id": "fc-sm-12",
+    "examCode": "dp-600",
+    "domain": "semantic-models",
+    "front": "Calculation group",
+    "back": "A set of calculation items that rewrite measures at query time, so one definition applies a pattern like year-to-date or prior year across every measure instead of duplicating each one."
+  },
+  {
+    "id": "fc-sm-13",
+    "examCode": "dp-600",
+    "domain": "semantic-models",
+    "front": "Object-level security (OLS)",
+    "back": "Hides entire tables or columns from a role, so restricted objects disappear from the field list rather than returning filtered rows. Row-level security filters rows; OLS removes structure."
+  },
+  {
+    "id": "fc-sm-14",
+    "examCode": "dp-600",
+    "domain": "semantic-models",
+    "front": "Aggregations",
+    "back": "Pre-summarised tables the engine substitutes for a large detail table when a query only needs the summary, falling back to the detail table when it does not."
+  },
+  {
+    "id": "fc-sm-15",
+    "examCode": "dp-600",
+    "domain": "semantic-models",
+    "front": "Direct Lake fallback",
+    "back": "When a Direct Lake model hits something it cannot serve straight from Delta files, the query silently reverts to DirectQuery against the SQL endpoint — correct, but slower, and worth detecting."
+  },
+  {
     "id": "fc-ea-01",
     "examCode": "dp-600",
     "domain": "explore-analyze",
@@ -278,5 +446,40 @@
     "domain": "explore-analyze",
     "front": "Eventstream",
     "back": "A Fabric item for capturing, transforming, and routing real-time streaming data (e.g., into an Eventhouse or Lakehouse) without writing custom ingestion code."
+  },
+  {
+    "id": "fc-ea-11",
+    "examCode": "dp-600",
+    "domain": "explore-analyze",
+    "front": "Eventhouse",
+    "back": "The Real-Time Intelligence workspace item that holds one or more KQL databases and shares compute across them."
+  },
+  {
+    "id": "fc-ea-12",
+    "examCode": "dp-600",
+    "domain": "explore-analyze",
+    "front": "KQL Database",
+    "back": "A database inside an Eventhouse, optimised for high-volume append-only telemetry and queried with KQL."
+  },
+  {
+    "id": "fc-ea-13",
+    "examCode": "dp-600",
+    "domain": "explore-analyze",
+    "front": "where and project (KQL)",
+    "back": "The two most common shaping operators: `where` filters rows by a predicate, `project` selects and renames columns. Filtering early keeps the rest of the query cheap."
+  },
+  {
+    "id": "fc-ea-14",
+    "examCode": "dp-600",
+    "domain": "explore-analyze",
+    "front": "Materialized view (KQL)",
+    "back": "A view that maintains an aggregation over a source table as new data arrives, so dashboards read a small pre-computed result instead of re-scanning raw telemetry."
+  },
+  {
+    "id": "fc-ea-15",
+    "examCode": "dp-600",
+    "domain": "explore-analyze",
+    "front": "Semantic link (SemPy)",
+    "back": "A Python library that reads semantic models from a notebook — tables, measures, relationships — so model data can be analysed and validated in code."
   }
 ]

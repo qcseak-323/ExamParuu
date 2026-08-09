@@ -60,7 +60,8 @@
           ],
           "cardIds": [
             "fc-ab-dp-01",
-            "fc-ab-dp-08"
+            "fc-ab-dp-08",
+            "fc-ab-dp-15"
           ]
         },
         {
@@ -71,7 +72,8 @@
           ],
           "cardIds": [
             "fc-ab-dp-02",
-            "fc-ab-dp-09"
+            "fc-ab-dp-09",
+            "fc-ab-dp-16"
           ]
         },
         {
@@ -81,7 +83,9 @@
             "identifying-and-responding-to-risk"
           ],
           "cardIds": [
-            "fc-ab-dp-03"
+            "fc-ab-dp-03",
+            "fc-ab-dp-10",
+            "fc-ab-dp-17"
           ]
         },
         {
@@ -89,7 +93,9 @@
           "title": "Create and manage data loss prevention policies",
           "sectionIds": [],
           "cardIds": [
-            "fc-ab-dp-04"
+            "fc-ab-dp-04",
+            "fc-ab-dp-11",
+            "fc-ab-dp-18"
           ]
         },
         {
@@ -97,7 +103,9 @@
           "title": "Create and manage Insider Risk Management policies",
           "sectionIds": [],
           "cardIds": [
-            "fc-ab-dp-05"
+            "fc-ab-dp-05",
+            "fc-ab-dp-12",
+            "fc-ab-dp-19"
           ]
         },
         {
@@ -105,7 +113,9 @@
           "title": "Detect and address communication risks with Microsoft Purview Communication Compliance",
           "sectionIds": [],
           "cardIds": [
-            "fc-ab-dp-06"
+            "fc-ab-dp-06",
+            "fc-ab-dp-13",
+            "fc-ab-dp-20"
           ]
         },
         {
@@ -113,7 +123,9 @@
           "title": "Secure Microsoft 365 Copilot interactions with Microsoft Purview",
           "sectionIds": [],
           "cardIds": [
-            "fc-ab-dp-07"
+            "fc-ab-dp-07",
+            "fc-ab-dp-14",
+            "fc-ab-dp-21"
           ]
         }
       ]

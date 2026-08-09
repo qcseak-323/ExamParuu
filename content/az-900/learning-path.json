@@ -160,7 +160,8 @@
           ],
           "cardIds": [
             "fc-az-mg-03",
-            "fc-az-mg-07"
+            "fc-az-mg-07",
+            "fc-az-mg-11"
           ]
         },
         {
@@ -171,7 +172,8 @@
           ],
           "cardIds": [
             "fc-az-mg-04",
-            "fc-az-mg-08"
+            "fc-az-mg-08",
+            "fc-az-mg-12"
           ]
         }
       ]

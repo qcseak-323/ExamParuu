@@ -1,43 +1,303 @@
 [
-  { "id": "fc-az-cc-01", "examCode": "az-900", "domain": "cloud-concepts", "front": "Consumption-based model", "back": "Pay only for the resources you actually use, as operational expenditure — no up-front hardware purchase, and the bill scales down as well as up." },
-  { "id": "fc-az-cc-02", "examCode": "az-900", "domain": "cloud-concepts", "front": "Shared responsibility model", "back": "Duties split between provider and customer. Microsoft always owns the physical infrastructure; you always own your data, devices, and identities; the middle layers shift toward Microsoft from IaaS → PaaS → SaaS." },
-  { "id": "fc-az-cc-03", "examCode": "az-900", "domain": "cloud-concepts", "front": "Serverless", "back": "You supply only code; the platform allocates all infrastructure on demand and bills per execution. Azure Functions is the flagship example." },
-  { "id": "fc-az-cc-04", "examCode": "az-900", "domain": "cloud-concepts", "front": "Public vs private vs hybrid cloud", "back": "Public: provider-owned shared infrastructure. Private: infrastructure dedicated to one organisation — most control, usually most cost. Hybrid: the two combined, e.g. regulated data on-premises with everything else in Azure." },
-  { "id": "fc-az-cc-05", "examCode": "az-900", "domain": "cloud-concepts", "front": "Cloud bursting", "back": "A hybrid pattern where a workload runs on private infrastructure and 'bursts' into public cloud capacity when local resources are exhausted." },
-  { "id": "fc-az-cc-06", "examCode": "az-900", "domain": "cloud-concepts", "front": "Pay-as-you-go vs reserved vs spot pricing", "back": "Pay-as-you-go: highest unit price, total flexibility. Reserved: 1- or 3-year commitment for deep discounts on steady workloads. Spot: deepest discounts for interruptible workloads Azure may evict." },
-  { "id": "fc-az-cc-07", "examCode": "az-900", "domain": "cloud-concepts", "front": "High availability", "back": "The service keeps responding despite component failures, expressed in uptime SLAs — 99.9% allows ~8.7 hours of downtime a year; 99.99% allows ~52 minutes." },
-  { "id": "fc-az-cc-08", "examCode": "az-900", "domain": "cloud-concepts", "front": "Vertical vs horizontal scaling", "back": "Vertical: make one machine bigger (more CPU/RAM). Horizontal: add more machines. Elasticity is scaling that happens automatically with demand." },
-  { "id": "fc-az-cc-09", "examCode": "az-900", "domain": "cloud-concepts", "front": "Reliability", "back": "The ability to recover from failure and keep functioning — e.g. a decentralised design that shifts work to a healthy region when one fails." },
-  { "id": "fc-az-cc-10", "examCode": "az-900", "domain": "cloud-concepts", "front": "IaaS / PaaS / SaaS in one line each", "back": "IaaS: rent VMs and networks, you manage the OS up (lift-and-shift). PaaS: you bring code and data, provider runs the platform (App Service). SaaS: you use a finished app (Microsoft 365)." },
-  { "id": "fc-az-cc-11", "examCode": "az-900", "domain": "cloud-concepts", "front": "Who patches the OS?", "back": "IaaS: the customer. PaaS and SaaS: Microsoft. The single most-tested consequence of the shared responsibility model." },
-  { "id": "fc-az-as-01", "examCode": "az-900", "domain": "architecture-services", "front": "Azure region", "back": "A geographic area containing one or more datacenters with low-latency connectivity, where you choose to deploy resources." },
-  { "id": "fc-az-as-02", "examCode": "az-900", "domain": "architecture-services", "front": "Availability zone", "back": "A physically separate location within a region with independent power, cooling, and networking — spreading across zones survives a datacenter failure." },
-  { "id": "fc-az-as-03", "examCode": "az-900", "domain": "architecture-services", "front": "Region pair", "back": "Two regions ≥300 miles apart in one geography: replication target, sequenced platform updates, and prioritised recovery after a broad outage." },
-  { "id": "fc-az-as-04", "examCode": "az-900", "domain": "architecture-services", "front": "Sovereign region", "back": "A physically and logically isolated Azure instance for special compliance jurisdictions — Azure Government, Azure operated by 21Vianet (China)." },
-  { "id": "fc-az-as-05", "examCode": "az-900", "domain": "architecture-services", "front": "Resource group", "back": "A mandatory container for resources sharing a lifecycle. Deleting the group deletes its contents; a resource belongs to exactly one group at a time." },
-  { "id": "fc-az-as-06", "examCode": "az-900", "domain": "architecture-services", "front": "Subscription", "back": "The billing and access boundary — costs accumulate per subscription, and organisations commonly split production and development this way." },
-  { "id": "fc-az-as-07", "examCode": "az-900", "domain": "architecture-services", "front": "Management group", "back": "A container above subscriptions so policy and access apply once and are inherited by every subscription beneath." },
-  { "id": "fc-az-as-08", "examCode": "az-900", "domain": "architecture-services", "front": "Virtual Machine Scale Sets", "back": "Groups of identical VMs with autoscaling and a built-in load balancer — the answer to 'many identical instances that grow with load'." },
-  { "id": "fc-az-as-09", "examCode": "az-900", "domain": "architecture-services", "front": "Availability set (fault/update domains)", "back": "Spreads VMs across separate power/network hardware (fault domains) and separate maintenance windows (update domains) within one datacenter." },
-  { "id": "fc-az-as-10", "examCode": "az-900", "domain": "architecture-services", "front": "Containers vs VMs vs Functions", "back": "VMs virtualise hardware (full OS control); containers virtualise the OS (lighter, faster); Functions run event-driven code with no server management at all." },
-  { "id": "fc-az-as-11", "examCode": "az-900", "domain": "architecture-services", "front": "VPN Gateway vs ExpressRoute", "back": "Both connect on-premises to Azure. VPN Gateway: encrypted tunnel over the public internet. ExpressRoute: dedicated private circuit that never touches the internet." },
-  { "id": "fc-az-as-12", "examCode": "az-900", "domain": "architecture-services", "front": "VNet peering", "back": "Connects two virtual networks — including across regions — so they route to each other as one network." },
-  { "id": "fc-az-as-13", "examCode": "az-900", "domain": "architecture-services", "front": "Public vs private endpoint", "back": "Public: the service has an internet-reachable address. Private: the service gets a private IP inside your VNet, so traffic never leaves the private network." },
-  { "id": "fc-az-as-14", "examCode": "az-900", "domain": "architecture-services", "front": "Blob access tiers", "back": "Hot: frequent access. Cool/Cold: infrequent access, minimum 30/90-day storage. Archive: cheapest to hold, hours to retrieve — long-term retention." },
-  { "id": "fc-az-as-15", "examCode": "az-900", "domain": "architecture-services", "front": "LRS / ZRS / GRS / GZRS", "back": "LRS: 3 copies, one datacenter. ZRS: copies across availability zones. GRS/GZRS: adds a secondary region (RA- variants make it readable). Regional disaster protection starts at GRS." },
-  { "id": "fc-az-as-16", "examCode": "az-900", "domain": "architecture-services", "front": "Azure Data Box", "back": "A rugged physical appliance Microsoft ships to you for offline transfer of very large datasets that would take too long over the network." },
-  { "id": "fc-az-as-17", "examCode": "az-900", "domain": "architecture-services", "front": "AzCopy / Storage Explorer / File Sync", "back": "AzCopy: command-line transfers. Storage Explorer: the same graphically. Azure File Sync: caches Azure file shares on local Windows servers." },
-  { "id": "fc-az-as-18", "examCode": "az-900", "domain": "architecture-services", "front": "Microsoft Entra ID", "back": "Azure's cloud identity service — authentication for Azure, Microsoft 365, and connected apps. Entra Domain Services adds managed domain join and group policy." },
-  { "id": "fc-az-as-19", "examCode": "az-900", "domain": "architecture-services", "front": "Conditional Access", "back": "Policy engine that evaluates sign-in signals (location, device, risk) and applies controls — require MFA, or block — before access is granted." },
-  { "id": "fc-az-as-20", "examCode": "az-900", "domain": "architecture-services", "front": "Zero Trust vs defense in depth", "back": "Zero Trust: verify explicitly, least privilege, assume breach. Defense in depth: layered controls (physical, identity, perimeter, network, compute, app, data) so one breach doesn't win." },
-  { "id": "fc-az-mg-01", "examCode": "az-900", "domain": "management-governance", "front": "Pricing calculator vs TCO calculator", "back": "Pricing calculator: estimates what a planned Azure architecture will cost. TCO calculator: compares current on-premises costs with running in Azure." },
-  { "id": "fc-az-mg-02", "examCode": "az-900", "domain": "management-governance", "front": "Egress cost", "back": "Data transferred out of Azure is billed; data transferred in is generally free. Network traffic direction is a classic hidden cost factor." },
-  { "id": "fc-az-mg-03", "examCode": "az-900", "domain": "management-governance", "front": "Tags", "back": "Name:value metadata on resources (e.g. costcenter:finance) used to organise resources and slice cost reports without restructuring subscriptions." },
-  { "id": "fc-az-mg-04", "examCode": "az-900", "domain": "management-governance", "front": "Budgets and cost alerts", "back": "Microsoft Cost Management lets you set spending thresholds per scope and fires alerts as actual or forecast spend approaches them." },
-  { "id": "fc-az-mg-05", "examCode": "az-900", "domain": "management-governance", "front": "Azure Policy", "back": "Evaluates resources against rules (allowed regions, SKUs, required tags), blocks non-compliant creations, reports existing violations. Initiatives bundle policies." },
-  { "id": "fc-az-mg-06", "examCode": "az-900", "domain": "management-governance", "front": "Resource locks", "back": "Delete lock: blocks deletion. Read-only lock: blocks all changes. Both apply even to owners and must be removed before the guarded action can proceed." },
-  { "id": "fc-az-mg-07", "examCode": "az-900", "domain": "management-governance", "front": "Azure Arc", "back": "Projects on-premises servers, other clouds, and Kubernetes clusters into Azure Resource Manager so Policy, RBAC, and monitoring govern them like native resources." },
-  { "id": "fc-az-mg-08", "examCode": "az-900", "domain": "management-governance", "front": "ARM and ARM templates", "back": "Azure Resource Manager is the deployment layer every tool talks to. ARM templates (and Bicep) declare a desired end state — the same file produces the same environment every time." },
-  { "id": "fc-az-mg-09", "examCode": "az-900", "domain": "management-governance", "front": "Azure Advisor vs Service Health", "back": "Advisor: free personalised recommendations (cost, security, reliability, performance, operations). Service Health: Azure incidents, maintenance, and advisories scoped to what you use." },
-  { "id": "fc-az-mg-10", "examCode": "az-900", "domain": "management-governance", "front": "Azure Monitor / Log Analytics / Application Insights", "back": "Monitor: platform-wide metrics and logs pipeline with alerts. Log Analytics: workspace and query engine over collected logs. Application Insights: app-level telemetry — requests, failures, dependencies." }
+  {
+    "id": "fc-az-cc-01",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "front": "Consumption-based model",
+    "back": "Pay only for the resources you actually use, as operational expenditure — no up-front hardware purchase, and the bill scales down as well as up."
+  },
+  {
+    "id": "fc-az-cc-02",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "front": "Shared responsibility model",
+    "back": "Duties split between provider and customer. Microsoft always owns the physical infrastructure; you always own your data, devices, and identities; the middle layers shift toward Microsoft from IaaS → PaaS → SaaS."
+  },
+  {
+    "id": "fc-az-cc-03",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "front": "Serverless",
+    "back": "You supply only code; the platform allocates all infrastructure on demand and bills per execution. Azure Functions is the flagship example."
+  },
+  {
+    "id": "fc-az-cc-04",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "front": "Public vs private vs hybrid cloud",
+    "back": "Public: provider-owned shared infrastructure. Private: infrastructure dedicated to one organisation — most control, usually most cost. Hybrid: the two combined, e.g. regulated data on-premises with everything else in Azure."
+  },
+  {
+    "id": "fc-az-cc-05",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "front": "Cloud bursting",
+    "back": "A hybrid pattern where a workload runs on private infrastructure and 'bursts' into public cloud capacity when local resources are exhausted."
+  },
+  {
+    "id": "fc-az-cc-06",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "front": "Pay-as-you-go vs reserved vs spot pricing",
+    "back": "Pay-as-you-go: highest unit price, total flexibility. Reserved: 1- or 3-year commitment for deep discounts on steady workloads. Spot: deepest discounts for interruptible workloads Azure may evict."
+  },
+  {
+    "id": "fc-az-cc-07",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "front": "High availability",
+    "back": "The service keeps responding despite component failures, expressed in uptime SLAs — 99.9% allows ~8.7 hours of downtime a year; 99.99% allows ~52 minutes."
+  },
+  {
+    "id": "fc-az-cc-08",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "front": "Vertical vs horizontal scaling",
+    "back": "Vertical: make one machine bigger (more CPU/RAM). Horizontal: add more machines. Elasticity is scaling that happens automatically with demand."
+  },
+  {
+    "id": "fc-az-cc-09",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "front": "Reliability",
+    "back": "The ability to recover from failure and keep functioning — e.g. a decentralised design that shifts work to a healthy region when one fails."
+  },
+  {
+    "id": "fc-az-cc-10",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "front": "IaaS / PaaS / SaaS in one line each",
+    "back": "IaaS: rent VMs and networks, you manage the OS up (lift-and-shift). PaaS: you bring code and data, provider runs the platform (App Service). SaaS: you use a finished app (Microsoft 365)."
+  },
+  {
+    "id": "fc-az-cc-11",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "front": "Who patches the OS?",
+    "back": "IaaS: the customer. PaaS and SaaS: Microsoft. The single most-tested consequence of the shared responsibility model."
+  },
+  {
+    "id": "fc-az-as-01",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Azure region",
+    "back": "A geographic area containing one or more datacenters with low-latency connectivity, where you choose to deploy resources."
+  },
+  {
+    "id": "fc-az-as-02",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Availability zone",
+    "back": "A physically separate location within a region with independent power, cooling, and networking — spreading across zones survives a datacenter failure."
+  },
+  {
+    "id": "fc-az-as-03",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Region pair",
+    "back": "Two regions ≥300 miles apart in one geography: replication target, sequenced platform updates, and prioritised recovery after a broad outage."
+  },
+  {
+    "id": "fc-az-as-04",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Sovereign region",
+    "back": "A physically and logically isolated Azure instance for special compliance jurisdictions — Azure Government, Azure operated by 21Vianet (China)."
+  },
+  {
+    "id": "fc-az-as-05",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Resource group",
+    "back": "A mandatory container for resources sharing a lifecycle. Deleting the group deletes its contents; a resource belongs to exactly one group at a time."
+  },
+  {
+    "id": "fc-az-as-06",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Subscription",
+    "back": "The billing and access boundary — costs accumulate per subscription, and organisations commonly split production and development this way."
+  },
+  {
+    "id": "fc-az-as-07",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Management group",
+    "back": "A container above subscriptions so policy and access apply once and are inherited by every subscription beneath."
+  },
+  {
+    "id": "fc-az-as-08",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Virtual Machine Scale Sets",
+    "back": "Groups of identical VMs with autoscaling and a built-in load balancer — the answer to 'many identical instances that grow with load'."
+  },
+  {
+    "id": "fc-az-as-09",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Availability set (fault/update domains)",
+    "back": "Spreads VMs across separate power/network hardware (fault domains) and separate maintenance windows (update domains) within one datacenter."
+  },
+  {
+    "id": "fc-az-as-10",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Containers vs VMs vs Functions",
+    "back": "VMs virtualise hardware (full OS control); containers virtualise the OS (lighter, faster); Functions run event-driven code with no server management at all."
+  },
+  {
+    "id": "fc-az-as-11",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "VPN Gateway vs ExpressRoute",
+    "back": "Both connect on-premises to Azure. VPN Gateway: encrypted tunnel over the public internet. ExpressRoute: dedicated private circuit that never touches the internet."
+  },
+  {
+    "id": "fc-az-as-12",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "VNet peering",
+    "back": "Connects two virtual networks — including across regions — so they route to each other as one network."
+  },
+  {
+    "id": "fc-az-as-13",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Public vs private endpoint",
+    "back": "Public: the service has an internet-reachable address. Private: the service gets a private IP inside your VNet, so traffic never leaves the private network."
+  },
+  {
+    "id": "fc-az-as-14",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Blob access tiers",
+    "back": "Hot: frequent access. Cool/Cold: infrequent access, minimum 30/90-day storage. Archive: cheapest to hold, hours to retrieve — long-term retention."
+  },
+  {
+    "id": "fc-az-as-15",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "LRS / ZRS / GRS / GZRS",
+    "back": "LRS: 3 copies, one datacenter. ZRS: copies across availability zones. GRS/GZRS: adds a secondary region (RA- variants make it readable). Regional disaster protection starts at GRS."
+  },
+  {
+    "id": "fc-az-as-16",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Azure Data Box",
+    "back": "A rugged physical appliance Microsoft ships to you for offline transfer of very large datasets that would take too long over the network."
+  },
+  {
+    "id": "fc-az-as-17",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "AzCopy / Storage Explorer / File Sync",
+    "back": "AzCopy: command-line transfers. Storage Explorer: the same graphically. Azure File Sync: caches Azure file shares on local Windows servers."
+  },
+  {
+    "id": "fc-az-as-18",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Microsoft Entra ID",
+    "back": "Azure's cloud identity service — authentication for Azure, Microsoft 365, and connected apps. Entra Domain Services adds managed domain join and group policy."
+  },
+  {
+    "id": "fc-az-as-19",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Conditional Access",
+    "back": "Policy engine that evaluates sign-in signals (location, device, risk) and applies controls — require MFA, or block — before access is granted."
+  },
+  {
+    "id": "fc-az-as-20",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "front": "Zero Trust vs defense in depth",
+    "back": "Zero Trust: verify explicitly, least privilege, assume breach. Defense in depth: layered controls (physical, identity, perimeter, network, compute, app, data) so one breach doesn't win."
+  },
+  {
+    "id": "fc-az-mg-01",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "front": "Pricing calculator vs TCO calculator",
+    "back": "Pricing calculator: estimates what a planned Azure architecture will cost. TCO calculator: compares current on-premises costs with running in Azure."
+  },
+  {
+    "id": "fc-az-mg-02",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "front": "Egress cost",
+    "back": "Data transferred out of Azure is billed; data transferred in is generally free. Network traffic direction is a classic hidden cost factor."
+  },
+  {
+    "id": "fc-az-mg-03",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "front": "Tags",
+    "back": "Name:value metadata on resources (e.g. costcenter:finance) used to organise resources and slice cost reports without restructuring subscriptions."
+  },
+  {
+    "id": "fc-az-mg-04",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "front": "Budgets and cost alerts",
+    "back": "Microsoft Cost Management lets you set spending thresholds per scope and fires alerts as actual or forecast spend approaches them."
+  },
+  {
+    "id": "fc-az-mg-05",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "front": "Azure Policy",
+    "back": "Evaluates resources against rules (allowed regions, SKUs, required tags), blocks non-compliant creations, reports existing violations. Initiatives bundle policies."
+  },
+  {
+    "id": "fc-az-mg-06",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "front": "Resource locks",
+    "back": "Delete lock: blocks deletion. Read-only lock: blocks all changes. Both apply even to owners and must be removed before the guarded action can proceed."
+  },
+  {
+    "id": "fc-az-mg-07",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "front": "Azure Arc",
+    "back": "Projects on-premises servers, other clouds, and Kubernetes clusters into Azure Resource Manager so Policy, RBAC, and monitoring govern them like native resources."
+  },
+  {
+    "id": "fc-az-mg-08",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "front": "ARM and ARM templates",
+    "back": "Azure Resource Manager is the deployment layer every tool talks to. ARM templates (and Bicep) declare a desired end state — the same file produces the same environment every time."
+  },
+  {
+    "id": "fc-az-mg-09",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "front": "Azure Advisor vs Service Health",
+    "back": "Advisor: free personalised recommendations (cost, security, reliability, performance, operations). Service Health: Azure incidents, maintenance, and advisories scoped to what you use."
+  },
+  {
+    "id": "fc-az-mg-10",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "front": "Azure Monitor / Log Analytics / Application Insights",
+    "back": "Monitor: platform-wide metrics and logs pipeline with alerts. Log Analytics: workspace and query engine over collected logs. Application Insights: app-level telemetry — requests, failures, dependencies."
+  },
+  {
+    "id": "fc-az-mg-11",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "front": "Reservations and savings plans",
+    "back": "Committing to one or three years of usage in advance for a large discount over pay-as-you-go. The trade is price against flexibility, not a change to the resource itself."
+  },
+  {
+    "id": "fc-az-mg-12",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "front": "Bicep",
+    "back": "A concise declarative language that compiles to ARM templates. Same deployment engine and same idempotent result, far less JSON to read."
+  }
 ]

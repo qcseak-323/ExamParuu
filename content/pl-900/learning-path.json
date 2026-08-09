@@ -16,7 +16,8 @@
           ],
           "cardIds": [
             "fc-pl9-bv-01",
-            "fc-pl9-bv-03"
+            "fc-pl9-bv-03",
+            "fc-pl9-bv-05"
           ]
         },
         {
@@ -25,7 +26,8 @@
           "sectionIds": [],
           "cardIds": [
             "fc-pl9-bv-02",
-            "fc-pl9-bv-04"
+            "fc-pl9-bv-04",
+            "fc-pl9-bv-06"
           ]
         }
       ]
@@ -78,7 +80,8 @@
           ],
           "cardIds": [
             "fc-pl9-pa-01",
-            "fc-pl9-pa-04"
+            "fc-pl9-pa-04",
+            "fc-pl9-pa-07"
           ]
         },
         {
@@ -89,7 +92,8 @@
           ],
           "cardIds": [
             "fc-pl9-pa-02",
-            "fc-pl9-pa-05"
+            "fc-pl9-pa-05",
+            "fc-pl9-pa-08"
           ]
         },
         {
@@ -97,7 +101,9 @@
           "title": "Build a model-driven app",
           "sectionIds": [],
           "cardIds": [
-            "fc-pl9-pa-03"
+            "fc-pl9-pa-03",
+            "fc-pl9-pa-06",
+            "fc-pl9-pa-09"
           ]
         }
       ]
@@ -148,7 +154,8 @@
           ],
           "cardIds": [
             "fc-pl9-cs-01",
-            "fc-pl9-cs-05"
+            "fc-pl9-cs-05",
+            "fc-pl9-cs-09"
           ]
         },
         {
@@ -159,7 +166,8 @@
           ],
           "cardIds": [
             "fc-pl9-cs-02",
-            "fc-pl9-cs-06"
+            "fc-pl9-cs-06",
+            "fc-pl9-cs-10"
           ]
         },
         {
@@ -168,7 +176,8 @@
           "sectionIds": [],
           "cardIds": [
             "fc-pl9-cs-03",
-            "fc-pl9-cs-07"
+            "fc-pl9-cs-07",
+            "fc-pl9-cs-11"
           ]
         },
         {
@@ -176,7 +185,9 @@
           "title": "Add structured automation to agents in Microsoft Copilot Studio",
           "sectionIds": [],
           "cardIds": [
-            "fc-pl9-cs-04"
+            "fc-pl9-cs-04",
+            "fc-pl9-cs-08",
+            "fc-pl9-cs-12"
           ]
         }
       ]

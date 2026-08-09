@@ -1,40 +1,324 @@
 [
-  { "id": "fc-sc9-sc-01", "examCode": "sc-900", "domain": "sci-concepts", "front": "Zero Trust", "back": "Verify explicitly, use least-privilege access, assume breach — trust is never granted by network location." },
-  { "id": "fc-sc9-sc-02", "examCode": "sc-900", "domain": "sci-concepts", "front": "Defense-in-depth", "back": "Layered protections — physical, identity, perimeter, network, compute, app, data — so one breached layer meets the next." },
-  { "id": "fc-sc9-sc-03", "examCode": "sc-900", "domain": "sci-concepts", "front": "Encryption vs hashing", "back": "Encryption is reversible with a key (data at rest/in transit). Hashing is an irreversible fingerprint — how passwords are stored." },
-  { "id": "fc-sc9-sc-04", "examCode": "sc-900", "domain": "sci-concepts", "front": "GRC", "back": "Governance sets the rules, risk management handles what could go wrong, compliance proves external obligations are met." },
-  { "id": "fc-sc9-sc-05", "examCode": "sc-900", "domain": "sci-concepts", "front": "Authentication vs authorization", "back": "AuthN proves who you are; AuthZ decides what you may do once proven." },
-  { "id": "fc-sc9-sc-06", "examCode": "sc-900", "domain": "sci-concepts", "front": "Identity provider (IdP)", "back": "Creates, maintains, and verifies identities and issues tokens applications trust — Entra ID is Microsoft's." },
-  { "id": "fc-sc9-sc-07", "examCode": "sc-900", "domain": "sci-concepts", "front": "Federation", "back": "Trust between identity providers so one organisation's users access another's resources with their home accounts." },
-  { "id": "fc-sc9-en-01", "examCode": "sc-900", "domain": "entra", "front": "Microsoft Entra ID", "back": "Microsoft's cloud identity and access management service — the IdP behind Azure, Microsoft 365, and integrated apps." },
-  { "id": "fc-sc9-en-02", "examCode": "sc-900", "domain": "entra", "front": "Identity types in Entra", "back": "Users (humans), workload identities (apps/services — service principals, managed identities), devices, and agent ID for AI agents." },
-  { "id": "fc-sc9-en-03", "examCode": "sc-900", "domain": "entra", "front": "Hybrid identity", "back": "On-premises AD accounts synchronised with Entra ID — one identity on-premises and in the cloud." },
-  { "id": "fc-sc9-en-04", "examCode": "sc-900", "domain": "entra", "front": "MFA factors", "back": "Something you know (password/PIN) + have (phone, key) + are (biometric) — two or more different categories." },
-  { "id": "fc-sc9-en-05", "examCode": "sc-900", "domain": "entra", "front": "Passwordless methods", "back": "Windows Hello for Business, FIDO2 security keys, passkeys — no password exists to phish or leak." },
-  { "id": "fc-sc9-en-06", "examCode": "sc-900", "domain": "entra", "front": "Password protection (Entra)", "back": "Banned-password lists (global + custom), smart lockout, and self-service password reset." },
-  { "id": "fc-sc9-en-07", "examCode": "sc-900", "domain": "entra", "front": "Conditional Access", "back": "Sign-in policy engine: signals (user, location, device, app, risk) → decision (allow, require MFA, block)." },
-  { "id": "fc-sc9-en-08", "examCode": "sc-900", "domain": "entra", "front": "Entra roles / RBAC", "back": "Built-in directory roles assigned at least privilege. Entra roles govern the identity platform; Azure RBAC governs Azure resources." },
-  { "id": "fc-sc9-en-09", "examCode": "sc-900", "domain": "entra", "front": "Privileged Identity Management", "back": "Just-in-time role activation: eligible instead of permanent, time-bound, optionally approval-gated." },
-  { "id": "fc-sc9-en-10", "examCode": "sc-900", "domain": "entra", "front": "Entra ID Protection", "back": "Detects identity risks (leaked credentials, impossible travel), scores user and sign-in risk, and can drive automated Conditional Access responses." },
-  { "id": "fc-sc9-en-11", "examCode": "sc-900", "domain": "entra", "front": "Access reviews", "back": "Recurring human recertification of group memberships, app access, and roles — access expires with its purpose." },
-  { "id": "fc-sc9-ss-01", "examCode": "sc-900", "domain": "security-solutions", "front": "Azure Firewall vs WAF vs NSG", "back": "Firewall: managed stateful network filtering across VNets. WAF: blocks HTTP-level exploits (SQLi, XSS). NSG: subnet/NIC-level allow-deny rules." },
-  { "id": "fc-sc9-ss-02", "examCode": "sc-900", "domain": "security-solutions", "front": "Azure Bastion", "back": "RDP/SSH to VMs through the portal over TLS — no public IPs or exposed management ports." },
-  { "id": "fc-sc9-ss-03", "examCode": "sc-900", "domain": "security-solutions", "front": "Azure Key Vault", "back": "Safeguarded store for secrets, keys, and certificates — retrieved at runtime under access policy and audit." },
-  { "id": "fc-sc9-ss-04", "examCode": "sc-900", "domain": "security-solutions", "front": "Azure DDoS Protection", "back": "Absorbs volumetric denial-of-service floods before they reach applications." },
-  { "id": "fc-sc9-ss-05", "examCode": "sc-900", "domain": "security-solutions", "front": "Defender for Cloud: CSPM", "back": "Continuous configuration assessment against standards, recommendations, and Secure Score to measure posture." },
-  { "id": "fc-sc9-ss-06", "examCode": "sc-900", "domain": "security-solutions", "front": "Cloud workload protection", "back": "Defender for Cloud's active half: threat detection and hardening for servers, storage, databases, containers." },
-  { "id": "fc-sc9-ss-07", "examCode": "sc-900", "domain": "security-solutions", "front": "SIEM vs SOAR", "back": "SIEM collects, correlates, detects across the estate. SOAR automates the response with playbooks. Sentinel is both, cloud-native." },
-  { "id": "fc-sc9-ss-08", "examCode": "sc-900", "domain": "security-solutions", "front": "Defender for Office 365", "back": "Protects email and collaboration: phishing, malicious links and attachments in Exchange, Teams, SharePoint." },
-  { "id": "fc-sc9-ss-09", "examCode": "sc-900", "domain": "security-solutions", "front": "Defender for Endpoint", "back": "Device protection: EDR, attack surface reduction, automated investigation on laptops, servers, mobile." },
-  { "id": "fc-sc9-ss-10", "examCode": "sc-900", "domain": "security-solutions", "front": "Defender for Cloud Apps", "back": "Cloud access security broker: discovers shadow IT, governs SaaS usage, protects data across cloud apps." },
-  { "id": "fc-sc9-ss-11", "examCode": "sc-900", "domain": "security-solutions", "front": "Defender for Identity", "back": "Watches on-premises Active Directory for identity attacks — reconnaissance, credential theft, lateral movement." },
-  { "id": "fc-sc9-ss-12", "examCode": "sc-900", "domain": "security-solutions", "front": "Defender portal", "back": "The unified home where incidents from the Defender family correlate into single coordinated investigations." },
-  { "id": "fc-sc9-cp-01", "examCode": "sc-900", "domain": "compliance-solutions", "front": "Service Trust Portal", "back": "Microsoft's public evidence locker: audit reports, certifications, and documentation of its own compliance." },
-  { "id": "fc-sc9-cp-02", "examCode": "sc-900", "domain": "compliance-solutions", "front": "Microsoft privacy principles", "back": "Control, transparency, security, strong legal protections, no content-based targeting, benefits to you." },
-  { "id": "fc-sc9-cp-03", "examCode": "sc-900", "domain": "compliance-solutions", "front": "Compliance Manager & score", "back": "Assessments map configuration to regulations with improvement actions; compliance score measures progress." },
-  { "id": "fc-sc9-cp-04", "examCode": "sc-900", "domain": "compliance-solutions", "front": "Sensitivity labels", "back": "Classify content and enforce travelling protection — encryption, watermarks, access restrictions." },
-  { "id": "fc-sc9-cp-05", "examCode": "sc-900", "domain": "compliance-solutions", "front": "Data loss prevention", "back": "Policies that detect sensitive content in motion and warn, block, or audit the risky action." },
-  { "id": "fc-sc9-cp-06", "examCode": "sc-900", "domain": "compliance-solutions", "front": "Retention vs records management", "back": "Retention policies/labels keep-then-delete on schedule; records management makes declared records immutable with reviewed disposition." },
-  { "id": "fc-sc9-cp-07", "examCode": "sc-900", "domain": "compliance-solutions", "front": "Insider Risk Management", "back": "Correlates internal signals (mass downloads, pre-departure activity) into pseudonymised, investigable cases." },
-  { "id": "fc-sc9-cp-08", "examCode": "sc-900", "domain": "compliance-solutions", "front": "eDiscovery & audit", "back": "eDiscovery searches and legal-holds content for cases; audit records who did what, where, when across Microsoft 365." }
+  {
+    "id": "fc-sc9-sc-01",
+    "examCode": "sc-900",
+    "domain": "sci-concepts",
+    "front": "Zero Trust",
+    "back": "Verify explicitly, use least-privilege access, assume breach — trust is never granted by network location."
+  },
+  {
+    "id": "fc-sc9-sc-02",
+    "examCode": "sc-900",
+    "domain": "sci-concepts",
+    "front": "Defense-in-depth",
+    "back": "Layered protections — physical, identity, perimeter, network, compute, app, data — so one breached layer meets the next."
+  },
+  {
+    "id": "fc-sc9-sc-03",
+    "examCode": "sc-900",
+    "domain": "sci-concepts",
+    "front": "Encryption vs hashing",
+    "back": "Encryption is reversible with a key (data at rest/in transit). Hashing is an irreversible fingerprint — how passwords are stored."
+  },
+  {
+    "id": "fc-sc9-sc-04",
+    "examCode": "sc-900",
+    "domain": "sci-concepts",
+    "front": "GRC",
+    "back": "Governance sets the rules, risk management handles what could go wrong, compliance proves external obligations are met."
+  },
+  {
+    "id": "fc-sc9-sc-05",
+    "examCode": "sc-900",
+    "domain": "sci-concepts",
+    "front": "Authentication vs authorization",
+    "back": "AuthN proves who you are; AuthZ decides what you may do once proven."
+  },
+  {
+    "id": "fc-sc9-sc-06",
+    "examCode": "sc-900",
+    "domain": "sci-concepts",
+    "front": "Identity provider (IdP)",
+    "back": "Creates, maintains, and verifies identities and issues tokens applications trust — Entra ID is Microsoft's."
+  },
+  {
+    "id": "fc-sc9-sc-07",
+    "examCode": "sc-900",
+    "domain": "sci-concepts",
+    "front": "Federation",
+    "back": "Trust between identity providers so one organisation's users access another's resources with their home accounts."
+  },
+  {
+    "id": "fc-sc9-en-01",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "front": "Microsoft Entra ID",
+    "back": "Microsoft's cloud identity and access management service — the IdP behind Azure, Microsoft 365, and integrated apps."
+  },
+  {
+    "id": "fc-sc9-en-02",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "front": "Identity types in Entra",
+    "back": "Users (humans), workload identities (apps/services — service principals, managed identities), devices, and agent ID for AI agents."
+  },
+  {
+    "id": "fc-sc9-en-03",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "front": "Hybrid identity",
+    "back": "On-premises AD accounts synchronised with Entra ID — one identity on-premises and in the cloud."
+  },
+  {
+    "id": "fc-sc9-en-04",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "front": "MFA factors",
+    "back": "Something you know (password/PIN) + have (phone, key) + are (biometric) — two or more different categories."
+  },
+  {
+    "id": "fc-sc9-en-05",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "front": "Passwordless methods",
+    "back": "Windows Hello for Business, FIDO2 security keys, passkeys — no password exists to phish or leak."
+  },
+  {
+    "id": "fc-sc9-en-06",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "front": "Password protection (Entra)",
+    "back": "Banned-password lists (global + custom), smart lockout, and self-service password reset."
+  },
+  {
+    "id": "fc-sc9-en-07",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "front": "Conditional Access",
+    "back": "Sign-in policy engine: signals (user, location, device, app, risk) → decision (allow, require MFA, block)."
+  },
+  {
+    "id": "fc-sc9-en-08",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "front": "Entra roles / RBAC",
+    "back": "Built-in directory roles assigned at least privilege. Entra roles govern the identity platform; Azure RBAC governs Azure resources."
+  },
+  {
+    "id": "fc-sc9-en-09",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "front": "Privileged Identity Management",
+    "back": "Just-in-time role activation: eligible instead of permanent, time-bound, optionally approval-gated."
+  },
+  {
+    "id": "fc-sc9-en-10",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "front": "Entra ID Protection",
+    "back": "Detects identity risks (leaked credentials, impossible travel), scores user and sign-in risk, and can drive automated Conditional Access responses."
+  },
+  {
+    "id": "fc-sc9-en-11",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "front": "Access reviews",
+    "back": "Recurring human recertification of group memberships, app access, and roles — access expires with its purpose."
+  },
+  {
+    "id": "fc-sc9-en-12",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "front": "Entitlement management",
+    "back": "Bundles resources — groups, apps, sites — into access packages that users can request, with approval and expiry built in, so access is granted as a package rather than item by item."
+  },
+  {
+    "id": "fc-sc9-ss-01",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "Azure Firewall vs WAF vs NSG",
+    "back": "Firewall: managed stateful network filtering across VNets. WAF: blocks HTTP-level exploits (SQLi, XSS). NSG: subnet/NIC-level allow-deny rules."
+  },
+  {
+    "id": "fc-sc9-ss-02",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "Azure Bastion",
+    "back": "RDP/SSH to VMs through the portal over TLS — no public IPs or exposed management ports."
+  },
+  {
+    "id": "fc-sc9-ss-03",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "Azure Key Vault",
+    "back": "Safeguarded store for secrets, keys, and certificates — retrieved at runtime under access policy and audit."
+  },
+  {
+    "id": "fc-sc9-ss-04",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "Azure DDoS Protection",
+    "back": "Absorbs volumetric denial-of-service floods before they reach applications."
+  },
+  {
+    "id": "fc-sc9-ss-05",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "Defender for Cloud: CSPM",
+    "back": "Continuous configuration assessment against standards, recommendations, and Secure Score to measure posture."
+  },
+  {
+    "id": "fc-sc9-ss-06",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "Cloud workload protection",
+    "back": "Defender for Cloud's active half: threat detection and hardening for servers, storage, databases, containers."
+  },
+  {
+    "id": "fc-sc9-ss-07",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "SIEM vs SOAR",
+    "back": "SIEM collects, correlates, detects across the estate. SOAR automates the response with playbooks. Sentinel is both, cloud-native."
+  },
+  {
+    "id": "fc-sc9-ss-08",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "Defender for Office 365",
+    "back": "Protects email and collaboration: phishing, malicious links and attachments in Exchange, Teams, SharePoint."
+  },
+  {
+    "id": "fc-sc9-ss-09",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "Defender for Endpoint",
+    "back": "Device protection: EDR, attack surface reduction, automated investigation on laptops, servers, mobile."
+  },
+  {
+    "id": "fc-sc9-ss-10",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "Defender for Cloud Apps",
+    "back": "Cloud access security broker: discovers shadow IT, governs SaaS usage, protects data across cloud apps."
+  },
+  {
+    "id": "fc-sc9-ss-11",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "Defender for Identity",
+    "back": "Watches on-premises Active Directory for identity attacks — reconnaissance, credential theft, lateral movement."
+  },
+  {
+    "id": "fc-sc9-ss-12",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "Defender portal",
+    "back": "The unified home where incidents from the Defender family correlate into single coordinated investigations."
+  },
+  {
+    "id": "fc-sc9-ss-13",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "Just-in-time (JIT) VM access",
+    "back": "Keeps management ports closed and opens them only for an approved user, for a limited window, from a limited source — shrinking the window an exposed port is attackable."
+  },
+  {
+    "id": "fc-sc9-ss-14",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "Sentinel data connectors",
+    "back": "The integrations that pull logs into Microsoft Sentinel from Microsoft services, other clouds, and on-premises sources. Without connectors a SIEM has nothing to correlate."
+  },
+  {
+    "id": "fc-sc9-ss-15",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "front": "Microsoft Secure Score",
+    "back": "A measure of an organisation's security posture against recommended configuration, with prioritised improvement actions and progress over time."
+  },
+  {
+    "id": "fc-sc9-cp-01",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "front": "Service Trust Portal",
+    "back": "Microsoft's public evidence locker: audit reports, certifications, and documentation of its own compliance."
+  },
+  {
+    "id": "fc-sc9-cp-02",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "front": "Microsoft privacy principles",
+    "back": "Control, transparency, security, strong legal protections, no content-based targeting, benefits to you."
+  },
+  {
+    "id": "fc-sc9-cp-03",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "front": "Compliance Manager & score",
+    "back": "Assessments map configuration to regulations with improvement actions; compliance score measures progress."
+  },
+  {
+    "id": "fc-sc9-cp-04",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "front": "Sensitivity labels",
+    "back": "Classify content and enforce travelling protection — encryption, watermarks, access restrictions."
+  },
+  {
+    "id": "fc-sc9-cp-05",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "front": "Data loss prevention",
+    "back": "Policies that detect sensitive content in motion and warn, block, or audit the risky action."
+  },
+  {
+    "id": "fc-sc9-cp-06",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "front": "Retention vs records management",
+    "back": "Retention policies/labels keep-then-delete on schedule; records management makes declared records immutable with reviewed disposition."
+  },
+  {
+    "id": "fc-sc9-cp-07",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "front": "Insider Risk Management",
+    "back": "Correlates internal signals (mass downloads, pre-departure activity) into pseudonymised, investigable cases."
+  },
+  {
+    "id": "fc-sc9-cp-08",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "front": "eDiscovery & audit",
+    "back": "eDiscovery searches and legal-holds content for cases; audit records who did what, where, when across Microsoft 365."
+  },
+  {
+    "id": "fc-sc9-cp-09",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "front": "Data classification",
+    "back": "Purview's view of what sensitive content exists and where, built from sensitive information types and trainable classifiers — the input every protection policy depends on."
+  },
+  {
+    "id": "fc-sc9-cp-10",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "front": "Communication Compliance",
+    "back": "Detects policy violations in internal messaging — harassment, regulatory breaches, sensitive data sharing — and routes them for review."
+  },
+  {
+    "id": "fc-sc9-cp-11",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "front": "Unified Catalog",
+    "back": "The Purview data governance experience for cataloguing data assets across sources, so owners, quality, and lineage are recorded in one place."
+  },
+  {
+    "id": "fc-sc9-cp-12",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "front": "Priva",
+    "back": "Microsoft's privacy risk management and subject rights request tooling — finding personal data, spotting privacy risk, and handling requests from data subjects."
+  }
 ]

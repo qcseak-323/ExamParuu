@@ -4,137 +4,176 @@
   "paths": [
     {
       "id": "ai-concepts",
-      "title": "Identify AI concepts and capabilities",
+      "title": "AI concepts for developers and technology professionals",
       "domainId": "ai-concepts",
-      "msLearnUrl": null,
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/ai-concepts/",
       "modules": [
         {
           "id": "ai-concepts-m1",
-          "title": "The six responsible AI principles",
+          "title": "Introduction to AI concepts",
           "sectionIds": [
             "responsible-ai-principles"
           ],
           "cardIds": [
             "fc-ai-co-01",
-            "fc-ai-co-05",
-            "fc-ai-co-09",
-            "fc-ai-co-13",
-            "fc-ai-co-17"
+            "fc-ai-co-08",
+            "fc-ai-co-15"
           ]
         },
         {
           "id": "ai-concepts-m2",
-          "title": "How generative models work, and choosing one",
+          "title": "Introduction to generative AI and agents",
           "sectionIds": [
             "generative-models-and-configuration"
           ],
           "cardIds": [
             "fc-ai-co-02",
-            "fc-ai-co-06",
-            "fc-ai-co-10",
-            "fc-ai-co-14"
+            "fc-ai-co-09",
+            "fc-ai-co-16"
           ]
         },
         {
           "id": "ai-concepts-m3",
-          "title": "Identifying AI workloads",
+          "title": "Introduction to natural language processing concepts",
           "sectionIds": [
             "identifying-ai-workloads"
           ],
           "cardIds": [
             "fc-ai-co-03",
-            "fc-ai-co-07",
-            "fc-ai-co-11",
-            "fc-ai-co-15"
+            "fc-ai-co-10",
+            "fc-ai-co-17"
           ]
         },
         {
           "id": "ai-concepts-m4",
-          "title": "Speech, vision, and information extraction",
+          "title": "Introduction to AI speech concepts",
           "sectionIds": [
             "speech-vision-and-extraction"
           ],
           "cardIds": [
             "fc-ai-co-04",
-            "fc-ai-co-08",
+            "fc-ai-co-11",
+            "fc-ai-co-18"
+          ]
+        },
+        {
+          "id": "ai-concepts-m5",
+          "title": "Introduction to computer vision concepts",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-ai-co-05",
             "fc-ai-co-12",
-            "fc-ai-co-16"
+            "fc-ai-co-19"
+          ]
+        },
+        {
+          "id": "ai-concepts-m6",
+          "title": "Introduction to AI-powered information extraction concepts",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-ai-co-06",
+            "fc-ai-co-13",
+            "fc-ai-co-20"
+          ]
+        },
+        {
+          "id": "ai-concepts-m7",
+          "title": "Introduction to retrieval-augmented generation concepts",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-ai-co-07",
+            "fc-ai-co-14",
+            "fc-ai-co-21"
           ]
         }
       ]
     },
     {
       "id": "foundry-implementation",
-      "title": "Implement AI solutions by using Microsoft Foundry",
+      "title": "Get started with AI applications and agents on Azure",
       "domainId": "foundry-implementation",
-      "msLearnUrl": null,
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/get-started-ai-apps-agents/",
       "modules": [
         {
           "id": "foundry-implementation-m1",
-          "title": "Prompts, and deploying models in Foundry",
+          "title": "Get started with AI in Azure",
           "sectionIds": [
             "prompts-and-model-deployment"
           ],
           "cardIds": [
             "fc-ai-fd-01",
-            "fc-ai-fd-06",
-            "fc-ai-fd-11",
-            "fc-ai-fd-16",
-            "fc-ai-fd-21"
+            "fc-ai-fd-08",
+            "fc-ai-fd-15",
+            "fc-ai-fd-22"
           ]
         },
         {
           "id": "foundry-implementation-m2",
-          "title": "Chat clients and agents",
+          "title": "Get started with generative AI and agents in Azure",
           "sectionIds": [
             "chat-clients-and-agents"
           ],
           "cardIds": [
             "fc-ai-fd-02",
-            "fc-ai-fd-07",
-            "fc-ai-fd-12",
-            "fc-ai-fd-17",
-            "fc-ai-fd-22"
+            "fc-ai-fd-09",
+            "fc-ai-fd-16",
+            "fc-ai-fd-23"
           ]
         },
         {
           "id": "foundry-implementation-m3",
-          "title": "Text and speech solutions",
+          "title": "Get started with text analysis in Azure",
           "sectionIds": [
             "text-and-speech-in-foundry"
           ],
           "cardIds": [
             "fc-ai-fd-03",
-            "fc-ai-fd-08",
-            "fc-ai-fd-13",
-            "fc-ai-fd-18",
-            "fc-ai-fd-23"
+            "fc-ai-fd-10",
+            "fc-ai-fd-17"
           ]
         },
         {
           "id": "foundry-implementation-m4",
-          "title": "Vision and image generation",
+          "title": "Get started with speech in Azure",
           "sectionIds": [
             "vision-and-image-generation"
           ],
           "cardIds": [
             "fc-ai-fd-04",
-            "fc-ai-fd-09",
-            "fc-ai-fd-14",
-            "fc-ai-fd-19"
+            "fc-ai-fd-11",
+            "fc-ai-fd-18"
           ]
         },
         {
           "id": "foundry-implementation-m5",
-          "title": "Information extraction with Content Understanding",
+          "title": "Get started with computer vision in Azure",
           "sectionIds": [
             "content-understanding"
           ],
           "cardIds": [
             "fc-ai-fd-05",
-            "fc-ai-fd-10",
-            "fc-ai-fd-15",
+            "fc-ai-fd-12",
+            "fc-ai-fd-19"
+          ]
+        },
+        {
+          "id": "foundry-implementation-m6",
+          "title": "Get started with AI-powered information extraction in Azure",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-ai-fd-06",
+            "fc-ai-fd-13",
             "fc-ai-fd-20"
+          ]
+        },
+        {
+          "id": "foundry-implementation-m7",
+          "title": "Get started with Microsoft Foundry IQ",
+          "sectionIds": [],
+          "cardIds": [
+            "fc-ai-fd-07",
+            "fc-ai-fd-14",
+            "fc-ai-fd-21"
           ]
         }
       ]

@@ -85,7 +85,8 @@
           ],
           "cardIds": [
             "fc-sc9-en-04",
-            "fc-sc9-en-08"
+            "fc-sc9-en-08",
+            "fc-sc9-en-12"
           ]
         }
       ]
@@ -128,7 +129,8 @@
           ],
           "cardIds": [
             "fc-sc9-ss-03",
-            "fc-sc9-ss-08"
+            "fc-sc9-ss-08",
+            "fc-sc9-ss-13"
           ]
         },
         {
@@ -139,7 +141,8 @@
           ],
           "cardIds": [
             "fc-sc9-ss-04",
-            "fc-sc9-ss-09"
+            "fc-sc9-ss-09",
+            "fc-sc9-ss-14"
           ]
         },
         {
@@ -148,59 +151,64 @@
           "sectionIds": [],
           "cardIds": [
             "fc-sc9-ss-05",
-            "fc-sc9-ss-10"
+            "fc-sc9-ss-10",
+            "fc-sc9-ss-15"
           ]
         }
       ]
     },
     {
       "id": "compliance-solutions",
-      "title": "Describe the capabilities of Microsoft compliance solutions",
+      "title": "Introduction to Microsoft Purview and Microsoft's privacy principles",
       "domainId": "compliance-solutions",
-      "msLearnUrl": null,
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/describe-capabilities-of-microsoft-compliance-solutions/",
       "modules": [
         {
           "id": "compliance-solutions-m1",
-          "title": "Service Trust Portal and privacy principles",
+          "title": "Describe Microsoft’s Service Trust portal and privacy principles",
           "sectionIds": [
             "service-trust-and-privacy"
           ],
           "cardIds": [
             "fc-sc9-cp-01",
-            "fc-sc9-cp-05"
+            "fc-sc9-cp-05",
+            "fc-sc9-cp-09"
           ]
         },
         {
           "id": "compliance-solutions-m2",
-          "title": "Purview portal and Compliance Manager",
+          "title": "Describe the data security solutions of Microsoft Purview",
           "sectionIds": [
             "purview-compliance-management"
           ],
           "cardIds": [
             "fc-sc9-cp-02",
-            "fc-sc9-cp-06"
+            "fc-sc9-cp-06",
+            "fc-sc9-cp-10"
           ]
         },
         {
           "id": "compliance-solutions-m3",
-          "title": "Information protection and lifecycle",
+          "title": "Describe the data compliance solutions of Microsoft Purview",
           "sectionIds": [
             "purview-information-protection"
           ],
           "cardIds": [
             "fc-sc9-cp-03",
-            "fc-sc9-cp-07"
+            "fc-sc9-cp-07",
+            "fc-sc9-cp-11"
           ]
         },
         {
           "id": "compliance-solutions-m4",
-          "title": "Insider risk, eDiscovery, and audit",
+          "title": "Describe the data governance solutions of Microsoft Purview",
           "sectionIds": [
             "purview-risk-and-audit"
           ],
           "cardIds": [
             "fc-sc9-cp-04",
-            "fc-sc9-cp-08"
+            "fc-sc9-cp-08",
+            "fc-sc9-cp-12"
           ]
         }
       ]
