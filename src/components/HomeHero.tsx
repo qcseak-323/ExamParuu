@@ -9,6 +9,7 @@ import { useQuizAttempts, useFlashcardProgress } from "@/lib/storage";
 import { usePreferences } from "@/lib/preferences";
 import type { SheetId } from "@/lib/assets";
 import PalSprite from "@/components/PalSprite";
+import PalAnimatedSprite from "@/components/PalAnimatedSprite";
 import StartPrompt from "@/components/StartPrompt";
 import BattleDemo from "@/components/BattleDemo";
 
@@ -47,7 +48,9 @@ function Runner({
     >
       <span className="speed-lines" aria-hidden="true" />
       <span className="runner-sprite">
-        <PalSprite sheet={sheet} size={size} flip />
+        {/* Falls back to the still sprite for any sheet without a run clip,
+            so trainer-girl keeps working until hers is generated. */}
+        <PalAnimatedSprite sheet={sheet} clip="run" size={size} flip />
       </span>
     </div>
   );

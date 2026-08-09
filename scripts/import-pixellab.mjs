@@ -142,16 +142,27 @@ U.w = U.x1 - U.x0 + 1; U.h = U.y1 - U.y0 + 1;
  * the canvas stays 96 so the 96/48/32 tiers remain clean divisors. The figure
  * still gets bigger — which was the actual goal — it just gets bigger by a
  * whole number.
+ *
+ * PAD is a preference, not a constraint, and the difference is load-bearing.
+ * Importing the trainer with a run clip made the union box ONE pixel taller
+ * than importing it without — 92 to 93 — because a running limb reaches
+ * further than a standing one. Against a 188 canvas that is the difference
+ * between (188-4)/92 = 2.0 and (188-4)/93 = 1.98, so flooring dropped the
+ * whole doubling and the sprite went from 18% of its frame to 4%. Two pixels
+ * of margin are not worth half the character, so the fit is measured against
+ * the full canvas and the padding is applied only where it still fits.
  */
 const side = images[0].img.width;
-const scale = Math.max(1, Math.min(
-  Math.floor((side - PAD * 2) / U.w),
-  Math.floor((side - PAD * 2) / U.h),
+const fit = (avail) => Math.max(1, Math.min(
+  Math.floor(avail / U.w),
+  Math.floor(avail / U.h),
 ));
+const scale = Math.max(fit(side - PAD * 2), fit(side));
 // Where the enlarged figure lands: centred horizontally, sitting on the floor
-// of the frame so a walking sprite does not appear to hover.
+// of the frame so a walking sprite does not appear to hover. `oy` cannot go
+// negative — when the figure fills the canvas exactly, it sits flush.
 const ox = Math.round((side - U.w * scale) / 2);
-const oy = side - PAD - U.h * scale;
+const oy = Math.max(0, side - PAD - U.h * scale);
 
 /** Scale a frame's content by `scale` and place it at the shared anchor. */
 function crop(img) {

@@ -302,6 +302,64 @@ body {
     drop-shadow(0 -1px 0 rgba(234, 242, 237, 0.38));
 }
 
+/* An animation clip: a `frames`-wide strip behind a one-cell window, stepped
+   across. `PalAnimatedSprite` supplies the width, the background size, the
+   duration, the step count and --pal-strip-travel; everything that is not
+   per-clip data lives here.
+
+   Reduced motion is correct without a second rule. Both gates collapse
+   animation-duration to 0.001ms and iteration-count to 1, so the animation
+   finishes instantly and — carrying no `forwards` fill — reverts to the base
+   position below. That is frame one, held still. Adding an `animation: none`
+   override here would do the same thing less honestly, and adding an
+   animation-delay would break it outright (law 6). */
+.pal-strip {
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  image-rendering: pixelated;
+  animation-name: pal-strip-play;
+  animation-iteration-count: infinite;
+}
+
+@keyframes pal-strip-play {
+  to {
+    background-position-x: var(--pal-strip-travel);
+  }
+}
+
+/* The region map's dungeon towers. Generated art recoloured per guardian, so
+   unlike the matrix they replaced they cannot re-ink themselves — hence the
+   rim, the same idiom .pal-raster uses.
+
+   Every state writes `filter` in full rather than adding to it. `filter` is a
+   single property: a rule that sets only the greyscale for the locked state
+   would silently drop the rim on Storm Watch, which is precisely where the
+   tower needs it most. Four rules, each complete, is the honest way to do it. */
+.gym-dungeon {
+  image-rendering: pixelated;
+}
+
+.gym-dungeon--locked {
+  /* Uncharted regions: drained rather than dimmed, so the silhouette still
+     reads as a building the trainer has not reached yet. */
+  filter: grayscale(0.85) brightness(0.72);
+}
+
+[data-theme="dark"] .gym-dungeon {
+  filter: drop-shadow(1px 0 0 rgba(234, 242, 237, 0.38))
+    drop-shadow(-1px 0 0 rgba(234, 242, 237, 0.38))
+    drop-shadow(0 1px 0 rgba(234, 242, 237, 0.38))
+    drop-shadow(0 -1px 0 rgba(234, 242, 237, 0.38));
+}
+
+[data-theme="dark"] .gym-dungeon--locked {
+  filter: grayscale(0.85) brightness(0.72)
+    drop-shadow(1px 0 0 rgba(234, 242, 237, 0.3))
+    drop-shadow(-1px 0 0 rgba(234, 242, 237, 0.3))
+    drop-shadow(0 1px 0 rgba(234, 242, 237, 0.3))
+    drop-shadow(0 -1px 0 rgba(234, 242, 237, 0.3));
+}
+
 /* Guarantees a 44×44 hit area without disturbing the visual box — padding
    absorbs the difference. */
 .tap-target {

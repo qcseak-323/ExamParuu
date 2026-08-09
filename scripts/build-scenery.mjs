@@ -43,6 +43,21 @@ const VERSION = "v1";
 const SIZES = [96, 48];
 const COLOURS = 16;
 
+/**
+ * The batches this script owns, named rather than inferred.
+ *
+ * It used to treat every key in picks.json that did not start with `_` as a
+ * scenery batch. That held only while picks.json described nothing else. The
+ * moment it gained the dungeon towers — which are recoloured per route by
+ * build-dungeons.mjs and cannot be cut by this pipeline — the assumption broke
+ * and every one of them was reported as a missing candidate.
+ *
+ * picks.json is the project's record of what was picked and why, for all art.
+ * It is not this script's input file. Naming the batches keeps the record free
+ * to grow.
+ */
+const BATCHES = ["scenery", "fx"];
+
 if (!fs.existsSync(PICKS)) {
   console.error("no art/picks.json");
   process.exit(1);
@@ -52,8 +67,12 @@ const picks = JSON.parse(fs.readFileSync(PICKS, "utf8"));
 const dry = process.argv.includes("--dry");
 const problems = [];
 
-for (const [batch, subjects] of Object.entries(picks)) {
-  if (batch.startsWith("_")) continue; // _comment, _dropped
+for (const batch of BATCHES) {
+  const subjects = picks[batch];
+  if (!subjects) {
+    problems.push(`picks.json has no batch "${batch}"`);
+    continue;
+  }
 
   const srcDir = path.join(ROOT, "art/gen/out", batch);
   if (!fs.existsSync(srcDir)) {

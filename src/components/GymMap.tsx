@@ -1,8 +1,37 @@
 "use client";
 
-import { GYM_SPRITE, GYM_PALETTE, GYM_LOCKED_PALETTE } from "@/lib/heroSprites";
-import PixelSprite from "@/components/PixelSprite";
 import { useSfx } from "@/components/AudioProvider";
+
+/**
+ * Which guardian's dungeon stands on each region marker.
+ *
+ * A region is a series, not an exam — the Delta holds every DP route — so the
+ * marker shows the region's fundamentals dungeon as its representative. The
+ * towers are generated art recoloured per guardian by
+ * `scripts/build-dungeons.mjs`, which writes one per exam code; this picks the
+ * one that stands for the whole region.
+ *
+ * These replaced `GYM_SPRITE`, a 16×16 matrix with hardcoded hex that ignored
+ * the theme entirely. The trade is deliberate and is the reason for the rim
+ * below: a matrix re-inks itself and a raster cannot.
+ */
+const REGION_DUNGEON: Record<string, string> = {
+  az: "az-900",
+  ai: "ai-901",
+  dp: "dp-900",
+  sc: "sc-900",
+  ab: "ab-900",
+  pl: "pl-900",
+};
+
+/**
+ * 48, not the 56 the matrix used.
+ *
+ * The towers are cut at 96 and 48, and `image-rendering: pixelated` is
+ * nearest-neighbour: 56 divides neither, so every marker would resample on a
+ * fractional scale and shimmer. 48 is native and exact.
+ */
+const DUNGEON_PX = 48;
 
 export type RegionStop = {
   id: string;
@@ -200,10 +229,17 @@ export default function GymMap({
               className={`gym-marker-hit ${selected ? "gym-marker-selected" : ""}`}
             >
               <span>
-                <PixelSprite
-                  sprite={GYM_SPRITE}
-                  palette={stop.playable ? GYM_PALETTE : GYM_LOCKED_PALETTE}
-                  size={56}
+                {/* Pixel art must not be resampled by the image optimizer; it
+                    ships as-authored, so a plain img is deliberate. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/scenery/v1/${DUNGEON_PX}/dungeon-${REGION_DUNGEON[stop.id] ?? "az-900"}.png`}
+                  width={DUNGEON_PX}
+                  height={DUNGEON_PX}
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                  className={`gym-dungeon ${stop.playable ? "" : "gym-dungeon--locked"}`}
                 />
               </span>
               <span className="gym-marker-label">

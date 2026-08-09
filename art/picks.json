@@ -22,7 +22,37 @@
     "gust-2": "v2",
     "speed-line": "v2"
   },
+  "buildings": {
+    "_note": "Generated 2026-08-09 in the PixelLab web app's Objects tool — 4 variations at 96px, top-down, from a 'stilt-house field station' prompt. Originally aimed at the dungeon and REJECTED for that: they read as ordinary houses with no menace, which is wrong for a gym the player is meant to be daunted by. Kept as the map's ordinary buildings — a region map needs unremarkable houses more than it needs four of anything else, so all four ship as a set rather than one winning and three being dropped.",
+    "building-1": "v1",
+    "building-2": "v2",
+    "building-3": "v3",
+    "building-4": "v4"
+  },
+  "dungeon": {
+    "_note": "Generated 2026-08-09, Objects tool, 4 variations at 96px top-down. The second attempt: the first read as ordinary houses and was reclassified into 'buildings' above. Prompt changed from a 'field station' to 'a tall dark watchtower on black mangrove stilts ... looming and forbidding', which is the whole difference. NOT installed — the gym is still GYM_SPRITE, a 16x16 PixelSprite matrix, and swapping it for a raster is a code change plus a dark-theme decision (design law 10).",
+    "_assignment": "All four ship; each is assigned to the routes whose guardian it actually suits, rather than one winning. Seven routes over four designs means three designs serve two routes each. If the guardian palettes in src/lib/guardians.ts are applied per route (see _recolour below), all seven become visually distinct and the reuse stops being visible.",
+    "dungeon-sentinel": "v1",
+    "dungeon-maker": "v2",
+    "dungeon-delta": "v3",
+    "dungeon-beacon": "v4",
+    "_recolour": "NOT DONE, and the obvious next step. Every guardian carries a five-colour palette (a..e). Mapping each tower through its route's palette the way scripts/recolour-hair.mjs maps hair would give seven distinct dungeons from four generations and zero further spend."
+  },
+  "dungeonByExam": {
+    "_comment": "Which tower stands on which route, and why. Names are the keys in the 'dungeon' batch above.",
+    "sc-900": "v1 — Bastilisk, 'a cliff sentinel that has never once blinked on watch'. v1 is the tallest and most upright of the four, three lit windows stacked in a narrow mass. The sentinel reading is exact.",
+    "az-900": "v1 — Straitwing, a courier that knows every strait. A watchtower over the Archipelago wants the same upright silhouette.",
+    "pl-900": "v2 — Mangroot, 'builds with whatever the tide brings in'. v2 is the warm, leaning, visibly improvised one. The ramshackle quality is the character.",
+    "dp-600": "v2 — Loomwing, the Delta's weaver, and the only guardian with a warm red-orange palette (#7A2E1E / #C4553B / #E8863F). v2 is the warmest tower.",
+    "dp-900": "v3 — Deltoad, 'filters every channel of the Delta'. v3 has the widest roof and the most windows; many openings reads as many channels.",
+    "ab-900": "v4 — Beaconid, 'a buoy-backed crab whose lantern signals every agent home'. v4 is the darkest mass with the brightest green windows — it reads as a lit beacon.",
+    "ai-901": "v4 — Voltfin, 'surfaces just before the thunder', in the Lightning Shoals. The storm-lashed tower belongs on the storm route.",
+    "_face_warning": "v4 is the risky one and it now serves two routes. Its two green windows sit symmetrically above a dark doorway and the tower reads as a face — prompt lesson 2 arriving through architecture rather than markings, and it worsens as the sprite shrinks to the 32 tier. Check v4 at 32px before committing it to ab-900 and ai-901; if it reads as a face, regenerate one replacement rather than reusing v1-v3 a third time."
+  },
   "_dropped": {
+    "dungeon-v2": "Warmer and browner, leaning, and the least green light of the four — reads as a derelict shack rather than something guarded. Loses the menace the whole regeneration was for.",
+    "dungeon-v3": "Close to v1 but a wider roof and more windows make it busier; the extra detail is the first thing to die at the 32 tier.",
+    "dungeon-v4": "The most atmospheric single image and the riskiest: two large green windows sit symmetrically above a dark doorway and the tower reads as a face. That is prompt lesson 2 arriving through architecture instead of markings, and it gets worse as the tier shrinks.",
     "cloud-3.dark": "Removed 2026-08-08. Both candidates read as jellyfish/mushrooms rather than thunderheads — the 'towering' prompt pulled the shape into a stalk with a canopy.",
     "cloud-3": "Dropped with its counterpart. A day cloud with no .dark variant falls back to itself on Storm Watch, i.e. a bright white cloud in a storm. Two fully-paired shapes beats three half-paired ones."
   }

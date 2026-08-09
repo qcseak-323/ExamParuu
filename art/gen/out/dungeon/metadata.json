@@ -1,0 +1,296 @@
+{
+  "objects": [
+    {
+      "id": "f5eb0f68-212c-43a7-9205-7d2c43bd5281",
+      "name": "base",
+      "prompt": "A tall dark watchtower on black mangrove stilts, low top-down angle. Steep slate roof, narrow windows glowing green, a heavy iron-banded door, storm-battered dark timber. Looming and forbidding. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges.",
+      "size": {
+        "width": 96,
+        "height": 96
+      },
+      "directions": 1,
+      "view": "low top-down",
+      "rotations": {
+        "unknown": "rotations/unknown.png"
+      },
+      "animations": {}
+    },
+    {
+      "id": "15e100b2-979b-4230-86c3-9c8f82d703a6",
+      "name": "base",
+      "prompt": "A tall dark watchtower on black mangrove stilts, low top-down angle. Steep slate roof, narrow windows glowing green, a heavy iron-banded door, storm-battered dark timber. Looming and forbidding. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges.",
+      "size": {
+        "width": 96,
+        "height": 96
+      },
+      "directions": 1,
+      "view": "low top-down",
+      "rotations": {
+        "unknown": "rotations/unknown.png"
+      },
+      "animations": {}
+    },
+    {
+      "id": "eb510513-3a75-4f1b-a875-e419d6541ed7",
+      "name": "base",
+      "prompt": "A tall dark watchtower on black mangrove stilts, low top-down angle. Steep slate roof, narrow windows glowing green, a heavy iron-banded door, storm-battered dark timber. Looming and forbidding. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges.",
+      "size": {
+        "width": 96,
+        "height": 96
+      },
+      "directions": 1,
+      "view": "low top-down",
+      "rotations": {
+        "unknown": "rotations/unknown.png"
+      },
+      "animations": {}
+    },
+    {
+      "id": "d57b858c-2c5b-449b-828d-2cade5a2d915",
+      "name": "base",
+      "prompt": "A tall dark watchtower on black mangrove stilts, low top-down angle. Steep slate roof, narrow windows glowing green, a heavy iron-banded door, storm-battered dark timber. Looming and forbidding. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges.",
+      "size": {
+        "width": 96,
+        "height": 96
+      },
+      "directions": 1,
+      "view": "low top-down",
+      "rotations": {
+        "unknown": "rotations/unknown.png"
+      },
+      "animations": {}
+    },
+    {
+      "id": "2c66d817-9719-4483-8145-2e4457104685",
+      "name": "base",
+      "prompt": "A small stilt-house field station on a tidal flat, seen from a low top-down angle. Mangrove-wood walls, a wide tan shingle roof, brass window frames and storm-glass panes, a double door at the front. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges, bright and clean.",
+      "size": {
+        "width": 96,
+        "height": 96
+      },
+      "directions": 1,
+      "view": "low top-down",
+      "rotations": {
+        "unknown": "rotations/unknown.png"
+      },
+      "animations": {}
+    },
+    {
+      "id": "1840edd7-13a9-42c7-8277-b593191a097b",
+      "name": "base",
+      "prompt": "A small stilt-house field station on a tidal flat, seen from a low top-down angle. Mangrove-wood walls, a wide tan shingle roof, brass window frames and storm-glass panes, a double door at the front. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges, bright and clean.",
+      "size": {
+        "width": 96,
+        "height": 96
+      },
+      "directions": 1,
+      "view": "low top-down",
+      "rotations": {
+        "unknown": "rotations/unknown.png"
+      },
+      "animations": {}
+    },
+    {
+      "id": "7d34f6a5-f7ae-4587-a031-6788da4e3dca",
+      "name": "base",
+      "prompt": "A small stilt-house field station on a tidal flat, seen from a low top-down angle. Mangrove-wood walls, a wide tan shingle roof, brass window frames and storm-glass panes, a double door at the front. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges, bright and clean.",
+      "size": {
+        "width": 96,
+        "height": 96
+      },
+      "directions": 1,
+      "view": "low top-down",
+      "rotations": {
+        "unknown": "rotations/unknown.png"
+      },
+      "animations": {}
+    },
+    {
+      "id": "82be6a45-9c2b-4090-ac8a-c08694a3a6c1",
+      "name": "base",
+      "prompt": "A small stilt-house field station on a tidal flat, seen from a low top-down angle. Mangrove-wood walls, a wide tan shingle roof, brass window frames and storm-glass panes, a double door at the front. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges, bright and clean.",
+      "size": {
+        "width": 96,
+        "height": 96
+      },
+      "directions": 1,
+      "view": "low top-down",
+      "rotations": {
+        "unknown": "rotations/unknown.png"
+      },
+      "animations": {}
+    }
+  ],
+  "groups": [
+    {
+      "group_id": "28e5daf1-5289-442d-bab0-03aeac2fd9aa",
+      "folder": "objects/A_tall_dark_watchtower_on_blac",
+      "objects": [
+        {
+          "id": "f5eb0f68-212c-43a7-9205-7d2c43bd5281",
+          "name": "base",
+          "prompt": "A tall dark watchtower on black mangrove stilts, low top-down angle. Steep slate roof, narrow windows glowing green, a heavy iron-banded door, storm-battered dark timber. Looming and forbidding. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges.",
+          "size": {
+            "width": 96,
+            "height": 96
+          },
+          "directions": 1,
+          "view": "low top-down",
+          "rotations": {
+            "unknown": "rotations/unknown.png"
+          },
+          "animations": {}
+        }
+      ]
+    },
+    {
+      "group_id": "2ca7a920-650c-4362-a472-29211b498baf",
+      "folder": "objects/A_tall_dark_watchtower_on_blac_2",
+      "objects": [
+        {
+          "id": "15e100b2-979b-4230-86c3-9c8f82d703a6",
+          "name": "base",
+          "prompt": "A tall dark watchtower on black mangrove stilts, low top-down angle. Steep slate roof, narrow windows glowing green, a heavy iron-banded door, storm-battered dark timber. Looming and forbidding. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges.",
+          "size": {
+            "width": 96,
+            "height": 96
+          },
+          "directions": 1,
+          "view": "low top-down",
+          "rotations": {
+            "unknown": "rotations/unknown.png"
+          },
+          "animations": {}
+        }
+      ]
+    },
+    {
+      "group_id": "db4376e4-4c9a-442f-9d24-9834a4ab0d49",
+      "folder": "objects/A_tall_dark_watchtower_on_blac_3",
+      "objects": [
+        {
+          "id": "eb510513-3a75-4f1b-a875-e419d6541ed7",
+          "name": "base",
+          "prompt": "A tall dark watchtower on black mangrove stilts, low top-down angle. Steep slate roof, narrow windows glowing green, a heavy iron-banded door, storm-battered dark timber. Looming and forbidding. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges.",
+          "size": {
+            "width": 96,
+            "height": 96
+          },
+          "directions": 1,
+          "view": "low top-down",
+          "rotations": {
+            "unknown": "rotations/unknown.png"
+          },
+          "animations": {}
+        }
+      ]
+    },
+    {
+      "group_id": "d92fc325-5e5b-4b01-a3d7-f00bd15a48bf",
+      "folder": "objects/A_tall_dark_watchtower_on_blac_4",
+      "objects": [
+        {
+          "id": "d57b858c-2c5b-449b-828d-2cade5a2d915",
+          "name": "base",
+          "prompt": "A tall dark watchtower on black mangrove stilts, low top-down angle. Steep slate roof, narrow windows glowing green, a heavy iron-banded door, storm-battered dark timber. Looming and forbidding. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges.",
+          "size": {
+            "width": 96,
+            "height": 96
+          },
+          "directions": 1,
+          "view": "low top-down",
+          "rotations": {
+            "unknown": "rotations/unknown.png"
+          },
+          "animations": {}
+        }
+      ]
+    },
+    {
+      "group_id": "96173124-bad3-4cce-bfbc-4a58f07ec695",
+      "folder": "objects/A_small_stilt-house_field_stat",
+      "objects": [
+        {
+          "id": "2c66d817-9719-4483-8145-2e4457104685",
+          "name": "base",
+          "prompt": "A small stilt-house field station on a tidal flat, seen from a low top-down angle. Mangrove-wood walls, a wide tan shingle roof, brass window frames and storm-glass panes, a double door at the front. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges, bright and clean.",
+          "size": {
+            "width": 96,
+            "height": 96
+          },
+          "directions": 1,
+          "view": "low top-down",
+          "rotations": {
+            "unknown": "rotations/unknown.png"
+          },
+          "animations": {}
+        }
+      ]
+    },
+    {
+      "group_id": "00e3f9f8-0aca-4a5a-9890-ed184d082327",
+      "folder": "objects/A_small_stilt-house_field_stat_2",
+      "objects": [
+        {
+          "id": "1840edd7-13a9-42c7-8277-b593191a097b",
+          "name": "base",
+          "prompt": "A small stilt-house field station on a tidal flat, seen from a low top-down angle. Mangrove-wood walls, a wide tan shingle roof, brass window frames and storm-glass panes, a double door at the front. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges, bright and clean.",
+          "size": {
+            "width": 96,
+            "height": 96
+          },
+          "directions": 1,
+          "view": "low top-down",
+          "rotations": {
+            "unknown": "rotations/unknown.png"
+          },
+          "animations": {}
+        }
+      ]
+    },
+    {
+      "group_id": "da0644a4-d289-465a-9397-ae2c4edbbedb",
+      "folder": "objects/A_small_stilt-house_field_stat_3",
+      "objects": [
+        {
+          "id": "7d34f6a5-f7ae-4587-a031-6788da4e3dca",
+          "name": "base",
+          "prompt": "A small stilt-house field station on a tidal flat, seen from a low top-down angle. Mangrove-wood walls, a wide tan shingle roof, brass window frames and storm-glass panes, a double door at the front. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges, bright and clean.",
+          "size": {
+            "width": 96,
+            "height": 96
+          },
+          "directions": 1,
+          "view": "low top-down",
+          "rotations": {
+            "unknown": "rotations/unknown.png"
+          },
+          "animations": {}
+        }
+      ]
+    },
+    {
+      "group_id": "34347fc7-eff3-43c1-86db-32ebe8d7e7ba",
+      "folder": "objects/A_small_stilt-house_field_stat_4",
+      "objects": [
+        {
+          "id": "82be6a45-9c2b-4090-ac8a-c08694a3a6c1",
+          "name": "base",
+          "prompt": "A small stilt-house field station on a tidal flat, seen from a low top-down angle. Mangrove-wood walls, a wide tan shingle roof, brass window frames and storm-glass panes, a double door at the front. Pixel art game asset, flat cel shading, limited palette, crisp pixel edges, bright and clean.",
+          "size": {
+            "width": 96,
+            "height": 96
+          },
+          "directions": 1,
+          "view": "low top-down",
+          "rotations": {
+            "unknown": "rotations/unknown.png"
+          },
+          "animations": {}
+        }
+      ]
+    }
+  ],
+  "export_version": "1.0",
+  "export_date": "2026-08-09T15:04:10.620483"
+}
