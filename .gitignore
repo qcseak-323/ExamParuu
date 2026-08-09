@@ -42,6 +42,9 @@ next-env.d.ts
 
 .vercel
 .env*
+# The one exception: keys only, never values. Must come after both .env*
+# rules above or it is overridden by the second one.
+!.env.example
 
 /src/generated/prisma
 
