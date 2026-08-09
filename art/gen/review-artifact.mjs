@@ -101,7 +101,7 @@ const sections = [...groups.entries()].map(([subject, items]) => {
 /* Batch label. The <title> names the artifact when this is published and the
    tag always wins over the publish parameter, so it has to be derived — a
    hardcoded one silently mislabels every later batch. */
-const BATCH_NO = { scenery: 1, fx: 2 };
+const BATCH_NO = { scenery: 1, fx: 2, characters: 3 };
 const heading = `${batch[0].toUpperCase()}${batch.slice(1)} candidates` +
   (BATCH_NO[batch] ? ` &mdash; batch ${BATCH_NO[batch]}` : "");
 

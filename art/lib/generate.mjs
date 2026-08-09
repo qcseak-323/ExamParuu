@@ -82,12 +82,19 @@ export async function runBatch(subjects, opts) {
     ? new Set(onlyArg.slice("--only=".length).split(",").map((s) => s.trim()))
     : null;
 
+  // A subject may override the batch style and negative prompt. The character
+  // batch needs this: a trainer is chained from the other trainer so the two
+  // look like classmates, while a creature must use fresh seeds and its own
+  // register, because style chaining copies subject traits and a wild Paruu
+  // must not come out wearing a trainer's face.
   const jobs = subjects
     .flatMap((s) =>
       s.seeds.map((seed, i) => ({
         label: `${s.key}-v${i + 1}`,
         desc: s.desc,
         extra: s.extra,
+        style: s.style ?? style,
+        negative: s.negative ?? negative,
         seed,
       })),
     )
@@ -113,8 +120,8 @@ export async function runBatch(subjects, opts) {
     try {
       const r = await generate({
         key, endpoint, size, seed: job.seed, extra: job.extra,
-        description: `${job.desc} ${style}`,
-        negative,
+        description: `${job.desc} ${job.style}`,
+        negative: job.negative,
       });
       fs.writeFileSync(path.join(outDir, `${job.label}.png`), Buffer.from(r.b64, "base64"));
       gens += r.gens; ok++;

@@ -102,7 +102,21 @@ export type SheetMeta = {
 const EVERY_TIER: SheetMeta = { tiers: ALL_TIERS };
 
 export const SHEETS: Record<SheetId, SheetMeta> = {
-  "trainer-boy": EVERY_TIER,
+  /**
+   * The first sheet to diverge, and the reason this is a table.
+   *
+   * Imported from a PixelLab character export rather than generated as a
+   * single still, so it arrives at 96px with a run cycle and NO 64 tier —
+   * 96 divides 48 and 32 exactly but not 64, and writing a 64 would mean
+   * inventing pixels. `sourceFor` handles the gap: a 64px render falls to
+   * the 32 tier at 2x rather than to a fractional scale.
+   *
+   * Its master lives in the export, not art/masters/128 — the old 128 master
+   * is retired under art/masters/_retired so build-tiers.mjs cannot
+   * regenerate over the import. Re-import with:
+   *   node scripts/import-pixellab.mjs <export-dir> trainer-boy
+   */
+  "trainer-boy": { tiers: [96, 48, 32], clips: { run: 8 } },
   "trainer-girl": EVERY_TIER,
   professor: EVERY_TIER,
   "fire-1": EVERY_TIER,

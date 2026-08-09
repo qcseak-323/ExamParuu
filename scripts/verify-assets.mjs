@@ -57,12 +57,25 @@ const unionBlock = src.match(/export type SheetId =([\s\S]*?);/)?.[1] ?? "";
 const sheets = [...unionBlock.matchAll(/"([^"]+)"/g)].map((m) => m[1]);
 if (!sheets.length) fail("could not parse the SheetId union");
 
-// Tiers each sheet claims. Every sheet currently shares EVERY_TIER, so the
-// declared tier list is read once from ALL_TIERS rather than per sheet; when
-// sheets start diverging this must grow a per-sheet parse.
+// The default tier list, used by every sheet declared as EVERY_TIER.
 const tiers = [...(src.match(/ALL_TIERS[^=]*=\s*\[([^\]]+)\]/)?.[1] ?? "").matchAll(/\d+/g)]
   .map((m) => Number(m[0]));
 if (!tiers.length) fail("could not parse ALL_TIERS");
+
+/**
+ * Sheets that declare their own tiers, e.g.
+ *   "trainer-boy": { tiers: [96, 48, 32], clips: { run: 8 } },
+ *
+ * This started as a single global list because every sheet shared one. The
+ * first import to arrive at 96px with no 64 broke that assumption, and a
+ * global list would have demanded a 64 tier that must not exist — reporting a
+ * missing file for art that was correctly never made.
+ */
+const overrides = new Map();
+for (const [, name, list] of src.matchAll(/"([\w-]+)":\s*\{\s*tiers:\s*\[([^\]]+)\]/g)) {
+  overrides.set(name, [...list.matchAll(/\d+/g)].map((m) => Number(m[0])));
+}
+const tiersFor = (sheet) => overrides.get(sheet) ?? tiers;
 
 const countColours = (px) => {
   const s = new Set();
@@ -79,7 +92,7 @@ const softAlpha = (px) => {
 let checked = 0;
 if (version && sheets.length && tiers.length) {
   for (const sheet of sheets) {
-    for (const tier of tiers) {
+    for (const tier of tiersFor(sheet)) {
       const rel = `public/pals/${version}/${tier}/${sheet}.png`;
       const file = path.join(ROOT, rel);
       if (!fs.existsSync(file)) {
@@ -105,7 +118,7 @@ if (version && sheets.length && tiers.length) {
   for (const [, sheet, clip, frames] of src.matchAll(
     /"?([\w-]+)"?:\s*\{\s*tiers:[^}]*clips:\s*\{[^}]*?"?(idle|run|battle)"?:\s*(\d+)/g,
   )) {
-    for (const tier of tiers) {
+    for (const tier of tiersFor(sheet)) {
       const rel = `public/pals/${version}/${tier}/${sheet}--${clip}.png`;
       const file = path.join(ROOT, rel);
       if (!fs.existsSync(file)) {
