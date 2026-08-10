@@ -8,6 +8,13 @@ import {
 } from "@/lib/content";
 import { useQuizAttempts, useFlashcardProgress } from "@/lib/storage";
 import { computeBadges } from "@/lib/gamification";
+import {
+  BADGE_SPRITES,
+  BADGE_LOCKED,
+  BADGE_LOCKED_PALETTE,
+  badgePalette,
+} from "@/lib/badgeSprites";
+import PixelSprite from "@/components/PixelSprite";
 import StorageNotice from "@/components/StorageNotice";
 
 function Bar({ pct }: { pct: number }) {
@@ -130,7 +137,16 @@ export default function ExamProgressClient({
                 badge.earned ? "" : "opacity-60"
               }`}
             >
-              <span aria-hidden="true" className="text-[1.75rem] leading-none">{badge.earned ? "🏅" : "⚪"}</span>
+              {/* Was 🏅 / ⚪ — the last literal emoji in the app. A matrix
+                  instead of art because the outline resolves to
+                  var(--sprite-outline) and follows the theme; a raster badge
+                  would vanish into the panel on Storm Watch. Every ribbon on
+                  this page wears its own exam's guardian colours. */}
+              <PixelSprite
+                sprite={badge.earned ? BADGE_SPRITES[examCode] ?? BADGE_LOCKED : BADGE_LOCKED}
+                palette={badge.earned ? badgePalette(examCode) : BADGE_LOCKED_PALETTE}
+                size={32}
+              />
               <div>
                 <p className="text-body font-medium">{badge.domainName}</p>
                 <p className="text-caption text-[var(--foreground-muted)]">
