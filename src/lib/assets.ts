@@ -66,7 +66,12 @@ export type SheetId =
   | "wild-bee"
   | "wild-armadillo"
   | "wild-snail"
-  | "wild-hedgehog";
+  | "wild-hedgehog"
+  // the trainer as seen from above, for the region map. Generated Low
+  // Top-Down and imported from the "south" rotation, so they face the reader
+  // rather than walking off the edge of the chart
+  | "map-boy"
+  | "map-girl";
 
 /** Referenced by ProfessorPortrait, which is the only site that names him. */
 export const PROFESSOR_SHEET: SheetId = "professor";
@@ -127,7 +132,9 @@ export const SHEETS: Record<SheetId, SheetMeta> = {
    *   node scripts/import-pixellab.mjs <export-dir> trainer-boy
    */
   "trainer-boy": { tiers: [96, 48, 32], clips: { run: 8 } },
-  "trainer-girl": EVERY_TIER,
+  // Regenerated in the web app alongside the boy, so she has his tier shape
+  // rather than the API cast's. Her old 128 master is retired next to his.
+  "trainer-girl": { tiers: [96, 48, 32] },
   professor: EVERY_TIER,
   "fire-1": EVERY_TIER,
   "fire-2": EVERY_TIER,
@@ -152,6 +159,10 @@ export const SHEETS: Record<SheetId, SheetMeta> = {
   "wild-armadillo": EVERY_TIER,
   "wild-snail": EVERY_TIER,
   "wild-hedgehog": EVERY_TIER,
+  // 96 divides 48 and 32 exactly but not 64, so these skip the 64 tier the
+  // same way trainer-boy does; sourceFor routes a 64px render to 32 at 2x.
+  "map-boy": { tiers: [96, 48, 32] },
+  "map-girl": { tiers: [96, 48, 32] },
 };
 
 /* ------------------------------------------------------------------ *

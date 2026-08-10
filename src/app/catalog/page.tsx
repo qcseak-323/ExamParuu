@@ -8,5 +8,10 @@ export const metadata = {
 export default async function CatalogPage() {
   const trainer = await requireTrainer("/catalog");
 
-  return <CatalogClient priorityExam={trainer.priorityExam} />;
+  return (
+    <CatalogClient
+      priorityExam={trainer.priorityExam}
+      trainerAvatar={trainer.trainerAvatar}
+    />
+  );
 }

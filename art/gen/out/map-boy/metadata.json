@@ -1,0 +1,36 @@
+{
+  "group_id": "36662eba-62f6-4681-96e4-c3110d9fa0b1",
+  "states": [
+    {
+      "character": {
+        "id": "abd987ff-5ae7-4cc3-87e7-eb810b2ef7b7",
+        "name": "Idle",
+        "prompt": "A cheerful teenage boy with spiky black hair, wearing a bright teal hoodie with a front pocket, sand-coloured jeans, and white trainers, standing in a relaxed posture, crisp black outlines, bright saturated colours, low top-down perspective.",
+        "size": {
+          "width": 172,
+          "height": 172
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "low top-down",
+        "created_at": "2026-08-10T02:05:20.590619+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-08-10T02:08:47.351236"
+}

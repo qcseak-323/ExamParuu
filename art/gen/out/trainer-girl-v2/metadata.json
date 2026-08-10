@@ -1,0 +1,36 @@
+{
+  "group_id": "cb6bc663-8768-4b4a-8793-7fe8f06794fd",
+  "states": [
+    {
+      "character": {
+        "id": "8d6fc148-f0e5-431b-88f4-ae0d19cde981",
+        "name": "Idle",
+        "prompt": "A cheerful teenage girl with long pink hair, wearing a white and red varsity jacket, blue jeans, and red boots, standing in a confident pose with crisp black outlines and bright saturated colors.",
+        "size": {
+          "width": 184,
+          "height": 184
+        },
+        "template_id": "mannequin",
+        "directions": 8,
+        "view": "side",
+        "created_at": "2026-08-10T02:16:43.838407+00:00"
+      },
+      "folder": "Idle",
+      "frames": {
+        "rotations": {
+          "south": "Idle/rotations/south.png",
+          "south-east": "Idle/rotations/south-east.png",
+          "east": "Idle/rotations/east.png",
+          "north-east": "Idle/rotations/north-east.png",
+          "north": "Idle/rotations/north.png",
+          "north-west": "Idle/rotations/north-west.png",
+          "west": "Idle/rotations/west.png",
+          "south-west": "Idle/rotations/south-west.png"
+        },
+        "animations": {}
+      }
+    }
+  ],
+  "export_version": "3.1",
+  "export_date": "2026-08-10T02:20:14.560573"
+}

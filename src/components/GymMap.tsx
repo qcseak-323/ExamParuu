@@ -1,6 +1,8 @@
 "use client";
 
 import { useSfx } from "@/components/AudioProvider";
+import PalSprite from "@/components/PalSprite";
+import { trainerMapSheet } from "@/lib/profile";
 
 /**
  * Which guardian's dungeon stands on each region marker.
@@ -84,10 +86,13 @@ const WAVES: { x: number; y: number }[] = [
  */
 export default function GymMap({
   stops,
+  trainerAvatar,
   selectedId,
   onSelect,
 }: {
   stops: RegionStop[];
+  /** Which trainer to stand on the pinned route; null falls back to a star. */
+  trainerAvatar: string | null;
   selectedId: string | null;
   onSelect: (id: string) => void;
 }) {
@@ -252,11 +257,25 @@ export default function GymMap({
                     : "Uncharted"}
                 </span>
               </span>
-              {stop.prioritised && (
-                <span className="gym-flag" title="Your pinned route is here">
-                  ★
-                </span>
-              )}
+              {stop.prioritised &&
+                (trainerMapSheet(trainerAvatar) ? (
+                  /* The trainer stands on their own route. This is the map's
+                     first player character — until now the chart showed where
+                     you could go and never where you were. */
+                  <span
+                    className="gym-you"
+                    title="You are here — your pinned route"
+                  >
+                    <PalSprite
+                      sheet={trainerMapSheet(trainerAvatar)!}
+                      size={32}
+                    />
+                  </span>
+                ) : (
+                  <span className="gym-flag" title="Your pinned route is here">
+                    ★
+                  </span>
+                ))}
               {stop.badgeEarned && (
                 <span className="gym-clear" aria-hidden="true">
                   ✓

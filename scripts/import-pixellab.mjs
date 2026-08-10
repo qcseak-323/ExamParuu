@@ -1,7 +1,7 @@
 /**
  * Import a PixelLab character export (the .zip from the app) into the pipeline.
  *
- *   node scripts/import-pixellab.mjs <extracted-dir> <sheet-name> [--dry]
+ *   node scripts/import-pixellab.mjs <extracted-dir> <sheet-name> [--profile east|south] [--dry]
  *
  * PixelLab's character export is a directory of PNGs plus a metadata.json:
  *
@@ -52,7 +52,7 @@ const [, , srcDir, sheet] = process.argv;
 const dry = process.argv.includes("--dry");
 
 if (!srcDir || !sheet) {
-  console.error("usage: node scripts/import-pixellab.mjs <extracted-dir> <sheet-name> [--dry]");
+  console.error("usage: node scripts/import-pixellab.mjs <extracted-dir> <sheet-name> [--profile east|south] [--dry]");
   process.exit(1);
 }
 
@@ -68,10 +68,21 @@ const state = meta.states?.[0];
 if (!state) { console.error("metadata.json has no states"); process.exit(1); }
 
 /**
- * The app draws characters in profile. In an 8-rotation export "east" is the
- * profile facing right, which is what PalSprite renders un-flipped.
+ * Which of the eight rotations becomes the sheet.
+ *
+ * The battle cast is drawn in profile, and in an 8-rotation export "east" is
+ * the profile facing right — what `PalSprite` renders un-flipped. That is the
+ * default and covers everything the app rendered before the map existed.
+ *
+ * A map avatar is the exception. It is generated Low Top-Down and stands on a
+ * chart seen from above, where a figure in profile reads as walking off the
+ * edge; "south" faces the camera, which is what a map figure should do.
+ * Pass `--profile south` for those.
  */
-const PROFILE = "east";
+const PROFILE = (() => {
+  const i = process.argv.indexOf("--profile");
+  return i > -1 && process.argv[i + 1] ? process.argv[i + 1] : "east";
+})();
 const TIERS = [96, 48, 32];
 
 /**
@@ -211,7 +222,14 @@ console.log(`\n${sheet}  <-  ${state.character?.name ?? "?"}  (${state.character
 console.log(`  profile "${PROFILE}", ${images.filter((i) => i.kind === "clip").length} animation frames across ${Object.keys(anims).length} clip(s)`);
 console.log(`  union bbox ${U.w}x${U.h} -> scaled ${scale}x inside a ${side}px canvas, fill ${(coverage(first.px) * 100).toFixed(0)}% (was ${(coverage(images[0].img.pixels) * 100).toFixed(0)}%)`);
 
-if (state.character?.view && !/side/i.test(state.character.view)) {
+// Only a mismatch worth flagging. A `--profile south` import is a map avatar,
+// which is *meant* to be top-down — warning there would train the reader to
+// ignore the one message that has caught a real mistake twice.
+if (
+  PROFILE === "east" &&
+  state.character?.view &&
+  !/side/i.test(state.character.view)
+) {
   console.log(`  ! view is "${state.character.view}"; the rest of the cast is side view`);
 }
 if (sat < 0.2) {

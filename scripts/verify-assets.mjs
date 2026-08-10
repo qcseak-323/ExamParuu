@@ -53,7 +53,15 @@ if (version && builderVersion && version !== builderVersion) {
 }
 
 // The SheetId union, one "name" per line between the type opening and its `;`.
-const unionBlock = src.match(/export type SheetId =([\s\S]*?);/)?.[1] ?? "";
+//
+// Comments are stripped first, and that is not fussiness. This scanned every
+// quoted string in the block, so a comment explaining that a sheet came from
+// the "south" rotation added `south` to the sheet list and failed the build
+// looking for public/pals/v2/96/south.png. The union is documented in place,
+// so any quoted word in that prose was a landmine.
+const unionBlock = (src.match(/export type SheetId =([\s\S]*?);/)?.[1] ?? "")
+  .replace(/\/\*[\s\S]*?\*\//g, "")
+  .replace(/\/\/[^\n]*/g, "");
 const sheets = [...unionBlock.matchAll(/"([^"]+)"/g)].map((m) => m[1]);
 if (!sheets.length) fail("could not parse the SheetId union");
 

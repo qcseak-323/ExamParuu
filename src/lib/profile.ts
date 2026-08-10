@@ -40,6 +40,20 @@ export function trainerAvatarSheet(value: string | null): SheetId | null {
 }
 
 /**
+ * The same trainer seen from above, for the region map.
+ *
+ * A separate sheet rather than a reuse: the cast is drawn in profile for the
+ * battle arena, and a figure in profile standing on a chart seen from above
+ * reads as walking off the edge of it. These are generated Low Top-Down and
+ * imported from the south rotation so they face the reader.
+ */
+export function trainerMapSheet(value: string | null): SheetId | null {
+  if (value === "boy") return "map-boy";
+  if (value === "girl") return "map-girl";
+  return null;
+}
+
+/**
  * How well the trainer already knows the exam series they picked.
  *
  * Asked *after* the route, and about that route specifically — "how well do

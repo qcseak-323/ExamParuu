@@ -36,8 +36,11 @@ import { useSfx } from "@/components/AudioProvider";
  */
 export default function CatalogClient({
   priorityExam,
+  trainerAvatar,
 }: {
   priorityExam: string | null;
+  /** Passed down to the map, which stands this trainer on their own route. */
+  trainerAvatar: string | null;
 }) {
   const attempts = useQuizAttempts();
   const playSfx = useSfx();
@@ -79,7 +82,12 @@ export default function CatalogClient({
         </p>
       </div>
 
-      <GymMap stops={stops} selectedId={selectedId} onSelect={setSelectedId} />
+      <GymMap
+        stops={stops}
+        trainerAvatar={trainerAvatar}
+        selectedId={selectedId}
+        onSelect={setSelectedId}
+      />
 
       {/* The same six destinations in plain reading order — the map is a
           positioned layout that is awkward on a narrow phone. */}

@@ -1455,6 +1455,22 @@ button.gym-marker-hit:hover {
   color: #ffffff;
 }
 
+/* The trainer, standing on their pinned route.
+ *
+ * Not a badge like .gym-flag and .gym-clear, so it carries none of their
+ * chrome: no disc, no border, no fill. Those two are status markers pinned to
+ * a building; this is a person standing beside one, and giving it a ring would
+ * read as a third status. It sits to the right of the tower and slightly low,
+ * so the figure stands on the island rather than hovering over the roof. */
+.gym-you {
+  position: absolute;
+  right: -16px;
+  bottom: 2px;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
 /* --- Primary call to action ---------------------------------------------- */
 
 /* One primary action per screen gets brass; nothing else does. */
