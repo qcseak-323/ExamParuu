@@ -10,6 +10,7 @@ import { PAL_SPECIES, stageForLevel } from "@/lib/pals";
 import { usePreferences, setPreference } from "@/lib/preferences";
 import PalSprite from "@/components/PalSprite";
 import { useSfx } from "@/components/AudioProvider";
+import { ForwardGlyph } from "@/components/Glyph";
 
 /**
  * The top ribbon: the brand, one action, and everything else behind a menu.
@@ -21,7 +22,17 @@ import { useSfx } from "@/components/AudioProvider";
  * folded into the ☰ menu.
  */
 
-type PrimaryAction = { href: string; label: string; brass: boolean };
+/**
+ * `forward` rather than a ▶ inside `label`: the mark is a sprite now, and a
+ * sprite cannot live in a string. Only the actions that move the trainer
+ * *onward* carry it — "End session" and "Back to AZ-900" are retreats.
+ */
+type PrimaryAction = {
+  href: string;
+  label: string;
+  brass: boolean;
+  forward?: boolean;
+};
 
 /** The one action the ribbon offers, derived from where the trainer is. */
 function primaryActionFor(
@@ -47,8 +58,9 @@ function primaryActionFor(
     if (rest === "") {
       return {
         href: `/exams/${code}/quiz`,
-        label: "Practice battle ▶",
+        label: "Practice battle",
         brass: true,
+        forward: true,
       };
     }
     return { href: `/exams/${code}`, label: `Back to ${upper}`, brass: false };
@@ -58,11 +70,12 @@ function primaryActionFor(
   if (priorityExam) {
     return {
       href: `/exams/${priorityExam}`,
-      label: `Continue ${priorityExam.toUpperCase()} ▶`,
+      label: `Continue ${priorityExam.toUpperCase()}`,
       brass: true,
+      forward: true,
     };
   }
-  return { href: "/catalog", label: "Dungeon ▶", brass: true };
+  return { href: "/catalog", label: "Dungeon", brass: true, forward: true };
 }
 
 const MENU_LINKS = [
@@ -157,6 +170,7 @@ export default function Nav() {
               }`}
             >
               {action.label}
+              {action.forward && <ForwardGlyph />}
             </Link>
           )}
 
@@ -230,6 +244,7 @@ export default function Nav() {
                   className="tap-target justify-start rounded-md px-3 py-2 text-body font-medium hover:bg-[var(--panel-raised)] sm:hidden"
                 >
                   {action.label}
+                  {action.forward && <ForwardGlyph />}
                 </Link>
               )}
 

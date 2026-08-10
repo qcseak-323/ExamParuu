@@ -3,6 +3,7 @@
 import { useState } from "react";
 import PalSprite from "@/components/PalSprite";
 import { useSfx } from "@/components/AudioProvider";
+import { TickGlyph, CrossGlyph } from "@/components/Glyph";
 
 /**
  * The landing page's try-before-you-sign-up battle: one real-style question,
@@ -101,8 +102,14 @@ export default function BattleDemo() {
                         : "bg-[var(--panel)]"
                   } ${dimmed ? "opacity-40" : ""}`}
                 >
-                  <span className="text-caption font-bold">
-                    {highlight ? "✓" : isWrongPick ? "✗" : a.letter}
+                  <span className="flex shrink-0 text-caption font-bold">
+                    {highlight ? (
+                      <TickGlyph title="correct" />
+                    ) : isWrongPick ? (
+                      <CrossGlyph title="your pick, wrong" />
+                    ) : (
+                      a.letter
+                    )}
                   </span>
                   {a.text}
                 </button>

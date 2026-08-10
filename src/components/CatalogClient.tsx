@@ -27,7 +27,7 @@ import ProfessorPortrait from "@/components/ProfessorPortrait";
 import PixelSprite from "@/components/PixelSprite";
 import FighterSprite from "@/components/battle/FighterSprite";
 import { useSfx } from "@/components/AudioProvider";
-import { SealGlyph } from "@/components/Glyph";
+import { SealGlyph, TickGlyph } from "@/components/Glyph";
 
 /**
  * Exam selection in two steps: pick a regional gym (one per 2026 Microsoft
@@ -109,7 +109,7 @@ export default function CatalogClient({
             }`}
           >
             {stop.worldName}
-            {stop.badgeEarned ? " ✓" : ""}
+            {stop.badgeEarned && <TickGlyph title="ribbon earned" />}
             {stop.prioritised && (
               <>
                 {" "}
@@ -231,7 +231,14 @@ export default function CatalogClient({
                       )}
                       <p className="mt-2 text-caption text-[var(--foreground-muted)]">
                         {badges.filter((b) => b.earned).length}/{badges.length}{" "}
-                        route ribbons{cleared ? " · ✓ dungeon cleared" : ""}
+                        route ribbons
+                        {cleared && (
+                          <>
+                            {" · "}
+                            <TickGlyph />
+                            dungeon cleared
+                          </>
+                        )}
                         {sealed ? " · ⚑ Proving sealed" : ""}
                       </p>
                       <Link

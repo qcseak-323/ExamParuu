@@ -9,9 +9,23 @@ import { spriteSize } from "@/lib/sprite";
  * is what stops the browser antialiasing the pixel seams into a blur.
  */
 
+/**
+ * For sprites drawn entirely in `C` — the interface marks in `uiSprites.ts`.
+ * They have no palette to give, and every entry resolving to `currentColor`
+ * means a stray lettered cell inks itself rather than rendering as `undefined`.
+ */
+const INHERITED: SpritePalette = {
+  a: "currentColor",
+  b: "currentColor",
+  c: "currentColor",
+  d: "currentColor",
+  e: "currentColor",
+};
+
 type Props = {
   sprite: SpriteMatrix;
-  palette: SpritePalette;
+  /** Omit for a sprite drawn only in `C`, which inherits the text colour. */
+  palette?: SpritePalette;
   /** Rendered size in px. The sprite scales without blurring. */
   size?: number;
   /** Mirrors the sprite, so a pal can face its opponent across a battle. */
@@ -95,7 +109,7 @@ function runsFor(sprite: SpriteMatrix, palette: SpritePalette): Run[] {
 
 export default function PixelSprite({
   sprite,
-  palette,
+  palette = INHERITED,
   size = 96,
   flip = false,
   className,

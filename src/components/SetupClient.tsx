@@ -19,6 +19,7 @@ import ProfessorPortrait from "@/components/ProfessorPortrait";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import { useSfx } from "@/components/AudioProvider";
 import { useBattleTransition } from "@/components/battle/BattleTransition";
+import { BackGlyph, ForwardGlyph, TickGlyph } from "@/components/Glyph";
 
 /**
  * First-run profile setup, played as a conversation with the professor and
@@ -246,7 +247,17 @@ export default function SetupClient({ email }: { email: string | null }) {
                     {avatar.hint}
                   </span>
                   <span className="select-card-pick mt-2">
-                    {picked ? "Chosen ✓" : "Choose ▶"}
+                    {picked ? (
+                      <>
+                        Chosen
+                        <TickGlyph />
+                      </>
+                    ) : (
+                      <>
+                        Choose
+                        <ForwardGlyph />
+                      </>
+                    )}
                   </span>
                 </button>
               );
@@ -306,7 +317,17 @@ export default function SetupClient({ email }: { email: string | null }) {
                     {candidate.tagline}
                   </span>
                   <span className="select-card-pick mt-auto">
-                    {picked ? "Chosen ✓" : "Choose ▶"}
+                    {picked ? (
+                      <>
+                        Chosen
+                        <TickGlyph />
+                      </>
+                    ) : (
+                      <>
+                        Choose
+                        <ForwardGlyph />
+                      </>
+                    )}
                   </span>
                 </button>
               );
@@ -326,7 +347,7 @@ export default function SetupClient({ email }: { email: string | null }) {
                   <span key={stage.name} className="contents">
                     {i > 0 && (
                       <span className="evo-arrow" aria-hidden="true">
-                        ▶
+                        <ForwardGlyph />
                       </span>
                     )}
                     <span
@@ -543,7 +564,17 @@ export default function SetupClient({ email }: { email: string | null }) {
                     {option.hint}
                   </span>
                   <span className="select-card-pick mt-auto">
-                    {picked ? "Chosen ✓" : "Choose ▶"}
+                    {picked ? (
+                      <>
+                        Chosen
+                        <TickGlyph />
+                      </>
+                    ) : (
+                      <>
+                        Choose
+                        <ForwardGlyph />
+                      </>
+                    )}
                   </span>
                 </button>
               );
@@ -580,7 +611,8 @@ export default function SetupClient({ email }: { email: string | null }) {
           disabled={step === 1 || saving}
           className="pixel-button rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
         >
-          ◀ Back
+          <BackGlyph />
+          Back
         </button>
 
         <span className="step-dots" aria-hidden="true">
@@ -595,11 +627,14 @@ export default function SetupClient({ email }: { email: string | null }) {
           disabled={!isStepReady(step) || saving}
           className="start-button tap-target px-8"
         >
-          {saving
-            ? "Setting sail…"
-            : step === TOTAL_STEPS
-              ? "Set sail ▶"
-              : "Next ▶"}
+          {saving ? (
+            "Setting sail…"
+          ) : (
+            <>
+              {step === TOTAL_STEPS ? "Set sail" : "Next"}
+              <ForwardGlyph />
+            </>
+          )}
         </button>
       </nav>
 

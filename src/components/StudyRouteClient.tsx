@@ -6,11 +6,12 @@ import { estimateMinutes, hasCompletedLesson } from "@/lib/learning";
 import { useLearningEvents } from "@/lib/storage";
 import MenuList from "@/components/MenuList";
 import { useBattleTransition } from "@/components/battle/BattleTransition";
+import { TickGlyph } from "@/components/Glyph";
 
 /**
  * The lesson index for one exam.
  *
- * Client-side because the ✓ ticks come from the learning log in local
+ * Client-side because the read ticks come from the learning log in local
  * storage. The prose itself still lives on the server-rendered page below —
  * this is navigation, not content.
  *
@@ -93,9 +94,14 @@ export default function StudyRouteClient({
               options={sections.map((section) => ({
                 id: section.id,
                 label: section.heading,
-                hint: hasCompletedLesson(events, examCode, section.id)
-                  ? "✓ read"
-                  : `~${estimateMinutes(section.paragraphs)} min`,
+                hint: hasCompletedLesson(events, examCode, section.id) ? (
+                  <>
+                    <TickGlyph />
+                    read
+                  </>
+                ) : (
+                  `~${estimateMinutes(section.paragraphs)} min`
+                ),
               }))}
               onSelect={(sectionId) =>
                 runTransition(() =>

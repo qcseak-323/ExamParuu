@@ -18,7 +18,7 @@ import ChallengeCard from "@/components/path/ChallengeCard";
 import { DialogueFrame } from "@/components/DialogueBox";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
 import { useBattleTransition } from "@/components/battle/BattleTransition";
-import { ShardGlyph, SealGlyph } from "@/components/Glyph";
+import { ShardGlyph, SealGlyph, BackGlyph, ForwardGlyph, TickGlyph } from "@/components/Glyph";
 import type { Challenge, LearningModule, LearningPath } from "@/lib/types";
 
 /**
@@ -131,7 +131,8 @@ export default function LearningPathClient({
             onClick={() => setStage({ kind: "paths" })}
             className="tap-target text-caption underline text-[var(--foreground-muted)]"
           >
-            ◀ All paths
+            <BackGlyph />
+            All paths
           </button>
           <h1 className="mt-2 font-pixel text-display">{path.title}</h1>
           {path.msLearnUrl && (
@@ -151,9 +152,14 @@ export default function LearningPathClient({
           options={path.modules.map((m) => ({
             id: m.id,
             label: m.title,
-            hint: moduleIsDone(events, examCode, m)
-              ? "✓ done"
-              : `${m.cardIds.length} card${m.cardIds.length === 1 ? "" : "s"}`,
+            hint: moduleIsDone(events, examCode, m) ? (
+              <>
+                <TickGlyph />
+                done
+              </>
+            ) : (
+              `${m.cardIds.length} card${m.cardIds.length === 1 ? "" : "s"}`
+            ),
             disabled: m.cardIds.length === 0,
           }))}
           onSelect={(moduleId) =>
@@ -177,7 +183,8 @@ export default function LearningPathClient({
         onClick={() => setStage({ kind: "modules", pathId: path.id })}
         className="text-body underline"
       >
-        ◀ Back to modules
+        <BackGlyph />
+        Back to modules
       </button>
     );
   }
@@ -368,7 +375,8 @@ function ModuleRunner({
           onClick={onExit}
           className="tap-target text-caption underline text-[var(--foreground-muted)]"
         >
-          ◀ {path.title}
+          <BackGlyph />
+          {path.title}
         </button>
         <div className="flex items-center gap-2">
           <span className="relative text-caption text-[var(--foreground-muted)]">
@@ -447,7 +455,8 @@ function ModuleRunner({
               onClick={() => advanceFromCard(step.index)}
               className="pixel-button tap-target w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
             >
-              Got it ▶
+              Got it
+              <ForwardGlyph />
             </button>
           )}
         </>
@@ -480,7 +489,8 @@ function ModuleRunner({
               onClick={onExit}
               className="pixel-button tap-target rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
             >
-              Next module ▶
+              Next module
+              <ForwardGlyph />
             </button>
             <Link
               href={`/exams/${examCode}/quiz?domain=${path.domainId}`}

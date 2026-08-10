@@ -28,6 +28,7 @@ import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import HpBar from "@/components/battle/HpBar";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
 import type { Question, QuizResultEntry } from "@/lib/types";
+import { ForwardGlyph } from "@/components/Glyph";
 
 /**
  * The Gym Leader — a timed, blueprint-weighted mock exam.
@@ -295,7 +296,8 @@ export default function GymLeaderClient({
                 onClick={() => runTransition(beginExam)}
                 className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
               >
-                Begin the challenge ▶
+                Begin the challenge
+                <ForwardGlyph />
               </button>
               <Link
                 href={`/exams/${examCode}`}

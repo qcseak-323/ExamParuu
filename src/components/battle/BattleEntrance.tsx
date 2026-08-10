@@ -9,6 +9,7 @@ import PixelSprite from "@/components/PixelSprite";
 import FighterSprite from "@/components/battle/FighterSprite";
 import type { Fighter } from "@/lib/guardians";
 import type { WildParuu } from "@/lib/wildParuu";
+import { SkipGlyph } from "@/components/Glyph";
 
 /**
  * What the blackout lifts on.
@@ -94,7 +95,8 @@ export default function BattleEntrance({
         onClick={onDone}
         className="entrance-skip text-caption uppercase tracking-[0.08em]"
       >
-        Skip ▶▶
+        Skip
+        <SkipGlyph />
       </button>
 
       <div className="entrance-cast">

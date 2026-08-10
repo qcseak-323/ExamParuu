@@ -3,7 +3,7 @@
 import { useSfx } from "@/components/AudioProvider";
 import PalSprite from "@/components/PalSprite";
 import { trainerMapSheet } from "@/lib/profile";
-import { SealGlyph } from "@/components/Glyph";
+import { SealGlyph, TickGlyph } from "@/components/Glyph";
 
 /**
  * Which guardian's dungeon stands on each region marker.
@@ -213,9 +213,13 @@ export default function GymMap({
 
       {stops.map((stop) => {
         const selected = stop.id === selectedId;
+        // The two badges below are `aria-hidden`, and have to be: an
+        // `aria-label` on the button replaces everything inside it, so a
+        // <title> on either sprite would never be read. What they show goes
+        // into the name here instead.
         const label = `${stop.worldName} — ${stop.name}${
-          stop.prioritised ? " (your pinned route is here)" : ""
-        }`;
+          stop.badgeEarned ? " (cleared)" : ""
+        }${stop.prioritised ? " (your pinned route is here)" : ""}`;
 
         return (
           <div
@@ -279,7 +283,7 @@ export default function GymMap({
                 ))}
               {stop.badgeEarned && (
                 <span className="gym-clear" aria-hidden="true">
-                  ✓
+                  <TickGlyph />
                 </span>
               )}
             </button>

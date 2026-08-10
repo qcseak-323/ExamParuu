@@ -5,6 +5,7 @@ import MenuList, { type MenuOption } from "@/components/MenuList";
 import { useSfx } from "@/components/AudioProvider";
 import { usePreferences } from "@/lib/preferences";
 import type { Challenge } from "@/lib/types";
+import { ForwardGlyph, TickGlyph, CrossGlyph } from "@/components/Glyph";
 
 /**
  * The checkpoint challenge, in its several shapes.
@@ -173,9 +174,12 @@ function MultiChallenge({
                 {on ? "☑" : "☐"}
               </span>
               <span className="flex-1">{option.label}</span>
-              {checked && (
-                <span aria-hidden="true" className="shrink-0 text-caption">
-                  {option.correct ? "✓" : ""}
+              {/* Not `aria-hidden`: after checking, this mark is the only
+                  thing distinguishing a correct option from a wrong one —
+                  the rest of the verdict is border and background colour. */}
+              {checked && option.correct && (
+                <span className="flex shrink-0">
+                  <TickGlyph title="correct" />
                 </span>
               )}
             </button>
@@ -197,7 +201,8 @@ function MultiChallenge({
           }}
           className="pixel-button tap-target w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)] disabled:opacity-40"
         >
-          Check answer ▶
+          Check answer
+          <ForwardGlyph />
         </button>
       ) : (
         <>
@@ -427,7 +432,8 @@ function PlacementChallenge({
           }}
           className="pixel-button tap-target w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)] disabled:opacity-40"
         >
-          Check answer ▶
+          Check answer
+          <ForwardGlyph />
         </button>
       ) : (
         <>
@@ -572,8 +578,12 @@ function SwipeChallenge({
       {card ? (
         <>
           <p className="text-caption text-[var(--foreground-muted)]">
-            Card {index + 1} of {deck.length} — drag the card, press ✗ / ✓, or
-            use ← / →.
+            {/* No comma after the tick: a mark carries its own margin on both
+                sides (see Glyph.tsx), so punctuation set directly against one
+                gets pushed off the word it belongs to. */}
+            Card {index + 1} of {deck.length} — drag the card, press
+            <CrossGlyph title="No match" />/<TickGlyph title="Match" />
+            or use ← / →.
           </p>
 
           <div className="swipe-stack">
@@ -647,14 +657,16 @@ function SwipeChallenge({
               onClick={() => answer(false)}
               className="pixel-button tap-target rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
             >
-              <span aria-hidden="true">✗</span> No match
+              <CrossGlyph />
+              No match
             </button>
             <button
               type="button"
               onClick={() => answer(true)}
               className="pixel-button tap-target rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
             >
-              <span aria-hidden="true">✓</span> Match
+              <TickGlyph />
+              Match
             </button>
           </div>
         </>
@@ -692,7 +704,8 @@ function ContinueButton({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       className="pixel-button tap-target w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
     >
-      Continue ▶
+      Continue
+      <ForwardGlyph />
     </button>
   );
 }

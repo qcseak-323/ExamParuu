@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { useQuizAttempts } from "@/lib/storage";
 import { getReviewSummary } from "@/lib/review";
+import { ForwardGlyph } from "@/components/Glyph";
 
 /**
  * "What should I do next?" on the exam hub.
@@ -65,7 +66,8 @@ export default function ReviewCallout({ examCode }: { examCode: string }) {
           href={`/exams/${examCode}/quiz?mode=review`}
           className="pixel-button w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
         >
-          Start review battle ▶
+          Start review battle
+          <ForwardGlyph />
         </Link>
       )}
     </div>

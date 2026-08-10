@@ -8,6 +8,7 @@ import { sendSignInLink } from "@/lib/authActions";
 import { DialogueFrame } from "@/components/DialogueBox";
 import ProfessorPortrait from "@/components/ProfessorPortrait";
 import { useSfx } from "@/components/AudioProvider";
+import { ForwardGlyph } from "@/components/Glyph";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -18,7 +19,14 @@ function SubmitButton() {
       disabled={pending}
       className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)] disabled:opacity-50"
     >
-      {pending ? "Sending…" : "Send my link ▶"}
+      {pending ? (
+        "Sending…"
+      ) : (
+        <>
+          Send my link
+          <ForwardGlyph />
+        </>
+      )}
     </button>
   );
 }

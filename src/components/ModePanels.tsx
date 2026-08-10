@@ -5,6 +5,7 @@ import { useState } from "react";
 import MenuList, { type MenuOption } from "@/components/MenuList";
 import { getLearningPaths } from "@/lib/learningPath";
 import { useBattleTransition } from "@/components/battle/BattleTransition";
+import { ForwardGlyph } from "@/components/Glyph";
 
 /**
  * The three ways to play, as three boxes.
@@ -160,7 +161,8 @@ export default function ModePanels({ examCode }: { examCode: string }) {
               onClick={() => runTransition(() => router.push(picked.href))}
               className="pixel-button tap-target mt-auto w-full rounded-md bg-[var(--accent)] px-5 py-3 text-body font-medium text-[var(--accent-foreground)]"
             >
-              {mode.verb} — {picked.label} ▶
+              {mode.verb} — {picked.label}
+              <ForwardGlyph />
             </button>
           </div>
         );

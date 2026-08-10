@@ -11,6 +11,7 @@ import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import ProfessorPortrait from "@/components/ProfessorPortrait";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
 import type { Question, QuizResultEntry } from "@/lib/types";
+import { BackGlyph, ForwardGlyph } from "@/components/Glyph";
 
 /**
  * The Proving — the real certification format, simulated.
@@ -222,7 +223,8 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
           footer={
             <div className="flex flex-wrap items-center gap-3">
               <button onClick={begin} className="start-button tap-target">
-                Begin the Proving ▶
+                Begin the Proving
+                <ForwardGlyph />
               </button>
               <Link
                 href={`/exams/${examCode}`}
@@ -251,7 +253,13 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
     const options: MenuOption[] = question.options.map((option, i) => ({
       id: String(i),
       label: option,
-      hint: answers[index] === i ? "◀ your answer" : undefined,
+      hint:
+        answers[index] === i ? (
+          <>
+            <BackGlyph />
+            your answer
+          </>
+        ) : undefined,
     }));
     const lowTime = remainingMs < 5 * 60_000;
     const answeredCount = answers.filter((a) => a !== null).length;
@@ -297,7 +305,8 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
               onClick={endPaper}
               className="pixel-button rounded-md bg-[var(--accent)] px-4 py-1.5 text-caption font-semibold text-[var(--accent-foreground)]"
             >
-              End exam{unanswered > 0 ? ` (${unanswered} unanswered)` : ""} ▶
+              End exam{unanswered > 0 ? ` (${unanswered} unanswered)` : ""}
+              <ForwardGlyph />
             </button>
           </div>
           <div

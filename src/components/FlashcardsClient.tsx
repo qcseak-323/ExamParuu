@@ -24,6 +24,7 @@ import {
 } from "@/lib/learning";
 import { saveFlashcardStatusToDb, saveLearningEventToDb } from "@/lib/actions";
 import type { FlashcardStatus } from "@/lib/types";
+import { ForwardGlyph } from "@/components/Glyph";
 
 export default function FlashcardsClient({ examCode }: { examCode: string }) {
   const content = getExamContent(examCode);
@@ -220,7 +221,8 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
               onClick={() => mark("known")}
               className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
             >
-              I knew it ▶
+              I knew it
+              <ForwardGlyph />
             </button>
           </div>
         </div>

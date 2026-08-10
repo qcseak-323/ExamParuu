@@ -31,6 +31,7 @@ import MenuList, { type MenuOption } from "@/components/MenuList";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
 import type { Flashcard, Question, QuizResultEntry } from "@/lib/types";
+import { ForwardGlyph } from "@/components/Glyph";
 
 const COUNT_OPTIONS = [5, 10, 20, "all"] as const;
 const FEEDBACK_EMAIL = "qcseak@gmail.com";
@@ -588,7 +589,8 @@ export default function QuizClient({
           disabled={availableCount === 0}
           className="pixel-button tap-target w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)] disabled:opacity-50"
         >
-          Send out {palName} ▶
+          Send out {palName}
+          <ForwardGlyph />
         </button>
 
         {transitionOverlay}
@@ -708,7 +710,8 @@ export default function QuizClient({
                 }}
                 className="pixel-button rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
               >
-                Resume battle ▶
+                Resume battle
+                <ForwardGlyph />
               </button>
               <button
                 type="button"
@@ -865,7 +868,8 @@ export default function QuizClient({
                     onClick={advance}
                     className="pixel-button tap-target rounded-md bg-[var(--accent)] px-5 py-2 text-body font-medium text-[var(--accent-foreground)]"
                   >
-                    {outcome ? "See results ▶" : "Next ▶"}
+                    {outcome ? "See results" : "Next"}
+                    <ForwardGlyph />
                   </button>
                 </div>
               }
@@ -967,7 +971,8 @@ export default function QuizClient({
               onClick={() => runTransition(() => beginBattle(missed))}
               className="pixel-button tap-target rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
             >
-              Redemption round ({missed.length}) ▶
+              Redemption round ({missed.length})
+              <ForwardGlyph />
             </button>
             <Link
               href={`/exams/${examCode}/study`}

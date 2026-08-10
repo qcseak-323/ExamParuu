@@ -2,12 +2,18 @@
 
 import { useRef, useState } from "react";
 import { useSfx } from "@/components/AudioProvider";
+import { ForwardGlyph, TickGlyph } from "@/components/Glyph";
 
 export type MenuOption = {
   id: string;
-  label: string;
-  /** Small trailing note, e.g. a question count. */
-  hint?: string;
+  /**
+   * `ReactNode` rather than `string` so a row can end in a sprite mark — the
+   * "Battle this topic ▶" kind of label, where the ▶ has to be a `ForwardGlyph`
+   * and not a character. Nothing reads this as text; it is only ever rendered.
+   */
+  label: React.ReactNode;
+  /** Small trailing note, e.g. a question count or a `TickGlyph` + "done". */
+  hint?: React.ReactNode;
   disabled?: boolean;
   /** Overrides the default styling, used for answer feedback in battle. */
   tone?: "default" | "correct" | "wrong" | "muted";
@@ -44,8 +50,8 @@ const TONE_CLASS: Record<NonNullable<MenuOption["tone"]>, string> = {
 };
 
 /**
- * A cursor-driven menu: a ▶ marks the current option and the arrow keys move
- * it, which is the interaction the whole era ran on.
+ * A cursor-driven menu: a forward mark points at the current option and the
+ * arrow keys move it, which is the interaction the whole era ran on.
  *
  * Two gold states, and they are not the same thing. The cursor draws a gold
  * *ring* — provisional, "this is what you would pick". A committed choice is
@@ -153,9 +159,15 @@ export default function MenuList({
               isDisabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
             } ${isPicked ? "menu-item--gold" : isCursor ? "menu-item--cursor" : ""}`}
           >
+            {/* Hidden from assistive tech on purpose: `aria-current` says
+                which row is committed and focus says where the cursor is, so
+                the mark is drawing what the semantics already carry. As
+                sprites both states are exactly 12px wide, which the ▶ and ✓
+                they replaced were not — the label used to shift a pixel or
+                two sideways at the moment a row was picked. */}
             <span
               aria-hidden="true"
-              className={`font-pixel text-label leading-none ${
+              className={`flex shrink-0 leading-none ${
                 isPicked
                   ? "opacity-100"
                   : isActive && !isDisabled
@@ -163,7 +175,7 @@ export default function MenuList({
                     : "opacity-0"
               }`}
             >
-              {isPicked ? "✓" : "▶"}
+              {isPicked ? <TickGlyph /> : <ForwardGlyph />}
             </span>
             <span className="flex-1">{option.label}</span>
             {option.hint && (

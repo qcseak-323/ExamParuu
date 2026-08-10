@@ -10,6 +10,7 @@ import { saveLearningEventToDb } from "@/lib/actions";
 import DialogueBox from "@/components/DialogueBox";
 import MenuList from "@/components/MenuList";
 import { useSceneTrack, useSfx } from "@/components/AudioProvider";
+import { ForwardGlyph, TickGlyph } from "@/components/Glyph";
 
 /**
  * A single lesson, delivered as dialogue rather than as a page of prose.
@@ -76,7 +77,10 @@ export default function LessonClient({
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h1 className="font-pixel text-display">{section.heading}</h1>
         {alreadyRead && (
-          <span className="text-caption text-[var(--accent-ink)]">✓ already read</span>
+          <span className="text-caption text-[var(--accent-ink)]">
+            <TickGlyph />
+            already read
+          </span>
         )}
       </div>
 
@@ -90,7 +94,12 @@ export default function LessonClient({
             options={[
               {
                 id: "battle",
-                label: "Battle this topic ▶",
+                label: (
+                  <>
+                    Battle this topic
+                    <ForwardGlyph />
+                  </>
+                ),
                 hint: "Put it to the test",
               },
               {
@@ -99,7 +108,18 @@ export default function LessonClient({
                 hint: "Drill the terms",
               },
               ...(nextSectionId
-                ? [{ id: "next", label: "Next lesson ▶", hint: undefined }]
+                ? [
+                    {
+                      id: "next",
+                      label: (
+                        <>
+                          Next lesson
+                          <ForwardGlyph />
+                        </>
+                      ),
+                      hint: undefined,
+                    },
+                  ]
                 : []),
               { id: "index", label: "Back to the route", hint: undefined },
             ]}
