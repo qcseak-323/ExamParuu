@@ -1482,17 +1482,22 @@ button.gym-marker-hit:hover {
   position: relative;
   margin-top: -2rem; /* main's py-8 — the sky meets the nav */
   overflow: hidden;
-  /* Sky only.
-     Three radial gradients used to paint low green banks along the bottom for
-     the trees to stand on. They read as flat blobby shapes behind the art
-     rather than as ground, and their edges cut across the horizon in a way
-     nothing else in the scene did. The scenery is dense enough now to be its
-     own horizon — trees and towers packed shoulder to shoulder — so the ground
-     is drawn by the art instead of painted behind it. */
+  /* Sky, fading out rather than stopping.
+     The gradient used to run top-to-bottom and simply end, which drew a hard
+     horizontal line across the page wherever the section finished — an edge
+     with nothing on the far side of it. Carrying the last stop to
+     `transparent` lets the page's own background come through, so the fold
+     ends by running out instead of by hitting a border.
+
+     `transparent` and not the page colour: --background differs per theme and
+     the sky would have to be told about both. Fading to nothing works in
+     either weather, and works on whatever surface the section is dropped on
+     later. */
   background: linear-gradient(
     180deg,
-    var(--hero-sky-top),
-    var(--hero-sky-bottom)
+    var(--hero-sky-top) 0%,
+    var(--hero-sky-bottom) 58%,
+    transparent 100%
   );
 }
 
@@ -1510,29 +1515,51 @@ button.gym-marker-hit:hover {
                      bug `vh` guarantees on a phone
      - 5rem          the nav bar above
 
-   It used to subtract another 162px for the brine and shore bands that sat
-   below. Those are gone — the scene ends on the treeline and the bank it
-   stands on, which is shoreline enough.
+   It used to subtract a further 162px for brine and shore bands, and later
+   reserve 13rem for a treeline. All of that scenery is gone; the fold is sky,
+   the title, the button and two characters.
 
    `max(340px, …)` is the floor. On a landscape phone the subtraction goes
-   near zero and the title would collapse onto the trees. */
+   near zero and the content would have nowhere to sit. */
 .title-screen {
   min-height: max(340px, calc(100svh - 5rem));
   display: grid;
   align-content: center;
   justify-items: center;
   gap: 1.25rem;
-  /* 7rem at the foot, and it is load-bearing rather than taste. The treeline
-     is absolutely positioned along the bottom of this box, so `align-content:
-     center` will happily centre the title INTO the trees once the box is
-     short — which is exactly what a 375-wide phone does. The caption ended up
-     behind a mangrove. Box-sizing is border-box here, so this reserves the
-     trees' height from inside without making the fold any taller. */
-  /* Reserves the scenery and the cast standing in front of it. Box-sizing is
-     border-box, so this keeps the title clear of the group photo without
-     making the fold any taller. */
-  padding: 2.5rem 1rem 13rem;
+  /* An ordinary foot again. This used to reserve 13rem for a treeline pinned
+     to the bottom of the box, because `align-content: center` will happily
+     centre the title INTO absolutely-positioned scenery once the box is short
+     — on a 375-wide phone the caption ended up behind a mangrove. There is no
+     scenery now and the cast is in the flow, so nothing needs clearing. */
+  padding: 2.5rem 1rem 3rem;
   text-align: center;
+}
+
+/* The trainer and their Paruu, standing under the button.
+   `align-items: flex-end` lands both pairs of feet on one line whatever the
+   sprite heights are — the trainer is taller than the creature, and centring
+   would float the smaller one. The overlap is slight: two figures only need to
+   look like they are standing together, not packed into a crowd. */
+.title-cast {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+/* -20, not -6. A sprite's box is wider than the figure drawn inside it, so a
+   small overlap still leaves the two standing apart like separate exhibits
+   rather than together like a pair. The margin has to beat the sprite's own
+   transparent padding before anything appears to touch. */
+.title-cast > * {
+  margin-inline: -20px;
+}
+/* Seats the creature on the trainer's ground line.
+   `align-items: flex-end` aligns the BOXES, and creature sheets carry more
+   empty space beneath the figure than the trainers do — so with the boxes
+   flush, the Paruu floats about a footstep above the ground the trainer is
+   standing on. This is a sheet-shape correction, not a design offset. */
+.title-cast > :last-child {
+  margin-bottom: -10px;
 }
 
 /* The wordmark. Steps down hard on narrow screens because the display face is
@@ -1553,150 +1580,6 @@ button.gym-marker-hit:hover {
   max-width: 34ch;
   text-wrap: balance;
 }
-
-/* --- The treeline ---------------------------------------------------------
-
-   Real trees along the horizon, replacing the gradient mounds that used to
-   stand in for them.
-
-   Painted after .sky-layer in the DOM and at the same z-index, so the trees
-   occlude the clouds — a cloud drifting in front of a tree that is nearer to
-   the viewer is the one thing that would give the whole flat scene away.
-
-   Depth is size plus a colour shift, not blur: blurring pixel art destroys
-   the hard pixel boundary that makes it read as pixel art at all. The far
-   rank is darkened and desaturated toward the sky, which is what aerial
-   perspective actually does. */
-.tree-line {
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 340px;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.tree {
-  position: absolute;
-  bottom: 0;
-  display: block;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  image-rendering: pixelated;
-}
-
-/* Near rank: full size, full colour, standing on the front line. */
-.tree--near { width: 96px; height: 96px; }
-/* Far rank: smaller, pushed back toward the sky's value, and standing HIGHER
-   up the frame. The lift is what turns a row of trees into a landscape — with
-   every trunk on one baseline the scenery was a strip, and depth cannot be
-   read from size alone when everything shares a horizon. */
-.tree--far {
-  width: 48px;
-  height: 48px;
-  bottom: 62px;
-  filter: brightness(0.78) saturate(0.72);
-}
-/* A third rank, further back and higher again. Two ranks read as a row of
-   trees with a row of smaller trees behind it; three read as land receding.
-   The shift is stronger here for the same reason it is on the far rank —
-   aerial perspective takes colour and light before it takes detail. */
-.tree--distant {
-  width: 32px;
-  height: 32px;
-  bottom: 122px;
-  filter: brightness(0.64) saturate(0.5);
-}
-
-.tree--a { background-image: url("/scenery/v1/96/tree-1.png"); }
-.tree--b { background-image: url("/scenery/v1/96/tree-2.png"); }
-.tree--c { background-image: url("/scenery/v1/96/tree-3.png"); }
-.tree--far.tree--a { background-image: url("/scenery/v1/48/tree-1.png"); }
-.tree--far.tree--b { background-image: url("/scenery/v1/48/tree-2.png"); }
-.tree--far.tree--c { background-image: url("/scenery/v1/48/tree-3.png"); }
-
-/* --- Buildings on the horizon ---------------------------------------------
-
-   The seven route towers, standing in the scenery line among the trees. They
-   were generated for the region map and served from /scenery already; this is
-   the first place a visitor meets them, and it is the truest thing the title
-   screen can say — those are the seven dungeons the game is about.
-
-   Each one is recoloured through its guardian's own palette by
-   build-dungeons.mjs, so a row of them is a row of different buildings rather
-   than one silhouette repeated. */
-.scenery-building {
-  position: absolute;
-  bottom: 0;
-  display: block;
-  image-rendering: pixelated;
-  pointer-events: none;
-}
-/* Pushed back toward the sky's value, exactly as .tree--far is. Depth here is
-   size plus a colour shift and never blur — blurring pixel art destroys the
-   hard boundary that makes it read as pixel art at all. */
-.scenery-building--far {
-  bottom: 62px;
-  filter: brightness(0.78) saturate(0.72);
-}
-
-/* --- The cast, as a group photo -------------------------------------------
-
-   Everybody stands in the middle facing out, shoulder to shoulder, with the
-   scenery behind them. They used to sprint across a separate strip of sand on
-   an infinite loop, which put two or three figures in a lot of empty ground.
-   Standing them together in one place is the answer that band was reaching for.
-
-   `margin-inline` is negative so the sprites overlap rather than sit in a row
-   of islands — a group photo has people touching. `align-items: flex-end`
-   lands every pair of feet on the same ground line whatever the sprite height,
-   which is what stops a mixed-size group looking like it is floating. */
-.cast-group {
-  position: absolute;
-  inset: auto 0 0 0;
-  z-index: 1;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  pointer-events: none;
-}
-/* -28, not -10. A sprite's box is wider than the figure drawn inside it —
-   there is transparent margin on both sides of every character — so a small
-   negative margin still left visible gaps with trees showing between the
-   cast. The overlap has to beat the sprite's own padding before the group
-   starts touching. */
-.cast-group > * {
-  margin-inline: -28px;
-  flex: none;
-}
-
-/* Storm Watch. The banks behind the trees re-ink for free because they are
-   painted from --hero-trees; the tree PNGs cannot, so without this they stay
-   at full daylight green against a #0C161E sky and glow like cut-outs. That
-   is the same defect GYM_SPRITE has on the map — hardcoded colour that does
-   not follow the weather — and the reason to catch it here is that a raster
-   scenery layer will keep reintroducing it.
-
-   Darkened rather than swapped for a second asset set: three more PNGs per
-   theme buys nothing a filter cannot do, because the change wanted is
-   uniformly "less light", not different art. The far rank composes both its
-   depth shift and the storm into one declaration, since a second filter on
-   the same element would replace rather than stack. */
-[data-theme="dark"] .tree {
-  filter: brightness(0.5) saturate(0.62);
-}
-[data-theme="dark"] .tree--far {
-  filter: brightness(0.4) saturate(0.48);
-}
-
-/* Phones: the hero is short and the copy needs the room, so only the far
-   rank survives and it sits lower. */
-@media (max-width: 640px) {
-  .tree-line { height: 120px; }
-  .tree--near { width: 64px; height: 64px; }
-  .tree--far { width: 40px; height: 40px; }
-}
-
 @keyframes xp-pop {
   0% { transform: translateY(6px) scale(0.6); opacity: 0; }
   40% { transform: translateY(-4px) scale(1.15); opacity: 1; }
@@ -1831,9 +1714,9 @@ button.gym-marker-hit:hover {
    position:relative with z-index:auto and therefore does NOT open a stacking
    context, so a negative child would slide behind the parent's own background
    gradient and vanish completely. */
-/* 2, above .cast-group's 1. The cast stands at the foot of the fold and the
-   title sits above it, but on a short viewport the two get close, and the one
-   that must stay readable is the one with the button in it. */
+/* Above the sky layer, which is absolutely positioned and would otherwise
+   paint over static in-flow siblings whatever the source order — the clouds
+   would drift across the headline. */
 .hero-content {
   position: relative;
   z-index: 2;
