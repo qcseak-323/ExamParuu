@@ -376,22 +376,68 @@ body {
 }
 
 /* --- Spacing rhythm ------------------------------------------------------
-   Four steps, unchanged from V0.04:
-     gap-2  inside a control · gap-4  between items in a group
-     gap-6  between groups   · gap-10 between page sections */
+   Six steps. Was four, which could not express the difference between "these
+   two things are related" and "this is a new section" on a page as dense as
+   /progress — every boundary got gap-6 and the page read as one long list.
+
+   Within a component:
+     gap-2   inside a control
+     gap-4   between items in a group
+     gap-6   between groups
+
+   Between components — the two that are new:
+     gap-8   between subsections of one band
+     gap-10  between page sections
+     gap-16  between major bands, where the subject changes entirely
+
+   The rule for picking: if a heading sits between two things, the gap is at
+   least 10. If the reader is meant to feel they have finished something, 16. */
 
 /* ==========================================================================
    Hardware. In @layer components so Tailwind utilities on the same element
    (tone borders, bg overrides) still win the cascade.
    ========================================================================== */
 @layer components {
-  /* Chart panel — the base container. Inked border, hard stamp shadow:
-     printed on the page, not floating over it. */
+  /* --- Elevation, in three tiers -----------------------------------------
+     Everything in this app used to be one idiom: 2px ink border + 2px hard
+     stamp + 12px radius, on panels, cards, buttons, chips and meters alike.
+     A single treatment repeated on everything flattens hierarchy — nothing
+     recedes, so nothing is foreground, and the whole page reads as unfinished.
+
+       flat     page furniture. A 2px line in --line rather than ink, and no
+                stamp. Sits ON the page. This is the default, because most
+                surfaces are containers.
+       stamped  things meant to be PRESSED. Ink border, hard stamp, and it
+                moves under the press. This is what made the idiom good, and
+                using it everywhere is what killed it.
+       raised   popovers, modals, the active card. Ink border, deeper stamp —
+                it is over the page rather than on it.
+
+     Two pixels, not one, even for flat: a 1px hairline is off the pixel grid
+     that every sprite in this app is drawn to. The weight stays; the *ink*
+     is what changes. */
+
+  /* Chart panel — the base container, flat by default. */
   .pixel-panel {
     background: var(--panel);
-    border: 2px solid var(--border);
+    border: 2px solid var(--line);
     border-radius: 12px;
+  }
+
+  /* Opt back in wherever the surface is genuinely pressable. */
+  .pixel-panel--stamped {
+    border-color: var(--border);
     box-shadow: 2px 2px 0 var(--stamp);
+  }
+  .pixel-panel--stamped:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
+
+  /* Over the page, not on it. Deeper stamp, ink border. */
+  .pixel-panel--raised {
+    border-color: var(--border);
+    box-shadow: 4px 4px 0 var(--stamp);
   }
 
   /* Stamped hardware button. Colour comes from utilities; the top-light
@@ -502,9 +548,23 @@ body {
       0 0 0 4px var(--gold),
       2px 2px 0 var(--stamp);
   }
+  /* Re-ink the subtitle once the card fills gold. `--foreground-muted` is a
+     light value in Storm Watch and measures 1.6:1 on the gold — the token's
+     documented failure mode, "the first thing to fail if you move it onto a
+     coloured surface".
+
+     `!important` is load-bearing here and not tidiable. This block is in
+     @layer components precisely so utilities on the element still win, which
+     is the right default everywhere else — but the call sites spell the
+     subtitle `text-caption text-[var(--foreground-muted)]`, and that arbitrary
+     utility sits in @layer utilities and beats a plain declaration here. So
+     the un-important version of this rule was dead code: it matched, lost, and
+     the gold card shipped with unreadable ink. For !important the layer order
+     reverses and components wins, which is the only reason this override
+     lands. */
   .select-card--picked .text-caption,
   .select-card--picked [class*="foreground-muted"] {
-    color: var(--outline);
+    color: var(--outline) !important;
   }
 
   /* The brass pill inside the card. Not a nested button — the whole card is
@@ -994,127 +1054,6 @@ html[data-reduced-motion="true"] .battle-entrance::before {
   }
 }
 
-/* --- Landing runners -------------------------------------------------------
-   The cast sprints across the sand strip, trailed by speed lines, with
-   gusts of wind crossing the strip. Every class here is only applied when
-   reduced motion is off — an infinite traversal at a 0.001ms duration
-   would strobe, so the motion variant is gated in the component. */
-.runner {
-  position: absolute;
-  bottom: 26px;
-  left: -90px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  animation: runner-cross var(--runner-duration, 18s) linear infinite;
-  animation-delay: var(--runner-delay, 0s);
-}
-.runner::after {
-  content: "";
-  width: 72%;
-  height: 12px;
-  margin-top: 2px;
-  border-radius: 50%;
-  background: var(--ground-shadow);
-}
-@keyframes runner-cross {
-  from { transform: translateX(0); }
-  to { transform: translateX(calc(100vw + 180px)); }
-}
-.runner-sprite {
-  animation: runner-gait 0.34s steps(2, end) infinite;
-}
-@keyframes runner-gait {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-/* Drawn speed lines, trailing a runner. Was a repeating-linear-gradient of
-   flat bars; the art tapers, which is what made the gradient version read as
-   a barcode rather than as motion. 48px at 1:1 from the 48 source. */
-.speed-lines {
-  position: absolute;
-  right: 100%;
-  margin-right: 6px;
-  top: 30%;
-  width: 48px;
-  height: 48px;
-  background-image: url("/scenery/v1/48/speed-line.png");
-  background-size: 48px 48px;
-  background-repeat: no-repeat;
-  image-rendering: pixelated;
-  animation: speed-flicker 0.28s steps(2, end) infinite;
-}
-
-/* The art is solid dark ink, which was right for the sand it crosses on Low
-   Tide (#E0DDD1) and invisible on Storm Watch (#081019). The gradient this
-   replaced used var(--ground-shadow) and re-inked itself for free; a raster
-   cannot, and this is the trade the whole scenery layer makes.
-
-   Flattened to a white silhouette rather than swapped for a second asset:
-   brightness(0) collapses every colour to black and invert(1) lifts it to
-   white, so the shape is preserved exactly and no second generation is
-   needed. That only works because these lines are a single flat ink — do not
-   copy it onto anything with real colour in it.
-
-   Only `filter` is set here: speed-flicker animates opacity between 0.9 and
-   0.4, so any opacity declared on this rule is dead. Checked, not assumed —
-   computed opacity read back as the keyframe's 0.9. */
-[data-theme="dark"] .speed-lines {
-  filter: brightness(0) invert(1);
-}
-
-@keyframes speed-flicker {
-  0%, 100% { opacity: 0.9; transform: translateX(0); }
-  50% { opacity: 0.4; transform: translateX(-6px); }
-}
-
-/* Two gusts crossing the sand, rather than one tiled band.
-   The old version was a repeating-linear-gradient sliding by exactly its own
-   period, which is seamless but reads as a moving stripe pattern. Real art
-   cannot tile that way — a gust is a discrete object, not a texture — so it
-   became two elements at different heights and speeds, the same treatment the
-   sky clouds get. ::before and ::after rather than new DOM: .wind-gusts is a
-   conditional class on .hero-sand-strip and nothing else claims its
-   pseudo-elements.
-
-   Rimmed, because gust-1 quantised to 9 colours over 8% of its canvas — it is
-   the palest asset in the set and the sand it crosses is #E0DDD1.
-
-   No animation-delay: the class is only applied when reduced motion is off,
-   but the two speeds already give the variety a delay would have. */
-.wind-gusts::before,
-.wind-gusts::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 48px;
-  height: 48px;
-  background-size: 48px 48px;
-  background-repeat: no-repeat;
-  image-rendering: pixelated;
-  opacity: 0.75;
-  pointer-events: none;
-  filter:
-    drop-shadow(1px 0 0 var(--scn-rim))
-    drop-shadow(-1px 0 0 var(--scn-rim))
-    drop-shadow(0 1px 0 var(--scn-rim))
-    drop-shadow(0 -1px 0 var(--scn-rim));
-}
-.wind-gusts::before {
-  top: 14px;
-  background-image: url("/scenery/v1/48/gust-1.png");
-  animation: gust-blow 7s linear infinite;
-}
-.wind-gusts::after {
-  top: 66px;
-  background-image: url("/scenery/v1/48/gust-2.png");
-  animation: gust-blow 11s linear infinite;
-}
-@keyframes gust-blow {
-  from { transform: translateX(-72px); }
-  to { transform: translateX(calc(100vw + 72px)); }
-}
-
 /* Idle bob, so a pal on screen looks alive rather than pasted on. */
 .pal-idle {
   animation: pal-bob 1.8s steps(2, end) infinite;
@@ -1322,33 +1261,49 @@ html[data-reduced-motion="true"] .battle-entrance::before {
 
 /* --- Region map — the estuary chart -------------------------------------- */
 
+/* The Monsoon Belt, as real terrain.
+   Was three radial gradients standing in for land — which is why the chart
+   read as a diagram of an archipelago rather than one. The map is now a
+   composited raster built by `scripts/build-region-map.mjs` from licensed
+   overworld art: six islands with drawn coastlines, forests, mountains, a
+   lighthouse and a fort.
+
+   ── The aspect ratio is load-bearing ──
+
+   It was `height: 420px` with a fluid width. Markers are positioned by
+   percentage of this box, so the moment the box's aspect stops matching the
+   image's, `object-fit: cover` crops the image and every marker drifts off the
+   island it names. Pinning `aspect-ratio` to the image's own 1280×560 keeps
+   the two locked together at every width, and `min-height` stops it collapsing
+   to a letterbox on a narrow phone. */
 .gym-map {
   position: relative;
   width: 100%;
-  height: 420px;
+  aspect-ratio: 1120 / 490;
+  min-height: 260px;
   border: 2px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 2px 2px 0 var(--stamp);
-  /* Terrain: brine at the edges, tidal flats in the middle, mangrove
-     stands in the corners. All gradients — no tiles to load. */
-  background:
-    radial-gradient(
-      ellipse 30% 26% at 22% 22%,
-      var(--map-forest) 0 100%,
-      transparent 101%
-    ),
-    radial-gradient(
-      ellipse 26% 22% at 74% 78%,
-      var(--map-forest) 0 100%,
-      transparent 101%
-    ),
-    radial-gradient(
-      ellipse 78% 68% at 50% 50%,
-      var(--map-land) 0 100%,
-      transparent 101%
-    ),
-    var(--map-water);
+  background: var(--map-water) url("/maps/v1/monsoon-belt.png") center / 100%
+    100% no-repeat;
+  image-rendering: pixelated;
+}
+
+/* Law 10, and the direction is the surprise.
+   Raster art cannot re-ink, so it needs an answer per theme — but this art
+   arrived with a NIGHT palette. Its sea samples #1E445E, which is almost
+   exactly Storm Watch's --map-water (#173B52) and nothing like Low Tide's
+   (#4FA3B8). So the dark theme is the one that needs nothing, and the BRIGHT
+   theme is the one wearing a filter — the reverse of every other raster in
+   this app.
+
+   A lift rather than a hue rotate: pushing navy far enough to reach Low Tide's
+   teal drags the sand and the forests with it and the whole island goes
+   sickly. Brightening it reads as the same chart under a midday sun, which is
+   what the two weathers are supposed to mean. */
+:where([data-theme="bright"], :root:not([data-theme])) .gym-map {
+  filter: brightness(1.18) saturate(1.12);
 }
 
 @media (min-width: 640px) {
@@ -1527,16 +1482,76 @@ button.gym-marker-hit:hover {
   position: relative;
   margin-top: -2rem; /* main's py-8 — the sky meets the nav */
   overflow: hidden;
-  background:
-    /* The bank the treeline stands on. These were tall mangrove mounds doing
-       the whole job of "there are trees here"; now that real trees stand on
-       them they are flattened to low banks, because a 200px mound behind a
-       96px tree reads as a hill eating the forest. */
-    radial-gradient(ellipse 42% 96px at 3% 100%, var(--hero-trees-far) 0 100%, transparent 101%),
-    radial-gradient(ellipse 44% 78px at 48% 100%, var(--hero-trees) 0 100%, transparent 101%),
-    radial-gradient(ellipse 40% 88px at 98% 100%, var(--hero-trees-far) 0 100%, transparent 101%),
-    /* sky */
-    linear-gradient(180deg, var(--hero-sky-top), var(--hero-sky-bottom));
+  /* Sky only.
+     Three radial gradients used to paint low green banks along the bottom for
+     the trees to stand on. They read as flat blobby shapes behind the art
+     rather than as ground, and their edges cut across the horizon in a way
+     nothing else in the scene did. The scenery is dense enough now to be its
+     own horizon — trees and towers packed shoulder to shoulder — so the ground
+     is drawn by the art instead of painted behind it. */
+  background: linear-gradient(
+    180deg,
+    var(--hero-sky-top),
+    var(--hero-sky-bottom)
+  );
+}
+
+/* --- The title screen (Landing v4) ----------------------------------------
+
+   The fold is one screen of world with the game's name on it, the way a
+   cartridge opens. Landing v3 put copy in a left column and a demo in a right
+   one, which is a website's answer; this is the game's.
+
+   The height is what makes it a title screen rather than a tall hero, and it
+   has to be arithmetic rather than `100vh`:
+
+     100svh          the SMALL viewport height, so mobile browser chrome
+                     collapsing does not shunt the button off-screen — the one
+                     bug `vh` guarantees on a phone
+     - 5rem          the nav bar above
+
+   It used to subtract another 162px for the brine and shore bands that sat
+   below. Those are gone — the scene ends on the treeline and the bank it
+   stands on, which is shoreline enough.
+
+   `max(340px, …)` is the floor. On a landscape phone the subtraction goes
+   near zero and the title would collapse onto the trees. */
+.title-screen {
+  min-height: max(340px, calc(100svh - 5rem));
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 1.25rem;
+  /* 7rem at the foot, and it is load-bearing rather than taste. The treeline
+     is absolutely positioned along the bottom of this box, so `align-content:
+     center` will happily centre the title INTO the trees once the box is
+     short — which is exactly what a 375-wide phone does. The caption ended up
+     behind a mangrove. Box-sizing is border-box here, so this reserves the
+     trees' height from inside without making the fold any taller. */
+  /* Reserves the scenery and the cast standing in front of it. Box-sizing is
+     border-box, so this keeps the title clear of the group photo without
+     making the fold any taller. */
+  padding: 2.5rem 1rem 13rem;
+  text-align: center;
+}
+
+/* The wordmark. Steps down hard on narrow screens because the display face is
+   set in whole pixels and a 4rem word at 375px would need to hyphenate — and
+   a hyphenated logo is not a logo. */
+.title-wordmark {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  /* Caps at 6.5rem rather than 5: on a desktop fold the smaller cap left the
+     whole title block floating in the middle of a lot of empty sky, reading
+     as a small thing lost in a big space rather than as a title. */
+  font-size: clamp(2.75rem, 9vw, 6.5rem);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+}
+
+.title-tagline {
+  max-width: 34ch;
+  text-wrap: balance;
 }
 
 /* --- The treeline ---------------------------------------------------------
@@ -1555,7 +1570,7 @@ button.gym-marker-hit:hover {
 .tree-line {
   position: absolute;
   inset: auto 0 0 0;
-  height: 200px;
+  height: 340px;
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
@@ -1570,13 +1585,27 @@ button.gym-marker-hit:hover {
   image-rendering: pixelated;
 }
 
-/* Near rank: full size, full colour, sitting on the bank. */
+/* Near rank: full size, full colour, standing on the front line. */
 .tree--near { width: 96px; height: 96px; }
-/* Far rank: smaller, pushed back toward the sky's value. */
+/* Far rank: smaller, pushed back toward the sky's value, and standing HIGHER
+   up the frame. The lift is what turns a row of trees into a landscape — with
+   every trunk on one baseline the scenery was a strip, and depth cannot be
+   read from size alone when everything shares a horizon. */
 .tree--far {
   width: 48px;
   height: 48px;
+  bottom: 62px;
   filter: brightness(0.78) saturate(0.72);
+}
+/* A third rank, further back and higher again. Two ranks read as a row of
+   trees with a row of smaller trees behind it; three read as land receding.
+   The shift is stronger here for the same reason it is on the far rank —
+   aerial perspective takes colour and light before it takes detail. */
+.tree--distant {
+  width: 32px;
+  height: 32px;
+  bottom: 122px;
+  filter: brightness(0.64) saturate(0.5);
 }
 
 .tree--a { background-image: url("/scenery/v1/96/tree-1.png"); }
@@ -1585,6 +1614,61 @@ button.gym-marker-hit:hover {
 .tree--far.tree--a { background-image: url("/scenery/v1/48/tree-1.png"); }
 .tree--far.tree--b { background-image: url("/scenery/v1/48/tree-2.png"); }
 .tree--far.tree--c { background-image: url("/scenery/v1/48/tree-3.png"); }
+
+/* --- Buildings on the horizon ---------------------------------------------
+
+   The seven route towers, standing in the scenery line among the trees. They
+   were generated for the region map and served from /scenery already; this is
+   the first place a visitor meets them, and it is the truest thing the title
+   screen can say — those are the seven dungeons the game is about.
+
+   Each one is recoloured through its guardian's own palette by
+   build-dungeons.mjs, so a row of them is a row of different buildings rather
+   than one silhouette repeated. */
+.scenery-building {
+  position: absolute;
+  bottom: 0;
+  display: block;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+/* Pushed back toward the sky's value, exactly as .tree--far is. Depth here is
+   size plus a colour shift and never blur — blurring pixel art destroys the
+   hard boundary that makes it read as pixel art at all. */
+.scenery-building--far {
+  bottom: 62px;
+  filter: brightness(0.78) saturate(0.72);
+}
+
+/* --- The cast, as a group photo -------------------------------------------
+
+   Everybody stands in the middle facing out, shoulder to shoulder, with the
+   scenery behind them. They used to sprint across a separate strip of sand on
+   an infinite loop, which put two or three figures in a lot of empty ground.
+   Standing them together in one place is the answer that band was reaching for.
+
+   `margin-inline` is negative so the sprites overlap rather than sit in a row
+   of islands — a group photo has people touching. `align-items: flex-end`
+   lands every pair of feet on the same ground line whatever the sprite height,
+   which is what stops a mixed-size group looking like it is floating. */
+.cast-group {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+}
+/* -28, not -10. A sprite's box is wider than the figure drawn inside it —
+   there is transparent margin on both sides of every character — so a small
+   negative margin still left visible gaps with trees showing between the
+   cast. The overlap has to beat the sprite's own padding before the group
+   starts touching. */
+.cast-group > * {
+  margin-inline: -28px;
+  flex: none;
+}
 
 /* Storm Watch. The banks behind the trees re-ink for free because they are
    painted from --hero-trees; the tree PNGs cannot, so without this they stay
@@ -1611,26 +1695,6 @@ button.gym-marker-hit:hover {
   .tree-line { height: 120px; }
   .tree--near { width: 64px; height: 64px; }
   .tree--far { width: 40px; height: 40px; }
-}
-
-.hero-water-strip {
-  height: 58px;
-  background: var(--hero-water);
-  border-top: 3px solid rgba(18, 32, 43, 0.25);
-}
-
-.hero-sand-strip {
-  position: relative;
-  height: 130px;
-  background: var(--hero-bank);
-}
-
-/* The rules of the game, stamped on dark ink. The ink is the constant
-   sprite-outline colour, so the strip reads the same in both themes and the
-   locked creature palettes on it stay ≥4.5:1. */
-.equation-strip {
-  background: var(--outline);
-  color: #eaf2ed;
 }
 
 @keyframes xp-pop {
@@ -1767,9 +1831,12 @@ button.gym-marker-hit:hover {
    position:relative with z-index:auto and therefore does NOT open a stacking
    context, so a negative child would slide behind the parent's own background
    gradient and vanish completely. */
+/* 2, above .cast-group's 1. The cast stands at the foot of the fold and the
+   title sits above it, but on a short viewport the two get close, and the one
+   that must stay readable is the one with the button in it. */
 .hero-content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .sky-prop {
@@ -1815,9 +1882,22 @@ button.gym-marker-hit:hover {
    at its authored offset, which for a cloud means stranded mid-screen or off
    the edge entirely. Variety comes from differing durations and starting
    positions instead. Same trap documented at .entrance-* and the swipe deck. */
-.sky-cloud-1 { width: 128px; height: 71px; top: 34px;  animation: cloud-drift 96s linear infinite; }
-.sky-cloud-2 { width: 96px;  height: 52px; top: 96px;  animation: cloud-drift 132s linear infinite; }
-.sky-cloud-3 { width: 64px;  height: 35px; top: 64px;  animation: cloud-drift 168s linear infinite; }
+/* Five clouds, and every delay is NEGATIVE.
+   They drift on 96–168s loops starting off-screen left, so with no offset the
+   sky is empty for the first minute of a visit — the one stretch anybody
+   actually sees. A negative delay starts each cloud part-way through its
+   crossing, so the sky is populated on the first painted frame. Same fault and
+   same fix as the landing runners had.
+
+   Safe against design law 6, which forbids animation-delay in CSS-gated
+   animation because reduced motion kills duration and leaves delay alone,
+   stranding the element mid-flight. It cannot bite here: under reduced motion
+   HomeHero does not render the sky layer at all. */
+.sky-cloud-1 { width: 128px; height: 71px; top: 34px;  animation: cloud-drift 96s linear -22s infinite; }
+.sky-cloud-2 { width: 96px;  height: 52px; top: 96px;  animation: cloud-drift 132s linear -74s infinite; }
+.sky-cloud-3 { width: 64px;  height: 35px; top: 64px;  animation: cloud-drift 168s linear -118s infinite; }
+.sky-cloud-4 { width: 112px; height: 62px; top: 148px; animation: cloud-drift 114s linear -48s infinite; }
+.sky-cloud-5 { width: 80px;  height: 44px; top: 16px;  animation: cloud-drift 150s linear -96s infinite; }
 
 @keyframes cloud-drift {
   from { transform: translateX(-140px); }
@@ -1845,20 +1925,6 @@ button.gym-marker-hit:hover {
 }
 
 
-.hero-combatant {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.hero-combatant::after {
-  content: "";
-  width: 72%;
-  height: 12px;
-  margin-top: 2px;
-  border-radius: 50%;
-  background: var(--ground-shadow);
-}
 
 @media (prefers-reduced-motion: reduce) {
   *,

@@ -243,7 +243,7 @@ export default function ProgressClient({
             <Link
               key={exam.code}
               href={`/exams/${exam.code}/progress`}
-              className="pixel-panel flex flex-col gap-2 p-5 hover:-translate-y-0.5 transition-transform"
+              className="pixel-panel pixel-panel--stamped flex flex-col gap-2 p-5"
             >
               <span className="font-pixel text-label text-[var(--accent-ink)]">
                 {exam.code.toUpperCase()}

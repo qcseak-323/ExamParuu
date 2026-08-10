@@ -26,7 +26,7 @@ function ToggleRow({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <label className="pixel-panel flex items-start justify-between gap-4 p-4">
+    <label className="pixel-panel pixel-panel--stamped flex items-start justify-between gap-4 p-4">
       <div>
         <p className="text-body font-medium">{label}</p>
         <p className="mt-1 text-caption text-[var(--foreground-muted)]">

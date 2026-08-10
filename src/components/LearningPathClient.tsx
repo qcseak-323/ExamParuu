@@ -434,7 +434,7 @@ function ModuleRunner({
                 advanceFromCard(step.index);
               }
             }}
-            className="pixel-panel flex min-h-[9rem] flex-col justify-center gap-3 p-6 text-left"
+            className="pixel-panel pixel-panel--stamped flex min-h-[9rem] flex-col justify-center gap-3 p-6 text-left"
           >
             <span className="text-body-lg font-semibold">
               {cards[step.index].front}

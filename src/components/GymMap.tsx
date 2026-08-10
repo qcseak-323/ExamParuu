@@ -56,34 +56,29 @@ export type RegionStop = {
 };
 
 /**
- * Fixed decorative wave marks, spread across the brine between islands.
- * Hand-placed rather than random so the chart doesn't shimmer on re-render.
- */
-const WAVES: { x: number; y: number }[] = [
-  { x: 8, y: 50 },
-  { x: 34, y: 8 },
-  { x: 38, y: 44 },
-  { x: 62, y: 36 },
-  { x: 68, y: 8 },
-  { x: 90, y: 50 },
-  { x: 12, y: 92 },
-  { x: 40, y: 86 },
-  { x: 70, y: 90 },
-  { x: 94, y: 12 },
-  { x: 50, y: 62 },
-  { x: 5, y: 12 },
-];
-
-/**
- * The Monsoon Belt drawn as an estuary chart: one island landmass per region
- * — sand rendered under each marker, ringed by a dashed shore ripple — the
- * brine dotted with wave marks, a compass rose in the corner, and the
- * shipping route threaded island to island on top. All SVG in the theme's
- * palette, so the chart re-inks itself between Low Tide and Storm Watch.
+ * The Monsoon Belt as real terrain, with the chart's furniture drawn over it.
  *
- * Markers are buttons that select a region; the exams inside it are listed
- * by the catalog below the map. Marker labels are the short series codes:
- * the full world names live in the chip list and region panel.
+ * The land used to be SVG: three ellipses per region, a dashed shore ripple,
+ * and a dozen hand-placed wave marks on the brine. All of it re-inked with the
+ * theme for free, and all of it read as a *diagram* of an archipelago rather
+ * than one — the reference that started this rebuild makes the point plainly,
+ * land is the figure and water is the ground, and six vector blobs are not
+ * land.
+ *
+ * The islands, coastlines, forests, mountains, the lighthouse and the fort are
+ * now a composited raster (`scripts/build-region-map.mjs`) set as the
+ * container's background.
+ *
+ * ── What stayed vector, and why ──
+ *
+ * The shipping lane and the compass rose. Both are chart *annotation* rather
+ * than terrain: they are drawn ON the map, not part of it, and keeping them in
+ * SVG means they keep following the theme where the terrain beneath them
+ * cannot. It also means the lane still redraws itself if a region moves.
+ *
+ * Markers are buttons that select a region; the exams inside it are listed by
+ * the catalog below the map. Marker labels are the short series codes — the
+ * full world names live in the chip list and region panel.
  */
 export default function GymMap({
   stops,
@@ -98,7 +93,27 @@ export default function GymMap({
   onSelect: (id: string) => void;
 }) {
   const playSfx = useSfx();
-  const points = stops.map((s) => `${s.x},${s.y}`).join(" ");
+
+  /**
+   * The lane visits the regions in a ring, not in array order.
+   *
+   * `stops` arrives in the catalogue's order — az, ai, dp, sc, ab, pl — and
+   * threading a polyline through that sequence sends it from the top-right
+   * island back across the whole chart to the bottom-left and out again,
+   * crossing itself twice. A shipping lane that crosses itself is not a route,
+   * it is a scribble.
+   *
+   * Anything not named here is appended, so a new region still appears on the
+   * lane rather than silently vanishing from it.
+   */
+  const LANE = ["az", "ai", "dp", "pl", "ab", "sc"];
+  const ordered = [
+    ...LANE.map((id) => stops.find((s) => s.id === id)).filter(
+      (s): s is RegionStop => Boolean(s),
+    ),
+    ...stops.filter((s) => !LANE.includes(s.id)),
+  ];
+  const points = ordered.map((s) => `${s.x},${s.y}`).join(" ");
 
   return (
     <div className="gym-map">
@@ -108,70 +123,6 @@ export default function GymMap({
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        {/* Wave marks on the open brine. */}
-        <g
-          stroke="var(--map-wave)"
-          strokeWidth="1.4"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.55"
-          vectorEffect="non-scaling-stroke"
-        >
-          {WAVES.map((w, i) => (
-            <path
-              key={i}
-              d={`M ${w.x - 2} ${w.y} q 1 -1.6 2 0 q 1 1.6 2 0`}
-              vectorEffect="non-scaling-stroke"
-            />
-          ))}
-        </g>
-
-        {/* One island per region: a cluster of sand banks with a dashed
-            shore ripple around the main mass. Drawn before the route so the
-            shipping lane passes over the land, chart-style. */}
-        {stops.map((stop) => (
-          <g key={stop.id}>
-            <ellipse
-              cx={stop.x}
-              cy={stop.y + 3}
-              rx={16.5}
-              ry={11.5}
-              fill="none"
-              stroke="var(--map-wave)"
-              strokeWidth="1"
-              strokeDasharray="2 3"
-              opacity="0.6"
-              vectorEffect="non-scaling-stroke"
-            />
-            <g fill="var(--map-island)" stroke="var(--map-shore)">
-              <ellipse
-                cx={stop.x}
-                cy={stop.y + 3}
-                rx={13.5}
-                ry={9}
-                strokeWidth="1.4"
-                vectorEffect="non-scaling-stroke"
-              />
-              <ellipse
-                cx={stop.x - 9}
-                cy={stop.y + 7}
-                rx={6}
-                ry={4}
-                strokeWidth="1.4"
-                vectorEffect="non-scaling-stroke"
-              />
-              <ellipse
-                cx={stop.x + 10}
-                cy={stop.y + 6}
-                rx={5}
-                ry={3.5}
-                strokeWidth="1.4"
-                vectorEffect="non-scaling-stroke"
-              />
-            </g>
-          </g>
-        ))}
-
         {/* The shipping route, island to island. */}
         <polyline
           points={points}

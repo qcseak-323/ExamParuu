@@ -109,7 +109,7 @@ export default function StartPrompt({
         ref={startRef}
         type="button"
         onClick={handleStart}
-        className="start-button start-button--word tap-target w-full"
+        className="start-button start-button--word tap-target"
       >
         {label}
       </button>

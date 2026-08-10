@@ -529,7 +529,7 @@ export default function GymLeaderClient({
               <li key={item.label}>
                 <Link
                   href={item.href}
-                  className="pixel-panel block p-3 text-body hover:-translate-y-0.5 transition-transform"
+                  className="pixel-panel pixel-panel--stamped block p-3 text-body"
                 >
                   {item.label} →
                 </Link>

@@ -140,7 +140,7 @@ function VocabFlashcards({ cards }: { cards: Flashcard[] }) {
               playSfx("cursor");
               setRevealed((r) => ({ ...r, [card.id]: !r[card.id] }));
             }}
-            className="pixel-panel tap-target p-4 text-left"
+            className="pixel-panel pixel-panel--stamped tap-target p-4 text-left"
           >
             <p className="text-body font-medium">{card.front}</p>
             {open ? (

@@ -202,7 +202,7 @@ export default function FlashcardsClient({ examCode }: { examCode: string }) {
 
           <button
             onClick={() => setFlipped((f) => !f)}
-            className="pixel-panel flex min-h-56 w-full max-w-xl items-center justify-center p-8 text-center text-body-lg hover:-translate-y-0.5 transition-transform"
+            className="pixel-panel pixel-panel--stamped flex min-h-56 w-full max-w-xl items-center justify-center p-8 text-center text-body-lg"
           >
             {flipped ? card.back : card.front}
           </button>

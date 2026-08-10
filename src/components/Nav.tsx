@@ -235,7 +235,7 @@ export default function Nav() {
             <div
               ref={menuRef}
               id={menuId}
-              className="pixel-panel absolute right-0 top-[calc(100%+0.75rem)] z-50 grid min-w-[15rem] gap-0.5 p-2"
+              className="pixel-panel pixel-panel--raised absolute right-0 top-[calc(100%+0.75rem)] z-50 grid min-w-[15rem] gap-0.5 p-2"
             >
               {/* The one action again, for phones where it is hidden above. */}
               {action && (

@@ -591,7 +591,7 @@ function SwipeChallenge({
               <div
                 key={leaving.key}
                 aria-hidden="true"
-                className={`swipe-card pixel-panel swipe-card--leaving ${
+                className={`swipe-card pixel-panel pixel-panel--stamped swipe-card--leaving ${
                   leaving.dir === "right"
                     ? "swipe-card--exit-right"
                     : "swipe-card--exit-left"
@@ -607,7 +607,7 @@ function SwipeChallenge({
               </div>
             )}
             <div
-              className="swipe-card pixel-panel"
+              className="swipe-card pixel-panel pixel-panel--stamped"
               style={
                 dragging
                   ? {
