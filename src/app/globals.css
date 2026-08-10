@@ -1652,9 +1652,14 @@ button.gym-marker-hit:hover {
      from localStorage cannot match that; it would render the wrong asset on
      the server pass and swap after hydration, which for full-bleed scenery is
      a visible flash of the whole background. */
-  --scn-cloud-a: url("/scenery/v1/96/cloud-1.png");
-  --scn-cloud-b: url("/scenery/v1/96/cloud-2.png");
-  --scn-cloud-far: url("/scenery/v1/48/cloud-2.png");
+  /* One cloud per weather, drawn at two tiers.
+     There used to be two shapes drifting at once, which at five clouds on one
+     sky meant the same pair repeating in an obvious alternation — two shapes
+     read as a repeat in a way one shape does not, because the eye starts
+     matching them. Depth comes from size, speed and opacity instead, which is
+     the same argument the treeline made before it was removed. */
+  --scn-cloud: url("/scenery/v1/96/cloud-1.png");
+  --scn-cloud-far: url("/scenery/v1/48/cloud-1.png");
   --scn-celestial: url("/scenery/v1/96/sun.png");
 
   /* The day art is near-white on a pale sky — measured at 1.03:1 for the sun
@@ -1679,9 +1684,8 @@ button.gym-marker-hit:hover {
      rather than the same clouds after dark. The celestial body does swap to
      the moon. Measured 2.26–2.95:1 against the storm sky, so these need far
      less help than the day set. */
-  --scn-cloud-a: url("/scenery/v1/96/cloud-1.dark.png");
-  --scn-cloud-b: url("/scenery/v1/96/cloud-2.dark.png");
-  --scn-cloud-far: url("/scenery/v1/48/cloud-2.dark.png");
+  --scn-cloud: url("/scenery/v1/96/cloud-1.dark.png");
+  --scn-cloud-far: url("/scenery/v1/48/cloud-1.dark.png");
   --scn-celestial: url("/scenery/v1/96/moon.png");
 
   --scn-rim: rgba(6, 14, 20, 0.6);
@@ -1749,8 +1753,9 @@ button.gym-marker-hit:hover {
   background-image: var(--scn-celestial);
 }
 
-.sky-cloud { background-image: var(--scn-cloud-a); }
-.sky-cloud--b { background-image: var(--scn-cloud-b); }
+.sky-cloud { background-image: var(--scn-cloud); }
+/* The same cloud at the 48 tier, held back. Not a second shape — distance,
+   drawn as size and light rather than as different art. */
 .sky-cloud--far {
   background-image: var(--scn-cloud-far);
   opacity: 0.7;

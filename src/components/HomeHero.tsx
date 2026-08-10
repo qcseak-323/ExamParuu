@@ -73,12 +73,16 @@ export default function HomeHero() {
     <section className="hero-canvas title-screen full-bleed">
       {!still && (
         <div className="sky-layer" aria-hidden="true">
+          {/* One cloud shape, five instances. They differ by size, height,
+              speed and — for the far one — opacity, never by art. Two shapes
+              alternating across five clouds read as a repeating pair; one
+              shape at five sizes reads as sky. */}
           <span className="sky-prop sky-celestial" />
           <span className="sky-prop sky-cloud sky-cloud-1" />
-          <span className="sky-prop sky-cloud--b sky-cloud-2" />
+          <span className="sky-prop sky-cloud sky-cloud-2" />
           <span className="sky-prop sky-cloud--far sky-cloud-3" />
           <span className="sky-prop sky-cloud sky-cloud-4" />
-          <span className="sky-prop sky-cloud--b sky-cloud-5" />
+          <span className="sky-prop sky-cloud sky-cloud-5" />
         </div>
       )}
 
