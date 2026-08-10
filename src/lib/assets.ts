@@ -56,7 +56,17 @@ export type SheetId =
   | "guardian-dp-600"
   | "guardian-sc-900"
   | "guardian-ab-900"
-  | "guardian-pl-900";
+  | "guardian-pl-900"
+  // the wild Paruu — one species per route, named for what they are rather
+  // than for the route, because the art is of an animal and the route
+  // assignment lives in code where it can change without renaming a file
+  | "wild-seal"
+  | "wild-pufferfish"
+  | "wild-otter"
+  | "wild-bee"
+  | "wild-armadillo"
+  | "wild-snail"
+  | "wild-hedgehog";
 
 /** Referenced by ProfessorPortrait, which is the only site that names him. */
 export const PROFESSOR_SHEET: SheetId = "professor";
@@ -135,6 +145,13 @@ export const SHEETS: Record<SheetId, SheetMeta> = {
   "guardian-sc-900": EVERY_TIER,
   "guardian-ab-900": EVERY_TIER,
   "guardian-pl-900": EVERY_TIER,
+  "wild-seal": EVERY_TIER,
+  "wild-pufferfish": EVERY_TIER,
+  "wild-otter": EVERY_TIER,
+  "wild-bee": EVERY_TIER,
+  "wild-armadillo": EVERY_TIER,
+  "wild-snail": EVERY_TIER,
+  "wild-hedgehog": EVERY_TIER,
 };
 
 /* ------------------------------------------------------------------ *

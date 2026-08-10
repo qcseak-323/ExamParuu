@@ -22,6 +22,8 @@ import { computeXp, computeLevel } from "@/lib/gamification";
 import { fighterRoster } from "@/lib/guardians";
 import { usePreferences } from "@/lib/preferences";
 import PixelSprite from "@/components/PixelSprite";
+import PalSprite from "@/components/PalSprite";
+import { wildParuuFor } from "@/lib/wildParuu";
 import FighterSprite from "@/components/battle/FighterSprite";
 import BattleEntrance from "@/components/battle/BattleEntrance";
 import { useBattleTransition } from "@/components/battle/BattleTransition";
@@ -607,6 +609,7 @@ export default function QuizClient({
           trainerAvatar={trainerAvatar}
           trainerName={trainerName}
           foeName={foeSubject}
+          foeParuu={wildParuuFor(examCode)}
           onDone={() => startBattle(pending.only, pending.count)}
         />
         {transitionOverlay}
@@ -757,12 +760,24 @@ export default function QuizClient({
                 outcome === "victory" && turn === "resolved" ? "foe-faint" : ""
               }`}
             >
-              <PixelSprite
-                sprite={GLITCHLING}
-                palette={GLITCHLING_PALETTE}
-                size={96}
-                title={`${foeName}, the wild opponent`}
-              />
+              {/* The route's own Paruu where one has been drawn; the
+                  Glitchling everywhere else, so an exam with no art yet stays
+                  playable rather than rendering a missing sheet. */}
+              {wildParuuFor(examCode) ? (
+                <PalSprite
+                  sheet={wildParuuFor(examCode)!.sheet}
+                  flip={wildParuuFor(examCode)!.flip}
+                  size={96}
+                  title={`${foeName}, the wild opponent`}
+                />
+              ) : (
+                <PixelSprite
+                  sprite={GLITCHLING}
+                  palette={GLITCHLING_PALETTE}
+                  size={96}
+                  title={`${foeName}, the wild opponent`}
+                />
+              )}
             </div>
           </div>
 

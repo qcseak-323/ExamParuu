@@ -8,6 +8,7 @@ import PalSprite from "@/components/PalSprite";
 import PixelSprite from "@/components/PixelSprite";
 import FighterSprite from "@/components/battle/FighterSprite";
 import type { Fighter } from "@/lib/guardians";
+import type { WildParuu } from "@/lib/wildParuu";
 
 /**
  * What the blackout lifts on.
@@ -45,12 +46,19 @@ export default function BattleEntrance({
   trainerAvatar,
   trainerName,
   foeName,
+  foeParuu,
   onDone,
 }: {
   /** Fallback for the left side on profiles predating the avatar step. */
   fighter: Fighter;
   trainerAvatar: string | null;
   trainerName: string | null;
+  /**
+   * The route's wild Paruu, already resolved. Passed rather than looked up
+   * here so this component never has to know what an exam code is — null
+   * means "no art for this route yet" and falls back to the Glitchling.
+   */
+  foeParuu: WildParuu | null;
   /**
    * The opponent as a sentence fragment — this goes after "A wild", so pass
    * "DP-600", never the HP bar's "WILD DP-600" nameplate.
@@ -105,11 +113,15 @@ export default function BattleEntrance({
 
         <span className="entrance-side entrance-side--right">
           <span className="entrance-idle">
-            <PixelSprite
-              sprite={GLITCHLING}
-              palette={GLITCHLING_PALETTE}
-              size={96}
-            />
+            {foeParuu ? (
+              <PalSprite sheet={foeParuu.sheet} flip={foeParuu.flip} size={96} />
+            ) : (
+              <PixelSprite
+                sprite={GLITCHLING}
+                palette={GLITCHLING_PALETTE}
+                size={96}
+              />
+            )}
           </span>
         </span>
       </div>
