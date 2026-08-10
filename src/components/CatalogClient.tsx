@@ -27,6 +27,7 @@ import ProfessorPortrait from "@/components/ProfessorPortrait";
 import PixelSprite from "@/components/PixelSprite";
 import FighterSprite from "@/components/battle/FighterSprite";
 import { useSfx } from "@/components/AudioProvider";
+import { SealGlyph } from "@/components/Glyph";
 
 /**
  * Exam selection in two steps: pick a regional gym (one per 2026 Microsoft
@@ -109,7 +110,12 @@ export default function CatalogClient({
           >
             {stop.worldName}
             {stop.badgeEarned ? " ✓" : ""}
-            {stop.prioritised ? " ★" : ""}
+            {stop.prioritised && (
+              <>
+                {" "}
+                <SealGlyph />
+              </>
+            )}
           </button>
         ))}
       </div>
@@ -183,7 +189,7 @@ export default function CatalogClient({
                       )}
                       {exam.code === priorityExam && (
                         <span className="rounded-full bg-[var(--accent-hi)] px-2 py-0.5 text-caption font-medium text-[var(--outline)]">
-                          ★ Your route
+                          <SealGlyph /> Your route
                         </span>
                       )}
                     </div>

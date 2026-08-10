@@ -3,6 +3,7 @@
 import { useSfx } from "@/components/AudioProvider";
 import PalSprite from "@/components/PalSprite";
 import { trainerMapSheet } from "@/lib/profile";
+import { SealGlyph } from "@/components/Glyph";
 
 /**
  * Which guardian's dungeon stands on each region marker.
@@ -273,7 +274,7 @@ export default function GymMap({
                   </span>
                 ) : (
                   <span className="gym-flag" title="Your pinned route is here">
-                    ★
+                    <SealGlyph />
                   </span>
                 ))}
               {stop.badgeEarned && (

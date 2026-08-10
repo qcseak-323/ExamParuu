@@ -236,19 +236,27 @@ export const SHARD_SPRITE: SpriteMatrix = sprite("shard", [
   "     KK     ",
 ]);
 
-/** Was ★ — a sealed learning path, and the pinned-route marker on the map. */
+/**
+ * Was ★ — a sealed learning path, and the pinned-route marker on the map.
+ *
+ * Drawn entirely in `C`, which `PixelSprite` resolves to `currentColor`, so it
+ * takes the colour of the text it sits in. It was first drawn in brass, and
+ * every place it appears turned out to be a brass chip or a brass label —
+ * brass on brass, and the star all but disappeared. There is no outline
+ * either: a solid mark reads at 12px where a ringed one becomes a smudge.
+ */
 export const SEAL_SPRITE: SpriteMatrix = sprite("seal", [
-  "     KK     ",
-  "    KeeK    ",
-  "    KeeK    ",
-  "KKKKeeeeKKKK",
-  "KeeeeeeeeeeK",
-  " KeeeeeeeeK ",
-  "  KeeeeeeK  ",
-  "  KeeeeeeK  ",
-  " Keee  eeeK ",
-  " KeK    KeK ",
-  "  K      K  ",
+  "     CC     ",
+  "    CCCC    ",
+  "    CCCC    ",
+  "CCCCCCCCCCCC",
+  "CCCCCCCCCCCC",
+  " CCCCCCCCCC ",
+  "  CCCCCCCC  ",
+  "  CCCCCCCC  ",
+  " CCCC  CCCC ",
+  " CC      CC ",
+  "            ",
   "            ",
 ]);
 

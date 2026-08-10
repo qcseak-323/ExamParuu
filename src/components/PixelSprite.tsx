@@ -29,6 +29,13 @@ function colorFor(char: string, palette: SpritePalette): string | null {
     // near-black outline disappears against the dark theme's background.
     case "K":
       return "var(--sprite-outline)";
+    // Inherit the surrounding text colour. For a sprite standing in for a text
+    // character this is the only correct answer: the seal replaced ★ and every
+    // place it appears is a brass chip or a brass label, so a fixed brass fill
+    // put brass on brass and the mark all but vanished. `currentColor` makes it
+    // behave the way the glyph it replaced did.
+    case "C":
+      return "currentColor";
     case "W":
       return "#ffffff";
     case "B":

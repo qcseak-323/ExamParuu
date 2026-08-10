@@ -18,6 +18,7 @@ import ChallengeCard from "@/components/path/ChallengeCard";
 import { DialogueFrame } from "@/components/DialogueBox";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
 import { useBattleTransition } from "@/components/battle/BattleTransition";
+import { ShardGlyph, SealGlyph } from "@/components/Glyph";
 import type { Challenge, LearningModule, LearningPath } from "@/lib/types";
 
 /**
@@ -106,7 +107,7 @@ export default function LearningPathClient({
                   {sealed && (
                     <span className="font-semibold text-[var(--accent-ink)]">
                       {" "}
-                      · ★ path sealed
+                      · <SealGlyph /> path sealed
                     </span>
                   )}
                 </span>
@@ -379,10 +380,11 @@ function ModuleRunner({
                 aria-hidden="true"
                 className="xp-pop absolute -top-4 right-0 text-caption font-bold text-[var(--success)]"
               >
-                +{lastGain.amount} ◆
+                +{lastGain.amount} <ShardGlyph />
               </span>
             )}
-            ◆ {shards} shards{streak > 1 ? ` · ${streak}× streak` : ""}
+            <ShardGlyph /> {shards} shards
+            {streak > 1 ? ` · ${streak}× streak` : ""}
           </span>
           {/* 15 = shardsFor's ceiling per checkpoint: 10 base + 5 perfect. */}
           <div className="hp-track w-20 shrink-0" aria-hidden="true">
@@ -464,7 +466,10 @@ function ModuleRunner({
         <div className="flex flex-col gap-4">
           <DialogueFrame>
             <p className="prose-measure text-body-lg">
-              Module cleared — <strong>◆ {shards} shards</strong>
+              Module cleared —{" "}
+              <strong>
+                <ShardGlyph /> {shards} shards
+              </strong>
               {best > 1 ? `, best streak ${best}×` : ""}. That one is logged
               against your route.
             </p>
