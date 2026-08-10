@@ -149,26 +149,46 @@ U.w = U.x1 - U.x0 + 1; U.h = U.y1 - U.y0 + 1;
  * "improved" sprite was softer than the export it came from.
  *
  * Doubling instead is lossless in the only sense that matters for pixel art:
- * every source pixel becomes an exact 2x2 block, nothing is interpolated, and
- * the canvas stays 96 so the 96/48/32 tiers remain clean divisors. The figure
- * still gets bigger — which was the actual goal — it just gets bigger by a
- * whole number.
+ * every source pixel becomes an exact 2x2 block and nothing is interpolated.
+ * The figure still gets bigger — which was the actual goal — it just gets
+ * bigger by a whole number.
  *
- * PAD is a preference, not a constraint, and the difference is load-bearing.
- * Importing the trainer with a run clip made the union box ONE pixel taller
- * than importing it without — 92 to 93 — because a running limb reaches
- * further than a standing one. Against a 188 canvas that is the difference
- * between (188-4)/92 = 2.0 and (188-4)/93 = 1.98, so flooring dropped the
- * whole doubling and the sprite went from 18% of its frame to 4%. Two pixels
- * of margin are not worth half the character, so the fit is measured against
- * the full canvas and the padding is applied only where it still fits.
+ * The export's own canvas turned out to be the wrong thing to measure against,
+ * and it took two failures to see it. See the note on `scale` and `side`
+ * below.
  */
-const side = images[0].img.width;
+const source = images[0].img.width;
 const fit = (avail) => Math.max(1, Math.min(
   Math.floor(avail / U.w),
   Math.floor(avail / U.h),
 ));
-const scale = Math.max(fit(side - PAD * 2), fit(side));
+
+/**
+ * Grow the canvas rather than accept a 1x figure.
+ *
+ * PAD was made a preference here once already, because one pixel of union-box
+ * height flipped the trainer boy from 2x to 1x. That fix was not enough. The
+ * girl's run clip put her union box at 58x93 inside a **184** canvas, and 93x2
+ * is 186 — two pixels too tall however the padding is counted. She imported at
+ * 1x and 5% fill, which is the exact "speck surrounded by nothing" this script
+ * exists to prevent. The boy escaped only because his export happened to come
+ * back at 188.
+ *
+ * The canvas was never the constraint it was being treated as. It is not a
+ * render target: it is downsampled straight to 96/48/32 below, so its only
+ * real job is to hold the figure. Inheriting it from the export meant a
+ * generation's arbitrary padding decided how big the character came out.
+ *
+ * So: pick the scale first, then size the canvas to it. Doubling is the floor
+ * — the exports arrive at 4-8% fill and 1x would ship that — and a source
+ * roomy enough for 3x still gets 3x.
+ */
+const scale = Math.max(2, fit(source));
+const side = Math.max(
+  source,
+  U.w * scale + PAD * 2,
+  U.h * scale + PAD * 2,
+);
 // Where the enlarged figure lands: centred horizontally, sitting on the floor
 // of the frame so a walking sprite does not appear to hover. `oy` cannot go
 // negative — when the figure fills the canvas exactly, it sits flush.
@@ -220,7 +240,7 @@ sat /= n; lum /= n;
 
 console.log(`\n${sheet}  <-  ${state.character?.name ?? "?"}  (${state.character?.view ?? "?"} view, ${srcSize}px, ${state.character?.directions ?? "?"} directions)`);
 console.log(`  profile "${PROFILE}", ${images.filter((i) => i.kind === "clip").length} animation frames across ${Object.keys(anims).length} clip(s)`);
-console.log(`  union bbox ${U.w}x${U.h} -> scaled ${scale}x inside a ${side}px canvas, fill ${(coverage(first.px) * 100).toFixed(0)}% (was ${(coverage(images[0].img.pixels) * 100).toFixed(0)}%)`);
+console.log(`  union bbox ${U.w}x${U.h} -> scaled ${scale}x on a ${side}px canvas (export was ${source}), fill ${(coverage(first.px) * 100).toFixed(0)}% (was ${(coverage(images[0].img.pixels) * 100).toFixed(0)}%)`);
 
 // Only a mismatch worth flagging. A `--profile south` import is a map avatar,
 // which is *meant* to be top-down — warning there would train the reader to

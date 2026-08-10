@@ -134,7 +134,7 @@ export const SHEETS: Record<SheetId, SheetMeta> = {
   "trainer-boy": { tiers: [96, 48, 32], clips: { run: 8 } },
   // Regenerated in the web app alongside the boy, so she has his tier shape
   // rather than the API cast's. Her old 128 master is retired next to his.
-  "trainer-girl": { tiers: [96, 48, 32] },
+  "trainer-girl": { tiers: [96, 48, 32], clips: { run: 8 } },
   professor: EVERY_TIER,
   "fire-1": EVERY_TIER,
   "fire-2": EVERY_TIER,
