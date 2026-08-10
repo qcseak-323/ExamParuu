@@ -15,6 +15,7 @@ import { recordLearningEvent, useLearningEvents } from "@/lib/storage";
 import { saveLearningEventToDb } from "@/lib/actions";
 import MenuList from "@/components/MenuList";
 import ChallengeCard from "@/components/path/ChallengeCard";
+import LessonCard from "@/components/path/LessonCard";
 import { DialogueFrame } from "@/components/DialogueBox";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
 import { useBattleTransition } from "@/components/battle/BattleTransition";
@@ -424,9 +425,12 @@ function ModuleRunner({
           <p className="text-caption text-[var(--foreground-muted)]">
             Card {step.index + 1} of {cards.length}
           </p>
-          <button
-            type="button"
-            onClick={() => {
+          <LessonCard
+            front={cards[step.index].front}
+            back={cards[step.index].back}
+            domain={cards[step.index].domain}
+            revealed={revealed}
+            onActivate={() => {
               if (!revealed) {
                 playSfx("cursor");
                 setRevealed(true);
@@ -434,21 +438,7 @@ function ModuleRunner({
                 advanceFromCard(step.index);
               }
             }}
-            className="pixel-panel pixel-panel--stamped flex min-h-[9rem] flex-col justify-center gap-3 p-6 text-left"
-          >
-            <span className="text-body-lg font-semibold">
-              {cards[step.index].front}
-            </span>
-            {revealed ? (
-              <span className="prose-measure text-body text-[var(--foreground-muted)]">
-                {cards[step.index].back}
-              </span>
-            ) : (
-              <span className="text-caption text-[var(--foreground-muted)]">
-                Tap to reveal ▸
-              </span>
-            )}
-          </button>
+          />
           {revealed && (
             <button
               type="button"

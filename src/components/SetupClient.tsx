@@ -7,12 +7,14 @@ import { PAL_SPECIES, PAL_TYPES, formLabel, type PalType } from "@/lib/pals";
 import {
   FAMILIARITY_OPTIONS,
   TRAINER_AVATARS,
+  trainerMapSheet,
   type Familiarity,
   type TrainerAvatar,
 } from "@/lib/profile";
 import { completeProfileSetup } from "@/lib/actions";
 import { catalog } from "@/lib/content";
-import { REGIONS } from "@/lib/regions";
+import { REGIONS, getExamsBySeries } from "@/lib/regions";
+import type { CatalogEntry } from "@/lib/types";
 import { getGuardian } from "@/lib/guardians";
 import PalSprite from "@/components/PalSprite";
 import ProfessorPortrait from "@/components/ProfessorPortrait";
@@ -80,6 +82,37 @@ function routeTitleFor(series: string): string {
   return region ? `${upper} · ${region.productName}` : upper;
 }
 
+/**
+ * One row per series, not per exam.
+ *
+ * This step titles a row by its series, so two playable exams in the same
+ * series render two rows reading "DP · Azure Data & Fabric" — which is what
+ * DP-900 and DP-600 did. They are different exams, but the trainer here is
+ * choosing a technology to start with, and "start with DP twice" is not a
+ * choice. So the series is the unit of selection and each one appears once.
+ *
+ * The exam actually stored is the series' entry point: `getExamsBySeries`
+ * sorts by Microsoft's own tier order, so filtering that to what has content
+ * and taking the first gives Fundamentals wherever one exists. That keeps
+ * `priorityExam` an exam code — nothing downstream had to change — and means
+ * picking DP starts you on DP-900 rather than on the Associate-level Fabric
+ * exam, which is the right door for a first route.
+ *
+ * Consequence worth knowing: DP-600 is no longer reachable from setup. It is
+ * still in the catalogue and still playable from there.
+ */
+function entryExamsBySeries(playable: CatalogEntry[]): CatalogEntry[] {
+  const seen = new Set<string>();
+  const rows: CatalogEntry[] = [];
+  for (const exam of playable) {
+    if (seen.has(exam.series)) continue;
+    seen.add(exam.series);
+    const entry = getExamsBySeries(exam.series).find((e) => e.hasContent);
+    if (entry) rows.push(entry);
+  }
+  return rows;
+}
+
 export default function SetupClient({ email }: { email: string | null }) {
   const router = useRouter();
   const { update } = useSession();
@@ -102,6 +135,7 @@ export default function SetupClient({ email }: { email: string | null }) {
   const [error, setError] = useState<string | null>(null);
 
   const playableExams = catalog.filter((exam) => exam.hasContent);
+  const routeRows = entryExamsBySeries(playableExams);
   const avatarOption = TRAINER_AVATARS.find((a) => a.id === trainerAvatar);
   const chosenExam = playableExams.find((exam) => exam.code === priorityExam);
   const familiarityOption = FAMILIARITY_OPTIONS.find(
@@ -241,7 +275,18 @@ export default function SetupClient({ email }: { email: string | null }) {
                     picked ? "select-card--picked" : ""
                   }`}
                 >
-                  <PalSprite sheet={avatar.sheet} size={96} />
+                  {/* The map sheet, not the avatar sheet. `avatar.sheet` draws
+                      the cast in profile — right for the battle arena, where
+                      two fighters face each other, and wrong on a card that
+                      says "this is how you'll appear": a figure in profile is
+                      looking past the reader at nothing. The map sheets are
+                      the same two trainers imported from the south rotation,
+                      the only front-facing pose in the cast. HomeHero made the
+                      same swap for the same reason. */}
+                  <PalSprite
+                    sheet={trainerMapSheet(avatar.id) ?? avatar.sheet}
+                    size={96}
+                  />
                   <span className="font-pixel text-title">{avatar.label}</span>
                   <span className="text-caption text-[var(--foreground-muted)]">
                     {avatar.hint}
@@ -472,7 +517,7 @@ export default function SetupClient({ email }: { email: string | null }) {
           </DialogueFrame>
 
           <div className="grid gap-2" role="group" aria-label="Choose a route">
-            {playableExams.map((exam) => {
+            {routeRows.map((exam) => {
               const picked = priorityExam === exam.code;
               const guardian = getGuardian(exam.code);
 
