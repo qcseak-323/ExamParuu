@@ -54,3 +54,9 @@ next-env.d.ts
 # candidates are the artefact worth keeping; these are a view of them.
 art/gen/out/**/sheet.html
 art/gen/out/**/review.html
+
+# Screenshot output from scripts/shots.mjs — look at them, do not commit them.
+shots/
+
+*storybook.log
+storybook-static
