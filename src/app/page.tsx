@@ -1,6 +1,11 @@
 import Link from "next/link";
 import { catalog } from "@/lib/content";
-import { allGuardians } from "@/lib/guardians";
+import { getGuardian } from "@/lib/guardians";
+import {
+  getRegion,
+  playableSeriesEntries,
+  seriesTitle,
+} from "@/lib/regions";
 import HomeHero from "@/components/HomeHero";
 import BattleDemo from "@/components/BattleDemo";
 import PalSprite from "@/components/PalSprite";
@@ -14,7 +19,7 @@ import PalSprite from "@/components/PalSprite";
  *
  *   1. the title screen        one screenful of world, one thing to press
  *   2. a wild question         the demo, given the room it always deserved
- *   3. the Monsoon Belt        six regions, seven guardians, the real scope
+ *   3. the Monsoon Belt        six regions, one guardian each, the real scope
  *
  * ── What v3 was and why it went ──
  *
@@ -42,15 +47,31 @@ import PalSprite from "@/components/PalSprite";
  * say it with the art instead of about it.
  */
 
-/** Six regions, seven guardians: the Delta holds two. Counted, never stated. */
+/**
+ * One card per series, not per exam. Counted, never stated.
+ *
+ * Listing playable exams put "The Datastream Delta" on screen twice — DP-900
+ * and DP-600 are different papers but the same region, so the pair read as a
+ * duplicate rather than as depth. A series is the unit a visitor is actually
+ * choosing between, and `playableSeriesEntries` is the same rule the setup
+ * route picker uses, so the two screens cannot drift.
+ */
 function beltScale() {
-  const guardians = allGuardians();
-  const regions = new Set(guardians.map((g) => g.regionName));
-  return { guardians, regionCount: regions.size };
+  const entries = playableSeriesEntries();
+  const rows = entries.map((exam) => ({
+    exam,
+    guardian: getGuardian(exam.code),
+    region: getRegion(exam.series),
+  }));
+  return {
+    rows,
+    regionCount: rows.length,
+    playableCount: catalog.filter((e) => e.hasContent).length,
+  };
 }
 
 export default function Home() {
-  const { guardians, regionCount } = beltScale();
+  const { rows, regionCount, playableCount } = beltScale();
   const totalExams = catalog.length;
 
   return (
@@ -89,30 +110,35 @@ export default function Home() {
             The Monsoon Belt
           </h2>
           <p className="prose-measure mx-auto mt-3 text-body-lg text-[var(--foreground-muted)]">
-            {regionCount} regions, {guardians.length} guardians. Each one holds
-            a dungeon, and clearing it means you are ready for that paper.
+            {regionCount} regions, {playableCount} playable exams. Each region
+            has a guardian holding a dungeon, and clearing it means you are
+            ready for that paper.
           </p>
         </div>
 
-        {/* Four across, not three. Seven cards in a 3-wide grid leaves the
-            seventh alone on its own row, which reads as a mistake rather than
-            a set; 4 + 3 reads as deliberate. */}
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {guardians.map((guardian) => (
+        {/* Three across. Six cards divide evenly into 3 + 3, where the old
+            seven needed 4 + 3 to avoid stranding one on its own row. */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {rows.map(({ exam, guardian, region }) => (
             <article
-              key={guardian.examCode}
+              key={exam.series}
               className="pixel-panel flex items-start gap-4 p-5"
             >
-              {guardian.image && (
+              {guardian?.image && (
                 <PalSprite sheet={guardian.image} size={64} />
               )}
               <div className="min-w-0">
-                <h3 className="font-pixel text-title">{guardian.name}</h3>
-                <p className="text-caption font-semibold uppercase tracking-[0.1em] text-[var(--accent-ink)]">
-                  {guardian.examCode.toUpperCase()}
+                <h3 className="font-pixel text-title">{guardian?.name}</h3>
+                {/* Not uppercase with wide tracking any more. That was right
+                    for "AZ-900" — a code, four characters, shouted like a
+                    label. "AB · Microsoft 365 Copilot" is a product name, and
+                    in caps it both shouts and wraps to two lines, which left
+                    the cards in a row visibly uneven. */}
+                <p className="text-caption font-semibold text-[var(--accent-ink)]">
+                  {seriesTitle(exam.series)}
                 </p>
                 <p className="mt-2 text-caption text-[var(--foreground-muted)]">
-                  {guardian.regionName}
+                  {region?.worldName}
                 </p>
               </div>
             </article>

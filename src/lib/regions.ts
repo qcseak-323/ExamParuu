@@ -124,6 +124,53 @@ export function getExamsBySeries(series: ExamSeries): CatalogEntry[] {
     .sort((a, b) => tierOrder[a.msLevel] - tierOrder[b.msLevel]);
 }
 
+/**
+ * How a series is titled wherever one is offered as a choice — "DP · Azure
+ * Data & Fabric".
+ *
+ * Someone picking where to start is picking a technology, not memorising an
+ * exam number, and the number is on the route page.
+ */
+export function seriesTitle(series: string): string {
+  const region = getRegion(series);
+  const upper = series.toUpperCase();
+  return region ? `${upper} · ${region.productName}` : upper;
+}
+
+/**
+ * The exam a series starts you on: its lowest published tier that has content.
+ *
+ * `getExamsBySeries` already sorts by Microsoft's own tier order, so the first
+ * playable entry is Fundamentals wherever one exists. This is what makes a
+ * series a single choice — DP holds four playable exams and picking "DP" has
+ * to mean one of them, which is DP-900 rather than an Associate-level Fabric
+ * paper.
+ */
+export function entryExamForSeries(
+  series: ExamSeries,
+): CatalogEntry | undefined {
+  return getExamsBySeries(series).find((e) => e.hasContent);
+}
+
+/**
+ * One entry exam per series that has any content, in catalogue order.
+ *
+ * The unit of selection anywhere a trainer chooses a starting point. Listing
+ * playable *exams* instead put "DP · Azure Data & Fabric" on screen twice —
+ * two different papers reading as a duplicate.
+ */
+export function playableSeriesEntries(): CatalogEntry[] {
+  const seen = new Set<string>();
+  const rows: CatalogEntry[] = [];
+  for (const exam of catalog) {
+    if (!exam.hasContent || seen.has(exam.series)) continue;
+    seen.add(exam.series);
+    const entry = entryExamForSeries(exam.series);
+    if (entry) rows.push(entry);
+  }
+  return rows;
+}
+
 export type RegionBadge = {
   region: Region;
   /** Exams in this region that have practice content today. */

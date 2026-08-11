@@ -13,8 +13,7 @@ import {
 } from "@/lib/profile";
 import { completeProfileSetup } from "@/lib/actions";
 import { catalog } from "@/lib/content";
-import { REGIONS, getExamsBySeries } from "@/lib/regions";
-import type { CatalogEntry } from "@/lib/types";
+import { playableSeriesEntries, seriesTitle } from "@/lib/regions";
 import { getGuardian } from "@/lib/guardians";
 import PalSprite from "@/components/PalSprite";
 import ProfessorPortrait from "@/components/ProfessorPortrait";
@@ -71,48 +70,6 @@ const INTRO_LINES = [
 const MAX_NAME_LENGTH = 14;
 const MAX_NICKNAME_LENGTH = 14;
 
-/**
- * How a route is titled: the exam series and the product it certifies —
- * "AZ · Azure". Someone choosing where to start is picking a technology,
- * not memorising an exam number, and the number is on the route page.
- */
-function routeTitleFor(series: string): string {
-  const region = REGIONS.find((r) => r.id === series);
-  const upper = series.toUpperCase();
-  return region ? `${upper} · ${region.productName}` : upper;
-}
-
-/**
- * One row per series, not per exam.
- *
- * This step titles a row by its series, so two playable exams in the same
- * series render two rows reading "DP · Azure Data & Fabric" — which is what
- * DP-900 and DP-600 did. They are different exams, but the trainer here is
- * choosing a technology to start with, and "start with DP twice" is not a
- * choice. So the series is the unit of selection and each one appears once.
- *
- * The exam actually stored is the series' entry point: `getExamsBySeries`
- * sorts by Microsoft's own tier order, so filtering that to what has content
- * and taking the first gives Fundamentals wherever one exists. That keeps
- * `priorityExam` an exam code — nothing downstream had to change — and means
- * picking DP starts you on DP-900 rather than on the Associate-level Fabric
- * exam, which is the right door for a first route.
- *
- * Consequence worth knowing: DP-600 is no longer reachable from setup. It is
- * still in the catalogue and still playable from there.
- */
-function entryExamsBySeries(playable: CatalogEntry[]): CatalogEntry[] {
-  const seen = new Set<string>();
-  const rows: CatalogEntry[] = [];
-  for (const exam of playable) {
-    if (seen.has(exam.series)) continue;
-    seen.add(exam.series);
-    const entry = getExamsBySeries(exam.series).find((e) => e.hasContent);
-    if (entry) rows.push(entry);
-  }
-  return rows;
-}
-
 export default function SetupClient({ email }: { email: string | null }) {
   const router = useRouter();
   const { update } = useSession();
@@ -135,7 +92,8 @@ export default function SetupClient({ email }: { email: string | null }) {
   const [error, setError] = useState<string | null>(null);
 
   const playableExams = catalog.filter((exam) => exam.hasContent);
-  const routeRows = entryExamsBySeries(playableExams);
+  // One row per series — the same rule the landing page uses.
+  const routeRows = playableSeriesEntries();
   const avatarOption = TRAINER_AVATARS.find((a) => a.id === trainerAvatar);
   const chosenExam = playableExams.find((exam) => exam.code === priorityExam);
   const familiarityOption = FAMILIARITY_OPTIONS.find(
@@ -540,7 +498,7 @@ export default function SetupClient({ email }: { email: string | null }) {
                   )}
                   <span className="min-w-0 flex-1">
                     <span className="block text-body font-medium">
-                      {routeTitleFor(exam.series)}
+                      {seriesTitle(exam.series)}
                     </span>
                     <span className="block text-caption text-[var(--foreground-muted)]">
                       {exam.summary}
@@ -577,7 +535,7 @@ export default function SetupClient({ email }: { email: string | null }) {
                     picked one step ago, and asking it in the abstract is how
                     you get an answer about the wrong thing. */}
                 {chosenExam
-                  ? `How well do you know ${routeTitleFor(chosenExam.series)}?`
+                  ? `How well do you know ${seriesTitle(chosenExam.series)}?`
                   : "And how well do you know that series?"}
               </p>
             </div>
