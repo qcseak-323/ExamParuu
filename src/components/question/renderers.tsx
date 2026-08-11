@@ -40,6 +40,62 @@ export type RendererResult = {
 
 export type OnDone = (result: RendererResult) => void;
 
+/**
+ * What every body accepts on top of its own content.
+ *
+ * ── `reveal` ──
+ *
+ * True (the default) is the teaching behaviour: mark the answer right or
+ * wrong, show the score and the explanation, and gate on a Check or Continue
+ * button. False makes the body a **pure input** — it collects an answer,
+ * shows what was picked, and judges nothing. That is not a styling choice: the
+ * Proving's briefing promises "No feedback until the end", so a body that
+ * colours an option green mid-paper breaks the format.
+ *
+ * With `reveal` false the body also renders no buttons of its own, because the
+ * exam owns navigation — its question navigator moves you, not a Continue.
+ *
+ * ── `value` / `onChange` ──
+ *
+ * Supply both to control the body from outside. The exam must, because its
+ * navigator unmounts a question when you jump away and remounts it when you
+ * come back; uncontrolled state would silently discard the answer. Omit both
+ * and the body keeps its own state, which is what the learning path wants.
+ */
+type Controllable<T> = {
+  reveal?: boolean;
+  value?: T;
+  onChange?: (value: T) => void;
+};
+
+/**
+ * Internal state, unless the caller passed an `onChange` to own it.
+ *
+ * `onChange` alone decides, not the presence of a `value`. A caller storing
+ * drafts for sixty questions starts every one of them undefined, and keying
+ * off `value` there would leave the body quietly uncontrolled — writing to
+ * internal state, never calling `onChange`, and losing the answer the moment
+ * the navigator unmounted it. Undefined simply means "not answered yet", so it
+ * reads as `initial`.
+ *
+ * Deliberately not a "controlled or throw" API: a body that keeps its own
+ * state when nobody claims it is what lets one component serve a checkpoint
+ * and an exam without either caller learning the other's rules.
+ */
+function useControllable<T>(
+  value: T | undefined,
+  onChange: ((value: T) => void) | undefined,
+  initial: T,
+): [T, (next: T) => void] {
+  const [internal, setInternal] = useState<T>(initial);
+  const current = onChange ? (value ?? initial) : internal;
+  const set = (next: T) => {
+    if (onChange) onChange(next);
+    else setInternal(next);
+  };
+  return [current, set];
+}
+
 export function ContinueButton({ onClick }: { onClick: () => void }) {
   return (
     <button
@@ -80,6 +136,9 @@ export function SingleChoiceBody({
   options,
   correctIndex,
   explanation,
+  reveal = true,
+  value,
+  onChange,
   onDone,
 }: {
   prompt: string;
@@ -87,15 +146,20 @@ export function SingleChoiceBody({
   correctIndex: number;
   explanation: string;
   onDone: OnDone;
-}) {
+} & Controllable<number | null>) {
   const playSfx = useSfx();
-  const [picked, setPicked] = useState<number | null>(null);
+  const [picked, setPicked] = useControllable(value, onChange, null);
 
+  // Without a verdict every row stays `default`, which is what lets MenuList's
+  // own committed-choice state show through — a filled gold row that persists
+  // after the cursor moves on. Tone rows deliberately suppress it, because a
+  // gold wash over a correct/wrong row would hide the verdict.
   const menu: MenuOption[] = options.map((label, i) => ({
     id: String(i),
     label,
-    tone:
-      picked === null
+    tone: !reveal
+      ? "default"
+      : picked === null
         ? "default"
         : i === correctIndex
           ? "correct"
@@ -111,14 +175,18 @@ export function SingleChoiceBody({
         ariaLabel="Choose your answer"
         columns={2}
         options={menu}
-        disabled={picked !== null}
+        selectedId={!reveal && picked !== null ? String(picked) : undefined}
+        // Locked after answering only when a verdict is on screen. In the exam
+        // an answer stays changeable until the paper ends.
+        disabled={reveal && picked !== null}
         onSelect={(id) => {
           const i = Number(id);
           setPicked(i);
-          playSfx(i === correctIndex ? "correct" : "wrong");
+          if (reveal) playSfx(i === correctIndex ? "correct" : "wrong");
+          else playSfx("cursor");
         }}
       />
-      {picked !== null && (
+      {reveal && picked !== null && (
         <>
           <p className="prose-measure text-body text-[var(--foreground-muted)]">
             {explanation}
@@ -143,15 +211,28 @@ export function SingleChoiceBody({
 export function MultiSelectBody({
   prompt,
   options,
+  reveal = true,
+  value,
+  onChange,
   onDone,
 }: {
   prompt: string;
   options: { id: string; label: string; correct: boolean }[];
   onDone: OnDone;
-}) {
+} & Controllable<string[]>) {
   const playSfx = useSfx();
-  const [chosen, setChosen] = useState<Set<string>>(new Set());
-  const [checked, setChecked] = useState(false);
+  // An array rather than a Set because a controlled value has to survive being
+  // handed out and handed back, and a Set would be mutated in place.
+  const [chosenList, setChosenList] = useControllable<string[]>(
+    value,
+    onChange,
+    [],
+  );
+  const chosen = new Set(chosenList);
+  const [checkedState, setChecked] = useState(false);
+  // With no verdict there is nothing to check, so the body never enters the
+  // checked phase and stays editable for the whole paper.
+  const checked = reveal && checkedState;
 
   const total = options.length;
   // Scored per option, not all-or-nothing: getting three of four right is
@@ -163,7 +244,11 @@ export function MultiSelectBody({
     <div className="flex flex-col gap-3">
       <p className="prose-measure text-body-lg">{prompt}</p>
 
-      <div role="group" aria-label={prompt} className="grid gap-2 sm:grid-cols-2">
+      <div
+        role="group"
+        aria-label={prompt}
+        className="grid gap-2 sm:grid-cols-2"
+      >
         {options.map((option) => {
           const on = chosen.has(option.id);
           const verdict = checked
@@ -181,12 +266,11 @@ export function MultiSelectBody({
               disabled={checked}
               onClick={() => {
                 playSfx("cursor");
-                setChosen((s) => {
-                  const next = new Set(s);
-                  if (next.has(option.id)) next.delete(option.id);
-                  else next.add(option.id);
-                  return next;
-                });
+                setChosenList(
+                  chosen.has(option.id)
+                    ? chosenList.filter((id) => id !== option.id)
+                    : [...chosenList, option.id],
+                );
               }}
               className={`menu-item flex min-h-11 items-center gap-2 px-3 py-2.5 text-left text-body ${
                 on && !checked ? "menu-item--gold" : ""
@@ -215,7 +299,7 @@ export function MultiSelectBody({
         })}
       </div>
 
-      {!checked ? (
+      {!reveal ? null : !checked ? (
         <CheckButton
           // Untouched distractors used to score as correct, so an empty
           // submission paid shards for zero engagement.
@@ -275,6 +359,9 @@ export function PlacementBody({
   emptyLabel,
   scoreWord,
   answerFor,
+  reveal = true,
+  value,
+  onChange,
   onDone,
 }: {
   prompt: string;
@@ -290,40 +377,42 @@ export function PlacementBody({
    */
   answerFor?: (placed: Record<string, string>) => SubmittedAnswer;
   onDone: OnDone;
-}) {
+} & Controllable<Record<string, string>>) {
   const playSfx = useSfx();
   /** itemId -> the slot it currently sits in. */
-  const [placed, setPlaced] = useState<Record<string, string>>({});
-  /** The item currently picked up, by keyboard or tap. */
+  const [placed, setPlaced] = useControllable<Record<string, string>>(
+    value,
+    onChange,
+    {},
+  );
+  /** The item currently picked up, by keyboard or tap. Never controlled — a
+      half-finished drag is interaction state, not an answer. */
   const [held, setHeld] = useState<string | null>(null);
-  const [checked, setChecked] = useState(false);
+  const [checkedState, setChecked] = useState(false);
+  const checked = reveal && checkedState;
 
   const total = items.length;
   const score = items.filter((i) => placed[i.id] === i.answerSlotId).length;
 
   function drop(slotId: string, itemId: string) {
     playSfx("confirm");
-    setPlaced((prev) => {
-      const next = { ...prev };
-      if (capacity === "one") {
-        for (const [i, s] of Object.entries(prev)) {
-          if (s === slotId) delete next[i];
-        }
+    const next = { ...placed };
+    if (capacity === "one") {
+      for (const [i, s] of Object.entries(placed)) {
+        if (s === slotId) delete next[i];
       }
-      next[itemId] = slotId;
-      return next;
-    });
+    }
+    next[itemId] = slotId;
+    setPlaced(next);
     setHeld(null);
   }
 
   /** Tapping a placed item returns it to the bank. */
   function vacate(itemId: string) {
     playSfx("back");
-    setPlaced((prev) => {
-      const next = { ...prev };
-      delete next[itemId];
-      return next;
-    });
+    const next = { ...placed };
+    delete next[itemId];
+    setPlaced(next);
   }
 
   return (
@@ -461,7 +550,7 @@ export function PlacementBody({
         </div>
       )}
 
-      {!checked ? (
+      {!reveal ? null : !checked ? (
         <CheckButton
           disabled={Object.keys(placed).length < total}
           onClick={() => {
@@ -497,6 +586,9 @@ export function VerdictDeckBody({
   prompt,
   cards,
   variant = "definition",
+  reveal = true,
+  value,
+  onChange,
   onDone,
 }: {
   prompt: string;
@@ -510,15 +602,18 @@ export function VerdictDeckBody({
    */
   variant?: "definition" | "statement";
   onDone: OnDone;
-}) {
+} & Controllable<boolean[]>) {
   const isStatement = variant === "statement";
   const affirmLabel = isStatement ? "Yes" : "Match";
   const denyLabel = isStatement ? "No" : "No match";
   const playSfx = useSfx();
   const prefs = usePreferences();
-  const [index, setIndex] = useState(0);
+  // The answers so far ARE the position in the deck, so controlling them is
+  // what makes the exam's navigator able to leave a half-judged series and
+  // come back to it mid-deck.
+  const [given, setGiven] = useControllable<boolean[]>(value, onChange, []);
+  const index = given.length;
   const [correctCount, setCorrectCount] = useState(0);
-  const [given, setGiven] = useState<boolean[]>([]);
   /** Live horizontal drag offset; zero whenever no drag is in flight. */
   const [dx, setDx] = useState(0);
   const [dragging, setDragging] = useState(false);
@@ -542,7 +637,7 @@ export function VerdictDeckBody({
     const correct = saidMatch === card.matches;
     playSfx(correct ? "correct" : "wrong");
     setCorrectCount((c) => (correct ? c + 1 : c));
-    setGiven((g) => [...g, saidMatch]);
+    setGiven([...given, saidMatch]);
     setVerdict({
       correct,
       text: isStatement
@@ -562,7 +657,7 @@ export function VerdictDeckBody({
             : `Not quite — that is not the definition of “${card.term}”.`,
     });
     // The fling is a flourish. Under reduced motion the card simply resolves.
-    if (!prefs.reducedMotion) {
+    if (!prefs.reducedMotion && reveal) {
       setLeaving({
         term: card.term,
         definition: card.definition,
@@ -572,7 +667,6 @@ export function VerdictDeckBody({
     }
     setDragging(false);
     setDx(0);
-    setIndex((i) => i + 1);
   }
 
   return (
@@ -686,7 +780,7 @@ export function VerdictDeckBody({
             </button>
           </div>
         </>
-      ) : (
+      ) : reveal ? (
         <>
           <p className="text-body font-semibold">
             {correctCount}/{cards.length} judged correctly
@@ -701,22 +795,42 @@ export function VerdictDeckBody({
             }
           />
         </>
+      ) : (
+        // Every statement judged, and the paper says nothing about whether they
+        // were right. All that is left is a way back into the deck to change
+        // an answer, which is what the real series allows until you move on.
+        <div className="flex flex-wrap items-center gap-3">
+          <p className="text-body font-semibold">
+            All {cards.length} answered.
+          </p>
+          <button
+            type="button"
+            onClick={() => setGiven([])}
+            className="pixel-button tap-target rounded-md bg-[var(--panel)] px-4 py-2 text-caption font-semibold"
+          >
+            Start again
+          </button>
+        </div>
       )}
 
-      {/* The verdict in words, never only in motion. */}
-      <p
-        role="status"
-        aria-live="polite"
-        className={`min-h-5 text-body font-medium ${
-          verdict
-            ? verdict.correct
-              ? "text-[var(--success)]"
-              : "text-[var(--danger)]"
-            : ""
-        }`}
-      >
-        {verdict ? verdict.text : ""}
-      </p>
+      {/* The verdict in words, never only in motion. Suppressed entirely
+          without `reveal` — on a paper this is exactly the feedback the
+          format forbids. */}
+      {reveal && (
+        <p
+          role="status"
+          aria-live="polite"
+          className={`min-h-5 text-body font-medium ${
+            verdict
+              ? verdict.correct
+                ? "text-[var(--success)]"
+                : "text-[var(--danger)]"
+              : ""
+          }`}
+        >
+          {verdict ? verdict.text : ""}
+        </p>
+      )}
     </div>
   );
 }
@@ -737,6 +851,9 @@ export function DropdownBody({
   prompt,
   segments,
   explanation,
+  reveal = true,
+  value,
+  onChange,
   onDone,
 }: {
   prompt: string;
@@ -746,17 +863,24 @@ export function DropdownBody({
   )[];
   explanation: string;
   onDone: OnDone;
-}) {
+} & Controllable<Record<string, number>>) {
   const playSfx = useSfx();
   const blanks = segments.filter(
     (s): s is { blankId: string; options: string[]; correctIndex: number } =>
       "blankId" in s,
   );
-  const [picks, setPicks] = useState<Record<string, number>>({});
-  const [checked, setChecked] = useState(false);
+  const [picks, setPicks] = useControllable<Record<string, number>>(
+    value,
+    onChange,
+    {},
+  );
+  const [checkedState, setChecked] = useState(false);
+  const checked = reveal && checkedState;
 
   const total = blanks.length;
-  const score = blanks.filter((b) => picks[b.blankId] === b.correctIndex).length;
+  const score = blanks.filter(
+    (b) => picks[b.blankId] === b.correctIndex,
+  ).length;
   const allFilled = blanks.every((b) => picks[b.blankId] !== undefined);
 
   return (
@@ -775,6 +899,7 @@ export function DropdownBody({
               ? "correct"
               : "wrong"
             : null;
+          const chosen = picked !== undefined;
 
           return (
             <select
@@ -784,17 +909,22 @@ export function DropdownBody({
               value={picked ?? ""}
               onChange={(e) => {
                 playSfx("cursor");
-                setPicks((p) => ({
-                  ...p,
+                setPicks({
+                  ...picks,
                   [segment.blankId]: Number(e.target.value),
-                }));
+                });
               }}
               className={`mx-1 inline-block min-h-11 max-w-full rounded-md bg-[var(--panel-raised)] px-2 py-1 text-body ${
                 verdict === "correct"
                   ? "border-[var(--success)]"
                   : verdict === "wrong"
                     ? "border-[var(--danger)]"
-                    : ""
+                    : // No verdict: a filled blank still has to look answered,
+                      // or a 60-question paper gives no way to see at a glance
+                      // which blanks are still empty.
+                      !reveal && chosen
+                      ? "border-[var(--gold)]"
+                      : ""
               }`}
               style={{ border: "2px solid var(--border)" }}
             >
@@ -811,7 +941,7 @@ export function DropdownBody({
         })}
       </p>
 
-      {!checked ? (
+      {!reveal ? null : !checked ? (
         <CheckButton
           disabled={!allFilled}
           onClick={() => {

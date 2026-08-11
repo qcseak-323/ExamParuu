@@ -146,11 +146,11 @@
     "series": "dp",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Design, build, and manage Lakehouses, Warehouses, semantic models, and real-time analytics in Microsoft Fabric.",
     "hasContent": true,
-    "catalogVerifiedAt": null,
+    "catalogVerifiedAt": "2026-08-11",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/exams/dp-600/"
   },
   {

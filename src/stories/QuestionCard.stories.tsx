@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import QuestionCard from "@/components/question/QuestionCard";
 import AudioProvider from "@/components/AudioProvider";
@@ -13,11 +14,26 @@ import type { Question } from "@/lib/types";
  * `AudioProvider` is required because every body calls `useSfx`.
  */
 
-function Harness({ question }: { question: Question }) {
+function Harness({
+  question,
+  reveal = true,
+}: {
+  question: Question;
+  reveal?: boolean;
+}) {
+  // Holds the draft the way ExamSimClient will, so the no-reveal stories
+  // exercise the controlled path rather than the internal-state one.
+  const [draft, setDraft] = useState<unknown>(undefined);
   return (
     <AudioProvider>
       <div className="pixel-panel" style={{ maxWidth: 720, padding: "1.5rem" }}>
-        <QuestionCard question={question} onAnswered={() => {}} />
+        <QuestionCard
+          question={question}
+          reveal={reveal}
+          draft={reveal ? undefined : draft}
+          onDraftChange={reveal ? undefined : setDraft}
+          onAnswered={() => {}}
+        />
       </div>
     </AudioProvider>
   );
@@ -145,4 +161,25 @@ export const Dropdown: Story = {
 export const StormWatch: Story = {
   args: { ...Multi.args },
   globals: { theme: "dark" },
+};
+
+/* --- Exam mode: the same bodies with nothing given away -------------------
+   The Proving promises "No feedback until the end", so these must show no
+   verdict colour, no score, no explanation and no buttons of their own — only
+   which answer is currently held. */
+
+export const ExamSingle: Story = {
+  args: { ...Single.args, reveal: false },
+};
+
+export const ExamMulti: Story = {
+  args: { ...Multi.args, reveal: false },
+};
+
+export const ExamDropdown: Story = {
+  args: { ...Dropdown.args, reveal: false },
+};
+
+export const ExamYesNo: Story = {
+  args: { ...YesNo.args, reveal: false },
 };

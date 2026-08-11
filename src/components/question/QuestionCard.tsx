@@ -37,11 +37,34 @@ export type AnsweredQuestion = {
 
 export default function QuestionCard({
   question,
+  reveal = true,
+  draft,
+  onDraftChange,
   onAnswered,
 }: {
   question: Question;
+  /**
+   * False on the Proving: collect an answer, judge nothing, render no buttons
+   * of its own. See the note on `Controllable` in renderers.tsx.
+   */
+  reveal?: boolean;
+  /**
+   * The in-progress answer, held by the caller so it survives the question
+   * being unmounted and remounted by a navigator. Opaque here — each body
+   * owns its own draft shape, and only `onAnswered` speaks SubmittedAnswer.
+   */
+  draft?: unknown;
+  onDraftChange?: (draft: unknown) => void;
   onAnswered: (result: AnsweredQuestion) => void;
 }) {
+  // One cast at the boundary rather than a generic parameter threaded through
+  // every caller: the exam stores drafts in one array of mixed shapes, and the
+  // body that reads a draft is always the same body that wrote it.
+  const controlled = <T,>() =>
+    onDraftChange
+      ? { reveal, value: draft as T, onChange: onDraftChange as (v: T) => void }
+      : { reveal };
+
   const done = (r: RendererResult) =>
     onAnswered({
       correct: gradeQuestion(question, r.answer),
@@ -54,6 +77,7 @@ export default function QuestionCard({
     case "single":
       return (
         <SingleChoiceBody
+          {...controlled<number | null>()}
           prompt={question.question}
           options={question.options}
           correctIndex={question.correctIndex}
@@ -65,6 +89,7 @@ export default function QuestionCard({
     case "multi":
       return (
         <MultiSelectBody
+          {...controlled<string[]>()}
           prompt={question.question}
           options={question.options.map((label, i) => ({
             id: String(i),
@@ -80,6 +105,7 @@ export default function QuestionCard({
       // and the item authored at index n belongs in position n.
       return (
         <PlacementBody
+          {...controlled<Record<string, string>>()}
           prompt={question.question}
           hint="Drag each step into position — or tap a step, then tap its slot."
           slots={question.correctOrder.map((_, i) => ({
@@ -110,6 +136,7 @@ export default function QuestionCard({
     case "match":
       return (
         <PlacementBody
+          {...controlled<Record<string, string>>()}
           prompt={question.question}
           hint="Drag a definition onto a term — or tap one, then tap its term."
           slots={question.pairs.map((p, i) => ({
@@ -141,6 +168,7 @@ export default function QuestionCard({
     case "yesno":
       return (
         <VerdictDeckBody
+          {...controlled<boolean[]>()}
           prompt={question.question}
           cards={question.statements.map((s, i) => ({
             id: `st-${i}`,
@@ -158,6 +186,7 @@ export default function QuestionCard({
     case "dropdown":
       return (
         <DropdownBody
+          {...controlled<Record<string, number>>()}
           prompt={question.question}
           segments={question.segments}
           explanation={question.explanation}

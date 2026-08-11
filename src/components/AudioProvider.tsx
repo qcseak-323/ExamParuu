@@ -34,8 +34,20 @@ type AudioContextValue = {
 
 const AudioCtx = createContext<AudioContextValue | null>(null);
 
-/** Which loop plays where, absent an explicit override from a component. */
-function defaultTrackForPath(pathname: string): TrackName | null {
+/**
+ * Which loop plays where, absent an explicit override from a component.
+ *
+ * `pathname` is typed non-null by `usePathname`, and is null outside a real
+ * Next router — which is exactly where every Storybook story runs. This threw
+ * on `startsWith` the first time a story was *clicked* rather than on mount,
+ * because the effect that calls it only runs once a gesture unlocks audio. The
+ * result was that no story in the project could be interacted with: the first
+ * click blanked it and replaced it with Storybook's render-error page.
+ *
+ * Silence is the right answer for an unknown context anyway.
+ */
+function defaultTrackForPath(pathname: string | null): TrackName | null {
+  if (!pathname) return null;
   if (pathname === "/setup") return "starter";
   // The landing page plays the overworld theme: it sets the tone before the
   // visitor commits to anything. It cannot literally sound on load — see the
