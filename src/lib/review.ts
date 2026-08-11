@@ -1,4 +1,8 @@
-import type { Question, QuizAttempt } from "./types";
+import type {
+  Question,
+  QuizAttempt,
+  SingleAnswerQuestion,
+} from "./types";
 import { getExamContent, getQuestionsByDomain } from "./content";
 import { weightedSample } from "./shuffle";
 
@@ -23,6 +27,144 @@ const MAX_BOX = INTERVAL_DAYS.length - 1;
 
 /** Don't re-serve something answered in the last half hour. */
 const RECENCY_WINDOW_MS = 30 * 60 * 1000;
+
+/**
+ * How many questions the Proving serves.
+ *
+ * Fixed rather than "the whole bank" so the paper length is a property of the
+ * exam format rather than of how much content happens to be authored. Once a
+ * bank exceeds this, `buildExamPaper` samples by domain weight and prefers
+ * unseen questions, so retakes become different papers with no further change.
+ */
+export const EXAM_PAPER_SIZE = 60;
+
+/**
+ * True for the historic four-option shape.
+ *
+ * The battle surfaces and `buildRecall` render answers as a four-option
+ * `MenuList`, which cannot express a matching grid or a set of blanks. They
+ * filter their pools through this rather than growing a drag surface inside a
+ * battle arena.
+ */
+export function isSingleAnswer(q: Question): q is SingleAnswerQuestion {
+  return q.kind === undefined || q.kind === "single";
+}
+
+/** What a trainer submitted, in whichever shape the question asked for. */
+export type SubmittedAnswer =
+  /** single: the chosen index. */
+  | { kind: "single"; index: number }
+  /** multi: the chosen indexes, in any order. */
+  | { kind: "multi"; indexes: number[] }
+  /** order: `items` indexes in the sequence the trainer put them. */
+  | { kind: "order"; order: number[] }
+  /** match: for each pair position, the index of the definition placed on it. */
+  | { kind: "match"; placed: number[] }
+  /** yesno: one verdict per statement, in statement order. */
+  | { kind: "yesno"; verdicts: boolean[] }
+  /** dropdown: the chosen index per blank, in blank order. */
+  | { kind: "dropdown"; picks: number[] };
+
+function sameSet(a: number[], b: number[]): boolean {
+  if (a.length !== b.length) return false;
+  const sorted = [...a].sort((x, y) => x - y);
+  return [...b].sort((x, y) => x - y).every((v, i) => v === sorted[i]);
+}
+
+function sameSequence<T>(a: T[], b: T[]): boolean {
+  return a.length === b.length && a.every((v, i) => v === b[i]);
+}
+
+/**
+ * Grade one answer, all-or-nothing.
+ *
+ * Microsoft scores most item types at the item level rather than per option, so
+ * three of four correct on a multi-select is a miss — and modelling it that way
+ * keeps `QuizResultEntry.correct` a boolean, which every existing consumer of
+ * the attempt log already understands. The learning path keeps its own partial
+ * credit; it reports `(correct, total)` and never routes through here.
+ *
+ * An answer whose kind does not match the question's is a miss rather than a
+ * throw: a malformed stored attempt should not take a results screen down.
+ */
+export function gradeQuestion(
+  question: Question,
+  answer: SubmittedAnswer | null,
+): boolean {
+  if (!answer) return false;
+
+  switch (question.kind) {
+    case undefined:
+    case "single":
+      return answer.kind === "single" && answer.index === question.correctIndex;
+    case "multi":
+      return (
+        answer.kind === "multi" &&
+        answer.indexes.length > 0 &&
+        sameSet(answer.indexes, question.correctIndexes)
+      );
+    case "order":
+      return (
+        answer.kind === "order" &&
+        sameSequence(answer.order, question.correctOrder)
+      );
+    case "match":
+      // Position i must hold the definition authored for pair i.
+      return (
+        answer.kind === "match" &&
+        answer.placed.length === question.pairs.length &&
+        answer.placed.every((definitionIndex, i) => definitionIndex === i)
+      );
+    case "yesno":
+      return (
+        answer.kind === "yesno" &&
+        sameSequence(
+          answer.verdicts,
+          question.statements.map((s) => s.correct),
+        )
+      );
+    case "dropdown": {
+      const blanks = question.segments.filter(
+        (s): s is Extract<typeof s, { blankId: string }> => "blankId" in s,
+      );
+      return (
+        answer.kind === "dropdown" &&
+        sameSequence(
+          answer.picks,
+          blanks.map((b) => b.correctIndex),
+        )
+      );
+    }
+  }
+}
+
+/**
+ * The answer in the shape `QuizResultEntry` stores it.
+ *
+ * Single answers keep writing `chosenIndex`, because every existing reader —
+ * the review deck, the misconception breakdown — already understands that
+ * field. Everything else goes in `chosen`.
+ */
+export function storedAnswer(answer: SubmittedAnswer | null): {
+  chosenIndex?: number;
+  chosen?: number[] | boolean[];
+} {
+  if (!answer) return {};
+  switch (answer.kind) {
+    case "single":
+      return { chosenIndex: answer.index };
+    case "multi":
+      return { chosen: answer.indexes };
+    case "order":
+      return { chosen: answer.order };
+    case "match":
+      return { chosen: answer.placed };
+    case "yesno":
+      return { chosen: answer.verdicts };
+    case "dropdown":
+      return { chosen: answer.picks };
+  }
+}
 
 export type QuestionHistory = {
   questionId: string;
@@ -190,6 +332,12 @@ export function buildExamPaper(
   examCode: string,
   attempts: QuizAttempt[],
   count: number,
+  /**
+   * Restricts the pool before quotas are filled. Passed by the battle
+   * surfaces, which render a four-option menu — filtering the finished paper
+   * instead would silently shrink it and break the blueprint weighting.
+   */
+  only?: (q: Question) => boolean,
 ): Question[] {
   const domains = getExamContent(examCode)?.outline.domains ?? [];
   if (domains.length === 0) return [];
@@ -215,7 +363,8 @@ export function buildExamPaper(
 
   const paper: Question[] = [];
   domains.forEach((domain, i) => {
-    const pool = getQuestionsByDomain(examCode, domain.id);
+    const all = getQuestionsByDomain(examCode, domain.id);
+    const pool = only ? all.filter(only) : all;
     const unseen = pool.filter((q) => !history.has(q.id));
     const seen = pool.filter((q) => history.has(q.id));
     // Unseen first, then previously-seen to top up a thin domain.
@@ -224,6 +373,21 @@ export function buildExamPaper(
   });
 
   return shuffleLocal(paper);
+}
+
+/**
+ * The same paper, restricted to the four-option shape the battle surfaces can
+ * render. A separate function rather than a flag so the return type narrows
+ * and callers keep reading `.options` without a cast.
+ */
+export function buildSingleAnswerPaper(
+  examCode: string,
+  attempts: QuizAttempt[],
+  count: number,
+): SingleAnswerQuestion[] {
+  return buildExamPaper(examCode, attempts, count, isSingleAnswer).filter(
+    isSingleAnswer,
+  );
 }
 
 // Local copy so review.ts doesn't need to re-export shuffle semantics.

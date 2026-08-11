@@ -3,14 +3,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { getCatalogEntry, getExamContent } from "@/lib/content";
-import { buildExamPaper, scoreByDomain } from "@/lib/review";
+import {
+  EXAM_PAPER_SIZE,
+  buildSingleAnswerPaper,
+  scoreByDomain,
+} from "@/lib/review";
 import { saveQuizAttempt } from "@/lib/storage";
 import { saveQuizAttemptToDb } from "@/lib/actions";
 import MenuList, { type MenuOption } from "@/components/MenuList";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import ProfessorPortrait from "@/components/ProfessorPortrait";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
-import type { Question, QuizResultEntry } from "@/lib/types";
+import type { QuizResultEntry, SingleAnswerQuestion } from "@/lib/types";
 import { BackGlyph, ForwardGlyph } from "@/components/Glyph";
 
 /**
@@ -55,7 +59,7 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
   const setTrack = useTrackControl();
 
   const [phase, setPhase] = useState<Phase>("briefing");
-  const [paper, setPaper] = useState<Question[]>([]);
+  const [paper, setPaper] = useState<SingleAnswerQuestion[]>([]);
   const [index, setIndex] = useState(0);
   // One slot per paper question, null while unanswered. An array rather than
   // an append-only list because the real exam lets you move around the paper
@@ -70,6 +74,13 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
   const finishedRef = useRef(false);
 
   const bankSize = content?.questions.length ?? 0;
+  /**
+   * How long the paper will actually be. The Proving asks for
+   * EXAM_PAPER_SIZE, but a bank with fewer single-answer questions than that
+   * yields what it has — so the briefing must promise the real number rather
+   * than the target or the bank size.
+   */
+  const paperLength = Math.min(EXAM_PAPER_SIZE, bankSize);
   const totalMs = (exam?.durationMinutes ?? DEFAULT_MINUTES) * 60_000;
   const passMark = exam?.passingScore ?? DEFAULT_PASS;
 
@@ -142,8 +153,20 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
   const attemptsUnused = useMemo(() => [], []);
 
   function begin() {
-    // The whole bank, ordered by blueprint weight — the full paper.
-    const built = buildExamPaper(examCode, attemptsUnused, bankSize);
+    // A fixed-length paper ordered by blueprint weight. Shorter than
+    // EXAM_PAPER_SIZE while a bank has fewer questions than that; once a bank
+    // exceeds it, buildExamPaper samples and retakes differ.
+    //
+    // Single-answer only for now. The other formats are authored and rendered
+    // (see components/question/), but the Proving needs them as *controlled*
+    // inputs — answers that survive navigating away and back, and that reveal
+    // no verdict until the debrief — which the one-shot checkpoint renderers
+    // do not yet offer.
+    const built = buildSingleAnswerPaper(
+      examCode,
+      attemptsUnused,
+      EXAM_PAPER_SIZE,
+    );
     setPaper(built);
     setIndex(0);
     setAnswers(Array<number | null>(built.length).fill(null));
@@ -199,7 +222,7 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
             the professor's dialogue, where they were read once and forgotten. */}
         <div className="flex flex-wrap gap-2">
           {[
-            `${bankSize} questions`,
+            `${paperLength} questions`,
             `${Math.round(totalMs / 60_000)} minutes`,
             `${passMark} to pass`,
             "No feedback until the end",

@@ -11,7 +11,8 @@ import { GLITCHLING, GLITCHLING_PALETTE } from "@/lib/pals";
 import PixelSprite from "@/components/PixelSprite";
 import MenuList, { type MenuOption } from "@/components/MenuList";
 import { useSfx } from "@/components/AudioProvider";
-import type { Question } from "@/lib/types";
+import { isSingleAnswer } from "@/lib/review";
+import type { SingleAnswerQuestion } from "@/lib/types";
 
 /**
  * Wild questions: while a trainer walks a route (any exam page that is NOT a
@@ -53,7 +54,7 @@ export default function WildEncounter({ examCode }: { examCode: string }) {
   const pathname = usePathname();
   const playSfx = useSfx();
 
-  const [question, setQuestion] = useState<Question | null>(null);
+  const [question, setQuestion] = useState<SingleAnswerQuestion | null>(null);
   const [verdict, setVerdict] = useState<Verdict>(null);
   const [remainingMs, setRemainingMs] = useState(0);
   const deadlineRef = useRef<number | null>(null);
@@ -89,7 +90,11 @@ export default function WildEncounter({ examCode }: { examCode: string }) {
     if (battling) return;
     if (question) return;
 
-    const bank = getExamContent(examCode)?.questions ?? [];
+    // Single-answer only: a wild encounter answers through a four-option
+    // menu inside a battle scene, which cannot hold a matching grid.
+    const bank = (getExamContent(examCode)?.questions ?? []).filter(
+      isSingleAnswer,
+    );
     if (bank.length === 0) return;
 
     const delay =

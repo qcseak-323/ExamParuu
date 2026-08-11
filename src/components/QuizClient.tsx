@@ -13,7 +13,11 @@ import {
   teachingLabelForQuestion,
 } from "@/lib/content";
 import { shuffle } from "@/lib/shuffle";
-import { selectReviewQuestions, getReviewSummary } from "@/lib/review";
+import {
+  getReviewSummary,
+  isSingleAnswer,
+  selectReviewQuestions,
+} from "@/lib/review";
 import { saveQuizAttempt } from "@/lib/storage";
 import { saveQuizAttemptToDb } from "@/lib/actions";
 import { GLITCHLING, GLITCHLING_PALETTE, type PalType } from "@/lib/pals";
@@ -30,7 +34,11 @@ import { useBattleTransition } from "@/components/battle/BattleTransition";
 import MenuList, { type MenuOption } from "@/components/MenuList";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
-import type { Flashcard, Question, QuizResultEntry } from "@/lib/types";
+import type {
+  Flashcard,
+  QuizResultEntry,
+  SingleAnswerQuestion,
+} from "@/lib/types";
 import { ForwardGlyph } from "@/components/Glyph";
 
 const COUNT_OPTIONS = [5, 10, 20, "all"] as const;
@@ -241,14 +249,14 @@ export default function QuizClient({
    * redemption round's fixed set; `count` overrides the length picker.
    */
   const [pending, setPending] = useState<{
-    only: Question[] | null;
+    only: SingleAnswerQuestion[] | null;
     count: number | null;
   }>({ only: null, count: null });
   const [domainFilter, setDomainFilter] = useState<string>(initialDomain);
   const [countChoice, setCountChoice] =
     useState<(typeof COUNT_OPTIONS)[number]>(10);
 
-  const [activeQuestions, setActiveQuestions] = useState<Question[]>([]);
+  const [activeQuestions, setActiveQuestions] = useState<SingleAnswerQuestion[]>([]);
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [results, setResults] = useState<QuizResultEntry[]>([]);
@@ -308,7 +316,7 @@ export default function QuizClient({
    * Every way into a battle goes through this, and every one of them is
    * already wrapped in a blackout — so the full beat is dark, cue, cast, fight.
    */
-  function beginBattle(only?: Question[], count?: number) {
+  function beginBattle(only?: SingleAnswerQuestion[], count?: number) {
     setPending({ only: only ?? null, count: count ?? null });
     setPhase("entering");
   }
@@ -321,19 +329,26 @@ export default function QuizClient({
   // which re-fights exactly the questions just missed. `forcedCount` overrides
   // the length picker; `?wild=N` was its only caller and is gone, so it is
   // currently always null and kept as the seam for a fixed-length battle.
-  function startBattle(only: Question[] | null, forcedCount: number | null) {
+  function startBattle(only: SingleAnswerQuestion[] | null, forcedCount: number | null) {
     const wanted =
       forcedCount ??
       (countChoice === "all" ? Number.MAX_SAFE_INTEGER : countChoice);
 
-    let pool: Question[];
+    let pool: SingleAnswerQuestion[];
     if (only) {
       pool = shuffle(only);
     } else if (domainFilter === REVIEW_FILTER) {
       // Weighted by what the trainer keeps getting wrong, not by chance.
-      pool = selectReviewQuestions(examCode, allAttempts, wanted);
+      pool = selectReviewQuestions(examCode, allAttempts, wanted).filter(
+        isSingleAnswer,
+      );
     } else {
-      pool = shuffle(getQuestionsByDomain(examCode, domainFilter));
+      // Practice is a battle — HP, a foe, a four-option menu — so it serves
+      // the same single-answer shape the other battles do. The formats that
+      // need a drag surface are the Proving's.
+      pool = shuffle(
+        getQuestionsByDomain(examCode, domainFilter).filter(isSingleAnswer),
+      );
     }
 
     const n = only ? pool.length : Math.min(wanted, pool.length);

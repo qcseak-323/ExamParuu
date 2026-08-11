@@ -14,13 +14,15 @@ export type Outline = {
   domains: Domain[];
 };
 
-export type Question = {
+/**
+ * What every question carries, whatever shape its answer takes.
+ */
+export type QuestionBase = {
   id: string;
   examCode: string;
   domain: string;
+  /** The stem. For `dropdown` this is the lead-in above the sentence. */
   question: string;
-  options: string[];
-  correctIndex: number;
   explanation: string;
   /**
    * Id of the study-guide section that teaches this question, so a miss can
@@ -32,6 +34,82 @@ export type Question = {
    */
   teaches?: string;
 };
+
+/**
+ * One piece of a `dropdown` question: either fixed prose or a blank the
+ * trainer fills from a list. Modelling the sentence as a sequence is what lets
+ * a blank sit mid-clause — "Use ▾ to move data from ▾ into the warehouse" —
+ * which is how Microsoft's build-list and hotspot items actually read.
+ */
+export type QuestionSegment =
+  | { text: string }
+  | { blankId: string; options: string[]; correctIndex: number };
+
+/**
+ * A question, in one of the shapes a real Microsoft paper uses.
+ *
+ * ── Why `kind` is optional ──
+ *
+ * Every one of the 440 questions authored before this existed is a plain
+ * four-option item with no `kind` field, and all of them must keep working
+ * untouched. So the absent case IS `single`, and nothing had to be migrated —
+ * the same bargain `teaches` and `QuizResultEntry.chosenIndex` already struck,
+ * for the same reason: an incomplete mapping should degrade to the old
+ * behaviour rather than break.
+ *
+ * ── Why a union rather than optional fields ──
+ *
+ * A single type with `correctIndex?` and `correctIndexes?` and `pairs?` would
+ * compile everywhere and be wrong at runtime. A union makes the compiler
+ * enumerate every place that reaches for `.options` without narrowing first,
+ * which is exactly the list of call sites that need to think about this.
+ *
+ * Grade with `gradeQuestion` in `review.ts` rather than comparing by hand;
+ * only it knows what each shape's answer looks like.
+ */
+export type Question =
+  /** Single answer, four options. The historic shape and still the majority. */
+  | (QuestionBase & {
+      kind?: "single";
+      options: string[];
+      correctIndex: number;
+    })
+  /** Multiple response — "choose two". Right only if the set matches exactly. */
+  | (QuestionBase & {
+      kind: "multi";
+      options: string[];
+      correctIndexes: number[];
+    })
+  /** Build-list: put the steps in order. `correctOrder` indexes into `items`. */
+  | (QuestionBase & {
+      kind: "order";
+      items: string[];
+      correctOrder: number[];
+    })
+  /** Drag-and-drop matching: one definition onto each term. */
+  | (QuestionBase & {
+      kind: "match";
+      pairs: { term: string; definition: string }[];
+    })
+  /**
+   * The repeated-scenario series — a shared setup, then several statements
+   * each judged true or false.
+   */
+  | (QuestionBase & {
+      kind: "yesno";
+      statements: { text: string; correct: boolean }[];
+    })
+  /** Hotspot / dropdown: a sentence with one or more blanks to fill. */
+  | (QuestionBase & {
+      kind: "dropdown";
+      segments: QuestionSegment[];
+    });
+
+/** The historic shape, narrowed. Battles and `buildRecall` only serve these. */
+export type SingleAnswerQuestion = Extract<
+  Question,
+  { options: string[]; correctIndex: number }
+>;
 
 export type Flashcard = {
   id: string;
@@ -74,6 +152,18 @@ export type QuizResultEntry = {
    * no migration. Every reader must tolerate `undefined`.
    */
   chosenIndex?: number;
+  /**
+   * What was actually answered, for the shapes `chosenIndex` cannot express —
+   * a set of indexes for `multi`, an ordering for `order`, one index per blank
+   * for `dropdown`, one verdict per statement for `yesno`.
+   *
+   * Optional for the same reason `chosenIndex` is: this lives inside the
+   * existing `results` Json column, so rows written before it simply lack it
+   * and no migration was needed. `chosenIndex` stays the field for single-
+   * answer questions rather than being folded in here, because every existing
+   * reader already understands it.
+   */
+  chosen?: number[] | boolean[];
   /**
    * When this specific answer was given. The attempt carries a single
    * timestamp, so without this every answer in a run looks simultaneous.

@@ -1,11 +1,12 @@
 import { getDomainName, getExamContent, getFlashcardsByDomain } from "./content";
+import { isSingleAnswer } from "./review";
 import { shuffle } from "./shuffle";
 import type {
   Challenge,
   Flashcard,
   LearningModule,
   LearningPath,
-  Question,
+  SingleAnswerQuestion,
 } from "./types";
 
 /**
@@ -84,17 +85,21 @@ function buildRecall(
   const content = getExamContent(examCode);
   if (!content) return null;
 
-  const inModule = content.questions.filter(
+  // Single-answer only. A checkpoint renders through the `recall` challenge,
+  // whose shape is options plus one correct index, so a matching or ordering
+  // question from the bank has nothing to map onto. The other formats reach
+  // the trainer through the Proving and practice instead.
+  const bank = content.questions.filter(isSingleAnswer);
+
+  const inModule = bank.filter(
     (q) => q.teaches && mod.sectionIds.includes(q.teaches),
   );
-  const inDomain = content.questions.filter(
-    (q) => q.domain === (path?.domainId ?? ""),
-  );
+  const inDomain = bank.filter((q) => q.domain === (path?.domainId ?? ""));
 
   const pool = (inModule.length ? inModule : inDomain).filter(
     (q) => !seenIds.has(q.id),
   );
-  const q: Question | undefined = shuffle(pool)[0];
+  const q: SingleAnswerQuestion | undefined = shuffle(pool)[0];
   if (!q) return null;
 
   seenIds.add(q.id);

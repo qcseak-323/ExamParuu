@@ -8,7 +8,7 @@ import {
   studyHrefForQuestion,
   teachingLabelForQuestion,
 } from "@/lib/content";
-import { buildExamPaper, scoreByDomain } from "@/lib/review";
+import { buildSingleAnswerPaper, scoreByDomain } from "@/lib/review";
 import { saveQuizAttempt, useQuizAttempts, useFlashcardProgress } from "@/lib/storage";
 import { saveQuizAttemptToDb } from "@/lib/actions";
 import {
@@ -27,7 +27,7 @@ import MenuList, { type MenuOption } from "@/components/MenuList";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import HpBar from "@/components/battle/HpBar";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
-import type { Question, QuizResultEntry } from "@/lib/types";
+import type { QuizResultEntry, SingleAnswerQuestion } from "@/lib/types";
 import { ForwardGlyph } from "@/components/Glyph";
 
 /**
@@ -94,7 +94,7 @@ export default function GymLeaderClient({
     useBattleTransition();
 
   const [phase, setPhase] = useState<Phase>("briefing");
-  const [paper, setPaper] = useState<Question[]>([]);
+  const [paper, setPaper] = useState<SingleAnswerQuestion[]>([]);
   const [index, setIndex] = useState(0);
   const [results, setResults] = useState<QuizResultEntry[]>([]);
   const [remainingMs, setRemainingMs] = useState(0);
@@ -180,7 +180,7 @@ export default function GymLeaderClient({
 
   function beginExam() {
     setWasClearedAtStart(isGymCleared(examCode, attempts));
-    const built = buildExamPaper(examCode, attempts, paperSize);
+    const built = buildSingleAnswerPaper(examCode, attempts, paperSize);
     setPaper(built);
     setIndex(0);
     setResults([]);

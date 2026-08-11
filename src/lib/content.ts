@@ -281,11 +281,30 @@ export function relatedFlashcardsForQuestion(
   const inDomain = cards.filter((c) => c.domain === question.domain);
   if (inDomain.length === 0) return [];
 
-  const haystack = [
-    question.question,
-    ...question.options,
-    question.explanation,
-  ]
+  // Every answer shape contributes whatever text it has. A matching question
+  // has no `options` but its pairs are exactly the vocabulary this is looking
+  // for, so pulling the words out per kind finds more cards than skipping
+  // anything that is not four options would.
+  const answerText: string[] = (() => {
+    switch (question.kind) {
+      case undefined:
+      case "single":
+      case "multi":
+        return question.options;
+      case "order":
+        return question.items;
+      case "match":
+        return question.pairs.flatMap((p) => [p.term, p.definition]);
+      case "yesno":
+        return question.statements.map((s) => s.text);
+      case "dropdown":
+        return question.segments.flatMap((s) =>
+          "blankId" in s ? s.options : [s.text],
+        );
+    }
+  })();
+
+  const haystack = [question.question, ...answerText, question.explanation]
     .join(" ")
     .toLowerCase();
 
