@@ -1,0 +1,153 @@
+[
+  {
+    "domainId": "analytics-solution",
+    "sections": [
+      {
+        "id": "fabric-workspace-settings",
+        "heading": "Workspace settings",
+        "paragraphs": [
+          "A Fabric workspace is the unit of collaboration, capacity assignment, and access, and its settings decide what the workloads inside it can do. Spark settings choose the pool — a starter pool for fast, low-friction sessions or a custom pool with a chosen node family, node size, autoscale range, and dynamic executor allocation — plus the runtime version and any workspace-level Spark properties and environment. High concurrency lets several notebooks share one Spark session, which cuts start-up time dramatically for interactive work.",
+          "Domain settings place the workspace inside a data-mesh domain or subdomain, which is how discovery and governance are organised across a large tenant, and domain admins can set their own branding and default sensitivity labels. OneLake settings control whether OneLake file explorer access is permitted for the workspace. Apache Airflow settings govern the Airflow item used for orchestration when a team already runs DAGs and wants to keep them. The capacity a workspace is assigned to is the setting that gates everything else — Fabric features, Direct Lake, and deployment pipelines all depend on an F SKU or trial capacity behind the workspace."
+        ]
+      },
+      {
+        "id": "lifecycle-and-deployment-pipelines",
+        "heading": "Version control and deployment pipelines",
+        "paragraphs": [
+          "Fabric git integration connects a workspace to a branch in Azure DevOps or GitHub, so items are serialised into files that can be reviewed, branched, and merged. The workspace shows an uncommitted-changes state, and syncing is two-way: commit pushes workspace changes to the branch, update pulls branch changes into the workspace. The usual team pattern is a branch per developer with their own workspace, merged back through pull requests. Database projects (SQL projects) hold warehouse schema as code so it can be built and deployed like application source.",
+          "Deployment pipelines move content between stages — typically development, test, and production — with each stage bound to its own workspace. Comparison shows what differs, and deployment copies items forward. Deployment rules are what make the pipeline usable in practice: they rebind a data source or a parameter per stage, so a semantic model promoted to production points at the production warehouse rather than the development one. Git integration and deployment pipelines are complementary rather than alternatives — git is the source of truth and the review mechanism, pipelines are the promotion mechanism."
+        ]
+      },
+      {
+        "id": "workspace-and-item-access",
+        "heading": "Workspace and item access",
+        "paragraphs": [
+          "Workspace roles are the coarse control and there are four. Viewer can read data in items but cannot write. Contributor can create and edit items. Member adds sharing and the ability to add other members up to their own level. Admin adds workspace management and deletion. A common design error is granting Contributor when the person only needs to read reports, because Contributor also carries the ability to change the items themselves.",
+          "Item-level permissions are the finer control, granted by sharing an individual item — a lakehouse, a warehouse, a semantic model — to a user or group without adding them to the workspace. The permissions available differ by item: Read grants access to the item's metadata and endpoint, ReadData grants access to the data through SQL, ReadAll grants access to the underlying files in OneLake, and Build grants the right to create new content on a semantic model. The distinction between Read, ReadData, and ReadAll is a reliable exam question, because a user with Read alone can see that a lakehouse exists and query nothing."
+        ]
+      },
+      {
+        "id": "granular-and-onelake-security",
+        "heading": "Granular security and OneLake security",
+        "paragraphs": [
+          "Below the item level, Fabric offers four granularities. Row-level security filters rows by a predicate, defined in the warehouse or SQL analytics endpoint with a security policy and an inline table-valued function, or in a semantic model with DAX roles. Column-level security grants or denies specific columns so a table can be shared without exposing salary or national identifiers. Object-level security hides whole tables or views. Dynamic data masking is a different idea again — it does not restrict access, it obscures the displayed value with a default, email, random, or custom string mask, and a user with UNMASK permission sees the real thing.",
+          "The important caveat is that these controls are enforced by the engine that applies them. A row-level security policy defined on the SQL analytics endpoint governs T-SQL queries, but does not by itself govern a Spark notebook reading the same Delta files directly through OneLake. OneLake security is what closes that gap, defining roles at the folder and file level in the lakehouse so the same restriction applies whichever engine reads the data. When a question describes an analyst who is blocked in SQL but can still read everything from a notebook, OneLake security is the missing piece."
+        ]
+      },
+      {
+        "id": "governance-labels-and-audit",
+        "heading": "Sensitivity labels, endorsement, and audit",
+        "paragraphs": [
+          "Sensitivity labels come from Microsoft Purview Information Protection and apply to Fabric items. Their defining property is downstream inheritance: a label on a lakehouse flows to the semantic models and reports built from it, and it travels with data exported to Excel, PDF, or PowerPoint, so the protection outlives the platform. Labels can be applied manually, by default policy, or automatically, and they can carry encryption and usage restrictions rather than being only a marker.",
+          "Endorsement signals trust without changing permissions. Promoted is applied by anyone with write access to the item; Certified is restricted to reviewers the tenant administrator authorises; Master data marks the authoritative source for a domain. Endorsed items rank higher in the OneLake catalog and discovery experiences, which is the mechanism for steering analysts away from an abandoned copy. Fabric audit logs record user and admin activity — item creation, access, permission changes, exports — and surface through the Microsoft Purview compliance portal and the admin monitoring workspace, which is where a question about proving who accessed what is pointing."
+        ]
+      },
+      {
+        "id": "orchestration-choices",
+        "heading": "Choosing an orchestration tool",
+        "paragraphs": [
+          "Three items can move and shape data and the exam expects you to choose deliberately. A Dataflow Gen2 is Power Query in the service: low-code, excellent for citizen developers and for connector breadth, and the natural choice when the transformation is expressible in the Power Query editor and the volume is modest. A notebook is code — PySpark, Spark SQL, or Python — and is the choice for complex logic, large-scale transformation, machine learning, and anything needing libraries. A data pipeline orchestrates: it copies data at scale with the Copy activity and coordinates other activities, including running dataflows and notebooks, in a control flow with conditions, loops, and error handling.",
+          "In practice the three combine — a pipeline that copies raw files, runs a notebook to transform them, and then refreshes a semantic model. Scheduling is per item, while event-based triggers come from Fabric Real-Time Intelligence: a Reflex or Activator item watches for an event such as a file landing in OneLake and starts a pipeline in response, which is the answer whenever a scenario says 'when a file arrives' rather than 'every hour'. Pipelines take parameters and support dynamic expressions, which is what turns one pipeline into a metadata-driven loop over many tables rather than one pipeline per table."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "ingest-transform",
+    "sections": [
+      {
+        "id": "loading-patterns",
+        "heading": "Full and incremental loading patterns",
+        "paragraphs": [
+          "A full load replaces the target every run. It is simple, self-correcting, and appropriate while volumes are small or when the source cannot tell you what changed. An incremental load moves only new or changed rows and becomes necessary as volume grows. The mechanism depends on what the source offers: a watermark column such as a modified timestamp, a change data capture feed, or change tracking. The watermark high value is stored between runs — commonly in a control table — and the pipeline reads it, filters the source, and writes the new high value on success.",
+          "Merge semantics are what make incremental loads correct. In a lakehouse this is a Delta MERGE that updates matching rows and inserts new ones, giving an upsert; in a warehouse it is T-SQL MERGE or an insert-update pair. Slowly changing dimensions build on the same operation: type 1 overwrites the attribute, type 2 closes the current row with an end date and inserts a new current row, preserving history. Preparing data for a dimensional model means generating surrogate keys, conforming dimensions so several facts can share them, and loading dimensions before the facts that reference them."
+        ]
+      },
+      {
+        "id": "choosing-a-data-store",
+        "heading": "Choosing a store and an engine",
+        "paragraphs": [
+          "Fabric offers several stores and choosing between them is a recurring exam question. A Lakehouse holds files and Delta tables, is read and written by Spark, and suits unstructured and semi-structured data and heavy transformation; it exposes a read-only SQL analytics endpoint for querying. A Warehouse is a full T-SQL relational engine with multi-table transactions and read-write SQL, which is the choice when the team is SQL-first or when writes must come from T-SQL. An Eventhouse with KQL databases is built for high-volume time-series and telemetry, queried with KQL. A Fabric SQL database serves operational, transactional workloads rather than analytics.",
+          "The transformation engine follows from the store and the skill set. Dataflow Gen2 for low-code Power Query work, notebooks with PySpark for large or complex transformation, T-SQL for set-based work in a warehouse, and KQL for time-series in an Eventhouse. The one hard constraint worth memorising is that the lakehouse SQL analytics endpoint is read-only: if a scenario requires INSERT, UPDATE, or DELETE through T-SQL, the answer is a Warehouse, not a Lakehouse. Everything in Fabric lands in OneLake in Delta-Parquet regardless, which is what lets one copy of the data serve several engines."
+        ]
+      },
+      {
+        "id": "shortcuts-and-mirroring",
+        "heading": "Shortcuts and mirroring",
+        "paragraphs": [
+          "A OneLake shortcut is a pointer to data that lives somewhere else — another lakehouse or warehouse in the tenant, ADLS Gen2, Amazon S3, Google Cloud Storage, or Dataverse — and it makes that data appear in your lakehouse without copying it. There is one copy, so there is no refresh and no drift, and the source's own permissions still apply when the shortcut is traversed, which is the cause of a shortcut that resolves for its creator and fails for everyone else. Internal shortcuts across workspaces are the standard way to build a medallion architecture without duplicating the bronze layer.",
+          "Mirroring is the other zero-copy pattern and solves a different problem: it continuously replicates an operational database — Azure SQL Database, Azure Cosmos DB, Snowflake, and others — into OneLake in Delta format, near real time, with no ETL to write and no cost for the replication itself. The result is queryable alongside everything else and always current. The dividing line is direction and ownership: use a shortcut when the data already sits in a lake you can point at, and mirroring when the source is a live operational database you want analytics on without building a pipeline. Query acceleration on a shortcut caches the data for faster Real-Time Intelligence queries at a storage cost."
+        ]
+      },
+      {
+        "id": "batch-transformation",
+        "heading": "Batch transformation and data quality",
+        "paragraphs": [
+          "PySpark transformation in a notebook is DataFrame work: select and withColumn to shape, filter to reduce, join to combine, groupBy with agg to aggregate, and write with a mode of append, overwrite, or a Delta merge. Repartitioning before a wide write and caching a DataFrame reused several times are the two habits that most often turn a slow notebook into a fast one. Spark SQL over temporary views is equivalent and often more readable for set-based logic. Denormalising — flattening a snowflake into a wide dimension — trades storage for query simplicity and is usually the right call for an analytics model.",
+          "Data quality is examined through three recurring problems. Duplicates are removed with dropDuplicates on a business key, or with a window function ranking by an ordering column and keeping the first row, which is the form you need when the duplicates differ and you must pick the newest. Missing values are dropped with na.drop, filled with na.fill, or flagged for review, and the right answer depends on whether absence is meaningful. Late-arriving data is the subtlest: a fact that arrives after its dimension row means either an inferred member — inserting a placeholder dimension row to be filled in later — or a reprocessing window that reruns the last few days so the fact finds its key on the second pass."
+        ]
+      },
+      {
+        "id": "streaming-engines-and-eventstreams",
+        "heading": "Streaming engines and Eventstreams",
+        "paragraphs": [
+          "Fabric offers three ways to process a stream and they are chosen by skill set and destination. An Eventstream is the low-code option: sources such as Azure Event Hubs, IoT Hub, Kafka, CDC feeds, or a custom endpoint, an optional event-processing editor for filtering, aggregating, and joining in flight, and destinations including an Eventhouse, a lakehouse, a derived stream, or an Activator. Spark structured streaming is the code option, running in a notebook with checkpointing and exactly-once semantics, and is the choice when the transformation needs arbitrary logic or a machine-learning model. KQL update policies transform data as it lands in an Eventhouse table, which is the choice when the data is already arriving there.",
+          "In Real-Time Intelligence, a native table stores data inside the Eventhouse and gives the fastest queries; a OneLake shortcut leaves it where it is and trades some performance for no duplication. Query acceleration sits between them, caching shortcut data for faster queries at a storage cost — the right answer when a shortcut is queried repeatedly and latency matters more than the extra storage. Destination choice matters for the same reason: routing an Eventstream to an Eventhouse gives sub-second KQL querying, while routing it to a lakehouse gives cheaper storage and Spark access with higher latency."
+        ]
+      },
+      {
+        "id": "windowing-and-late-data",
+        "heading": "Windowing functions",
+        "paragraphs": [
+          "Streaming aggregation needs a window because the stream never ends. Tumbling windows are fixed-size and non-overlapping, so every event falls in exactly one window — the choice for 'count per five minutes'. Hopping windows are fixed-size but advance by a smaller hop, so they overlap and an event can appear in several — the choice for a moving average. Sliding windows emit only when an event enters or leaves, producing output at irregular intervals rather than on a clock. Session windows group events separated by less than a timeout, closing when the gap exceeds it, which is how user activity is grouped into sessions. Snapshot windows group events sharing exactly the same timestamp.",
+          "Two clocks matter and confusing them produces wrong answers. Event time is when the event happened, carried in the payload; processing time is when the system saw it. Windowing should almost always use event time, or a network delay silently moves events into the wrong bucket. Late arrivals are then handled with a watermark and an allowed lateness — events later than that are dropped or routed aside rather than reopening a window forever. In Spark structured streaming this is withWatermark; in KQL and the Eventstream processor the equivalent tolerance settings apply."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "monitor-optimize",
+    "sections": [
+      {
+        "id": "monitoring-fabric-items",
+        "heading": "Monitoring and alerts",
+        "paragraphs": [
+          "The Monitoring hub is the single view of activity across the workspace: pipeline runs, dataflow refreshes, notebook and Spark application runs, and semantic model refreshes, filterable by item type, status, and time. Each run drills into its own detail — a pipeline run shows every activity with duration and error, a Spark application links to the Spark UI and the driver and executor logs. The Capacity Metrics app is the complementary view, showing compute usage against the capacity, which is where throttling and smoothing are diagnosed when everything is slow rather than broken.",
+          "Alerting on data rather than on infrastructure is done with Activator (Data Activator), which watches a stream, a KQL query, or a Power BI visual and triggers an action — an email, a Teams message, or a Fabric item run — when a condition holds. For refresh and run failures, pipeline activities support failure paths that can send a notification, and semantic model refresh failures notify their configured contacts. The distinction the exam draws is between monitoring a run's success and alerting on the meaning of the data, and Activator is the answer for the second."
+        ]
+      },
+      {
+        "id": "pipeline-and-dataflow-errors",
+        "heading": "Pipeline and Dataflow errors",
+        "paragraphs": [
+          "A failed pipeline is diagnosed activity by activity in the run detail, where each activity exposes its input, output, and error. Common causes are authentication and connection failures against a source, a Copy activity type mismatch where the sink column type cannot hold the source value, a timeout on a long-running query, and a missing file where the source path was built from a dynamic expression that produced the wrong string — inspecting the resolved input is what reveals that last one. Retry and retry interval on the activity handle transient faults, and a failure path with an On Fail dependency is how a pipeline reports rather than simply stops.",
+          "Dataflow Gen2 errors divide into refresh failures and row-level errors. Refresh failures surface in the refresh history with a message and are usually credentials, a privacy-level conflict that blocks query folding between sources, or a source schema change that broke a step. Row-level errors do not stop the refresh: they land in the error rows for the query and are inspected there, which is where a type conversion failure on a handful of rows shows up. Staging is worth knowing as a lever — enabling it writes intermediate results to the lakehouse and can rescue a dataflow that fails on memory, while disabling it for a simple query removes an unnecessary write."
+        ]
+      },
+      {
+        "id": "spark-and-notebook-errors",
+        "heading": "Notebook, Eventhouse, and shortcut errors",
+        "paragraphs": [
+          "Notebook failures are read from the cell output first and the Spark UI second. Out-of-memory on an executor points at skew or an over-large collect; a driver out-of-memory usually means someone called collect or toPandas on a large DataFrame and pulled it back to a single machine. AnalysisException is a schema or column-name problem, and a Delta concurrent-modification error means two writers touched the same table without coordination. Job failures that only appear at scale are usually skew — one partition far larger than the rest — visible in the Spark UI as one task running long after the others finished.",
+          "Eventhouse and Eventstream errors have their own shapes. An Eventstream shows per-source and per-destination health with the rows in and out, so a destination that has stopped accepting data is visible without reading logs, and ingestion failures into a KQL database are inspected with the ingestion failure commands. T-SQL errors in a warehouse are conventional — permissions, invalid object names, type conversion — with the caveat that the lakehouse SQL analytics endpoint is read-only, so a write attempt fails by design rather than by misconfiguration. Shortcut errors are almost always permissions or a moved source: the shortcut resolves with the caller's own credentials against the target, so a shortcut created by an administrator will fail for an analyst who lacks access to the underlying storage."
+        ]
+      },
+      {
+        "id": "lakehouse-and-warehouse-optimization",
+        "heading": "Optimising Lakehouse tables and warehouses",
+        "paragraphs": [
+          "Delta tables degrade in a predictable way: many small files, written by frequent appends or a highly partitioned write, make every read pay a per-file cost. OPTIMIZE compacts them into fewer, larger files and is the first answer to a table that has slowed over time. V-Order is Fabric's write-time optimisation, sorting and encoding Parquet so the Power BI and SQL engines read it faster, and it is on by default for Fabric writes. Z-Order clusters data by one or more columns so that filters on those columns skip more files. VACUUM removes files no longer referenced, reclaiming storage after compaction, with a retention period that must be respected or time travel breaks.",
+          "Partitioning helps only when the partition column has moderate cardinality and is actually filtered on; partitioning by a high-cardinality column produces the small-file problem it was meant to solve. In a Warehouse, the levers are different: statistics drive the query optimiser and should be current, the engine distributes work automatically so there is no distribution key to choose, and result set caching serves repeated identical queries. Star schema modelling, correct data types — the narrowest type that fits — and avoiding SELECT * do more for warehouse performance than any single setting."
+        ]
+      },
+      {
+        "id": "realtime-and-query-optimization",
+        "heading": "Optimising Spark, Eventhouses, and queries",
+        "paragraphs": [
+          "Spark performance comes down to a few repeated causes. Skew, where one key dominates, is addressed by salting the key or enabling adaptive query execution, which also coalesces partitions after a shuffle. A broadcast join sends a small table to every executor and eliminates the shuffle entirely, which is the single biggest win when joining a large fact to a small dimension. Caching a DataFrame that is used several times avoids recomputing the whole lineage. Starter pools remove session start-up time; high concurrency shares a session across notebooks. Reading only the columns you need matters more in Parquet than in a row store, because column pruning is free.",
+          "For Eventhouses, the levers are the caching policy, which decides how much data stays on hot SSD for fast queries, and the retention policy, which decides how long it is kept at all — setting hot cache shorter than the queries actually reach is what makes a KQL dashboard slow. Materialised views and update policies pre-compute aggregates so dashboards read a small table. Partitioning policies help very large tables. Across every engine, the general query rules hold: filter early, project only the needed columns, avoid functions on a filtered column that prevent an index or partition from being used, and aggregate before joining where the semantics allow it."
+        ]
+      }
+    ]
+  }
+]

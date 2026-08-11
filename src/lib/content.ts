@@ -36,6 +36,12 @@ import sc900Flashcards from "../../content/sc-900/flashcards.json";
 import sc900StudyGuide from "../../content/sc-900/study-guide.json";
 import sc900Path from "../../content/sc-900/learning-path.json";
 
+import dp700Outline from "../../content/dp-700/outline.json";
+import dp700Questions from "../../content/dp-700/questions.json";
+import dp700Flashcards from "../../content/dp-700/flashcards.json";
+import dp700StudyGuide from "../../content/dp-700/study-guide.json";
+import dp700Path from "../../content/dp-700/learning-path.json";
+
 import sc200Outline from "../../content/sc-200/outline.json";
 import sc200Questions from "../../content/sc-200/questions.json";
 import sc200Flashcards from "../../content/sc-200/flashcards.json";
@@ -108,6 +114,13 @@ const examRegistry: Record<string, ExamContent> = {
     flashcards: ai901Flashcards as Flashcard[],
     studyGuide: ai901StudyGuide as StudyGuideDomain[],
     learningPath: ai901Path as ExamLearningPath,
+  },
+  "dp-700": {
+    outline: dp700Outline as Outline,
+    questions: dp700Questions as Question[],
+    flashcards: dp700Flashcards as Flashcard[],
+    studyGuide: dp700StudyGuide as StudyGuideDomain[],
+    learningPath: dp700Path as ExamLearningPath,
   },
   "sc-200": {
     outline: sc200Outline as Outline,

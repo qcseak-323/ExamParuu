@@ -37,6 +37,8 @@ export const WILD_PARUU: Record<string, WildParuu> = {
   "az-104": { sheet: "wild-seal", flip: true },
   "ai-901": { sheet: "wild-pufferfish" },
   "dp-900": { sheet: "wild-otter" },
+  // DP-700 shares the Datastream Delta with DP-900.
+  "dp-700": { sheet: "wild-otter" },
   "dp-600": { sheet: "wild-bee" },
   "sc-900": { sheet: "wild-armadillo" },
   // SC-200 shares the Bastion Cliffs with SC-900.

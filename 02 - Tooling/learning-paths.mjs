@@ -111,6 +111,16 @@ const PATH_UIDS = {
     "incident-response": "learn.wwl.sc-200-mitigate-threats-using-microsoft-365-defender",
     "threat-hunting": "learn.wwl.sc-200-perform-threat-hunting-azure-sentinel",
   },
+  // DP-700 has no code-prefixed paths at all, so these were matched by
+  // topic. `monitor-optimize` is deliberately null: the catalog has no
+  // published path covering Fabric monitoring and optimisation, and
+  // mapping it to the Lakehouse path would claim a source it does not
+  // have. It falls back to sections-as-modules, per the note above.
+  "dp-700": {
+    "analytics-solution": "learn.wwl.manage-microsoft-fabric-environment",
+    "ingest-transform": "learn.wwl.ingest-data-with-microsoft-fabric",
+    "monitor-optimize": null,
+  },
 };
 
 /** Spread `items` across `buckets` groups, front-loading any remainder. */

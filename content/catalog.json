@@ -160,11 +160,11 @@
     "series": "dp",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Ingest, transform, and manage data engineering workloads in Microsoft Fabric.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-11",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/fabric-data-engineer-associate/"
   },
   {

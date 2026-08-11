@@ -1,0 +1,53 @@
+{
+  "examCode": "DP-700",
+  "examName": "Implementing Data Engineering Solutions Using Microsoft Fabric",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for DP-700, 'Skills measured as of July 21, 2026'. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "analytics-solution",
+      "name": "Implement and manage an analytics solution",
+      "weight": "30-35%",
+      "subtopics": [
+        "Configure Spark, domain, OneLake, and Apache Airflow workspace settings",
+        "Configure version control and implement database projects",
+        "Create and configure deployment pipelines",
+        "Implement workspace-level and item-level access controls",
+        "Implement row-level, column-level, object-level, and file-level access controls",
+        "Implement dynamic data masking and OneLake security",
+        "Apply sensitivity labels, endorse items, and use Fabric audit logs",
+        "Choose between Dataflow Gen2, a pipeline, and a notebook, and design triggers"
+      ]
+    },
+    {
+      "id": "ingest-transform",
+      "name": "Ingest and transform data",
+      "weight": "30-35%",
+      "subtopics": [
+        "Design and implement full and incremental data loads",
+        "Prepare data for loading into a dimensional model",
+        "Choose an appropriate data store and transformation engine",
+        "Create and manage OneLake shortcuts and implement mirroring",
+        "Ingest data with pipelines and transform with PySpark, SQL, and KQL",
+        "Denormalise, group, and aggregate data",
+        "Handle duplicate, missing, and late-arriving data",
+        "Process streaming data with Eventstreams, Spark structured streaming, and KQL",
+        "Create windowing functions"
+      ]
+    },
+    {
+      "id": "monitor-optimize",
+      "name": "Monitor and optimise an analytics solution",
+      "weight": "30-35%",
+      "subtopics": [
+        "Monitor data ingestion, transformation, and semantic model refresh",
+        "Configure alerts on Fabric items",
+        "Identify and resolve pipeline, Dataflow Gen2, and notebook errors",
+        "Identify and resolve Eventhouse, Eventstream, and T-SQL errors",
+        "Identify and resolve OneLake shortcut errors",
+        "Optimise a Lakehouse table and a data warehouse",
+        "Optimise a pipeline, Eventstreams, and Eventhouses",
+        "Optimise Spark and query performance"
+      ]
+    }
+  ]
+}

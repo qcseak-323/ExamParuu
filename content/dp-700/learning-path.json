@@ -1,0 +1,201 @@
+{
+  "examCode": "DP-700",
+  "note": "Learning path and module titles mirror the structure published on Microsoft Learn. All teaching content is original to ExamParuu.",
+  "paths": [
+    {
+      "id": "analytics-solution",
+      "title": "Manage a Microsoft Fabric environment",
+      "domainId": "analytics-solution",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/manage-microsoft-fabric-environment/",
+      "modules": [
+        {
+          "id": "analytics-solution-m1",
+          "title": "Implement continuous integration and continuous delivery (CI/CD) in Microsoft Fabric",
+          "sectionIds": [
+            "fabric-workspace-settings",
+            "governance-labels-and-audit"
+          ],
+          "cardIds": [
+            "fc-dp700-as-01",
+            "fc-dp700-as-05",
+            "fc-dp700-as-09",
+            "fc-dp700-as-13",
+            "fc-dp700-as-17"
+          ]
+        },
+        {
+          "id": "analytics-solution-m2",
+          "title": "Monitor activities in Microsoft Fabric",
+          "sectionIds": [
+            "lifecycle-and-deployment-pipelines",
+            "orchestration-choices"
+          ],
+          "cardIds": [
+            "fc-dp700-as-02",
+            "fc-dp700-as-06",
+            "fc-dp700-as-10",
+            "fc-dp700-as-14",
+            "fc-dp700-as-18"
+          ]
+        },
+        {
+          "id": "analytics-solution-m3",
+          "title": "Secure data access in Microsoft Fabric",
+          "sectionIds": [
+            "workspace-and-item-access"
+          ],
+          "cardIds": [
+            "fc-dp700-as-03",
+            "fc-dp700-as-07",
+            "fc-dp700-as-11",
+            "fc-dp700-as-15"
+          ]
+        },
+        {
+          "id": "analytics-solution-m4",
+          "title": "Administer a Microsoft Fabric environment",
+          "sectionIds": [
+            "granular-and-onelake-security"
+          ],
+          "cardIds": [
+            "fc-dp700-as-04",
+            "fc-dp700-as-08",
+            "fc-dp700-as-12",
+            "fc-dp700-as-16"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ingest-transform",
+      "title": "Ingest data with Microsoft Fabric",
+      "domainId": "ingest-transform",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/ingest-data-with-microsoft-fabric/",
+      "modules": [
+        {
+          "id": "ingest-transform-m1",
+          "title": "Ingest Data with Dataflows Gen2 in Microsoft Fabric",
+          "sectionIds": [
+            "loading-patterns",
+            "streaming-engines-and-eventstreams"
+          ],
+          "cardIds": [
+            "fc-dp700-it-01",
+            "fc-dp700-it-05",
+            "fc-dp700-it-09",
+            "fc-dp700-it-13",
+            "fc-dp700-it-17"
+          ]
+        },
+        {
+          "id": "ingest-transform-m2",
+          "title": "Orchestrate processes and data movement with Microsoft Fabric",
+          "sectionIds": [
+            "choosing-a-data-store",
+            "windowing-and-late-data"
+          ],
+          "cardIds": [
+            "fc-dp700-it-02",
+            "fc-dp700-it-06",
+            "fc-dp700-it-10",
+            "fc-dp700-it-14",
+            "fc-dp700-it-18"
+          ]
+        },
+        {
+          "id": "ingest-transform-m3",
+          "title": "Use Apache Spark in Microsoft Fabric",
+          "sectionIds": [
+            "shortcuts-and-mirroring"
+          ],
+          "cardIds": [
+            "fc-dp700-it-03",
+            "fc-dp700-it-07",
+            "fc-dp700-it-11",
+            "fc-dp700-it-15"
+          ]
+        },
+        {
+          "id": "ingest-transform-m4",
+          "title": "Work with real-time data in an Eventhouse in Microsoft Fabric",
+          "sectionIds": [
+            "batch-transformation"
+          ],
+          "cardIds": [
+            "fc-dp700-it-04",
+            "fc-dp700-it-08",
+            "fc-dp700-it-12",
+            "fc-dp700-it-16"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "monitor-optimize",
+      "title": "Monitor and optimise an analytics solution",
+      "domainId": "monitor-optimize",
+      "msLearnUrl": null,
+      "modules": [
+        {
+          "id": "monitor-optimize-m1",
+          "title": "Monitoring and alerts",
+          "sectionIds": [
+            "monitoring-fabric-items"
+          ],
+          "cardIds": [
+            "fc-dp700-mo-01",
+            "fc-dp700-mo-06",
+            "fc-dp700-mo-11"
+          ]
+        },
+        {
+          "id": "monitor-optimize-m2",
+          "title": "Pipeline and Dataflow errors",
+          "sectionIds": [
+            "pipeline-and-dataflow-errors"
+          ],
+          "cardIds": [
+            "fc-dp700-mo-02",
+            "fc-dp700-mo-07",
+            "fc-dp700-mo-12"
+          ]
+        },
+        {
+          "id": "monitor-optimize-m3",
+          "title": "Notebook, Eventhouse, and shortcut errors",
+          "sectionIds": [
+            "spark-and-notebook-errors"
+          ],
+          "cardIds": [
+            "fc-dp700-mo-03",
+            "fc-dp700-mo-08",
+            "fc-dp700-mo-13"
+          ]
+        },
+        {
+          "id": "monitor-optimize-m4",
+          "title": "Optimising Lakehouse tables and warehouses",
+          "sectionIds": [
+            "lakehouse-and-warehouse-optimization"
+          ],
+          "cardIds": [
+            "fc-dp700-mo-04",
+            "fc-dp700-mo-09",
+            "fc-dp700-mo-14"
+          ]
+        },
+        {
+          "id": "monitor-optimize-m5",
+          "title": "Optimising Spark, Eventhouses, and queries",
+          "sectionIds": [
+            "realtime-and-query-optimization"
+          ],
+          "cardIds": [
+            "fc-dp700-mo-05",
+            "fc-dp700-mo-10"
+          ]
+        }
+      ]
+    }
+  ]
+}
