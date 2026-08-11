@@ -1,0 +1,339 @@
+{
+  "examCode": "AZ-104",
+  "note": "Learning path and module titles mirror the structure published on Microsoft Learn. All teaching content is original to ExamParuu.",
+  "paths": [
+    {
+      "id": "identities-governance",
+      "title": "AZ-104: Manage identities and governance in Azure",
+      "domainId": "identities-governance",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/az-104-manage-identities-governance/",
+      "modules": [
+        {
+          "id": "identities-governance-m1",
+          "title": "Understand Microsoft Entra ID",
+          "sectionIds": [
+            "entra-users-and-groups"
+          ],
+          "cardIds": [
+            "fc-az104-ig-01",
+            "fc-az104-ig-07"
+          ]
+        },
+        {
+          "id": "identities-governance-m2",
+          "title": "Create, configure, and manage identities",
+          "sectionIds": [
+            "external-users-and-sspr"
+          ],
+          "cardIds": [
+            "fc-az104-ig-02",
+            "fc-az104-ig-08"
+          ]
+        },
+        {
+          "id": "identities-governance-m3",
+          "title": "Describe the core architectural components of Azure",
+          "sectionIds": [
+            "rbac-roles-and-scopes"
+          ],
+          "cardIds": [
+            "fc-az104-ig-03",
+            "fc-az104-ig-09"
+          ]
+        },
+        {
+          "id": "identities-governance-m4",
+          "title": "Azure Policy initiatives",
+          "sectionIds": [
+            "azure-policy"
+          ],
+          "cardIds": [
+            "fc-az104-ig-04",
+            "fc-az104-ig-10"
+          ]
+        },
+        {
+          "id": "identities-governance-m5",
+          "title": "Secure your Azure resources with Azure role-based access control (Azure RBAC)",
+          "sectionIds": [
+            "resource-locks-and-tags"
+          ],
+          "cardIds": [
+            "fc-az104-ig-05",
+            "fc-az104-ig-11"
+          ]
+        },
+        {
+          "id": "identities-governance-m6",
+          "title": "Allow users to reset their password with Microsoft Entra self-service password reset",
+          "sectionIds": [
+            "subscriptions-and-cost-management"
+          ],
+          "cardIds": [
+            "fc-az104-ig-06",
+            "fc-az104-ig-12"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "manage-storage",
+      "title": "AZ-104: Implement and manage storage in Azure",
+      "domainId": "manage-storage",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/az-104-manage-storage/",
+      "modules": [
+        {
+          "id": "manage-storage-m1",
+          "title": "Configure storage accounts",
+          "sectionIds": [
+            "storage-accounts-and-redundancy"
+          ],
+          "cardIds": [
+            "fc-az104-st-01",
+            "fc-az104-st-05",
+            "fc-az104-st-09"
+          ]
+        },
+        {
+          "id": "manage-storage-m2",
+          "title": "Configure Azure Blob Storage",
+          "sectionIds": [
+            "storage-security-and-access"
+          ],
+          "cardIds": [
+            "fc-az104-st-02",
+            "fc-az104-st-06",
+            "fc-az104-st-10"
+          ]
+        },
+        {
+          "id": "manage-storage-m3",
+          "title": "Configure Azure Storage security",
+          "sectionIds": [
+            "blob-storage-tiers-and-lifecycle"
+          ],
+          "cardIds": [
+            "fc-az104-st-03",
+            "fc-az104-st-07"
+          ]
+        },
+        {
+          "id": "manage-storage-m4",
+          "title": "Configure Azure Files",
+          "sectionIds": [
+            "azure-files-and-data-movement"
+          ],
+          "cardIds": [
+            "fc-az104-st-04",
+            "fc-az104-st-08"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compute-resources",
+      "title": "AZ-104: Deploy and manage Azure compute resources",
+      "domainId": "compute-resources",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/az-104-manage-compute-resources/",
+      "modules": [
+        {
+          "id": "compute-resources-m1",
+          "title": "Introduction to Azure virtual machines",
+          "sectionIds": [
+            "arm-templates-and-bicep"
+          ],
+          "cardIds": [
+            "fc-az104-cp-01",
+            "fc-az104-cp-06",
+            "fc-az104-cp-11"
+          ]
+        },
+        {
+          "id": "compute-resources-m2",
+          "title": "Configure virtual machine availability",
+          "sectionIds": [
+            "virtual-machines"
+          ],
+          "cardIds": [
+            "fc-az104-cp-02",
+            "fc-az104-cp-07"
+          ]
+        },
+        {
+          "id": "compute-resources-m3",
+          "title": "Configure Azure App Service plans",
+          "sectionIds": [
+            "availability-and-scale-sets"
+          ],
+          "cardIds": [
+            "fc-az104-cp-03",
+            "fc-az104-cp-08"
+          ]
+        },
+        {
+          "id": "compute-resources-m4",
+          "title": "Configure Azure App Service",
+          "sectionIds": [
+            "app-service"
+          ],
+          "cardIds": [
+            "fc-az104-cp-04",
+            "fc-az104-cp-09"
+          ]
+        },
+        {
+          "id": "compute-resources-m5",
+          "title": "Configure Azure Container Instances",
+          "sectionIds": [
+            "containers"
+          ],
+          "cardIds": [
+            "fc-az104-cp-05",
+            "fc-az104-cp-10"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "virtual-networking",
+      "title": "AZ-104: Configure and manage virtual networks for Azure administrators",
+      "domainId": "virtual-networking",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/az-104-manage-virtual-networks/",
+      "modules": [
+        {
+          "id": "virtual-networking-m1",
+          "title": "Configure virtual networks",
+          "sectionIds": [
+            "vnets-and-subnets"
+          ],
+          "cardIds": [
+            "fc-az104-vn-01",
+            "fc-az104-vn-09"
+          ]
+        },
+        {
+          "id": "virtual-networking-m2",
+          "title": "Configure network security groups",
+          "sectionIds": [
+            "vnet-peering"
+          ],
+          "cardIds": [
+            "fc-az104-vn-02",
+            "fc-az104-vn-10"
+          ]
+        },
+        {
+          "id": "virtual-networking-m3",
+          "title": "Host your domain on Azure DNS",
+          "sectionIds": [
+            "public-ips"
+          ],
+          "cardIds": [
+            "fc-az104-vn-03",
+            "fc-az104-vn-11"
+          ]
+        },
+        {
+          "id": "virtual-networking-m4",
+          "title": "Configure Azure Virtual Network peering",
+          "sectionIds": [
+            "user-defined-routes"
+          ],
+          "cardIds": [
+            "fc-az104-vn-04",
+            "fc-az104-vn-12"
+          ]
+        },
+        {
+          "id": "virtual-networking-m5",
+          "title": "Manage and control traffic flow in your Azure deployment with routes",
+          "sectionIds": [
+            "network-security-groups"
+          ],
+          "cardIds": [
+            "fc-az104-vn-05",
+            "fc-az104-vn-13"
+          ]
+        },
+        {
+          "id": "virtual-networking-m6",
+          "title": "Introduction to Azure Load Balancer",
+          "sectionIds": [
+            "bastion-and-private-access"
+          ],
+          "cardIds": [
+            "fc-az104-vn-06",
+            "fc-az104-vn-14"
+          ]
+        },
+        {
+          "id": "virtual-networking-m7",
+          "title": "Introduction to Azure Application Gateway",
+          "sectionIds": [
+            "azure-dns"
+          ],
+          "cardIds": [
+            "fc-az104-vn-07",
+            "fc-az104-vn-15"
+          ]
+        },
+        {
+          "id": "virtual-networking-m8",
+          "title": "Introduction to Azure Network Watcher",
+          "sectionIds": [
+            "load-balancing"
+          ],
+          "cardIds": [
+            "fc-az104-vn-08",
+            "fc-az104-vn-16"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "monitor-maintain",
+      "title": "AZ-104: Monitor and back up Azure resources",
+      "domainId": "monitor-maintain",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/az-104-monitor-backup-resources/",
+      "modules": [
+        {
+          "id": "monitor-maintain-m1",
+          "title": "Introduction to Azure Backup",
+          "sectionIds": [
+            "azure-monitor-metrics-and-logs",
+            "backup-and-site-recovery"
+          ],
+          "cardIds": [
+            "fc-az104-mn-01",
+            "fc-az104-mn-04",
+            "fc-az104-mn-07"
+          ]
+        },
+        {
+          "id": "monitor-maintain-m2",
+          "title": "Protect your virtual machines by using Azure Backup",
+          "sectionIds": [
+            "alerts-and-action-groups"
+          ],
+          "cardIds": [
+            "fc-az104-mn-02",
+            "fc-az104-mn-05",
+            "fc-az104-mn-08"
+          ]
+        },
+        {
+          "id": "monitor-maintain-m3",
+          "title": "Monitor your Azure virtual machines with Azure Monitor",
+          "sectionIds": [
+            "network-watcher"
+          ],
+          "cardIds": [
+            "fc-az104-mn-03",
+            "fc-az104-mn-06",
+            "fc-az104-mn-09"
+          ]
+        }
+      ]
+    }
+  ]
+}

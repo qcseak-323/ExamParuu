@@ -1,0 +1,243 @@
+[
+  {
+    "domainId": "identities-governance",
+    "sections": [
+      {
+        "id": "entra-users-and-groups",
+        "heading": "Entra users and groups",
+        "paragraphs": [
+          "Microsoft Entra ID holds two kinds of user account. A member is created in your own tenant and carries your organisation's domain; a guest is invited from outside and keeps their home identity. The user type is set at creation and is visible on the user object, and it matters far more than it looks — guest accounts default to a restricted directory permission set, so a guest who can see a resource group may still be unable to enumerate the directory around it.",
+          "Groups come in two membership types. Assigned groups have a hand-curated member list. Dynamic groups have a membership rule written against user or device attributes, and Entra re-evaluates that rule whenever the attribute changes, so nobody has to remember to add the new starter. Dynamic membership requires Entra ID P1 or higher, and a rule can target users or devices but never both in one group. Security groups grant access; Microsoft 365 groups also create a mailbox and a SharePoint site, so choosing the wrong type creates collaboration artefacts nobody asked for."
+        ]
+      },
+      {
+        "id": "external-users-and-sspr",
+        "heading": "External users and self-service password reset",
+        "paragraphs": [
+          "External collaboration is governed at the tenant level before any individual invitation is sent. External collaboration settings decide who is allowed to invite guests — everyone, members and specific admin roles, only admins, or nobody — and the allow or deny domain list restricts which external domains can be invited at all. An invited guest appears in the directory immediately in a Pending Acceptance state and can be assigned roles and group membership before they ever redeem the invitation.",
+          "Self-service password reset lets users unlock themselves without a helpdesk ticket. It is enabled for none, a selected group, or all users, and the key settings are the number of authentication methods required to reset (one or two) and which methods count — mobile app notification or code, email, mobile or office phone, or security questions. Two settings are commonly confused: 'Require users to register when signing in' forces registration at next sign-in, while password writeback is what pushes a cloud reset back to an on-premises Active Directory in a hybrid tenant. Without writeback, a hybrid user resets only the cloud copy of their password."
+        ]
+      },
+      {
+        "id": "rbac-roles-and-scopes",
+        "heading": "Azure RBAC roles and scopes",
+        "paragraphs": [
+          "Azure role-based access control answers who can do what, where. A role assignment binds a security principal to a role definition at a scope, and the four scopes nest: management group, subscription, resource group, resource. An assignment made at one level is inherited by everything beneath it, so Reader granted at the subscription cannot be taken away at a single resource group — inheritance flows down and is additive.",
+          "The three fundamental built-in roles are Reader (view everything, change nothing), Contributor (create and manage everything except access), and Owner (Contributor plus the ability to grant access). User Access Administrator sits between them: it manages access without managing resources. The critical distinction on the exam is that Contributor cannot assign roles. When two assignments conflict, the permissive ones add together — but a deny assignment always wins over any allow, and deny assignments are created by Azure itself (for example by Blueprints or managed apps) rather than by administrators. Entra roles are a separate system: Global Administrator governs the directory, not Azure resources, until it elevates access."
+        ]
+      },
+      {
+        "id": "azure-policy",
+        "heading": "Azure Policy",
+        "paragraphs": [
+          "Azure Policy enforces rules about what resources may exist and how they must be configured. RBAC decides who can act; Policy decides what the result is allowed to look like. A policy definition contains a condition and an effect, an initiative groups definitions into a single set, and an assignment applies either one at a scope with optional parameters and exclusions.",
+          "Effects are what the exam tests. Deny blocks the deployment outright. Audit lets it through and flags it as non-compliant. Append and Modify add or change properties on the way in — Modify is the one used to add a required tag, and it needs a managed identity to do so. DeployIfNotExists provisions a missing related resource, also via a managed identity, and also only on create or update. Nothing with a deploy or modify effect fixes existing resources on its own: for that you run a remediation task, which walks the non-compliant resources and applies the effect retrospectively."
+        ]
+      },
+      {
+        "id": "resource-locks-and-tags",
+        "heading": "Resource locks and tags",
+        "paragraphs": [
+          "A resource lock protects against accidental change regardless of RBAC. CanNotDelete allows reads and modifications but blocks deletion; ReadOnly allows reads only, which is stricter than it sounds because many routine operations are implemented as writes — a ReadOnly lock on a storage account blocks listing its access keys, because that call is a POST. Locks are inherited downward like RBAC, and the most restrictive lock in the chain wins. Only Owner and User Access Administrator can create or delete locks by default.",
+          "Tags are name-value pairs used for cost reporting, automation, and ownership. A resource can carry up to 50 tags, and tag names are case-insensitive while values are case-sensitive. The trap is that tags are not inherited: applying a tag to a resource group does not tag the resources inside it. Policy is the standard way to close that gap, using a Modify effect with the 'Inherit a tag from the resource group' built-in definition and a remediation task for what already exists."
+        ]
+      },
+      {
+        "id": "subscriptions-and-cost-management",
+        "heading": "Subscriptions, management groups, and cost",
+        "paragraphs": [
+          "Management groups organise subscriptions into a hierarchy so that policy and RBAC can be applied once and inherited everywhere. Every tenant has a root management group that cannot be moved or deleted, the hierarchy supports up to six levels below root, and a subscription has exactly one parent. A resource group holds resources that share a lifecycle; a resource lives in exactly one resource group and can be moved between groups and subscriptions, though not every resource type supports the move and the operation locks the source and target while it runs.",
+          "Cost management works on three instruments. A budget sets a spending threshold at a scope and triggers an action group when forecast or actual spend crosses it — a budget alerts, it never stops spending. Cost alerts cover credit and quota thresholds. Azure Advisor makes recommendations across cost, security, reliability, operational excellence, and performance, and its cost recommendations are where right-sizing and idle-resource findings surface. Reservations and savings plans reduce the rate rather than the usage, and they are billing constructs, so they apply automatically to matching resources without redeploying anything."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "manage-storage",
+    "sections": [
+      {
+        "id": "storage-accounts-and-redundancy",
+        "heading": "Storage accounts and redundancy",
+        "paragraphs": [
+          "A storage account is the namespace and billing boundary for blobs, files, queues, and tables. General-purpose v2 is the default and supports every service and every access tier; premium accounts are provisioned per service — premium block blobs, premium file shares, premium page blobs — and cannot mix. The account name becomes a global DNS label, so it must be unique across all of Azure and is lowercase letters and numbers only, three to twenty-four characters.",
+          "Redundancy is chosen per account and decides how many copies exist and where. LRS keeps three copies inside one datacentre and is the cheapest and least durable. ZRS spreads three copies across availability zones in one region, protecting against a zone failure. GRS copies asynchronously to a paired secondary region hundreds of miles away, and GZRS combines zone redundancy in the primary with geo-replication. The distinction that decides exam questions is read access: with GRS or GZRS the secondary copy is not readable, and only the RA- variants (RA-GRS, RA-GZRS) expose a secondary endpoint you can read from. Conversion between most options is possible in place, but LRS to ZRS and anything crossing the geo boundary may need a live migration request or a manual copy."
+        ]
+      },
+      {
+        "id": "storage-security-and-access",
+        "heading": "Storage security and access",
+        "paragraphs": [
+          "Four mechanisms control who reaches data in a storage account. Access keys are two account-wide root credentials that grant full control and should be rotated one at a time so that clients using the other key keep working. Shared access signature tokens grant scoped, time-limited access — a service SAS covers one resource, an account SAS can cover several services, and a user delegation SAS is signed with Entra credentials rather than the account key, which makes it the only kind that can be revoked by revoking the identity. Microsoft Entra authorisation with RBAC data roles such as Storage Blob Data Reader is the recommended default because there is no secret to leak.",
+          "A stored access policy sits between a container and the SAS tokens issued against it, holding the start time, expiry, and permissions server-side. That is the answer to 'how do I revoke a SAS that has already been handed out': delete or change the policy and every token bound to it dies at once, whereas an ad-hoc SAS is valid until it expires. Networking is a separate layer again — the storage firewall can deny all public access and allow only selected virtual networks via service endpoints, specific IP ranges, or trusted Azure services. For Azure Files, identity-based access means joining the share to on-premises AD DS or Microsoft Entra Domain Services so that NTFS permissions apply to SMB mounts instead of an account key."
+        ]
+      },
+      {
+        "id": "blob-storage-tiers-and-lifecycle",
+        "heading": "Blob tiers, versioning, and lifecycle",
+        "paragraphs": [
+          "Blob access tiers trade storage cost against access cost and latency. Hot is expensive to store and cheap to read. Cool is cheaper to store with higher read costs and a thirty-day minimum retention. Cold extends that pattern with a ninety-day minimum. Archive is the cheapest and is offline: data must be rehydrated to hot or cool before it can be read, which takes hours, and archive has a one-hundred-and-eighty-day minimum. Hot, cool, and cold can be set at account level as a default or per blob; archive is per blob only.",
+          "Three data-protection features are commonly confused. Soft delete retains deleted blobs, snapshots, versions, or whole containers for a configured retention period so they can be undeleted. Versioning automatically keeps a previous version every time a blob is overwritten, which is protection against modification rather than deletion. Snapshots are manual, read-only point-in-time copies. Lifecycle management is the automation layer over all of it: a rule with filters and actions that moves blobs between tiers or deletes them after a number of days since creation or last modification, evaluated once a day. Lifecycle rules act on the base blob, previous versions, and snapshots as separately configured actions."
+        ]
+      },
+      {
+        "id": "azure-files-and-data-movement",
+        "heading": "Azure Files and moving data",
+        "paragraphs": [
+          "Azure Files provides SMB and NFS shares that mount as a drive letter or a mount point. Standard shares are billed on used capacity and live in a general-purpose v2 account; premium shares are provisioned in GiB in a FileStorage account and buy predictable IOPS and throughput. SMB shares support share snapshots for point-in-time recovery and soft delete for the share itself. Azure File Sync is the hybrid answer — it turns a Windows Server into a cache of an Azure file share, with cloud tiering keeping only hot files on local disk.",
+          "For moving data, AzCopy is the command-line tool for high-throughput copies between local storage, blobs, and file shares, and it authenticates with either a SAS token or Entra credentials. Azure Storage Explorer is the graphical equivalent and is the usual answer when the question mentions browsing or drag-and-drop. Object replication is a different thing again: it asynchronously copies block blobs from a source container to a destination container, in the same or a different account and region, driven by rules — and it requires both change feed and versioning on the source account."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "compute-resources",
+    "sections": [
+      {
+        "id": "arm-templates-and-bicep",
+        "heading": "ARM templates and Bicep",
+        "paragraphs": [
+          "An ARM template is a JSON document describing the resources a deployment should produce. Its top-level elements are schema, contentVersion, parameters, variables, resources, and outputs; parameters take values at deployment time, variables are computed inside the template, and outputs return values afterwards. Bicep is a domain-specific language that compiles to exactly the same JSON — no new capability, far less syntax. You can decompile JSON to Bicep and build Bicep back to JSON, and either can be deployed with the same commands.",
+          "Deployments are declarative and idempotent: submitting the same template twice produces the same result rather than a second copy. The one setting that changes that is deployment mode. Incremental, the default, leaves resources that exist in the resource group but not in the template alone. Complete deletes them. Complete mode is the source of a classic exam scenario — a deployment that quietly removes resources nobody mentioned. The Export template action on a resource group produces a template from what exists today, which is useful as a starting point but often needs hand-editing before it will redeploy cleanly."
+        ]
+      },
+      {
+        "id": "virtual-machines",
+        "heading": "Virtual machines, sizes, and disks",
+        "paragraphs": [
+          "A virtual machine's size determines vCPU, memory, and the number and type of disks it can attach, and sizes are grouped into families by purpose — B for burstable, D for general purpose, E for memory-optimised, F for compute-optimised. Resizing is possible in place if the target size is available on the current hardware cluster; if it is not, the VM must be stopped and deallocated first, which is the answer whenever a question says the desired size is greyed out.",
+          "Every VM has an OS disk and a temporary disk, and the temporary disk is genuinely temporary — its contents are lost on deallocation or host maintenance and nothing valuable belongs on it. Data disks are managed disks in Standard HDD, Standard SSD, Premium SSD, or Ultra Disk, and the disk type can be changed after creation by deallocating the VM. Encryption has two distinct answers: Azure Disk Encryption uses BitLocker or dm-crypt inside the guest, while encryption at host encrypts the data on the Azure host itself before it reaches storage, covers the temporary disk and disk caches, and must be enabled on the subscription before a VM can use it. Moving a VM between resource groups or subscriptions is a management-plane move; moving it to another region is a copy, done with Azure Resource Mover or Site Recovery."
+        ]
+      },
+      {
+        "id": "availability-and-scale-sets",
+        "heading": "Availability and scale sets",
+        "paragraphs": [
+          "Availability in Azure is bought in three increasing units. An availability set spreads VMs across fault domains (separate racks, power, and network) and update domains (separate reboot groups) inside a single datacentre, protecting against hardware failure and host patching. Availability zones are physically separate datacentres within a region, protecting against a whole-datacentre failure — a VM is placed in exactly one zone and the SLA improves accordingly. A region pair adds geographic separation and is a disaster-recovery construct rather than an availability one. A VM can join an availability set or a zone, never both.",
+          "Virtual Machine Scale Sets manage an identical group of VMs as one object, with a capacity that can be fixed or driven by autoscale rules. Rules scale out and in on metrics such as CPU percentage over a time grain, and each rule has a cool-down period that stops the set oscillating. Two orchestration modes exist: Uniform, which treats instances as interchangeable from a single model, and Flexible, which places individually configurable VMs across fault domains and is the current default for new scenarios. Upgrade policy — manual, automatic, or rolling — decides what happens to running instances when the model changes."
+        ]
+      },
+      {
+        "id": "app-service",
+        "heading": "App Service plans and apps",
+        "paragraphs": [
+          "An App Service plan is the compute that apps run on: it fixes the region, operating system, instance size, and instance count, and every app in the plan shares that capacity. The tiers matter because features hang off them. Free and Shared run on shared infrastructure with quotas and no custom TLS or autoscale. Basic adds dedicated compute, custom domains, and manual scale. Standard adds autoscale, daily backups, and five deployment slots. Premium increases both. Isolated runs the plan inside an App Service Environment in your own virtual network. Scaling up means changing tier; scaling out means changing instance count, and only Standard and above can do it automatically.",
+          "Deployment slots are live app instances within the same plan that share its resources. Deploying to a staging slot and then swapping makes the release atomic and warm — the swap exchanges the routing, not the content, so there is no cold start for users, and swapping back is the rollback. Settings are either slot-specific (they stay put during a swap) or swapped with the app, which is controlled per setting. For custom DNS, mapping a name requires a verification record and either a CNAME or an A record, and a certificate must be bound to the app afterwards; an App Service Managed Certificate is free but does not cover naked domains or wildcards in every case. Backups are configured per app on Standard and above and write to a storage account you own."
+        ]
+      },
+      {
+        "id": "containers",
+        "heading": "Containers: ACR, Container Instances, and Container Apps",
+        "paragraphs": [
+          "Azure Container Registry stores private container images. Its tiers — Basic, Standard, Premium — differ mainly in included storage, throughput, and Premium-only features such as geo-replication, content trust, and private endpoints. Registries can build images in the cloud with ACR Tasks, which also rebuild automatically when a base image is updated. Authentication should use Entra identities or a managed identity; the admin account is a single shared credential intended for testing.",
+          "Azure Container Instances runs a single container or a container group without any orchestrator — fastest to start, billed per second, and the right answer for a short job, a build agent, or a simple task. Containers in a group share a lifecycle, a network, and storage, and the restart policy (Always, OnFailure, Never) is what makes ACI usable for run-to-completion work. Azure Container Apps sits above it, built on Kubernetes and KEDA but hiding both: it adds ingress, revisions, traffic splitting, and event-driven autoscaling including scale to zero. The dividing line for the exam is orchestration — if the scenario needs scaling on queue depth, blue-green revisions, or microservice-to-microservice calls, it is Container Apps; if it needs one container to run now, it is Container Instances."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "virtual-networking",
+    "sections": [
+      {
+        "id": "vnets-and-subnets",
+        "heading": "Virtual networks and subnets",
+        "paragraphs": [
+          "A virtual network is a private address space in one region and one subscription, carved into subnets that cannot overlap each other. Azure reserves five addresses in every subnet — the network address, the default gateway, two for DNS, and the broadcast address — so a /29 yields three usable addresses, not eight, and /29 is the smallest subnet allowed. A virtual network's address space can be expanded after creation as long as the new range does not conflict with a peered network.",
+          "Some services require their own dedicated subnet with a fixed name: GatewaySubnet for a virtual network gateway, AzureBastionSubnet for Bastion, AzureFirewallSubnet for Azure Firewall. Resources in different subnets of the same virtual network can reach each other by default — there is no isolation between subnets until a network security group is applied. Name resolution inside a virtual network is provided by Azure-provided DNS unless custom DNS servers are configured on the network, and that setting applies to every VM in it after a restart of the network interface."
+        ]
+      },
+      {
+        "id": "vnet-peering",
+        "heading": "Virtual network peering",
+        "paragraphs": [
+          "Peering connects two virtual networks so that traffic flows over the Microsoft backbone using private addresses, with no gateway, no encryption overhead, and no public internet. Regional peering joins networks in the same region; global peering joins networks in different regions, including across subscriptions and tenants. The two address spaces must not overlap, and peering is not transitive: if A peers with B and B peers with C, A cannot reach C. Hub-and-spoke designs solve that with user-defined routes pointing at a network virtual appliance in the hub, or with Azure Virtual WAN.",
+          "A peering is two link objects, one on each network, and both must be present for traffic to flow — a peering left in the Initiated state rather than Connected means the second half was never created. Four settings appear on each side: allow virtual network access, allow forwarded traffic, allow gateway transit, and use remote gateways. Gateway transit is the pair that matters most in practice: the hub sets 'allow gateway transit' and the spoke sets 'use remote gateways', which lets the spoke reach on-premises through the hub's VPN or ExpressRoute gateway without one of its own. Both cannot use remote gateways, and a network with its own gateway cannot also use a remote one."
+        ]
+      },
+      {
+        "id": "public-ips",
+        "heading": "Public IP addresses",
+        "paragraphs": [
+          "A public IP address in Azure is a resource in its own right, with a SKU and an assignment method. Basic SKU is retired for new deployments and allowed dynamic assignment, meaning the address could change when the attached resource was deallocated. Standard SKU is always static, is zone-redundant by default (or can be pinned to a zone), and is secure by default — inbound traffic is denied unless a network security group explicitly allows it, which is the opposite of Basic behaviour and a frequent source of 'why can't I reach my VM' questions.",
+          "SKUs must match along the path: a Standard load balancer requires a Standard public IP, and a Basic public IP cannot be attached to a Standard resource. A public IP can be associated with a VM's network interface, a load balancer front end, a gateway, or Bastion, and it can be moved between them by disassociating first. Outbound connectivity is a related trap — a VM behind a Standard internal load balancer with no public IP and no NAT gateway has no default outbound internet access, and the recommended fix is an Azure NAT Gateway on the subnet rather than giving each VM its own address."
+        ]
+      },
+      {
+        "id": "user-defined-routes",
+        "heading": "Routing and user-defined routes",
+        "paragraphs": [
+          "Every subnet starts with system routes that Azure creates and maintains: local virtual network traffic stays inside, peered ranges route to the peer, and everything else goes to the internet. These routes cannot be deleted, only overridden. A route table holds user-defined routes and is associated with a subnet — never with an individual network interface — and one subnet can have at most one route table, though a table can serve many subnets.",
+          "A user-defined route names an address prefix and a next hop type: virtual appliance (with an explicit next-hop IP), virtual network gateway, virtual network, internet, or none. 'None' is how you black-hole traffic. Route selection is by longest prefix match first; when prefixes tie, user-defined routes beat BGP routes, which beat system routes. The standard forced-tunnelling pattern is a 0.0.0.0/0 route with next hop set to a firewall appliance, which sends all internet-bound traffic through inspection — and the appliance's own network interface must have IP forwarding enabled or the packets are dropped silently."
+        ]
+      },
+      {
+        "id": "network-security-groups",
+        "heading": "Network security groups and ASGs",
+        "paragraphs": [
+          "A network security group is a stateful packet filter holding inbound and outbound rules, each with a priority from 100 to 4096, a source and destination, a protocol, a port range, and allow or deny. Rules are evaluated in priority order and the first match wins, so a lower number is evaluated earlier. Because the filter is stateful, allowing an inbound flow automatically permits its response — there is no need for a matching outbound rule for the same conversation.",
+          "Every NSG carries default rules that cannot be deleted and sit at priorities 65000 and above: allow virtual network inbound and outbound, allow Azure Load Balancer inbound, and deny all inbound; allow internet outbound and deny all outbound. An NSG can be associated with a subnet, with a network interface, or with both — and when both apply, inbound traffic is filtered by the subnet's NSG first and then the interface's, while outbound runs the other way, so a flow must be allowed by both. Application security groups let rules name a logical group of network interfaces instead of IP ranges, so a rule can say 'web tier to database tier' and keep working as machines come and go. Effective security rules, on the network interface, is the tool that shows the merged result and is what a troubleshooting question is usually pointing at."
+        ]
+      },
+      {
+        "id": "bastion-and-private-access",
+        "heading": "Bastion, service endpoints, and private endpoints",
+        "paragraphs": [
+          "Azure Bastion provides RDP and SSH to virtual machines through the Azure portal over TLS, so no VM needs a public IP address and no management port is exposed to the internet. It is deployed per virtual network into a subnet that must be named AzureBastionSubnet and be at least /26. Peered networks can use a Bastion host in the hub, which is the usual deployment.",
+          "Service endpoints and private endpoints both restrict access to platform services, and telling them apart is a reliable exam question. A service endpoint extends the virtual network identity to the service over the Azure backbone: the service keeps its public IP, and the storage account or SQL server is configured to accept traffic only from named subnets. A private endpoint instead places a network interface with a private IP from your subnet in front of the service, so the service becomes reachable at a private address — which is what makes it work from on-premises over VPN or ExpressRoute, and what requires a private DNS zone so the public hostname resolves to the private address. Service endpoints are free and per-service; private endpoints are billed and per-resource."
+        ]
+      },
+      {
+        "id": "azure-dns",
+        "heading": "Azure DNS and private DNS zones",
+        "paragraphs": [
+          "Azure DNS hosts public DNS zones on Microsoft's global anycast name servers. Creating a zone allocates four name servers, and the domain does not resolve through Azure until the registrar's NS records are changed to those four — which is the missing step whenever a question describes a zone that exists but is not answering. Record sets hold one or more records of the same type and name; A, AAAA, CNAME, MX, TXT, SRV, and NS are all supported, and the zone apex cannot hold a CNAME, which is why alias records exist.",
+          "Alias record sets point at an Azure resource — a public IP, a Traffic Manager profile, a Front Door endpoint, or another record set in the zone — and track it automatically, so deleting the target removes the record instead of leaving a dangling name that could be claimed by someone else. Private DNS zones serve name resolution inside virtual networks: a zone is linked to one or more networks, and enabling auto-registration on a link makes Azure create and remove A records as VMs are created and deleted. Private DNS zones are the mechanism behind private endpoint name resolution."
+        ]
+      },
+      {
+        "id": "load-balancing",
+        "heading": "Load balancing",
+        "paragraphs": [
+          "Azure Load Balancer is a layer-four distributor that works on IP address and port with no visibility into the payload. It comes in public and internal variants — public balances internet traffic to backend instances, internal balances traffic inside a virtual network — and in Basic and Standard SKUs, where Standard supports availability zones, larger backend pools, and is secure by default, requiring an NSG rule to permit traffic. Its parts are a frontend IP configuration, a backend pool, a health probe, and load-balancing rules; inbound NAT rules map a frontend port to one specific instance for management access.",
+          "The health probe is the piece that decides where traffic goes and the piece most questions turn on: an instance failing its probe is removed from rotation, and if every instance fails, the whole pool is unreachable, which presents as a total outage rather than a partial one. Probes can be TCP, HTTP, or HTTPS, and an HTTP probe must receive a 200 to count as healthy. Choosing between products is the other common question: Load Balancer for layer-four regional traffic, Application Gateway for layer-seven HTTP routing with URL paths, SSL termination, and a Web Application Firewall, Traffic Manager for DNS-based global distribution, and Front Door for global layer-seven with acceleration and WAF at the edge."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "monitor-maintain",
+    "sections": [
+      {
+        "id": "azure-monitor-metrics-and-logs",
+        "heading": "Azure Monitor metrics and logs",
+        "paragraphs": [
+          "Azure Monitor collects two fundamentally different kinds of telemetry. Platform metrics are numeric, sampled at one-minute granularity, collected automatically for every resource with no configuration, and retained for ninety-three days — they are cheap, fast, and the right basis for near-real-time alerting. Logs are timestamped records of varying structure that must be routed somewhere before they exist at all, and they are queried with KQL rather than charted directly.",
+          "The routing is done by a diagnostic setting on each resource, which selects log categories and metric categories and sends them to a Log Analytics workspace for querying, a storage account for cheap long-term archive, an event hub for streaming to third-party tools, or a partner solution. Without a diagnostic setting there is nothing in the workspace, which is the answer whenever a question describes empty query results. Guest-level data from inside a VM — memory, disk space, application event logs — is not platform telemetry either; it needs the Azure Monitor Agent and a data collection rule. VM Insights, Container Insights, and Storage Insights are pre-built workbooks over that data rather than separate collection systems."
+        ]
+      },
+      {
+        "id": "alerts-and-action-groups",
+        "heading": "Alerts, action groups, and processing rules",
+        "paragraphs": [
+          "An alert rule has three parts: a scope (what to watch), a condition (a signal, an operator, a threshold, and an aggregation over a window), and an action. Signals come in types — metric alerts evaluate platform metrics frequently and cheaply, log alerts run a KQL query on a schedule, activity log alerts fire on control-plane events such as a resource deletion or a service health notice. Metric alerts support dynamic thresholds, which learn a baseline instead of taking a fixed number, and that is the right answer when a workload's normal range varies by time of day.",
+          "An action group is a reusable named set of notifications and actions — email, SMS, push, voice, webhook, logic app, function, automation runbook, ITSM connector — and it is referenced by rules rather than defined inside them, so changing an on-call address once updates every alert. Alert processing rules sit on top and modify what happens at fire time without editing any rule: they can suppress notifications during a planned maintenance window or add an action group to every alert in a scope. Suppression via a processing rule is the correct answer to 'stop the noise during patching' — disabling the alert rules themselves also stops the evaluation and is easy to forget to undo."
+        ]
+      },
+      {
+        "id": "network-watcher",
+        "heading": "Network Watcher",
+        "paragraphs": [
+          "Network Watcher is the diagnostics toolbox for virtual networking, enabled per region and holding several tools that questions distinguish between. IP flow verify answers whether a specific five-tuple is allowed or denied and names the NSG rule responsible, which makes it the tool for 'why is this connection blocked'. Next hop takes a source VM and a destination address and reports where the packet would actually be sent, which is the tool for a routing or user-defined-route problem.",
+          "Connection troubleshoot runs a one-off reachability test between a source and a destination and reports latency and the hop-by-hop path. Connection monitor is the continuous version, running the same probes on a schedule and alerting on degradation, so it is the answer whenever a scenario needs ongoing measurement rather than a single check. NSG flow logs record allowed and denied flows to a storage account and feed Traffic Analytics for aggregate views. Effective security rules and effective routes, both visible on a network interface, show the merged result of everything applied at subnet and interface level."
+        ]
+      },
+      {
+        "id": "backup-and-site-recovery",
+        "heading": "Azure Backup and Site Recovery",
+        "paragraphs": [
+          "Azure Backup protects data so that it can be restored later; Azure Site Recovery replicates whole machines so that they can be brought up somewhere else. Backup answers 'we lost or corrupted something', Site Recovery answers 'we lost a region'. Backup stores recovery points in a vault, and there are two vault types: a Recovery Services vault covers Azure VMs, on-premises workloads via the MARS agent or MABS, Azure Files, and SQL or SAP HANA in a VM, while a Backup vault covers the newer workloads such as Azure Blobs, Azure Disks, Azure Database for PostgreSQL, and Kubernetes. A vault's storage redundancy must be set before the first item is protected, because it cannot be changed afterwards.",
+          "A backup policy sets the schedule and the retention rules — daily, weekly, monthly, and yearly points, each with its own retention — and soft delete keeps deleted backup data recoverable for fourteen days beyond that. For Site Recovery, replication is continuous and produces recovery points with a configurable retention; a test failover to an isolated network validates the plan without disrupting production and is the recommended routine, while a planned failover is for an anticipated outage and an unplanned failover for an actual one. Failing back requires re-protecting in the reverse direction first. Recovery plans group machines so they boot in the right order with optional scripts between the groups."
+        ]
+      }
+    ]
+  }
+]

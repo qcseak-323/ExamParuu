@@ -31,12 +31,18 @@ export type WildParuu = {
 
 export const WILD_PARUU: Record<string, WildParuu> = {
   "az-900": { sheet: "wild-seal", flip: true },
+  // AZ-104 shares the Archipelago with AZ-900 and shipped before it had a
+  // creature of its own. A species roaming two routes of the same region is
+  // ordinary; the Glitchling fallback would read as a missing asset.
+  "az-104": { sheet: "wild-seal", flip: true },
   "ai-901": { sheet: "wild-pufferfish" },
   "dp-900": { sheet: "wild-otter" },
   "dp-600": { sheet: "wild-bee" },
   "sc-900": { sheet: "wild-armadillo" },
   "ab-900": { sheet: "wild-snail" },
   "pl-900": { sheet: "wild-hedgehog" },
+  // Same reuse as az-104: PL-300 shares the Mangroves with PL-900.
+  "pl-300": { sheet: "wild-hedgehog" },
 };
 
 /**

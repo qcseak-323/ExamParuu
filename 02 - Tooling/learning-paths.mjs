@@ -82,6 +82,26 @@ const PATH_UIDS = {
     "ai-concepts": "learn.ai-technical-concepts",
     "foundry-implementation": "learn.wwl.get-started-ai-apps-agents",
   },
+  // The cleanest mapping in the file: Microsoft publishes exactly five
+  // AZ-104-prefixed paths and they line up one-to-one with the five
+  // skills-measured areas, so no editorial split was needed.
+  "az-104": {
+    "identities-governance": "learn.az-104-manage-identities-governance",
+    "manage-storage": "learn.az-104-manage-storage",
+    "compute-resources": "learn.az-104-manage-compute-resources",
+    "virtual-networking": "learn.az-104-manage-virtual-networks",
+    "monitor-maintain": "learn.az-104-monitor-backup-resources",
+  },
+  // PL-300's paths are titled by topic rather than by exam code — the only
+  // code-prefixed hit in the catalog is a "prepare to teach" path aimed at
+  // instructors, which is the wrong audience. These four are the learner
+  // paths and they line up with the four skills areas.
+  "pl-300": {
+    "prepare-data": "learn-bizapps.data-preparation-in-power-bi",
+    "model-data": "learn.wwl.model-data-power-bi",
+    "visualize-analyze": "learn-bizapps.power-bi-effective",
+    "manage-secure-powerbi": "learn-bizapps.manage-secure-power-bi",
+  },
 };
 
 /** Spread `items` across `buckets` groups, front-loading any remainder. */

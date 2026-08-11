@@ -109,6 +109,12 @@ export type Guardian = {
   sprite: SpriteMatrix;
   /** Raster sheet under /pals once PixelLab art is generated, else null. */
   image: SheetId | null;
+  /**
+   * True when this guardian was lent by another route in the same series
+   * because the exam has no art of its own. A borrowed guardian is displayed
+   * but cannot be collected — see `getGuardian`.
+   */
+  borrowed?: true;
 };
 
 export const GUARDIANS: Record<string, Guardian> = {
@@ -226,8 +232,30 @@ export const GUARDIANS: Record<string, Guardian> = {
   },
 };
 
+/**
+ * The guardian standing at `examCode`'s dungeon door.
+ *
+ * Falls back to the guardian of another route in the same series when the exam
+ * has none of its own. AZ-104 shipped content before it had art, and a dungeon
+ * with no boss reads as broken in a way that a borrowed boss does not — the
+ * Archipelago's courier guarding both of the Archipelago's doors is at least
+ * coherent.
+ *
+ * The copy carries the *requested* exam code, not the lender's, so anything
+ * reading `examCode` off the result attributes it to the right route. It is
+ * also flagged `borrowed`, because a borrowed guardian cannot be won:
+ * `allGuardians` reads `GUARDIANS` directly, so clearing AZ-104 adds nothing
+ * to the collection and the UI must not promise otherwise.
+ */
 export function getGuardian(examCode: string): Guardian | undefined {
-  return GUARDIANS[examCode];
+  const own = GUARDIANS[examCode];
+  if (own) return own;
+
+  const series = examCode.split("-")[0];
+  const lender = Object.values(GUARDIANS).find((g) =>
+    g.examCode.startsWith(`${series}-`),
+  );
+  return lender ? { ...lender, examCode, borrowed: true } : undefined;
 }
 
 /** Every guardian with a playable dungeon, in catalog order. */

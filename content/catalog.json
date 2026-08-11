@@ -20,11 +20,11 @@
     "series": "az",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Manage identities, storage, compute, and virtual networks in Azure — consistently Microsoft's most-taken associate exam.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-11",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/azure-administrator/"
   },
   {
@@ -398,11 +398,11 @@
     "series": "pl",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Model, visualise, and analyse data with Power BI — one of the most in-demand exams in the portfolio.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-11",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/power-bi-data-analyst-associate/"
   },
   {

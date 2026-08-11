@@ -1,0 +1,71 @@
+{
+  "examCode": "AZ-104",
+  "examName": "Microsoft Azure Administrator",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for AZ-104, 'Skills measured as of April 17, 2026'. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "identities-governance",
+      "name": "Manage Azure identities and governance",
+      "weight": "20-25%",
+      "subtopics": [
+        "Manage Microsoft Entra users and groups (creation, properties, licences)",
+        "Manage external users and configure self-service password reset",
+        "Manage access to Azure resources with built-in roles and scoped assignments",
+        "Implement and manage Azure Policy, resource locks, and tags",
+        "Manage subscriptions, resource groups, and management groups",
+        "Manage costs with alerts, budgets, and Azure Advisor recommendations"
+      ]
+    },
+    {
+      "id": "manage-storage",
+      "name": "Implement and manage storage",
+      "weight": "15-20%",
+      "subtopics": [
+        "Create and configure storage accounts and choose a redundancy option",
+        "Configure storage firewalls, SAS tokens, stored access policies, and access keys",
+        "Configure identity-based access for Azure Files",
+        "Configure Blob Storage containers, tiers, versioning, and lifecycle management",
+        "Configure Azure Files shares, snapshots, and soft delete",
+        "Move data with Azure Storage Explorer and AzCopy, and configure object replication"
+      ]
+    },
+    {
+      "id": "compute-resources",
+      "name": "Deploy and manage Azure compute resources",
+      "weight": "20-25%",
+      "subtopics": [
+        "Interpret, modify, and deploy ARM templates and Bicep files",
+        "Create and configure virtual machines, sizes, disks, and encryption at host",
+        "Deploy virtual machines to availability zones and sets, and configure scale sets",
+        "Provision containers with Azure Container Registry, Container Instances, and Container Apps",
+        "Create and configure App Service plans, TLS, custom domains, slots, and backup"
+      ]
+    },
+    {
+      "id": "virtual-networking",
+      "name": "Implement and manage virtual networking",
+      "weight": "15-20%",
+      "subtopics": [
+        "Create and configure virtual networks, subnets, and virtual network peering",
+        "Configure public IP addresses and user-defined routes",
+        "Create network security groups and application security groups, and evaluate effective rules",
+        "Implement Azure Bastion, service endpoints, and private endpoints",
+        "Configure Azure DNS and internal or public load balancers",
+        "Troubleshoot network connectivity and load balancing"
+      ]
+    },
+    {
+      "id": "monitor-maintain",
+      "name": "Monitor and maintain Azure resources",
+      "weight": "10-15%",
+      "subtopics": [
+        "Interpret metrics and configure log settings in Azure Monitor",
+        "Query and analyse logs, and use Azure Monitor Insights",
+        "Set up alert rules, action groups, and alert processing rules",
+        "Use Azure Network Watcher and Connection monitor",
+        "Create Recovery Services and Backup vaults and configure backup policies",
+        "Configure Azure Site Recovery and perform a failover to a secondary region"
+      ]
+    }
+  ]
+}

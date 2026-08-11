@@ -1,0 +1,198 @@
+[
+  {
+    "domainId": "prepare-data",
+    "sections": [
+      {
+        "id": "connecting-to-data",
+        "heading": "Connecting to data",
+        "paragraphs": [
+          "Power BI connects to hundreds of sources through connectors, and the important early decision is not which connector but which storage mode. Import loads a compressed copy of the data into the model, which is the fastest to query and the default; it needs a refresh to see new data and is bounded by model size limits. DirectQuery leaves the data at the source and sends a query per interaction, so the report is always current but every visual costs a round trip and many DAX functions are unavailable. Direct Lake, available on Fabric capacities, reads Delta tables in OneLake directly with import-like speed and no refresh — the middle road, and the answer whenever a scenario mentions Fabric and near-real-time together.",
+          "A composite model mixes modes across tables, which is how a large fact table stays in DirectQuery while small dimensions are imported. Connecting to a shared semantic model instead of raw sources is the recommended pattern for report authors: the model is built and certified once, and reports live on top of it. Data source settings hold the credentials and the privacy level for each source, and privacy levels matter more than they look — Power Query will refuse to fold a query that would send data from a Private source to another source, which surfaces as a refresh error rather than a permissions error."
+        ]
+      },
+      {
+        "id": "parameters-and-query-reuse",
+        "heading": "Parameters, reference, and duplicate",
+        "paragraphs": [
+          "A parameter is a named value that queries can refer to, most commonly for a server name, a database name, or a folder path so the same file can be pointed at development and production without editing every step. Parameters also drive incremental refresh, where the reserved names RangeStart and RangeEnd must be date/time parameters used to filter the fact table.",
+          "Reference and duplicate look similar in the menu and behave differently. Duplicate copies every step into a new independent query — change the original and the copy is unaffected. Reference creates a new query whose first step is the output of the original, so the two share the upstream work and a change to the original flows downstream. Reference is what you want when several tables are shaped from one source; duplicate is what you want when a query is a starting point you intend to diverge from. The other loading control is Enable load: an intermediate query used only as a source for others should have load disabled so it does not appear as a table in the model, while Include in report refresh decides whether it is refreshed at all."
+        ]
+      },
+      {
+        "id": "profiling-and-cleaning",
+        "heading": "Profiling and cleaning data",
+        "paragraphs": [
+          "Power Query's data preview tools are the first stop for quality problems. Column quality shows the percentage of valid, error, and empty values; column distribution shows distinct and unique counts, which is how you spot a key that is not actually unique; column profile gives full statistics for the selected column. By default these are calculated on the first thousand rows, and switching to the whole dataset is the setting people forget when a problem does not reproduce.",
+          "Errors and nulls need different treatment. Remove errors deletes rows that failed a step; replace errors substitutes a value and keeps the row, which is usually right for a numeric column that should be zero. Keep errors is the diagnostic option, isolating the failures so they can be inspected. Nulls are removed with Remove empty or filled with Fill down and Fill up, which propagate the last non-null value and are the standard fix for a source that only prints a category on its first row. A data import error frequently comes down to a data type conversion applied before the cleaning step rather than after — step order in the Applied Steps pane is part of the logic, not just a history."
+        ]
+      },
+      {
+        "id": "shaping-and-transforming",
+        "heading": "Shaping and transforming",
+        "paragraphs": [
+          "Unpivot is the transformation that turns a spreadsheet into a table: columns that are really values — one per month, one per region — become rows of an attribute and value pair, which is what a star schema needs. Unpivot other columns is the resilient form of it, because it keeps working when next year's column appears. Pivot does the reverse and is comparatively rare in modelling. Transpose swaps rows and columns wholesale and is mostly used to rescue a source whose headers run down the side.",
+          "Merge and append are the two ways to combine queries and they are often confused. Append stacks rows from tables with the same shape — twelve monthly files into one year. Merge joins columns from a second query on matching keys, with the join kinds you would expect from SQL plus two Power Query specialities: inner, left outer, right outer, full outer, left anti, and right anti. The anti joins are the tool for finding unmatched rows, which is how you check that every fact row has a matching dimension key before you build the relationship. Group by aggregates rows to a coarser grain and can return an aggregate or a nested table of the underlying rows."
+        ]
+      },
+      {
+        "id": "fact-and-dimension-tables",
+        "heading": "Fact and dimension tables",
+        "paragraphs": [
+          "A star schema is the shape Power BI is built for. Fact tables are long and narrow, hold the numeric measurements and the foreign keys, and grow over time. Dimension tables are short and wide, hold the descriptive attributes you slice by, and have one row per thing. Modelling a flattened single table works for a demonstration and stops working as soon as two facts need to share a dimension.",
+          "Building dimensions in Power Query usually means referencing the source query, keeping the descriptive columns, and removing duplicates to leave one row per entity — and then confirming with column distribution that distinct equals unique on the key. Keys should be single columns, and where a source only offers a composite key the standard answer is to create a merged key column in both tables rather than build a relationship on two fields, which Power BI does not support. Surrogate keys are integers rather than text where possible, because the storage engine compresses and joins integers far better."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "model-data",
+    "sections": [
+      {
+        "id": "relationships-and-cardinality",
+        "heading": "Relationships and cardinality",
+        "paragraphs": [
+          "A relationship connects a column in one table to a column in another and defines how filters travel. Cardinality is one-to-many in almost every healthy model, with the one side on the dimension and the many side on the fact. Many-to-many is possible and should be a deliberate choice, usually via a bridge table; one-to-one usually means two tables that should have been one. The cross-filter direction is single by default, meaning filters flow from the one side to the many side only, which is what you want because it keeps the model predictable.",
+          "Setting cross-filter to both makes filters travel in both directions and is the source of most ambiguity errors — with several bidirectional relationships, the engine can find more than one path between two tables and refuses to guess. The recommended alternative is to leave the relationship single and use the CROSSFILTER function inside the one measure that needs the other direction. Only one relationship between two tables can be active at a time; additional ones are inactive, drawn as a dashed line, and activated per calculation with USERELATIONSHIP. That is exactly how a role-playing dimension works: one date table related to order date, ship date, and due date, with one relationship active and the others switched on inside specific measures."
+        ]
+      },
+      {
+        "id": "date-tables-and-time-intelligence",
+        "heading": "Date tables and time intelligence",
+        "paragraphs": [
+          "Time intelligence functions require a proper date table: one row per date, no gaps, covering full years, with a date-typed key column, and marked as a date table in the model. Without that, functions such as TOTALYTD and SAMEPERIODLASTYEAR return wrong answers rather than errors, which is why a silently incorrect year-to-date figure is such a common exam scenario. A date table can be generated with CALENDAR or CALENDARAUTO, imported from a source, or built in Power Query — the source matters less than the completeness.",
+          "Auto date/time is the feature that creates a hidden date hierarchy for every date column in the model. It is convenient in a first draft and harmful at scale: it adds a hidden table per date column, inflating model size and refresh time, and it does not respect a fiscal calendar. The standard advice is to switch it off and use one explicit date table for the whole model. Common patterns to recognise are year-to-date with TOTALYTD or DATESYTD, prior-period comparison with SAMEPERIODLASTYEAR or DATEADD, and rolling windows with DATESINPERIOD."
+        ]
+      },
+      {
+        "id": "dax-measures-and-calculate",
+        "heading": "DAX measures and CALCULATE",
+        "paragraphs": [
+          "The distinction that governs DAX is measures versus calculated columns. A calculated column is evaluated row by row when the model refreshes, stored in the model, and consumes memory — it is the right choice when you need a value to slice or filter by. A measure is evaluated at query time in the filter context of the visual, stores nothing, and is the right choice for anything aggregated. Creating a calculated column for something a measure could compute is the single most common modelling mistake, because it bloats the model and produces sums that do not respond to slicers the way users expect.",
+          "CALCULATE is the function that modifies filter context, and almost every non-trivial measure uses it. It evaluates an expression with the filters you supply, replacing any existing filter on the same column — which is why CALCULATE([Sales], 'Product'[Colour] = \"Red\") ignores a colour slicer. To keep the existing filter and add to it, wrap the condition in KEEPFILTERS; to remove filters instead, use ALL, ALLEXCEPT, or ALLSELECTED, which is how a percent-of-total measure gets its denominator. Iterator functions ending in X — SUMX, AVERAGEX, MAXX — evaluate an expression row by row over a table and then aggregate, which is what you need when the calculation cannot be done on a pre-existing column, such as quantity multiplied by price. Semi-additive measures, which sum across some dimensions but not time, are built with LASTDATE, FIRSTNONBLANK, or CLOSINGBALANCEMONTH and are the standard answer for stock levels and account balances."
+        ]
+      },
+      {
+        "id": "calculation-groups",
+        "heading": "Calculation groups and quick measures",
+        "paragraphs": [
+          "A calculation group solves the combinatorial problem of time intelligence: rather than writing year-to-date, prior year, and year-over-year variants of thirty measures, you write one calculation group with those three calculation items and apply them to any measure. Each item contains an expression using SELECTEDMEASURE as a placeholder, and the group appears in the field list as a table users can slice by. Calculation items have an ordinal that controls display order and a format string expression that can change the formatting per item — useful when the year-over-year item should show a percentage while the base measure shows currency.",
+          "Quick measures are a guided dialog that writes DAX for common patterns — running totals, rank, percentage of total, time comparisons — and the generated code is visible and editable afterwards. They are a reasonable learning tool and a fast way to get a correct pattern, but the exam expects you to recognise the underlying functions rather than the dialog. Where a quick measure and a calculation group both apply, the calculation group is the maintainable answer at scale because it applies to measures written later without further work."
+        ]
+      },
+      {
+        "id": "model-performance",
+        "heading": "Optimising model performance",
+        "paragraphs": [
+          "Power BI's storage engine compresses column by column, so the biggest wins come from removing columns rather than rows. A high-cardinality column — a transaction GUID, a timestamp to the second, a free-text note — compresses badly and can dominate model size on its own. Splitting a datetime into a date column and a time column, or rounding the time to the minute, routinely cuts model size substantially. Removing unused columns entirely is better still, and reducing granularity by pre-aggregating the fact table to the grain the reports actually use is the most effective change available when it is acceptable to the business.",
+          "For diagnosing rather than preventing, Performance Analyzer records the duration of every visual on a page, split into DAX query, visual display, and other, and it will export the DAX so you can run it in DAX query view or a tool such as DAX Studio. A visual that is slow in the DAX portion is a measure or model problem; one that is slow in visual display is usually returning too many data points. Common culprits are bidirectional relationships, calculated columns doing work a measure should do, iterators over large tables, and visuals with too many categories."
+        ]
+      },
+      {
+        "id": "table-and-column-properties",
+        "heading": "Table and column properties",
+        "paragraphs": [
+          "Model metadata does a lot of quiet work. Data category tells Power BI what a column means — Web URL, Image URL, Barcode, or the geographic categories that make maps plot correctly — and a map visual putting points in the wrong country is almost always a missing or wrong data category. Sort by column is how month names appear in calendar order rather than alphabetically: the display column is sorted by a numeric month column, and the sort column must have the same granularity or the setting is rejected.",
+          "Summarization controls what happens when a numeric column is dropped into a visual, and setting it to Do not summarize is the fix for a year column that keeps appearing as a sum. Hiding columns is not cosmetic either — key columns, sort helper columns, and anything users should reach only through a measure should be hidden so the field list shows a curated model. Display folders group related measures, and a description appears as a tooltip in the field list, both of which matter when the model is shared for self-service."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "visualize-analyze",
+    "sections": [
+      {
+        "id": "choosing-and-formatting-visuals",
+        "heading": "Choosing and formatting visuals",
+        "paragraphs": [
+          "Choosing a visual is choosing what comparison the reader should make. Bar and column charts compare magnitude across categories and are the safe default. Line charts show change over time. Scatter charts show the relationship between two measures, with bubble size as a third. Treemaps and pie charts show part-to-whole and lose accuracy quickly past a handful of categories. Cards and KPIs carry a single number, and a matrix or table is right when the reader needs to look up an exact value rather than compare shapes. A funnel is for sequential stages, a waterfall for the contributions that move a total from one value to another.",
+          "Formatting is governed by themes so it does not have to be repeated. A report theme is a JSON file setting the colour palette, fonts, and default visual formatting, applied report-wide and overridable per visual. Conditional formatting drives a colour, data bar, or icon from a rule, a colour scale, or a field value — the field value option is the escape hatch when the logic is complex enough to belong in a DAX measure returning a hex code. Visual calculations, added on the visual itself, compute over the visual's own result set, which is what makes running totals and rank-within-what-is-displayed simple without touching the model."
+        ]
+      },
+      {
+        "id": "filtering-and-slicing",
+        "heading": "Filtering and slicing",
+        "paragraphs": [
+          "Power BI filters at four levels, and knowing which one a scenario needs is a frequent exam question. A visual-level filter affects one visual, a page-level filter every visual on that page, a report-level filter every page, and a filter on all pages behaves like a report-level filter that users can see and change. Slicers are filters rendered as a control on the canvas so readers can drive them, and a slicer can be synced across pages with the Sync slicers pane, which separately controls whether the slicer is visible on each page and whether it is synced to it.",
+          "The Row-level security model is not a filter of this kind and should not be confused with one: report filters are a presentation convenience that a user can often remove, while RLS is enforced in the model. For usability, Edit interactions controls what happens when a reader selects a data point in one visual — filter the others, highlight within them, or do nothing — and setting a slicer-like chart to filter rather than highlight is the usual intent. Top N filters, relative date filters, and relative time filters cover the common dynamic cases without any DAX."
+        ]
+      },
+      {
+        "id": "bookmarks-and-navigation",
+        "heading": "Bookmarks, tooltips, and navigation",
+        "paragraphs": [
+          "A bookmark captures the current state of a page — filters, slicer selections, sort order, drill level, and the visibility of objects in the Selection pane — and can be replayed by a button, an image, or a shape. Choosing which of those properties a bookmark saves is what makes it usable: a bookmark that captures Data will override a reader's slicer choices, whereas unchecking Data leaves them alone and switches only the display. Selected visuals scopes the bookmark to just the objects chosen at the time it was created, which is how one page hosts several show-and-hide groups without them fighting.",
+          "Custom tooltips replace the default hover card with a report page. The page is sized to the Tooltip page-size preset, its Tooltip toggle is switched on, and the visual then points at it in its Tooltip formatting. Drillthrough is the other navigation mechanism: a target page declares a drillthrough field, and readers right-click a data point on any page to jump there with that value carried across as a filter. A back button is added automatically. Page navigation buttons and a report-level navigator handle plain movement between pages, and the Selection pane's layer order and tab order is where accessibility for keyboard readers is actually configured."
+        ]
+      },
+      {
+        "id": "reports-for-people",
+        "heading": "Mobile, accessibility, and personalization",
+        "paragraphs": [
+          "A report designed at desktop proportions is unusable on a phone unless a mobile layout is authored — the Mobile layout view lets you place a subset of the visuals on a portrait canvas, and visuals not placed there simply do not appear on the phone. Accessibility is a set of concrete settings rather than a stance: alt text on every visual, a logical tab order set in the Selection pane, sufficient colour contrast, and never using colour as the only way to convey a difference. The built-in accessible themes and the Show data table view for a visual both help readers using assistive technology.",
+          "Personalize visuals lets readers change the measure, dimension, or visual type of a visual for themselves without editing the report, and it is enabled per report and then per visual. Their changes are theirs alone and can be reset. Automatic page refresh keeps a page current for DirectQuery sources at an interval the capacity administrator permits, and it is the answer for an operations dashboard on a wall — with the important caveat that it does not apply to Import mode, where the schedule of the semantic model refresh governs."
+        ]
+      },
+      {
+        "id": "patterns-and-trends",
+        "heading": "Finding patterns and trends",
+        "paragraphs": [
+          "Power BI has several analysis features that do statistical work without DAX. Grouping combines selected categorical values into a new group; binning buckets a numeric or date column into equal-sized ranges; clustering finds natural groupings across several fields and creates a new column from them. The Analyze feature, reached by right-clicking a data point, offers Explain the increase or decrease and Find where this distribution is different, and produces a generated visual explaining the largest contributing factors.",
+          "The Analytics pane on a visual adds reference lines — constant, average, median, percentile, min, max — plus error bars and, on a line chart with a date axis, forecasting with a configurable confidence interval and seasonality. Anomaly detection flags points that deviate from the expected pattern and explains the likely contributing factors. Among the AI visuals, the Key influencers visual ranks what drives a metric up or down, the Decomposition tree lets a reader break a measure down field by field interactively, and the Q&A visual answers typed natural-language questions against the model. Copilot adds narrative summaries and suggested report pages on capacities where it is enabled."
+        ]
+      },
+      {
+        "id": "paginated-and-export",
+        "heading": "Paginated reports and export",
+        "paragraphs": [
+          "Paginated reports are the answer whenever the requirement is a pixel-perfect document meant for printing or for a PDF — a multi-page invoice, a regulatory return, a table that must span hundreds of pages with repeating headers. They are built in Power BI Report Builder rather than Power BI Desktop, use their own RDL format, and can run against a Power BI semantic model as well as external sources. An interactive report is for exploring; a paginated report is for producing a document.",
+          "Export settings are configured per report and control which export options readers see: Export data as a summarized or underlying dataset, export to PDF or PowerPoint, and analyze in Excel. Restricting export of underlying data is a governance decision made here and reinforced by sensitivity labels, which travel with a file exported to Excel or PDF and keep their protection outside Power BI. Subscriptions deliver a rendered snapshot on a schedule by email and are distinct from data alerts, which fire when a card, gauge, or KPI on a dashboard crosses a threshold."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "manage-secure-powerbi",
+    "sections": [
+      {
+        "id": "workspaces-and-roles",
+        "heading": "Workspaces and workspace roles",
+        "paragraphs": [
+          "A workspace is the container that reports, semantic models, dashboards, and dataflows live in, and it is the unit that permissions are granted on. There are four workspace roles and their order is the exam question. Viewer can see and interact with content. Contributor can additionally create and edit content but cannot publish an app or change permissions. Member can do everything Contributor can, plus publish and update the app, share items, and add other Members, Contributors, and Viewers. Admin adds the ability to delete the workspace, and to add or remove other Admins.",
+          "The practical consequence is that a report author who needs to publish updates needs Contributor at minimum and Member if they will also publish the app. Personal My workspace is not a collaboration space and content that matters should not live there, because it cannot be shared with a role and disappears with the account. Workspaces can be assigned to a Fabric or Premium capacity, which is what unlocks larger models, more frequent refreshes, Direct Lake, deployment pipelines, and consumption by free-licensed users."
+        ]
+      },
+      {
+        "id": "apps-and-distribution",
+        "heading": "Apps and distribution",
+        "paragraphs": [
+          "An app is the packaged, read-only presentation of a workspace's content for consumers, with its own navigation and audience. The workspace stays the authoring surface; the app is what the wider organisation opens. Apps support multiple audiences, so one app can show a different set of items to sales and to finance without duplicating reports. Publishing an app and then updating it are separate actions — content changed in the workspace is not visible to app users until the app is updated, which is the answer whenever a scenario says consumers still see yesterday's report.",
+          "The distribution choices sit on a ladder. An app is the standard for many consumers. Sharing an individual report or dashboard is for a handful of people and grants access to the underlying semantic model too. Adding people to the workspace with a role is for collaborators, not consumers. Embedding covers portals and custom applications, and Publish to web is public to the entire internet with no authentication — it is the option to recognise and reject in any scenario mentioning confidential data, and tenant administrators frequently disable it outright."
+        ]
+      },
+      {
+        "id": "refresh-and-gateways",
+        "heading": "Refresh, gateways, and alerts",
+        "paragraphs": [
+          "Scheduled refresh keeps an Import model current, and its cadence is limited by licensing: eight refreshes a day on shared capacity, up to forty-eight on Premium or Fabric capacity. Incremental refresh partitions a large table so only a recent window is reloaded, configured with the RangeStart and RangeEnd parameters, and it both shortens the refresh and reduces the load on the source. A dataflow moves the Power Query work into the service so several models can consume the same prepared tables.",
+          "A data gateway is required whenever the service must reach a data source that is not accessible from the cloud — on-premises servers and sources inside a private network. The standard mode gateway is shared, centrally managed, and supports scheduled refresh, DirectQuery, and live connections; personal mode is single-user, supports Import refresh only, and is not intended for production. Cloud sources do not need a gateway. Data alerts are configured by a consumer on a dashboard tile — card, gauge, or KPI only — and notify when a value crosses a threshold, while subscriptions email a rendered snapshot on a schedule."
+        ]
+      },
+      {
+        "id": "row-level-security",
+        "heading": "Row-level security",
+        "paragraphs": [
+          "Row-level security restricts which rows a user can see, and it is enforced in the semantic model rather than in the report, so it survives export and applies to every report on that model. A role is defined in Power BI Desktop with a DAX filter expression on one or more tables, for example [Region] = \"West\", and then published; members are assigned to the role in the service under the semantic model's security settings, not in Desktop. Missing that second step is the classic failure — the role exists and filters nothing because nobody is in it.",
+          "Static RLS hardcodes the value per role, which means one role per region and does not scale. Dynamic RLS uses USERPRINCIPALNAME or USERNAME in the filter expression against a permissions table mapping users to what they may see, so one role serves everyone. Where the permissions table relates to a dimension that then filters the fact table, the relationship from the permissions table often needs bidirectional cross-filtering for the filter to propagate. Two important limits: RLS does not apply to a user with Admin, Member, or Contributor on the workspace, and it does not apply to Power BI administrators viewing through the admin portal — testing is done with View as role in Desktop or Test as role in the service."
+        ]
+      },
+      {
+        "id": "governance-and-labels",
+        "heading": "Endorsement, item access, and sensitivity labels",
+        "paragraphs": [
+          "Endorsement signals trust in an item. Promoted is applied by anyone with write permission on the item and says the owner considers it ready. Certified is a stronger claim applied only by users the tenant administrator has authorised, and certified items surface first in discovery. Neither changes permissions; both change how findable and trusted the content appears, and a governance scenario asking how to steer users toward the right semantic model is asking about endorsement.",
+          "Item-level permissions sit alongside workspace roles for finer control — granting Read on a single semantic model, plus Build if the recipient needs to create their own reports from it, and Reshare if they may pass it on. Build is the permission most often missing when someone can open a report but cannot connect to its model. Sensitivity labels come from Microsoft Purview Information Protection, apply to semantic models, reports, dashboards, and dataflows, and are inherited downstream from a model to the reports built on it. Because the label travels with exported files, applying one is what keeps protection attached to a PDF or Excel extract after it leaves the service."
+        ]
+      }
+    ]
+  }
+]

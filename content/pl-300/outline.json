@@ -1,0 +1,63 @@
+{
+  "examCode": "PL-300",
+  "examName": "Microsoft Power BI Data Analyst",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for PL-300, 'Skills measured as of April 20, 2026'. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "prepare-data",
+      "name": "Prepare the data",
+      "weight": "25-30%",
+      "subtopics": [
+        "Identify and connect to data sources or a shared semantic model",
+        "Change data source settings, including credentials and privacy levels",
+        "Choose between Direct Lake, DirectQuery, and Import storage modes",
+        "Create and modify parameters",
+        "Profile data and resolve inconsistencies, nulls, and import errors",
+        "Transform columns, group and aggregate rows, pivot and unpivot",
+        "Merge and append queries, and choose between reference and duplicate"
+      ]
+    },
+    {
+      "id": "model-data",
+      "name": "Model the data",
+      "weight": "25-30%",
+      "subtopics": [
+        "Configure table and column properties and implement role-playing dimensions",
+        "Define relationship cardinality and cross-filter direction",
+        "Create a common date table and implement time intelligence",
+        "Create measures with DAX, including CALCULATE and semi-additive measures",
+        "Create calculated columns, calculated tables, and calculation groups",
+        "Optimize performance by reducing granularity and removing unused columns",
+        "Identify poorly performing measures and visuals with Performance Analyzer"
+      ]
+    },
+    {
+      "id": "visualize-analyze",
+      "name": "Visualize and analyze the data",
+      "weight": "25-30%",
+      "subtopics": [
+        "Select, format, and configure appropriate visuals",
+        "Apply themes, conditional formatting, slicing, and filtering",
+        "Configure bookmarks, custom tooltips, and visual interactions",
+        "Configure drillthrough navigation, sync slicers, and report navigation",
+        "Design for mobile, accessibility, and personalization",
+        "Identify patterns with grouping, binning, clustering, and AI visuals",
+        "Use reference lines, forecasting, and anomaly detection"
+      ]
+    },
+    {
+      "id": "manage-secure-powerbi",
+      "name": "Manage and secure Power BI",
+      "weight": "15-20%",
+      "subtopics": [
+        "Create and configure workspaces and assign workspace roles",
+        "Configure and update an app and choose a distribution method",
+        "Configure subscriptions, data alerts, and scheduled refresh",
+        "Identify when a gateway is required",
+        "Promote or certify Power BI content",
+        "Implement row-level security roles and group membership",
+        "Configure item-level access and apply sensitivity labels"
+      ]
+    }
+  ]
+}

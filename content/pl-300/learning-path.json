@@ -1,0 +1,256 @@
+{
+  "examCode": "PL-300",
+  "note": "Learning path and module titles mirror the structure published on Microsoft Learn. All teaching content is original to ExamParuu.",
+  "paths": [
+    {
+      "id": "prepare-data",
+      "title": "Prepare data for analysis with Power BI",
+      "domainId": "prepare-data",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/prepare-data-power-bi/",
+      "modules": [
+        {
+          "id": "prepare-data-m1",
+          "title": "Get data in Power BI",
+          "sectionIds": [
+            "connecting-to-data",
+            "shaping-and-transforming"
+          ],
+          "cardIds": [
+            "fc-pl300-pd-01",
+            "fc-pl300-pd-04",
+            "fc-pl300-pd-07",
+            "fc-pl300-pd-10"
+          ]
+        },
+        {
+          "id": "prepare-data-m2",
+          "title": "Clean, transform, and load data in Power BI",
+          "sectionIds": [
+            "parameters-and-query-reuse",
+            "fact-and-dimension-tables"
+          ],
+          "cardIds": [
+            "fc-pl300-pd-02",
+            "fc-pl300-pd-05",
+            "fc-pl300-pd-08",
+            "fc-pl300-pd-11"
+          ]
+        },
+        {
+          "id": "prepare-data-m3",
+          "title": "Choose a Power BI model framework",
+          "sectionIds": [
+            "profiling-and-cleaning"
+          ],
+          "cardIds": [
+            "fc-pl300-pd-03",
+            "fc-pl300-pd-06",
+            "fc-pl300-pd-09",
+            "fc-pl300-pd-12"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "model-data",
+      "title": "Model data with Power BI",
+      "domainId": "model-data",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/model-data-power-bi/",
+      "modules": [
+        {
+          "id": "model-data-m1",
+          "title": "Configure a semantic model",
+          "sectionIds": [
+            "relationships-and-cardinality"
+          ],
+          "cardIds": [
+            "fc-pl300-md-01",
+            "fc-pl300-md-07",
+            "fc-pl300-md-13"
+          ]
+        },
+        {
+          "id": "model-data-m2",
+          "title": "Write DAX formulas for semantic models",
+          "sectionIds": [
+            "date-tables-and-time-intelligence"
+          ],
+          "cardIds": [
+            "fc-pl300-md-02",
+            "fc-pl300-md-08",
+            "fc-pl300-md-14"
+          ]
+        },
+        {
+          "id": "model-data-m3",
+          "title": "Create DAX calculations in semantic models",
+          "sectionIds": [
+            "dax-measures-and-calculate"
+          ],
+          "cardIds": [
+            "fc-pl300-md-03",
+            "fc-pl300-md-09"
+          ]
+        },
+        {
+          "id": "model-data-m4",
+          "title": "Modify DAX filter context in semantic models",
+          "sectionIds": [
+            "calculation-groups"
+          ],
+          "cardIds": [
+            "fc-pl300-md-04",
+            "fc-pl300-md-10"
+          ]
+        },
+        {
+          "id": "model-data-m5",
+          "title": "Use DAX time intelligence functions in semantic models",
+          "sectionIds": [
+            "model-performance"
+          ],
+          "cardIds": [
+            "fc-pl300-md-05",
+            "fc-pl300-md-11"
+          ]
+        },
+        {
+          "id": "model-data-m6",
+          "title": "Create visual calculations in Power BI Desktop",
+          "sectionIds": [
+            "table-and-column-properties"
+          ],
+          "cardIds": [
+            "fc-pl300-md-06",
+            "fc-pl300-md-12"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visualize-analyze",
+      "title": "Design effective reports in Power BI",
+      "domainId": "visualize-analyze",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/power-bi-effective/",
+      "modules": [
+        {
+          "id": "visualize-analyze-m1",
+          "title": "Scope report design requirements",
+          "sectionIds": [
+            "choosing-and-formatting-visuals",
+            "patterns-and-trends"
+          ],
+          "cardIds": [
+            "fc-pl300-va-01",
+            "fc-pl300-va-05",
+            "fc-pl300-va-09",
+            "fc-pl300-va-13"
+          ]
+        },
+        {
+          "id": "visualize-analyze-m2",
+          "title": "Design Power BI reports",
+          "sectionIds": [
+            "filtering-and-slicing",
+            "paginated-and-export"
+          ],
+          "cardIds": [
+            "fc-pl300-va-02",
+            "fc-pl300-va-06",
+            "fc-pl300-va-10",
+            "fc-pl300-va-14"
+          ]
+        },
+        {
+          "id": "visualize-analyze-m3",
+          "title": "Enhance Power BI report designs for the user experience",
+          "sectionIds": [
+            "bookmarks-and-navigation"
+          ],
+          "cardIds": [
+            "fc-pl300-va-03",
+            "fc-pl300-va-07",
+            "fc-pl300-va-11"
+          ]
+        },
+        {
+          "id": "visualize-analyze-m4",
+          "title": "Perform analytics in Power BI",
+          "sectionIds": [
+            "reports-for-people"
+          ],
+          "cardIds": [
+            "fc-pl300-va-04",
+            "fc-pl300-va-08",
+            "fc-pl300-va-12"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "manage-secure-powerbi",
+      "title": "Manage and secure Power BI",
+      "domainId": "manage-secure-powerbi",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/manage-secure-power-bi/",
+      "modules": [
+        {
+          "id": "manage-secure-powerbi-m1",
+          "title": "Manage workspaces in Power BI service",
+          "sectionIds": [
+            "workspaces-and-roles"
+          ],
+          "cardIds": [
+            "fc-pl300-ms-01",
+            "fc-pl300-ms-06",
+            "fc-pl300-ms-11"
+          ]
+        },
+        {
+          "id": "manage-secure-powerbi-m2",
+          "title": "Manage semantic models in Power BI",
+          "sectionIds": [
+            "apps-and-distribution"
+          ],
+          "cardIds": [
+            "fc-pl300-ms-02",
+            "fc-pl300-ms-07",
+            "fc-pl300-ms-12"
+          ]
+        },
+        {
+          "id": "manage-secure-powerbi-m3",
+          "title": "Choose a content distribution method",
+          "sectionIds": [
+            "refresh-and-gateways"
+          ],
+          "cardIds": [
+            "fc-pl300-ms-03",
+            "fc-pl300-ms-08"
+          ]
+        },
+        {
+          "id": "manage-secure-powerbi-m4",
+          "title": "Create dashboards in Power BI",
+          "sectionIds": [
+            "row-level-security"
+          ],
+          "cardIds": [
+            "fc-pl300-ms-04",
+            "fc-pl300-ms-09"
+          ]
+        },
+        {
+          "id": "manage-secure-powerbi-m5",
+          "title": "Secure data access in Power BI",
+          "sectionIds": [
+            "governance-and-labels"
+          ],
+          "cardIds": [
+            "fc-pl300-ms-05",
+            "fc-pl300-ms-10"
+          ]
+        }
+      ]
+    }
+  ]
+}

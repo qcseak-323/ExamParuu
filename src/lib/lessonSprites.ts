@@ -352,6 +352,17 @@ const BY_DOMAIN: Record<string, SpriteMatrix> = {
   "core-features": WINDOW,
   "data-protection-governance": SHIELD,
   "copilot-agent-admin": ROBOT,
+  // AZ-104 — Azure Administrator
+  "identities-governance": KEY,
+  "manage-storage": DATABASE,
+  "compute-resources": BLOCKS,
+  "virtual-networking": NODES,
+  "monitor-maintain": CHART,
+  // PL-300 — Power BI
+  "prepare-data": FLOW,
+  "model-data": NODES,
+  "visualize-analyze": CHART,
+  "manage-secure-powerbi": SHIELD,
   // PL-900 — Power Platform
   "business-value": SPARK,
   environment: GEAR,

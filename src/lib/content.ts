@@ -36,6 +36,18 @@ import sc900Flashcards from "../../content/sc-900/flashcards.json";
 import sc900StudyGuide from "../../content/sc-900/study-guide.json";
 import sc900Path from "../../content/sc-900/learning-path.json";
 
+import pl300Outline from "../../content/pl-300/outline.json";
+import pl300Questions from "../../content/pl-300/questions.json";
+import pl300Flashcards from "../../content/pl-300/flashcards.json";
+import pl300StudyGuide from "../../content/pl-300/study-guide.json";
+import pl300Path from "../../content/pl-300/learning-path.json";
+
+import az104Outline from "../../content/az-104/outline.json";
+import az104Questions from "../../content/az-104/questions.json";
+import az104Flashcards from "../../content/az-104/flashcards.json";
+import az104StudyGuide from "../../content/az-104/study-guide.json";
+import az104Path from "../../content/az-104/learning-path.json";
+
 import pl900Outline from "../../content/pl-900/outline.json";
 import pl900Questions from "../../content/pl-900/questions.json";
 import pl900Flashcards from "../../content/pl-900/flashcards.json";
@@ -90,6 +102,20 @@ const examRegistry: Record<string, ExamContent> = {
     flashcards: ai901Flashcards as Flashcard[],
     studyGuide: ai901StudyGuide as StudyGuideDomain[],
     learningPath: ai901Path as ExamLearningPath,
+  },
+  "pl-300": {
+    outline: pl300Outline as Outline,
+    questions: pl300Questions as Question[],
+    flashcards: pl300Flashcards as Flashcard[],
+    studyGuide: pl300StudyGuide as StudyGuideDomain[],
+    learningPath: pl300Path as ExamLearningPath,
+  },
+  "az-104": {
+    outline: az104Outline as Outline,
+    questions: az104Questions as Question[],
+    flashcards: az104Flashcards as Flashcard[],
+    studyGuide: az104StudyGuide as StudyGuideDomain[],
+    learningPath: az104Path as ExamLearningPath,
   },
   "dp-900": {
     outline: dp900Outline as Outline,

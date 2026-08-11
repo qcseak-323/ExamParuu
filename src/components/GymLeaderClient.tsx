@@ -239,7 +239,13 @@ export default function GymLeaderClient({
     const guardianLine = guardian
       ? alreadyOwned
         ? `${guardian.name} guards this door — but you two have already met. This run is for the record.`
-        : `${guardian.name} guards this door. ${guardian.tagline} Clear the dungeon and it joins your team.`
+        : guardian.borrowed
+          ? // Lent by another route in the same series because this exam has
+            // no guardian of its own, so it cannot be won. Promising a
+            // recruit the collection will never show is worse than saying
+            // nothing about it.
+            `${guardian.name} guards this door too. ${guardian.tagline}`
+          : `${guardian.name} guards this door. ${guardian.tagline} Clear the dungeon and it joins your team.`
       : null;
 
     return (
@@ -439,7 +445,11 @@ export default function GymLeaderClient({
   }
 
   // The catch moment: this run is the trainer's first clear of this dungeon.
-  const guardianJoins = passed && guardian && !wasClearedAtStart;
+  // A borrowed guardian is on loan from another route in the same series and
+  // is not in this exam's collection, so clearing here cannot recruit it. The
+  // badge is still earned; only the recruit panel is withheld.
+  const guardianJoins =
+    passed && guardian && !guardian.borrowed && !wasClearedAtStart;
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
