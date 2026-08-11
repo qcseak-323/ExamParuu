@@ -1,0 +1,169 @@
+[
+  {
+    "domainId": "soc-environment",
+    "sections": [
+      {
+        "id": "defender-xdr-notifications-and-tuning",
+        "heading": "Notifications, tuning, and alert noise",
+        "paragraphs": [
+          "Microsoft Defender XDR sends two independent kinds of email. Incident notifications go out when an incident is created or updated and are scoped by severity and by device group, so a tier-one queue can be told about medium and above while a specialist group hears only about its own devices. Threat analytics notifications are separate and cover new reports rather than activity in your tenant. Both are configured in Settings under Microsoft Defender XDR, and a rule that names no device group applies to all of them.",
+          "Tuning is what keeps the queue usable. An alert tuning rule (formerly alert suppression) matches on conditions such as file name, folder path, command line, or IP, and then hides, resolves, or lowers the severity of matching alerts. The scope decides the blast radius: a rule can apply to one device or across the organisation, and an over-broad suppression is how a real detection gets silently discarded. Correlation is the opposite mechanism — Defender XDR groups related alerts from endpoints, identity, email, and cloud apps into a single incident, which is why an incident count is far smaller than an alert count and why investigating at incident level is the intended workflow."
+        ]
+      },
+      {
+        "id": "defender-for-endpoint-configuration",
+        "heading": "Defender for Endpoint settings and device groups",
+        "paragraphs": [
+          "Advanced features in Defender for Endpoint switch on the integrations the rest of the platform depends on — automated investigation, live response, live response for servers, allowing unsigned script execution, the Defender for Cloud Apps and Defender for Identity connections, and Web content filtering. A scenario in which a capability simply does not appear is very often an advanced feature left off rather than a licensing problem.",
+          "Device groups are the unit of both permission and automation. Each group is defined by a rank, a matching rule over device attributes such as name, domain, tag, or OS, and an assigned automation level, and the first group whose rule matches wins — hence rank matters and the catch-all Ungrouped devices group sits last. Automation level runs from No automated response, through Semi — requiring approval for some or all folders — to Full, which remediates automatically. Raising a group to Full is what turns automated investigation from a recommendation engine into a remediation engine, and it is the setting a question about 'threats are detected but nothing is remediated' is usually pointing at."
+        ]
+      },
+      {
+        "id": "asr-and-security-policies",
+        "heading": "Attack surface reduction and policy",
+        "paragraphs": [
+          "Attack surface reduction rules block behaviours that legitimate software rarely needs — Office applications creating child processes, executable content from email, credential theft from LSASS, obfuscated scripts. Each rule has four states: not configured, audit, block, and warn. Audit is the deployment discipline the exam expects: run in audit, review the ASR reports for what would have been blocked, add exclusions for the false positives, and only then move to block. Going straight to block is how a line-of-business application stops working overnight.",
+          "Policies reach devices through Microsoft Intune endpoint security policies or, for Defender-managed configuration, through the Endpoint security policies page in the Defender portal. Custom data collection extends what the sensor sends — additional event categories and, where a question mentions capturing something the timeline does not show by default, that is the setting. Exclusions deserve care in all of it: an exclusion path that is too broad creates a hole an attacker can live in, and the ASR exclusions are separate from antivirus exclusions."
+        ]
+      },
+      {
+        "id": "automated-investigation-and-attack-disruption",
+        "heading": "Automated investigation and attack disruption",
+        "paragraphs": [
+          "Automated investigation and response takes an alert, expands it into an investigation, examines the entities involved, reaches a verdict of malicious, suspicious, or no threat found, and then proposes or applies remediation actions. Where actions land depends on the device group's automation level, and anything pending sits in the Action center awaiting approval. The Action center is also where completed actions are reviewed and undone, which matters because a reverted action is often the fastest correct response to a false positive.",
+          "Automatic attack disruption is a distinct and more aggressive capability. Using high-confidence signals across the XDR estate, it contains an attack in progress by disabling a compromised user account or containing a device, without waiting for an analyst. It is designed for ransomware, business email compromise, and adversary-in-the-middle patterns, and it operates even where the automation level would not permit ordinary remediation. Analysts should know that disruption actions are visible in the incident and reversible from the Action center, so the recovery step for a wrongly contained device is documented rather than improvised."
+        ]
+      },
+      {
+        "id": "sentinel-roles-and-retention",
+        "heading": "Sentinel roles, retention, and workbooks",
+        "paragraphs": [
+          "Microsoft Sentinel has three purpose-built roles on top of Azure RBAC. Sentinel Reader can view data, incidents, and workbooks. Sentinel Responder adds the ability to manage incidents — assign, change severity, add comments, close. Sentinel Contributor adds creating and editing analytics rules, workbooks, and other artefacts. Playbooks bring their own requirement: running a playbook needs the Logic App Contributor role as well, which is the missing permission when a responder can see a playbook but not run it.",
+          "Retention is now a tiered decision rather than one number. The Analytics tier holds hot, fully queryable data with an interactive retention period; the Data lake tier holds far cheaper long-term data for compliance and retrospective hunting at reduced query performance; and Defender XDR tables carry their own default. Total retention can extend for years beyond the interactive window, and moving data between tiers is what keeps cost predictable when a source such as firewall logs is high-volume and rarely queried. Workbooks visualise all of it — they are built on the same KQL and are the answer whenever a question asks for a dashboard rather than an alert."
+        ]
+      },
+      {
+        "id": "sentinel-data-connectors",
+        "heading": "Data connectors and collection",
+        "paragraphs": [
+          "Choosing a connector is choosing a collection mechanism. Windows Security Events via AMA installs the Azure Monitor Agent and is driven by a data collection rule that selects which event set to gather — All events, Common, Minimal, or a custom XPath filter, and the XPath option is what you reach for when a specific event ID must be collected without the volume of Common. Windows Event Forwarding is the alternative when agents cannot be installed everywhere: endpoints forward to a collector server, and only the collector runs the agent.",
+          "Syslog via AMA and Common Event Format via AMA cover Linux hosts and network appliances, with CEF being the structured variant that most firewall and proxy vendors emit and that parses into named fields rather than a raw message. Azure resource activity comes from diagnostic settings, and applying them at scale is done with Azure Policy rather than resource by resource. Threat indicators are ingested through the threat intelligence connectors or uploaded via the API, and they feed the threat-intelligence analytics rules that match indicators against your telemetry. Anything that does not fit an existing table goes into a custom log table created in the workspace."
+        ]
+      },
+      {
+        "id": "analytics-and-detection-rules",
+        "heading": "Analytics rules and detections",
+        "paragraphs": [
+          "Sentinel analytics rules come in kinds that differ by latency and purpose. Scheduled rules run a KQL query on an interval over a lookback period and are the workhorse. Near-real-time rules run once a minute against the most recent data for cases where a scheduled interval is too slow, and they carry restrictions on the query they can run. Microsoft security rules simply promote alerts from a connected Microsoft product into Sentinel incidents. Fusion and machine-learning behavioural analytics correlate low-fidelity signals into high-fidelity multi-stage detections, and anomaly rules score deviations from a learned baseline and can be tuned by duplicating the rule and adjusting thresholds.",
+          "Two settings on a scheduled rule decide how the queue behaves. Event grouping controls whether all matching events become one alert or each event becomes its own. Alert grouping, under incident settings, controls whether alerts collapse into a single incident, grouped by matching entities or by all entities, within a chosen time window — this is the setting behind 'one incident per host per day' rather than a thousand incidents. Entity mapping is what makes an alert investigable, binding query columns to accounts, hosts, IPs, and files so the graph can be drawn. In Defender XDR the equivalent is a custom detection rule built from an Advanced Hunting query, which must return specific columns — Timestamp, ReportId, and an entity id column — before it can be saved. MITRE ATT&CK coverage is reviewed on the MITRE page, which shows which techniques your active rules address and where the gaps are."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "incident-response",
+    "sections": [
+      {
+        "id": "defender-xdr-incident-queue",
+        "heading": "Working the incident queue",
+        "paragraphs": [
+          "An incident is a container for correlated alerts and the entities they touch. The queue is filtered by severity, status, assignment, service source, and tags, and the intended discipline is to triage at the incident level rather than chase alerts. An incident's Attack story tab draws the graph of what happened; Alerts lists what fired; Assets, Investigations, Evidence and Response, and Summary each answer a different question. Classification on closing — true positive, informational expected activity, or false positive, with a determination — is not paperwork: those verdicts feed the tuning and the machine-learning models that decide what fires next time.",
+          "Multi-stage attacks are the reason XDR exists. A phishing email that lands a payload, which steals a credential, which is then used against a cloud application, produces alerts in three different products, and correlating them by shared entities is what turns them into one story. When investigating a complex attack, the sequence that works is to establish the earliest signal, follow the entities rather than the alerts, and check for lateral movement through the identity signals rather than only endpoint ones. Embedded Security Copilot summarises an incident, explains a script, and drafts a response, and its guided response suggests the next action — useful as an accelerator, not as the decision."
+        ]
+      },
+      {
+        "id": "email-and-collaboration-threats",
+        "heading": "Email and collaboration threats",
+        "paragraphs": [
+          "Defender for Office 365 handles email, Teams, SharePoint, and OneDrive. Threat Explorer, or the Real-time detections view on lower licence tiers, is where a message is found by sender, recipient, subject, URL, or attachment hash, and the delivery action and delivery location columns are the ones that matter — a message can be delivered, junked, blocked, or replaced, and it can sit in the inbox, junk folder, quarantine, or have been removed by zero-hour auto purge.",
+          "Remediation is done with actions from Explorer or an automated investigation: soft delete moves messages to Deleted Items, hard delete purges them, and both are recorded for review. Zero-hour auto purge retroactively acts on mail already delivered when the verdict changes. Quarantine holds messages that policy blocked, and release from quarantine is where an end-user request meets an analyst decision. Two configuration points are common exam material: Safe Links rewrites URLs and checks them at click time, so protection continues after delivery, and Safe Attachments detonates files in a sandbox, with dynamic delivery letting the body arrive while the attachment is still being checked."
+        ]
+      },
+      {
+        "id": "identity-compromise",
+        "heading": "Compromised identities",
+        "paragraphs": [
+          "Identity signals arrive from two places and confusing them costs marks. Microsoft Entra ID Protection scores cloud identity risk, producing risk detections, a user risk level, and a sign-in risk level, and its remediation actions are to reset the password, confirm the user as compromised, confirm safe, or dismiss the risk. Risk-based Conditional Access uses those levels to force multifactor authentication or a password change automatically. Microsoft Defender for Identity monitors on-premises Active Directory through sensors on domain controllers and detects reconnaissance, credential theft such as Pass-the-Hash and Kerberoasting, and lateral movement paths.",
+          "The practical response to a compromised account is ordered: confirm the user as compromised so the signal feeds the model, revoke sessions so existing tokens stop working, require a password reset, and only then investigate what the account touched. Revoking sessions is the step most often forgotten — a password reset alone leaves issued refresh tokens valid. Defender for Identity adds account-level actions such as disabling the account in Active Directory directly from the portal, and its lateral movement path view is the tool for answering which sensitive accounts a compromised machine exposes."
+        ]
+      },
+      {
+        "id": "cloud-apps-and-cloud-workloads",
+        "heading": "Cloud apps and cloud workloads",
+        "paragraphs": [
+          "Microsoft Defender for Cloud Apps governs SaaS usage. App discovery surfaces shadow IT from firewall and proxy logs, app connectors give deep visibility and governance into sanctioned apps through their APIs, and conditional access app control proxies sessions in real time so a download can be blocked or a file labelled at the moment it is accessed. Policies come in types — activity, file, anomaly detection, OAuth app — and the governance actions available depend on the policy type and the app.",
+          "Microsoft Defender for Cloud is a different product with a similar name and covers workloads rather than SaaS: servers, containers, storage, SQL, key vaults, and app services, with a secure score for posture and workload protection plans for detection. Its alerts flow into Defender XDR and Sentinel, and remediation is frequently a configuration change surfaced as a recommendation rather than an action on a device. When a question involves an unfamiliar SaaS application and data leaving the organisation, it is Cloud Apps; when it involves a virtual machine, a container image, or a storage account, it is Defender for Cloud."
+        ]
+      },
+      {
+        "id": "endpoint-investigation-and-live-response",
+        "heading": "Endpoint investigation and live response",
+        "paragraphs": [
+          "The device timeline is the chronological record of process, file, network, and registry events on an endpoint, filterable by event type and searchable, and it is where an analyst reconstructs what a suspicious process actually did. Device inventory, discovered vulnerabilities, and the security recommendations on the device page provide the posture context around the incident.",
+          "Response actions on a device are graded. Isolate the device cuts network access while leaving the Defender connection alive, with a selective option that permits Outlook and Teams so the user can still be contacted. Restrict app execution allows only Microsoft-signed binaries to run. Run antivirus scan, stop and quarantine a file, and add an indicator cover the file-level responses. Collect investigation package gathers autoruns, installed programs, network connections, prefetch files, and more into a zip for offline forensics — it is the answer whenever the question asks for evidence to be preserved. Live response opens a remote shell on the device for commands such as getfile, putfile, processes, connections, and running an approved script from the library; it requires the advanced feature to be enabled and, for servers, its own toggle."
+        ]
+      },
+      {
+        "id": "sentinel-incidents-and-case-management",
+        "heading": "Sentinel incidents, automation, and cases",
+        "paragraphs": [
+          "A Sentinel incident carries alerts, entities, and a full investigation graph that can be expanded entity by entity to find related activity. Bookmarks let a hunter preserve an interesting query result and attach it to an incident later, which is how a hunt turns into an investigation. Case management groups incidents and evidence into a longer-running case with its own tasks and notes, for campaigns that outlive a single incident.",
+          "Automation has two layers that questions like to separate. An automation rule is Sentinel-native: triggered on incident creation or update, it can assign an owner, change severity, add tags, close the incident, or run a playbook, and rules execute in an order you control. A playbook is a Logic App — it does the work that reaches outside Sentinel, such as posting to Teams, opening a ServiceNow ticket, isolating a device, or asking an approver. The distinction that matters is that playbooks are triggered through automation rules for incidents, and running one requires Logic App Contributor in addition to a Sentinel role."
+        ]
+      },
+      {
+        "id": "purview-audit-and-graph-logs",
+        "heading": "Purview Audit, Content search, and Graph logs",
+        "paragraphs": [
+          "Microsoft Purview Audit records user and administrator activity across Microsoft 365. Audit (Standard) retains records for 180 days; Audit (Premium) extends retention, adds longer retention for selected users, and unlocks high-value crucial events such as MailItemsAccessed, SearchQueryInitiatedExchange, and Send — MailItemsAccessed being the one that answers whether an attacker actually read a mailbox rather than merely reaching it. Audit search is the first stop for who did what and when.",
+          "Content search in Microsoft Purview eDiscovery finds the content itself — messages and documents matching a query across mailboxes and sites — which is what you use to scope a phishing campaign or to find where a leaked document travelled. Microsoft Graph activity logs record API calls made against Microsoft Graph, and they are the source for detecting a malicious OAuth application or an attacker enumerating a directory through the API rather than through the portal. They are routed to a Log Analytics workspace with a diagnostic setting, after which they are queryable alongside everything else in Sentinel."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "threat-hunting",
+    "sections": [
+      {
+        "id": "kql-fundamentals",
+        "heading": "KQL fundamentals",
+        "paragraphs": [
+          "A KQL query starts with a table and pipes it through operators. The ones that carry most queries are where to filter, project to select columns, extend to compute new ones, summarize to aggregate, join and union to combine tables, and order or top to rank. Filtering early and projecting early is the performance rule — every operator downstream works on less data. Time filtering is the most important filter of all, and it should be the first where clause rather than an afterthought.",
+          "summarize with the by clause is the workhorse for hunting, producing counts and aggregates per entity: count(), dcount() for distinct values, make_set() and make_list() to collect them, and arg_max() to pick the most recent row per group. bin() buckets a timestamp so activity can be counted per hour or per day, which is how a beaconing pattern becomes visible. String matching offers has, contains, startswith, and matches regex, and has is both faster and more precise than contains because it matches whole terms rather than substrings. let statements name a subquery or a value at the top of a query and are what makes a long hunting query readable."
+        ]
+      },
+      {
+        "id": "advanced-hunting-tables",
+        "heading": "Choosing the right table",
+        "paragraphs": [
+          "Advanced Hunting in Defender XDR exposes a schema whose table names tell you which product and which entity they describe, and picking the right one is a graded skill. DeviceProcessEvents holds process creations with command lines and parents. DeviceNetworkEvents holds connections. DeviceFileEvents holds file creation and modification. DeviceLogonEvents holds sign-ins to devices. DeviceRegistryEvents, DeviceImageLoadEvents, and DeviceEvents cover the remainder of endpoint telemetry.",
+          "Away from the endpoint, EmailEvents holds message delivery with sender, recipient, and delivery action, EmailAttachmentInfo and EmailUrlInfo hold the attachments and links, and EmailPostDeliveryEvents records what happened after delivery, such as a ZAP action. IdentityLogonEvents, IdentityQueryEvents, and IdentityDirectoryEvents come from Defender for Identity and cover on-premises activity, while AADSignInEventsBeta covers Entra sign-ins. CloudAppEvents holds Defender for Cloud Apps activity, and AlertInfo and AlertEvidence join alerts to the entities they involve. The single most common mistake is reaching for a device table to answer a question about email, or vice versa."
+        ]
+      },
+      {
+        "id": "hunting-queries-and-bookmarks",
+        "heading": "Hunting queries, bookmarks, and detections",
+        "paragraphs": [
+          "Hunting in Sentinel starts from the Hunting page, which ships with built-in queries mapped to MITRE tactics and lets you save your own. A query worth keeping becomes a saved hunting query; a result worth keeping becomes a bookmark, which preserves the rows, the query, and your notes, and can be attached to a new or existing incident. Livestream runs a hunting query continuously and notifies on new matches, which is the tool for watching a suspicion in real time without committing it to an analytics rule.",
+          "The promotion path is the point of hunting: a hypothesis becomes a query, a query that reliably finds real badness becomes a detection. In Sentinel that means creating a scheduled analytics rule from the query, setting entity mapping and alert grouping. In Defender XDR it means creating a custom detection rule from an Advanced Hunting query, choosing a frequency, mapping impacted entities, and optionally attaching automated actions such as isolating a device or quarantining a file. The requirement to return Timestamp, ReportId, and an entity column is what most often blocks saving a custom detection."
+        ]
+      },
+      {
+        "id": "threat-analytics-and-graphs",
+        "heading": "Threat analytics and hunting graphs",
+        "paragraphs": [
+          "Threat analytics is Microsoft's in-product threat intelligence, and it is tenant-aware rather than generic: each report describes an actor, campaign, or technique and then shows your own exposure — how many devices are affected, which mitigations are already in place, and which recommended configurations are missing. Reading a threat analytics report is therefore both intelligence and a gap analysis, and the exam treats the exposure and mitigation views as the reason to use it over an external feed.",
+          "Hunting graphs render relationships rather than rows. Blast radius shows what a compromised entity can reach — the accounts, devices, and resources at risk if that identity or machine is owned — which is what turns a single alert into a scoped containment decision. Sentinel Graph analyses relationships between entities across the connected data, letting a hunter pivot from an IP to the accounts that used it to the devices those accounts signed into. The graph views complement KQL rather than replacing it: the graph shows the shape, the query proves the detail."
+        ]
+      },
+      {
+        "id": "notebooks-and-data-lake",
+        "heading": "Notebooks, KQL jobs, and the data lake",
+        "paragraphs": [
+          "Jupyter notebooks extend hunting beyond what KQL alone can express — statistical analysis, machine learning, enrichment from external sources, and reproducible investigations with narrative alongside code. Sentinel notebooks run on Azure Machine Learning compute, authenticate to the workspace, and are the right answer when a question mentions custom analytics, data science libraries, or a repeatable investigation artefact. Connecting a notebook to the Sentinel MCP Server lets an agent query the same data through a tool interface rather than by hand.",
+          "The data lake tier changes what long-term hunting costs. Data kept there is inexpensive to store and is queried with KQL jobs — asynchronous queries that run over large historical volumes and write their results somewhere you can use, rather than returning interactively. That is what makes a year-long retrospective search for an indicator practical. Summary rules aggregate verbose data on a schedule into a compact summary table, so the detail can be retained cheaply while dashboards and analytics rules query the small table instead. Between them, the pattern is: keep raw data cheap, query it in bulk when you must, and keep a summarised copy hot for everyday work."
+        ]
+      }
+    ]
+  }
+]

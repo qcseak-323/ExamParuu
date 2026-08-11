@@ -348,6 +348,10 @@ const BY_DOMAIN: Record<string, SpriteMatrix> = {
   entra: KEY,
   "security-solutions": SHIELD,
   "compliance-solutions": DOCUMENT,
+  // SC-200 — Security operations
+  "soc-environment": GEAR,
+  "incident-response": SHIELD,
+  "threat-hunting": NODES,
   // AB-900 — Copilot & agents
   "core-features": WINDOW,
   "data-protection-governance": SHIELD,

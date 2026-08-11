@@ -1,0 +1,229 @@
+{
+  "examCode": "SC-200",
+  "note": "Learning path and module titles mirror the structure published on Microsoft Learn. All teaching content is original to ExamParuu.",
+  "paths": [
+    {
+      "id": "soc-environment",
+      "title": "Configure your Microsoft Sentinel environment",
+      "domainId": "soc-environment",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/sc-200-configure-azure-sentinel-environment/",
+      "modules": [
+        {
+          "id": "soc-environment-m1",
+          "title": "Introduction to Microsoft Sentinel",
+          "sectionIds": [
+            "defender-xdr-notifications-and-tuning",
+            "analytics-and-detection-rules"
+          ],
+          "cardIds": [
+            "fc-sc200-so-01",
+            "fc-sc200-so-07",
+            "fc-sc200-so-13",
+            "fc-sc200-so-19"
+          ]
+        },
+        {
+          "id": "soc-environment-m2",
+          "title": "Create and manage Microsoft Sentinel workspaces",
+          "sectionIds": [
+            "defender-for-endpoint-configuration"
+          ],
+          "cardIds": [
+            "fc-sc200-so-02",
+            "fc-sc200-so-08",
+            "fc-sc200-so-14",
+            "fc-sc200-so-20"
+          ]
+        },
+        {
+          "id": "soc-environment-m3",
+          "title": "Query logs in Microsoft Sentinel",
+          "sectionIds": [
+            "asr-and-security-policies"
+          ],
+          "cardIds": [
+            "fc-sc200-so-03",
+            "fc-sc200-so-09",
+            "fc-sc200-so-15"
+          ]
+        },
+        {
+          "id": "soc-environment-m4",
+          "title": "Use watchlists in Microsoft Sentinel",
+          "sectionIds": [
+            "automated-investigation-and-attack-disruption"
+          ],
+          "cardIds": [
+            "fc-sc200-so-04",
+            "fc-sc200-so-10",
+            "fc-sc200-so-16"
+          ]
+        },
+        {
+          "id": "soc-environment-m5",
+          "title": "Utilize threat intelligence in Microsoft Sentinel",
+          "sectionIds": [
+            "sentinel-roles-and-retention"
+          ],
+          "cardIds": [
+            "fc-sc200-so-05",
+            "fc-sc200-so-11",
+            "fc-sc200-so-17"
+          ]
+        },
+        {
+          "id": "soc-environment-m6",
+          "title": "Integrate Microsoft Defender XDR with Microsoft Sentinel",
+          "sectionIds": [
+            "sentinel-data-connectors"
+          ],
+          "cardIds": [
+            "fc-sc200-so-06",
+            "fc-sc200-so-12",
+            "fc-sc200-so-18"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "incident-response",
+      "title": "Mitigate threats using Microsoft Defender XDR",
+      "domainId": "incident-response",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/sc-200-mitigate-threats-using-microsoft-365-defender/",
+      "modules": [
+        {
+          "id": "incident-response-m1",
+          "title": "Introduction to Microsoft Defender XDR threat protection",
+          "sectionIds": [
+            "defender-xdr-incident-queue",
+            "purview-audit-and-graph-logs"
+          ],
+          "cardIds": [
+            "fc-sc200-ir-01",
+            "fc-sc200-ir-07",
+            "fc-sc200-ir-13"
+          ]
+        },
+        {
+          "id": "incident-response-m2",
+          "title": "Mitigate incidents using Microsoft Defender",
+          "sectionIds": [
+            "email-and-collaboration-threats"
+          ],
+          "cardIds": [
+            "fc-sc200-ir-02",
+            "fc-sc200-ir-08",
+            "fc-sc200-ir-14"
+          ]
+        },
+        {
+          "id": "incident-response-m3",
+          "title": "Remediate threats using Microsoft Defender",
+          "sectionIds": [
+            "identity-compromise"
+          ],
+          "cardIds": [
+            "fc-sc200-ir-03",
+            "fc-sc200-ir-09",
+            "fc-sc200-ir-15"
+          ]
+        },
+        {
+          "id": "incident-response-m4",
+          "title": "Manage Microsoft Entra Identity Protection",
+          "sectionIds": [
+            "cloud-apps-and-cloud-workloads"
+          ],
+          "cardIds": [
+            "fc-sc200-ir-04",
+            "fc-sc200-ir-10",
+            "fc-sc200-ir-16"
+          ]
+        },
+        {
+          "id": "incident-response-m5",
+          "title": "Safeguard your environment with Microsoft Defender for Identity",
+          "sectionIds": [
+            "endpoint-investigation-and-live-response"
+          ],
+          "cardIds": [
+            "fc-sc200-ir-05",
+            "fc-sc200-ir-11",
+            "fc-sc200-ir-17"
+          ]
+        },
+        {
+          "id": "incident-response-m6",
+          "title": "Secure your cloud apps and services with Microsoft Defender for Cloud Apps",
+          "sectionIds": [
+            "sentinel-incidents-and-case-management"
+          ],
+          "cardIds": [
+            "fc-sc200-ir-06",
+            "fc-sc200-ir-12",
+            "fc-sc200-ir-18"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "threat-hunting",
+      "title": "Perform threat hunting in Microsoft Sentinel",
+      "domainId": "threat-hunting",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/sc-200-perform-threat-hunting-azure-sentinel/",
+      "modules": [
+        {
+          "id": "threat-hunting-m1",
+          "title": "Explain threat hunting concepts in Microsoft Sentinel",
+          "sectionIds": [
+            "kql-fundamentals",
+            "notebooks-and-data-lake"
+          ],
+          "cardIds": [
+            "fc-sc200-th-01",
+            "fc-sc200-th-05",
+            "fc-sc200-th-09",
+            "fc-sc200-th-13"
+          ]
+        },
+        {
+          "id": "threat-hunting-m2",
+          "title": "Threat hunting with Microsoft Sentinel",
+          "sectionIds": [
+            "advanced-hunting-tables"
+          ],
+          "cardIds": [
+            "fc-sc200-th-02",
+            "fc-sc200-th-06",
+            "fc-sc200-th-10",
+            "fc-sc200-th-14"
+          ]
+        },
+        {
+          "id": "threat-hunting-m3",
+          "title": "Use Search jobs in Microsoft Sentinel",
+          "sectionIds": [
+            "hunting-queries-and-bookmarks"
+          ],
+          "cardIds": [
+            "fc-sc200-th-03",
+            "fc-sc200-th-07",
+            "fc-sc200-th-11"
+          ]
+        },
+        {
+          "id": "threat-hunting-m4",
+          "title": "Hunt for threats using notebooks in Microsoft Sentinel",
+          "sectionIds": [
+            "threat-analytics-and-graphs"
+          ],
+          "cardIds": [
+            "fc-sc200-th-04",
+            "fc-sc200-th-08",
+            "fc-sc200-th-12"
+          ]
+        }
+      ]
+    }
+  ]
+}

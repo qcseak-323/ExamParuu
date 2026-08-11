@@ -20,7 +20,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = process.cwd();
-const EXAMS = ["dp-600", "ab-900", "az-900", "ai-901", "dp-900", "sc-900", "pl-900", "az-104", "pl-300"];
+const EXAMS = ["dp-600", "ab-900", "az-900", "ai-901", "dp-900", "sc-900", "pl-900", "az-104", "pl-300", "sc-200"];
 
 const MATCH_SIZE = 4;
 const REVERSE_DISTRACTORS = 3;

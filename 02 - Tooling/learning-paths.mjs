@@ -102,6 +102,15 @@ const PATH_UIDS = {
     "visualize-analyze": "learn-bizapps.power-bi-effective",
     "manage-secure-powerbi": "learn-bizapps.manage-secure-power-bi",
   },
+  // SC-200 publishes ten code-prefixed paths against only three skills
+  // areas, so these are a choice rather than a mapping: the Sentinel
+  // environment path for the platform domain, the Defender XDR path for
+  // response, and the threat-hunting path for hunting.
+  "sc-200": {
+    "soc-environment": "learn.wwl.sc-200-configure-your-azure-sentinel-environment",
+    "incident-response": "learn.wwl.sc-200-mitigate-threats-using-microsoft-365-defender",
+    "threat-hunting": "learn.wwl.sc-200-perform-threat-hunting-azure-sentinel",
+  },
 };
 
 /** Spread `items` across `buckets` groups, front-loading any remainder. */

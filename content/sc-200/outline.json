@@ -1,0 +1,50 @@
+{
+  "examCode": "SC-200",
+  "examName": "Microsoft Security Operations Analyst",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for SC-200, 'Skills measured as of July 28, 2026'. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "soc-environment",
+      "name": "Manage a security operations environment",
+      "weight": "40-45%",
+      "subtopics": [
+        "Configure email and alert notifications in Microsoft Defender XDR, including tuning and suppression",
+        "Configure Defender for Endpoint advanced features, rules, and attack surface reduction",
+        "Manage automated investigation and response, and automatic attack disruption",
+        "Configure device groups, permissions, and automation levels",
+        "Create automation rules and playbooks in Microsoft Sentinel",
+        "Specify Sentinel roles and manage data retention across Analytics, Data lake, and XDR tiers",
+        "Select data connectors and configure AMA, WEF, Syslog, and CEF collection",
+        "Create analytics and custom detection rules, and map coverage with MITRE ATT&CK"
+      ]
+    },
+    {
+      "id": "incident-response",
+      "name": "Respond to security incidents",
+      "weight": "35-40%",
+      "subtopics": [
+        "Investigate and remediate threats in Defender for Office 365 and Defender for Cloud Apps",
+        "Investigate compromised identities in Microsoft Entra ID and Defender for Identity",
+        "Investigate alerts from Defender for Cloud workload protections and Microsoft Purview",
+        "Investigate and remediate incidents in Microsoft Sentinel, including case management",
+        "Investigate complex multi-stage, multi-domain, and lateral-movement attacks",
+        "Investigate device timelines and perform live response on a device",
+        "Collect investigation packages and perform evidence and entity investigation",
+        "Investigate Microsoft 365 activity with Purview Audit, Content search, and Graph activity logs"
+      ]
+    },
+    {
+      "id": "threat-hunting",
+      "name": "Perform threat hunting",
+      "weight": "20-25%",
+      "subtopics": [
+        "Identify the appropriate table for a KQL query and write Advanced Hunting queries",
+        "Interpret threat analytics in Microsoft Defender XDR",
+        "Create hunting graphs, including blast radius, and analyse entity relationships with Sentinel Graph",
+        "Create and monitor hunting queries in Microsoft Sentinel",
+        "Create and manage KQL jobs in the Data lake and summary rule tables",
+        "Hunt with notebooks, including a connection to the Sentinel MCP Server"
+      ]
+    }
+  ]
+}

@@ -216,11 +216,11 @@
     "series": "sc",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Threat detection, investigation, and response with Microsoft Sentinel and Defender XDR.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-11",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/security-operations-analyst/"
   },
   {

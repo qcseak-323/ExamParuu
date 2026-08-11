@@ -39,6 +39,8 @@ export const WILD_PARUU: Record<string, WildParuu> = {
   "dp-900": { sheet: "wild-otter" },
   "dp-600": { sheet: "wild-bee" },
   "sc-900": { sheet: "wild-armadillo" },
+  // SC-200 shares the Bastion Cliffs with SC-900.
+  "sc-200": { sheet: "wild-armadillo" },
   "ab-900": { sheet: "wild-snail" },
   "pl-900": { sheet: "wild-hedgehog" },
   // Same reuse as az-104: PL-300 shares the Mangroves with PL-900.
