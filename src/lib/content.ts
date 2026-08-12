@@ -61,6 +61,7 @@ import az104StudyGuide from "../../content/az-104/study-guide.json";
 import az104Path from "../../content/az-104/learning-path.json";
 import az104CaseStudies from "../../content/az-104/case-studies.json";
 import sc200CaseStudies from "../../content/sc-200/case-studies.json";
+import dp600CaseStudies from "../../content/dp-600/case-studies.json";
 
 import pl900Outline from "../../content/pl-900/outline.json";
 import pl900Questions from "../../content/pl-900/questions.json";
@@ -98,6 +99,7 @@ const examRegistry: Record<string, ExamContent> = {
     flashcards: dp600Flashcards as Flashcard[],
     studyGuide: dp600StudyGuide as StudyGuideDomain[],
     learningPath: dp600Path as ExamLearningPath,
+    caseStudies: dp600CaseStudies as CaseStudy[],
   },
   "ab-900": {
     outline: ab900Outline as Outline,

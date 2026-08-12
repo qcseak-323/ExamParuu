@@ -598,5 +598,456 @@
     "correctIndex": 0,
     "explanation": "Data Activator monitors data (including streaming data) for conditions you define and automatically triggers actions such as Teams or email alerts when thresholds are met, without requiring a dashboard to be watched manually.",
     "teaches": "ai-assisted-analysis-and-automated-alerting"
+  },
+  {
+    "id": "psd-cs-01",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "caseStudyId": "cs-aurora-fabric",
+    "question": "The platform team's raw files must be queryable from lh_sales without being duplicated. What should you create?",
+    "options": [
+      "A OneLake shortcut in lh_sales pointing at the ADLS Gen2 path",
+      "A Dataflow Gen2 that copies the files into lh_sales hourly",
+      "A data pipeline with a Copy activity into the bronze layer",
+      "An external table in wh_finance over the storage account"
+    ],
+    "correctIndex": 0,
+    "explanation": "A shortcut references data where it already lives, so the platform team's account stays the single system of record and nothing is duplicated. Every other option makes a second copy, which is the one thing the requirement forbids.",
+    "teaches": "onelake-and-workspaces"
+  },
+  {
+    "id": "psd-cs-02",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "caseStudyId": "cs-aurora-fabric",
+    "question": "Sales leadership need figures minutes old, with Import-mode query performance and no refresh schedule to maintain. What should you change the semantic model to?",
+    "options": [
+      "Direct Lake over the Delta tables in OneLake",
+      "Import mode refreshed hourly instead of twice a day",
+      "DirectQuery against the SQL analytics endpoint",
+      "Dual mode with automatic page refresh on the report"
+    ],
+    "correctIndex": 0,
+    "explanation": "Direct Lake reads the Delta files in OneLake directly: there is no import, so nothing to schedule, and no per-query translation to the source, so it keeps Import-like speed. DirectQuery gets the freshness but pays that translation cost on every visual.",
+    "teaches": "storage-modes"
+  },
+  {
+    "id": "psd-cs-03",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "caseStudyId": "cs-aurora-fabric",
+    "question": "Each centre's managers must see only their own centre's rows in the shared semantic model. What should you implement?",
+    "options": [
+      "Row-level security roles with a DAX filter on the centre column",
+      "Object-level security on the centre column",
+      "A separate workspace and semantic model per distribution centre",
+      "Viewer access on lh_sales instead of on the semantic model"
+    ],
+    "correctIndex": 0,
+    "explanation": "Row-level security filters the rows a signed-in user can see, which is exactly the requirement. Object-level security hides whole columns or tables from everyone assigned the role, and duplicating the model per centre gives up the word \"shared\".",
+    "teaches": "securing-and-governing-models"
+  },
+  {
+    "id": "psd-cs-04",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "caseStudyId": "cs-aurora-fabric",
+    "question": "The silver table has grown to several thousand small Parquet files and queries have slowed. The notebook's logic must not change. What should you do?",
+    "options": [
+      "Run table maintenance to compact the files, with V-Order applied",
+      "Rewrite the notebook to append rather than overwrite each run",
+      "Move the silver table from the lakehouse into wh_finance",
+      "Scale the capacity from F64 to F128"
+    ],
+    "correctIndex": 0,
+    "explanation": "Thousands of small files is a layout problem, and compaction is the direct fix — V-Order additionally optimises the files for how the Fabric engine reads them. Rewriting the notebook is explicitly ruled out, and scaling the capacity spends money without changing the layout.",
+    "teaches": "performance-and-storage-optimization"
+  },
+  {
+    "id": "psd-cs-05",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "caseStudyId": "cs-aurora-fabric",
+    "question": "The team proposes moving the gold layer out of wh_finance and into lh_sales. What happens to finance's existing T-SQL reports?",
+    "options": [
+      "They can still read through the SQL analytics endpoint, but the ones that write staging rows will fail",
+      "They keep working unchanged, including the writes",
+      "They stop working entirely, because a lakehouse exposes no T-SQL surface",
+      "They work only once each report is rewritten as Spark SQL"
+    ],
+    "correctIndex": 0,
+    "explanation": "A lakehouse's SQL analytics endpoint is read-only, so SELECT survives the move and INSERT does not. That read-versus-write split is the main reason to keep a warehouse, and the requirement naming the write-back reports is what settles it.",
+    "teaches": "choosing-the-right-storage-item-lakehouse-vs-warehouse"
+  },
+  {
+    "id": "psd-11",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "kind": "multi",
+    "question": "Which two Fabric items can write data into a lakehouse table? Choose two.",
+    "options": [
+      "A Dataflow Gen2",
+      "A notebook",
+      "The lakehouse's SQL analytics endpoint",
+      "A Power BI report built on the lakehouse"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Dataflows and notebooks are both write paths into Delta tables. The SQL analytics endpoint is read-only, and a report only ever reads what a semantic model exposes.",
+    "teaches": "ingesting-data-pipelines-dataflows-gen2-and-notebooks"
+  },
+  {
+    "id": "psd-12",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "kind": "multi",
+    "question": "Which two statements about a OneLake shortcut are true? Choose two.",
+    "options": [
+      "It references the source data in place rather than copying it",
+      "It can point at storage outside Fabric, such as ADLS Gen2 or Amazon S3",
+      "It runs a scheduled copy to keep a local replica in step",
+      "It converts the source files to Delta format automatically"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "A shortcut is a pointer, not a pipeline — there is no copy and therefore no schedule and no format conversion. What the source holds is what you read.",
+    "teaches": "onelake-and-workspaces"
+  },
+  {
+    "id": "psd-13",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "kind": "order",
+    "question": "Put the stages of a medallion architecture load in order.",
+    "items": [
+      "Serve the gold tables to a semantic model",
+      "Land the raw files in bronze, unchanged",
+      "Publish business-level aggregates to gold",
+      "Clean and conform the data into silver"
+    ],
+    "correctOrder": [
+      1,
+      3,
+      2,
+      0
+    ],
+    "explanation": "Bronze keeps the raw landing exactly as it arrived so it can always be replayed, silver is the cleaned and conformed layer, gold is shaped for the business, and only then is anything served.",
+    "teaches": "medallion-architecture"
+  },
+  {
+    "id": "psd-14",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "kind": "order",
+    "question": "Put the steps of taking a change from development into production in order.",
+    "items": [
+      "Deploy from Test to Prod",
+      "Commit the change in the Dev workspace to Git",
+      "Deploy from Dev to Test",
+      "Validate the change in Test"
+    ],
+    "correctOrder": [
+      1,
+      2,
+      3,
+      0
+    ],
+    "explanation": "Source control captures the change first, then the deployment pipeline moves it one stage at a time. Validating in Test before promoting is the step that makes the pipeline worth having.",
+    "teaches": "application-lifecycle-management"
+  },
+  {
+    "id": "psd-15",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "kind": "match",
+    "question": "Match each Fabric ingestion tool to what it suits best.",
+    "pairs": [
+      {
+        "term": "Dataflow Gen2",
+        "definition": "Low-code transformation with Power Query"
+      },
+      {
+        "term": "Data pipeline",
+        "definition": "Orchestrating activities and control flow"
+      },
+      {
+        "term": "Notebook",
+        "definition": "Code-first transformation at scale with Spark"
+      },
+      {
+        "term": "Eventstream",
+        "definition": "Continuous ingestion of streaming events"
+      }
+    ],
+    "explanation": "The split is by how the work is expressed: Power Query steps, an orchestration graph, Spark code, or a continuous stream. A pipeline can call the other three, which is why orchestration is its own row.",
+    "teaches": "ingesting-data-pipelines-dataflows-gen2-and-notebooks"
+  },
+  {
+    "id": "psd-16",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "kind": "match",
+    "question": "Match each Fabric item to what characterises it.",
+    "pairs": [
+      {
+        "term": "Lakehouse",
+        "definition": "Delta tables with a read-only SQL endpoint"
+      },
+      {
+        "term": "Warehouse",
+        "definition": "Full T-SQL, including inserts and updates"
+      },
+      {
+        "term": "KQL database",
+        "definition": "Time-series and log data queried with KQL"
+      },
+      {
+        "term": "OneLake shortcut",
+        "definition": "A reference to data that lives elsewhere"
+      }
+    ],
+    "explanation": "Lakehouse against warehouse comes down to whether you need to write with T-SQL. Everything here stores into OneLake, so the choice is about the surface you get, not about where the bytes end up.",
+    "teaches": "choosing-the-right-storage-item-lakehouse-vs-warehouse"
+  },
+  {
+    "id": "psd-17",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "kind": "yesno",
+    "question": "A lakehouse's SQL analytics endpoint is being evaluated. Judge each statement.",
+    "statements": [
+      {
+        "text": "It can run SELECT queries across the lakehouse's Delta tables.",
+        "correct": true
+      },
+      {
+        "text": "It can run INSERT and UPDATE against those tables.",
+        "correct": false
+      },
+      {
+        "text": "It is created automatically with the lakehouse.",
+        "correct": true
+      },
+      {
+        "text": "It can join to tables in a warehouse in the same workspace.",
+        "correct": true
+      }
+    ],
+    "explanation": "The endpoint appears with the lakehouse and gives a T-SQL read surface over the Delta tables, including cross-item joins. Writing is the one thing it cannot do — that needs a warehouse, a notebook or a dataflow.",
+    "teaches": "choosing-the-right-storage-item-lakehouse-vs-warehouse"
+  },
+  {
+    "id": "psd-18",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "kind": "dropdown",
+    "question": "Complete the statement about where Fabric keeps data.",
+    "segments": [
+      {
+        "text": "Tables written to a lakehouse or a warehouse are stored in "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "OneLake, as Delta Parquet",
+          "a SQL database attached to the workspace",
+          "an ADLS Gen2 account you provision"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", which is why an item in one workspace can be read from another without "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "copying the data",
+          "enabling cross-tenant sharing",
+          "creating a linked service"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "One tenant, one lake, one copy. Because every item lands in OneLake in the same open format, sharing across workspaces is a permission question rather than a movement question.",
+    "teaches": "onelake-and-workspaces"
+  },
+  {
+    "id": "psd-19",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "kind": "dropdown",
+    "question": "Complete the statement about maintaining a Delta table.",
+    "segments": [
+      {
+        "text": "A table written by many small appends is compacted by running "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "OPTIMIZE",
+          "VACUUM",
+          "REFRESH"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", while deleting files no longer referenced by the table is the job of "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "VACUUM",
+          "OPTIMIZE",
+          "CHECKPOINT"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "The two are often run together and do opposite halves of the job: one merges the live files into fewer, larger ones, the other reclaims the space held by files the table has stopped pointing at.",
+    "teaches": "performance-and-storage-optimization"
+  },
+  {
+    "id": "sm-11",
+    "examCode": "dp-600",
+    "domain": "semantic-models",
+    "kind": "multi",
+    "question": "Which two conditions must hold for a semantic model to use Direct Lake? Choose two.",
+    "options": [
+      "The data is in Delta tables in OneLake",
+      "The model sits in a workspace backed by a Fabric capacity",
+      "The tables are loaded on a refresh schedule",
+      "The source is reached through an on-premises data gateway"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Direct Lake reads Delta files in OneLake from a Fabric capacity — those two facts are the whole prerequisite. A refresh schedule describes Import, and a gateway describes a source that is not in OneLake at all.",
+    "teaches": "storage-modes"
+  },
+  {
+    "id": "sm-12",
+    "examCode": "dp-600",
+    "domain": "semantic-models",
+    "kind": "order",
+    "question": "Put the steps of adding row-level security to a semantic model in order.",
+    "items": [
+      "Assign users or groups to the role",
+      "Create a role in the model",
+      "Test the result with View as",
+      "Write a DAX filter on the table"
+    ],
+    "correctOrder": [
+      1,
+      3,
+      2,
+      0
+    ],
+    "explanation": "A role has to exist before it can carry a filter, and the filter has to be tested before anyone is assigned to it. Assigning first means the first person to open the report is the one who finds the mistake.",
+    "teaches": "securing-and-governing-models"
+  },
+  {
+    "id": "sm-13",
+    "examCode": "dp-600",
+    "domain": "semantic-models",
+    "kind": "match",
+    "question": "Match each semantic model storage mode to what it does.",
+    "pairs": [
+      {
+        "term": "Import",
+        "definition": "Holds a copy in memory, refreshed on a schedule"
+      },
+      {
+        "term": "DirectQuery",
+        "definition": "Sends a query to the source for every visual"
+      },
+      {
+        "term": "Direct Lake",
+        "definition": "Reads OneLake Delta files with no import or refresh"
+      },
+      {
+        "term": "Dual",
+        "definition": "Lets a table behave either way, per query"
+      }
+    ],
+    "explanation": "Import trades freshness for speed and DirectQuery trades the reverse. Direct Lake exists to stop that being a trade at all, which is why it only works over Delta in OneLake.",
+    "teaches": "storage-modes"
+  },
+  {
+    "id": "ea-11",
+    "examCode": "dp-600",
+    "domain": "explore-analyze",
+    "kind": "multi",
+    "question": "Which two query languages can be used against a KQL database in Fabric? Choose two.",
+    "options": [
+      "KQL",
+      "A subset of T-SQL",
+      "DAX",
+      "MDX"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "KQL is the native language and a T-SQL subset is accepted so existing SQL tooling can connect. DAX belongs to semantic models and MDX to the legacy multidimensional world — neither reaches a KQL database.",
+    "teaches": "real-time-intelligence-and-kql"
+  },
+  {
+    "id": "ea-12",
+    "examCode": "dp-600",
+    "domain": "explore-analyze",
+    "kind": "order",
+    "question": "Put the clauses of a KQL query into the order the engine applies them.",
+    "items": [
+      "summarize Total = sum(Amount) by Region",
+      "SalesEvents",
+      "where Timestamp > ago(1d)",
+      "order by Total desc"
+    ],
+    "correctOrder": [
+      1,
+      2,
+      0,
+      3
+    ],
+    "explanation": "Start at the table, narrow it, aggregate what survives, then sort the aggregate. Filtering before summarizing is also what keeps the query affordable over a large event table.",
+    "teaches": "real-time-intelligence-and-kql"
+  },
+  {
+    "id": "ea-13",
+    "examCode": "dp-600",
+    "domain": "explore-analyze",
+    "kind": "yesno",
+    "question": "A notebook is being used for exploratory analysis in Fabric. Judge each statement.",
+    "statements": [
+      {
+        "text": "It can read a lakehouse table without first copying the data into the notebook.",
+        "correct": true
+      },
+      {
+        "text": "It can write its results back as a new Delta table in the lakehouse.",
+        "correct": true
+      },
+      {
+        "text": "It can only be written in Python.",
+        "correct": false
+      },
+      {
+        "text": "It consumes the Fabric capacity assigned to its workspace.",
+        "correct": true
+      }
+    ],
+    "explanation": "A notebook attaches to a lakehouse and reads and writes it in place. Spark notebooks in Fabric also take Scala, SQL and R, and everything they run is billed against the workspace's capacity.",
+    "teaches": "exploratory-analytics-with-notebooks-and-sql"
   }
 ]

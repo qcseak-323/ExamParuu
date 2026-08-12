@@ -1,0 +1,38 @@
+[
+  {
+    "id": "cs-aurora-fabric",
+    "examCode": "dp-600",
+    "domain": "prepare-serve-data",
+    "title": "Aurora Foods — a Fabric lakehouse for sales analytics",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Aurora Foods supplies chilled products to supermarkets across the Nordics from three distribution centres. Its analytics team of five has moved off a mix of Excel extracts and a legacy warehouse onto Microsoft Fabric.",
+          "The move is half finished. Several of the decisions in the requirements have not been made yet, and two of the choices already taken are being questioned by the team."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "A single F64 capacity backs three workspaces: Aurora-Dev, Aurora-Test and Aurora-Prod. The three are joined by a deployment pipeline, and Aurora-Dev is connected to a Git repository.",
+          "Raw sales files land hourly in an Azure Data Lake Storage Gen2 account owned by the platform team. That account is the system of record for the business and the platform team has said the files must not be duplicated anywhere.",
+          "A lakehouse named lh_sales holds the bronze and silver Delta tables. A warehouse named wh_finance holds the gold layer, which the finance team queries with T-SQL reports written years ago.",
+          "Analysts connect to a semantic model in Import mode that refreshes at 06:00 and 12:00. Sales leadership complains that by mid-afternoon the numbers no longer match what the distribution centres are seeing.",
+          "One notebook rewrites the whole silver table on every run. The table is now several thousand small Parquet files and queries against it have become noticeably slower over the last quarter."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "The raw files in the platform team's ADLS Gen2 account must be queryable from lh_sales without being copied or duplicated into OneLake.",
+          "Sales leadership must see figures no more than a few minutes old, with the query performance of the current Import model, and without the team maintaining a refresh schedule.",
+          "Each distribution centre's managers must see only their own centre's rows when they open the shared semantic model.",
+          "Query performance against the silver table must improve without changing the notebook's logic.",
+          "Finance's existing T-SQL reports must continue to run, including the ones that write staging rows back before producing a statement.",
+          "Nothing may be edited directly in Aurora-Prod; every change reaches production through the deployment pipeline."
+        ]
+      }
+    ]
+  }
+]
