@@ -72,6 +72,8 @@ import az104Path from "../../content/az-104/learning-path.json";
 import az104CaseStudies from "../../content/az-104/case-studies.json";
 import sc200CaseStudies from "../../content/sc-200/case-studies.json";
 import dp600CaseStudies from "../../content/dp-600/case-studies.json";
+import dp700CaseStudies from "../../content/dp-700/case-studies.json";
+import pl300CaseStudies from "../../content/pl-300/case-studies.json";
 
 import pl900Outline from "../../content/pl-900/outline.json";
 import pl900Questions from "../../content/pl-900/questions.json";
@@ -152,6 +154,7 @@ const examRegistry: Record<string, ExamContent> = {
     flashcards: dp700Flashcards as Flashcard[],
     studyGuide: dp700StudyGuide as StudyGuideDomain[],
     learningPath: dp700Path as ExamLearningPath,
+    caseStudies: dp700CaseStudies as CaseStudy[],
   },
   "sc-200": {
     outline: sc200Outline as Outline,
@@ -167,6 +170,7 @@ const examRegistry: Record<string, ExamContent> = {
     flashcards: pl300Flashcards as Flashcard[],
     studyGuide: pl300StudyGuide as StudyGuideDomain[],
     learningPath: pl300Path as ExamLearningPath,
+    caseStudies: pl300CaseStudies as CaseStudy[],
   },
   "az-104": {
     outline: az104Outline as Outline,

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "cs-brightline-lakehouse",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "title": "Brightline Rail — telemetry into a Fabric lakehouse",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Brightline Rail operates freight services across four regions. Every locomotive emits telemetry — position, fuel, temperature and fault codes — and the engineering team wants that data available for both live monitoring and historical analysis.",
+          "A data engineering team of four has built the first version in Microsoft Fabric. It works, but it was built quickly and several decisions are now being revisited."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "One F64 capacity backs three workspaces: BL-Dev, BL-Test and BL-Prod, joined by a deployment pipeline. BL-Dev is connected to Git.",
+          "Locomotive telemetry arrives continuously as events, roughly 4,000 per second at peak. A separate nightly extract of maintenance records arrives as CSV files in an Azure Data Lake Storage Gen2 account owned by the maintenance system vendor.",
+          "A lakehouse named lh_telemetry holds bronze and silver Delta tables. A warehouse named wh_reporting holds the gold layer, which the finance and operations teams query with T-SQL, including a nightly procedure that writes reconciliation rows.",
+          "A notebook rewrites the entire silver table on every run. It now takes 50 minutes and the silver table has grown to several thousand small Parquet files.",
+          "Engineers currently need Workspace Contributor in BL-Prod to read pipeline run history, which the platform lead considers too broad."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Locomotive events must be queryable within seconds of arriving, for a live operations dashboard.",
+          "The vendor's CSV files must be readable from lh_telemetry without being copied, because the vendor's account remains the system of record.",
+          "Query performance against the silver table must improve without changing the notebook's transformation logic.",
+          "Finance and operations must keep running their existing T-SQL, including the nightly procedure that writes rows.",
+          "Engineers must be able to read pipeline run history in BL-Prod without gaining the ability to change items there.",
+          "Nothing may be edited directly in BL-Prod; every change reaches production through the deployment pipeline."
+        ]
+      }
+    ]
+  }
+]

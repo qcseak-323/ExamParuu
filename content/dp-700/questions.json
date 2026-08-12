@@ -1,44 +1,1053 @@
 [
-  { "id": "as-01", "examCode": "dp-700", "domain": "analytics-solution", "question": "Several analysts run short interactive notebooks all day and complain that each one waits a long time to start. What should you configure?", "options": ["High concurrency mode so notebooks share a Spark session", "A custom pool with larger nodes", "Autoscale with a higher maximum node count", "A separate workspace per analyst"], "correctIndex": 0, "explanation": "Session start-up dominates short interactive work. High concurrency lets several notebooks attach to one running session, so only the first pays the start-up cost. Bigger nodes do not reduce start-up time.", "teaches": "fabric-workspace-settings" },
-  { "id": "as-02", "examCode": "dp-700", "domain": "analytics-solution", "question": "A semantic model promoted from the development workspace to production still queries the development warehouse. What should you configure in the deployment pipeline?", "options": ["A deployment rule that rebinds the data source per stage", "A separate git branch for production", "A sensitivity label on the production item", "Item-level ReadAll permission on the production warehouse"], "correctIndex": 0, "explanation": "Deployment copies items forward with their bindings intact. Deployment rules are what repoint a data source or parameter for the target stage.", "teaches": "lifecycle-and-deployment-pipelines" },
-  { "id": "as-03", "examCode": "dp-700", "domain": "analytics-solution", "question": "Your team needs code review and branching for Fabric items, plus a controlled promotion path to production. What should you use?", "options": ["Git integration for review, and deployment pipelines for promotion", "Git integration alone", "Deployment pipelines alone", "Manual export and import of item definitions"], "correctIndex": 0, "explanation": "The two are complementary. Git provides source control, branching, and pull-request review; deployment pipelines move content between stage workspaces with rules applied.", "teaches": "lifecycle-and-deployment-pipelines" },
-  { "id": "as-04", "examCode": "dp-700", "domain": "analytics-solution", "question": "A user must query a lakehouse table through the SQL analytics endpoint but must not be added to the workspace or be able to edit anything. What should you grant?", "options": ["Item-level ReadData on the lakehouse", "Workspace Contributor", "Item-level Read only", "Workspace Viewer plus Build"], "correctIndex": 0, "explanation": "ReadData grants querying through the SQL endpoint without workspace membership. Read alone exposes the item and its endpoint but returns no data.", "teaches": "workspace-and-item-access" },
-  { "id": "as-05", "examCode": "dp-700", "domain": "analytics-solution", "question": "Row-level security is defined on the warehouse, but an analyst reading the same Delta tables from a Spark notebook still sees every row. What should you implement?", "options": ["OneLake security roles at the folder and file level", "Column-level security on the warehouse", "Dynamic data masking on the sensitive columns", "A sensitivity label on the lakehouse"], "correctIndex": 0, "explanation": "A SQL security policy is enforced by the SQL engine. Reading the underlying files through Spark bypasses it, and OneLake security is what applies the restriction whichever engine reads the data.", "teaches": "granular-and-onelake-security" },
-  { "id": "as-06", "examCode": "dp-700", "domain": "analytics-solution", "question": "Support staff must see a customer table but never the full national identifier, while a fraud team must see it in full. Access to the table itself is required for both. What should you implement?", "options": ["Dynamic data masking, with UNMASK granted to the fraud team", "Object-level security on the table", "Row-level security filtering by team", "A separate copy of the table without the column"], "correctIndex": 0, "explanation": "Masking obscures the displayed value without denying access to the table, and the UNMASK permission reveals the real value to those who need it.", "teaches": "granular-and-onelake-security" },
-  { "id": "as-07", "examCode": "dp-700", "domain": "analytics-solution", "question": "A classification applied to a lakehouse must follow the data into every downstream report and into any Excel file exported from it. What should you apply?", "options": ["A sensitivity label", "Certified endorsement", "A Fabric domain", "An audit log retention policy"], "correctIndex": 0, "explanation": "Sensitivity labels inherit downstream to derived items and travel with exported files. Endorsement and domains change discovery, not protection.", "teaches": "governance-labels-and-audit" },
-  { "id": "as-08", "examCode": "dp-700", "domain": "analytics-solution", "question": "Analysts keep building on an abandoned copy of a lakehouse. You want the maintained one to surface first in discovery without changing anyone's access. What should you do?", "options": ["Endorse the maintained lakehouse as Certified", "Grant ReadAll on the maintained lakehouse only", "Move the abandoned lakehouse to another domain", "Apply a sensitivity label to the maintained lakehouse"], "correctIndex": 0, "explanation": "Endorsement ranks items higher in the catalog and signals trust, without altering permissions. Certified is the level restricted to authorised reviewers.", "teaches": "governance-labels-and-audit" },
-  { "id": "as-09", "examCode": "dp-700", "domain": "analytics-solution", "question": "A transformation requires custom Python libraries and machine-learning inference over tens of millions of rows. Which item should you use?", "options": ["A notebook", "A Dataflow Gen2", "A data pipeline Copy activity", "A KQL update policy"], "correctIndex": 0, "explanation": "Notebooks run PySpark and arbitrary Python with library support and scale out across the pool. Dataflow Gen2 is Power Query and cannot host custom libraries or models.", "teaches": "orchestration-choices" },
-  { "id": "as-10", "examCode": "dp-700", "domain": "analytics-solution", "question": "A pipeline must run as soon as a new file lands in a OneLake folder, not on a schedule. What should you configure?", "options": ["An Activator item watching for the OneLake event", "A pipeline schedule with a one-minute interval", "A tumbling window trigger on the Copy activity", "A Spark structured streaming job"], "correctIndex": 0, "explanation": "Event-based triggering in Fabric comes from Activator, which watches for events such as a file arriving and starts the pipeline in response.", "teaches": "orchestration-choices" },
-  { "id": "as-11", "examCode": "dp-700", "domain": "analytics-solution", "question": "Two hundred source tables must be copied with identical logic. You want one pipeline rather than two hundred. What is the correct approach?", "options": ["Parameterise the pipeline and drive it from a control table with a ForEach loop", "Create a pipeline template and clone it per table", "Use a single Copy activity with a wildcard sink", "Create one Dataflow Gen2 per table"], "correctIndex": 0, "explanation": "A metadata-driven pipeline reads a control table of source and target definitions and loops, using parameters and dynamic expressions to build each copy at run time.", "teaches": "orchestration-choices" },
-  { "id": "as-12", "examCode": "dp-700", "domain": "analytics-solution", "question": "Warehouse schema must be reviewed, versioned, and deployed like application code. What should you use?", "options": ["A database project", "A deployment pipeline rule", "A Fabric domain", "A dataflow with staging enabled"], "correctIndex": 0, "explanation": "Database projects hold warehouse schema as source that can be built, diffed, and deployed, which is what brings schema under the same review process as code.", "teaches": "lifecycle-and-deployment-pipelines" },
-  { "id": "as-13", "examCode": "dp-700", "domain": "analytics-solution", "question": "Compliance asks for evidence of who accessed a particular lakehouse over the last quarter. Where do you get it?", "options": ["Fabric audit logs, through Purview compliance or the admin monitoring workspace", "The Monitoring hub run history", "The Capacity Metrics app", "The item's endorsement history"], "correctIndex": 0, "explanation": "Audit logs record item access, permission changes, and exports. The Monitoring hub tracks item runs, not user access.", "teaches": "governance-labels-and-audit" },
-
-  { "id": "it-01", "examCode": "dp-700", "domain": "ingest-transform", "question": "A source table of 400 million rows carries a LastModified column. Nightly loads currently reload everything and no longer fit the window. What should you implement?", "options": ["A watermark-based incremental load with a Delta MERGE", "A full load written with overwrite mode", "Partitioning of the target by LastModified", "A OneLake shortcut to the source"], "correctIndex": 0, "explanation": "A watermark filters the source to rows changed since the last successful run, and MERGE applies them as an upsert so the target stays correct without a full rewrite.", "teaches": "loading-patterns" },
-  { "id": "it-02", "examCode": "dp-700", "domain": "ingest-transform", "question": "A customer dimension must retain the previous address when a customer moves, with the period each address was valid. Which pattern applies?", "options": ["Slowly changing dimension type 2", "Slowly changing dimension type 1", "A full reload each night", "Dynamic data masking on the address column"], "correctIndex": 0, "explanation": "Type 2 closes the current row with an end date and inserts a new current row, preserving the history and its validity period. Type 1 overwrites and loses it.", "teaches": "loading-patterns" },
-  { "id": "it-03", "examCode": "dp-700", "domain": "ingest-transform", "question": "An application must issue INSERT, UPDATE, and DELETE statements over T-SQL against a Fabric analytical store. Which item should you use?", "options": ["A Warehouse", "A Lakehouse SQL analytics endpoint", "An Eventhouse KQL database", "A OneLake shortcut to a Lakehouse"], "correctIndex": 0, "explanation": "The lakehouse SQL analytics endpoint is read-only. A Warehouse is the T-SQL engine that supports writes and multi-table transactions.", "teaches": "choosing-a-data-store" },
-  { "id": "it-04", "examCode": "dp-700", "domain": "ingest-transform", "question": "Millions of IoT telemetry events per hour must be stored and queried with sub-second latency for time-series analysis. Which store fits?", "options": ["An Eventhouse with a KQL database", "A Warehouse", "A Fabric SQL database", "A Lakehouse with hourly Delta appends"], "correctIndex": 0, "explanation": "Eventhouses are purpose-built for high-volume time-series and telemetry, queried with KQL. A lakehouse with hourly appends adds latency and creates a small-file problem.", "teaches": "choosing-a-data-store" },
-  { "id": "it-05", "examCode": "dp-700", "domain": "ingest-transform", "question": "A silver lakehouse must read the bronze lakehouse's tables from another workspace without duplicating storage. What should you create?", "options": ["An internal OneLake shortcut", "A Copy activity on a schedule", "A mirrored database", "A Dataflow Gen2 with staging"], "correctIndex": 0, "explanation": "An internal shortcut points at data in another Fabric workspace with no copy and no refresh, which is the standard way to build medallion layers without duplication.", "teaches": "shortcuts-and-mirroring" },
-  { "id": "it-06", "examCode": "dp-700", "domain": "ingest-transform", "question": "A shortcut to an ADLS Gen2 container works for the administrator who created it but returns an authorisation error for analysts. Why?", "options": ["A shortcut resolves with the caller's own credentials against the target", "Shortcuts cache the creator's token for 24 hours", "Shortcuts only support internal Fabric sources", "The shortcut needs query acceleration enabled"], "correctIndex": 0, "explanation": "Shortcut traversal uses the calling user's permissions on the underlying storage, so access must be granted at the source as well as in Fabric.", "teaches": "shortcuts-and-mirroring" },
-  { "id": "it-07", "examCode": "dp-700", "domain": "ingest-transform", "question": "Analytics are needed on a live Azure SQL Database with near-real-time freshness and no ETL to build or maintain. What should you use?", "options": ["Mirroring", "A OneLake shortcut", "A nightly Copy activity", "A Dataflow Gen2 on a 15-minute schedule"], "correctIndex": 0, "explanation": "Mirroring continuously replicates an operational database into OneLake as Delta with no pipeline to author. A shortcut cannot point at a transactional database.", "teaches": "shortcuts-and-mirroring" },
-  { "id": "it-08", "examCode": "dp-700", "domain": "ingest-transform", "question": "A feed contains repeated rows for the same order id whose values differ, and only the most recent should survive. What should you use?", "options": ["A window function ranked by the modified timestamp, keeping rank 1", "dropDuplicates on the order id", "distinct on all columns", "A left anti join against the target"], "correctIndex": 0, "explanation": "dropDuplicates keeps an arbitrary row when the duplicates differ. Ranking within a window by an ordering column lets you keep the newest deterministically.", "teaches": "batch-transformation" },
-  { "id": "it-09", "examCode": "dp-700", "domain": "ingest-transform", "question": "Fact rows regularly arrive before the dimension rows they reference, breaking the load. What is a standard remedy?", "options": ["Insert an inferred member placeholder in the dimension and update it later", "Discard the fact rows", "Disable referential integrity on the warehouse", "Switch the fact load to a full reload"], "correctIndex": 0, "explanation": "An inferred member creates a placeholder dimension row so the fact can be keyed immediately, and the placeholder is completed when the real dimension record arrives.", "teaches": "batch-transformation" },
-  { "id": "it-10", "examCode": "dp-700", "domain": "ingest-transform", "question": "A stream must be filtered and aggregated with no code and routed to an Eventhouse. What should you use?", "options": ["An Eventstream with the event-processing editor", "Spark structured streaming in a notebook", "A Dataflow Gen2", "A KQL update policy on the destination table"], "correctIndex": 0, "explanation": "Eventstreams provide low-code stream processing with sources, an editor for filtering and aggregation in flight, and destinations including an Eventhouse.", "teaches": "streaming-engines-and-eventstreams" },
-  { "id": "it-11", "examCode": "dp-700", "domain": "ingest-transform", "question": "You need a five-minute moving average that updates every minute over a stream. Which windowing function should you use?", "options": ["A hopping window with a five-minute size and one-minute hop", "A tumbling window of five minutes", "A session window with a five-minute timeout", "A snapshot window"], "correctIndex": 0, "explanation": "Hopping windows are fixed-size and advance by a smaller hop, so they overlap and produce a moving average. Tumbling windows do not overlap and would emit only every five minutes.", "teaches": "windowing-and-late-data" },
-  { "id": "it-12", "examCode": "dp-700", "domain": "ingest-transform", "question": "Events sometimes arrive several seconds after they occurred, and aggregates are landing in the wrong buckets. What should you change?", "options": ["Window on event time and set a watermark for allowed lateness", "Window on processing time and increase the window size", "Increase the Eventstream throughput units", "Switch the destination from a lakehouse to an Eventhouse"], "correctIndex": 0, "explanation": "Event time is when the event happened; windowing on it puts each event in the correct bucket, and a watermark bounds how long the system waits for stragglers.", "teaches": "windowing-and-late-data" },
-  { "id": "it-13", "examCode": "dp-700", "domain": "ingest-transform", "question": "A snowflaked product hierarchy makes report queries slow and hard to write. What transformation is usually appropriate for the analytics model?", "options": ["Denormalise the hierarchy into a single wide dimension", "Normalise it further into more tables", "Partition each level by its key", "Store each level as a separate shortcut"], "correctIndex": 0, "explanation": "Denormalising trades storage for query simplicity and speed, which is the usual trade in an analytics model where the fact-to-dimension join count dominates.", "teaches": "batch-transformation" },
-  { "id": "it-14", "examCode": "dp-700", "domain": "ingest-transform", "question": "A shortcut in Real-Time Intelligence is queried constantly and latency matters more than the extra storage cost. What should you enable?", "options": ["Query acceleration", "A native table copy plus a nightly sync", "Query result caching on the warehouse", "V-Order on the source"], "correctIndex": 0, "explanation": "Query acceleration caches shortcut data for faster queries, sitting between a plain shortcut and a fully native table in both performance and cost.", "teaches": "streaming-engines-and-eventstreams" },
-
-  { "id": "mo-01", "examCode": "dp-700", "domain": "monitor-optimize", "question": "You need one place to see today's pipeline runs, dataflow refreshes, and Spark applications with their statuses. Where do you look?", "options": ["The Monitoring hub", "The Capacity Metrics app", "The admin portal audit log", "The workspace lineage view"], "correctIndex": 0, "explanation": "The Monitoring hub aggregates runs across item types with filters for status and time. Capacity Metrics shows compute consumption rather than individual runs.", "teaches": "monitoring-fabric-items" },
-  { "id": "mo-02", "examCode": "dp-700", "domain": "monitor-optimize", "question": "Every item in the workspace has become slow, though nothing is failing. What should you check?", "options": ["The Capacity Metrics app for throttling and overload", "The Spark UI for the last notebook run", "The Delta transaction log for the largest table", "The Eventstream destination health"], "correctIndex": 0, "explanation": "Uniform slowness without failures is the signature of capacity throttling. The Capacity Metrics app shows consumption, smoothing, and overload against the SKU.", "teaches": "monitoring-fabric-items" },
-  { "id": "mo-03", "examCode": "dp-700", "domain": "monitor-optimize", "question": "The business must be notified when daily revenue in a KQL table falls below a threshold, not when a job fails. What should you configure?", "options": ["An Activator rule on the query result", "A pipeline On Fail path with an email activity", "A semantic model refresh failure notification", "An alert in the Monitoring hub"], "correctIndex": 0, "explanation": "Activator alerts on the meaning of the data by watching a stream, a KQL query, or a visual and triggering when a condition holds. The other options report job outcomes.", "teaches": "monitoring-fabric-items" },
-  { "id": "mo-04", "examCode": "dp-700", "domain": "monitor-optimize", "question": "A Copy activity fails with a file-not-found error, though the file exists. The source path is built from a dynamic expression. What should you inspect first?", "options": ["The activity's resolved input in the run detail", "The pipeline's schedule trigger", "The lakehouse's Delta transaction log", "The capacity's Spark settings"], "correctIndex": 0, "explanation": "The run detail shows the input as it was actually resolved at run time, which is where an expression that produced the wrong string becomes visible. The definition alone will look correct.", "teaches": "pipeline-and-dataflow-errors" },
-  { "id": "mo-05", "examCode": "dp-700", "domain": "monitor-optimize", "question": "A Dataflow Gen2 refresh succeeds but a few hundred rows are missing from the output. Where should you look?", "options": ["The error rows for the query", "The refresh history message", "The Spark application log", "The capacity throttling report"], "correctIndex": 0, "explanation": "Row-level errors do not fail a refresh; they are collected in the query's error rows, which is where a type conversion failure on a subset of rows appears.", "teaches": "pipeline-and-dataflow-errors" },
-  { "id": "mo-06", "examCode": "dp-700", "domain": "monitor-optimize", "question": "A notebook fails with an out-of-memory error on the driver. What is the most likely cause?", "options": ["A collect or toPandas call pulling a large DataFrame to a single machine", "Data skew across executors", "Too many small files in the source table", "A missing broadcast hint on a join"], "correctIndex": 0, "explanation": "Driver memory is exhausted by pulling data back to one machine. Skew and small files cause executor-side problems rather than driver out-of-memory.", "teaches": "spark-and-notebook-errors" },
-  { "id": "mo-07", "examCode": "dp-700", "domain": "monitor-optimize", "question": "In the Spark UI, one task is still running long after all the others in its stage finished. What does this indicate?", "options": ["Data skew on the partitioning key", "An undersized driver", "A missing OPTIMIZE on the target table", "A stale statistics object"], "correctIndex": 0, "explanation": "A single long-running task in an otherwise complete stage is the signature of skew, where one key holds far more rows than the rest. Salting or adaptive query execution addresses it.", "teaches": "spark-and-notebook-errors" },
-  { "id": "mo-08", "examCode": "dp-700", "domain": "monitor-optimize", "question": "A Delta table has slowed steadily over months of frequent small appends. What should you run first?", "options": ["OPTIMIZE to compact small files", "VACUUM to reclaim storage", "Repartition the table by a high-cardinality key", "Convert the table to a Warehouse table"], "correctIndex": 0, "explanation": "Frequent appends create many small files and every read pays a per-file cost. OPTIMIZE compacts them; VACUUM afterwards reclaims the space the old files used.", "teaches": "lakehouse-and-warehouse-optimization" },
-  { "id": "mo-09", "examCode": "dp-700", "domain": "monitor-optimize", "question": "Queries filter almost always on a single region column with about a dozen distinct values, over a very large table. What is likely to help most?", "options": ["Partitioning or Z-Ordering by that column so filters skip files", "Partitioning by the transaction id", "Disabling V-Order on writes", "Increasing the Spark executor count"], "correctIndex": 0, "explanation": "Moderate cardinality and a column that is actually filtered on is exactly when partitioning or Z-Ordering pays off. Partitioning by a unique id would create the small-file problem instead.", "teaches": "lakehouse-and-warehouse-optimization" },
-  { "id": "mo-10", "examCode": "dp-700", "domain": "monitor-optimize", "question": "A join between a 2-billion-row fact table and a 5,000-row dimension is dominated by shuffle time. What should you do?", "options": ["Broadcast the dimension table", "Increase the number of shuffle partitions", "Cache the fact table", "Z-Order the fact table by the join key"], "correctIndex": 0, "explanation": "Broadcasting sends the small table to every executor and removes the shuffle entirely, which is the single biggest win for a large-to-small join.", "teaches": "realtime-and-query-optimization" },
-  { "id": "mo-11", "examCode": "dp-700", "domain": "monitor-optimize", "question": "A KQL dashboard over an Eventhouse is slow for queries reaching back 30 days, though recent queries are fast. What should you change?", "options": ["Extend the caching policy so 30 days stays in hot cache", "Extend the retention policy to 90 days", "Add a OneLake shortcut to the table", "Increase the Eventstream throughput"], "correctIndex": 0, "explanation": "The caching policy governs how much data stays on hot SSD. When the queries reach beyond the hot window they fall back to cold storage and slow down; retention only governs whether data exists at all.", "teaches": "realtime-and-query-optimization" },
-  { "id": "mo-12", "examCode": "dp-700", "domain": "monitor-optimize", "question": "A Dataflow Gen2 fails on a memory error partway through a large transformation. What is a reasonable first lever?", "options": ["Enable staging so intermediate results are written to the lakehouse", "Disable query folding", "Reduce the refresh frequency", "Convert the destination to an Eventhouse"], "correctIndex": 0, "explanation": "Staging writes intermediate results out rather than holding them in memory, which frequently rescues a large dataflow. Disabling it is the right move only for simple queries where the write is pure overhead.", "teaches": "pipeline-and-dataflow-errors" },
-  { "id": "mo-13", "examCode": "dp-700", "domain": "monitor-optimize", "question": "After compacting a large Delta table, storage consumption has not fallen. What should you run, and what must you respect?", "options": ["VACUUM, respecting the retention period so time travel is not broken", "OPTIMIZE again with Z-Order", "A full overwrite of the table", "ANALYZE to refresh statistics"], "correctIndex": 0, "explanation": "OPTIMIZE writes new compacted files but leaves the originals for time travel. VACUUM removes files no longer referenced, and shortening its retention below the supported window breaks time travel.", "teaches": "lakehouse-and-warehouse-optimization" }
+  {
+    "id": "as-01",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "question": "Several analysts run short interactive notebooks all day and complain that each one waits a long time to start. What should you configure?",
+    "options": [
+      "High concurrency mode so notebooks share a Spark session",
+      "A custom pool with larger nodes",
+      "Autoscale with a higher maximum node count",
+      "A separate workspace per analyst"
+    ],
+    "correctIndex": 0,
+    "explanation": "Session start-up dominates short interactive work. High concurrency lets several notebooks attach to one running session, so only the first pays the start-up cost. Bigger nodes do not reduce start-up time.",
+    "teaches": "fabric-workspace-settings"
+  },
+  {
+    "id": "as-02",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "question": "A semantic model promoted from the development workspace to production still queries the development warehouse. What should you configure in the deployment pipeline?",
+    "options": [
+      "A deployment rule that rebinds the data source per stage",
+      "A separate git branch for production",
+      "A sensitivity label on the production item",
+      "Item-level ReadAll permission on the production warehouse"
+    ],
+    "correctIndex": 0,
+    "explanation": "Deployment copies items forward with their bindings intact. Deployment rules are what repoint a data source or parameter for the target stage.",
+    "teaches": "lifecycle-and-deployment-pipelines"
+  },
+  {
+    "id": "as-03",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "question": "Your team needs code review and branching for Fabric items, plus a controlled promotion path to production. What should you use?",
+    "options": [
+      "Git integration for review, and deployment pipelines for promotion",
+      "Git integration alone",
+      "Deployment pipelines alone",
+      "Manual export and import of item definitions"
+    ],
+    "correctIndex": 0,
+    "explanation": "The two are complementary. Git provides source control, branching, and pull-request review; deployment pipelines move content between stage workspaces with rules applied.",
+    "teaches": "lifecycle-and-deployment-pipelines"
+  },
+  {
+    "id": "as-04",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "question": "A user must query a lakehouse table through the SQL analytics endpoint but must not be added to the workspace or be able to edit anything. What should you grant?",
+    "options": [
+      "Item-level ReadData on the lakehouse",
+      "Workspace Contributor",
+      "Item-level Read only",
+      "Workspace Viewer plus Build"
+    ],
+    "correctIndex": 0,
+    "explanation": "ReadData grants querying through the SQL endpoint without workspace membership. Read alone exposes the item and its endpoint but returns no data.",
+    "teaches": "workspace-and-item-access"
+  },
+  {
+    "id": "as-05",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "question": "Row-level security is defined on the warehouse, but an analyst reading the same Delta tables from a Spark notebook still sees every row. What should you implement?",
+    "options": [
+      "OneLake security roles at the folder and file level",
+      "Column-level security on the warehouse",
+      "Dynamic data masking on the sensitive columns",
+      "A sensitivity label on the lakehouse"
+    ],
+    "correctIndex": 0,
+    "explanation": "A SQL security policy is enforced by the SQL engine. Reading the underlying files through Spark bypasses it, and OneLake security is what applies the restriction whichever engine reads the data.",
+    "teaches": "granular-and-onelake-security"
+  },
+  {
+    "id": "as-06",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "question": "Support staff must see a customer table but never the full national identifier, while a fraud team must see it in full. Access to the table itself is required for both. What should you implement?",
+    "options": [
+      "Dynamic data masking, with UNMASK granted to the fraud team",
+      "Object-level security on the table",
+      "Row-level security filtering by team",
+      "A separate copy of the table without the column"
+    ],
+    "correctIndex": 0,
+    "explanation": "Masking obscures the displayed value without denying access to the table, and the UNMASK permission reveals the real value to those who need it.",
+    "teaches": "granular-and-onelake-security"
+  },
+  {
+    "id": "as-07",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "question": "A classification applied to a lakehouse must follow the data into every downstream report and into any Excel file exported from it. What should you apply?",
+    "options": [
+      "A sensitivity label",
+      "Certified endorsement",
+      "A Fabric domain",
+      "An audit log retention policy"
+    ],
+    "correctIndex": 0,
+    "explanation": "Sensitivity labels inherit downstream to derived items and travel with exported files. Endorsement and domains change discovery, not protection.",
+    "teaches": "governance-labels-and-audit"
+  },
+  {
+    "id": "as-08",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "question": "Analysts keep building on an abandoned copy of a lakehouse. You want the maintained one to surface first in discovery without changing anyone's access. What should you do?",
+    "options": [
+      "Endorse the maintained lakehouse as Certified",
+      "Grant ReadAll on the maintained lakehouse only",
+      "Move the abandoned lakehouse to another domain",
+      "Apply a sensitivity label to the maintained lakehouse"
+    ],
+    "correctIndex": 0,
+    "explanation": "Endorsement ranks items higher in the catalog and signals trust, without altering permissions. Certified is the level restricted to authorised reviewers.",
+    "teaches": "governance-labels-and-audit"
+  },
+  {
+    "id": "as-09",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "question": "A transformation requires custom Python libraries and machine-learning inference over tens of millions of rows. Which item should you use?",
+    "options": [
+      "A notebook",
+      "A Dataflow Gen2",
+      "A data pipeline Copy activity",
+      "A KQL update policy"
+    ],
+    "correctIndex": 0,
+    "explanation": "Notebooks run PySpark and arbitrary Python with library support and scale out across the pool. Dataflow Gen2 is Power Query and cannot host custom libraries or models.",
+    "teaches": "orchestration-choices"
+  },
+  {
+    "id": "as-10",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "question": "A pipeline must run as soon as a new file lands in a OneLake folder, not on a schedule. What should you configure?",
+    "options": [
+      "An Activator item watching for the OneLake event",
+      "A pipeline schedule with a one-minute interval",
+      "A tumbling window trigger on the Copy activity",
+      "A Spark structured streaming job"
+    ],
+    "correctIndex": 0,
+    "explanation": "Event-based triggering in Fabric comes from Activator, which watches for events such as a file arriving and starts the pipeline in response.",
+    "teaches": "orchestration-choices"
+  },
+  {
+    "id": "as-11",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "question": "Two hundred source tables must be copied with identical logic. You want one pipeline rather than two hundred. What is the correct approach?",
+    "options": [
+      "Parameterise the pipeline and drive it from a control table with a ForEach loop",
+      "Create a pipeline template and clone it per table",
+      "Use a single Copy activity with a wildcard sink",
+      "Create one Dataflow Gen2 per table"
+    ],
+    "correctIndex": 0,
+    "explanation": "A metadata-driven pipeline reads a control table of source and target definitions and loops, using parameters and dynamic expressions to build each copy at run time.",
+    "teaches": "orchestration-choices"
+  },
+  {
+    "id": "as-12",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "question": "Warehouse schema must be reviewed, versioned, and deployed like application code. What should you use?",
+    "options": [
+      "A database project",
+      "A deployment pipeline rule",
+      "A Fabric domain",
+      "A dataflow with staging enabled"
+    ],
+    "correctIndex": 0,
+    "explanation": "Database projects hold warehouse schema as source that can be built, diffed, and deployed, which is what brings schema under the same review process as code.",
+    "teaches": "lifecycle-and-deployment-pipelines"
+  },
+  {
+    "id": "as-13",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "question": "Compliance asks for evidence of who accessed a particular lakehouse over the last quarter. Where do you get it?",
+    "options": [
+      "Fabric audit logs, through Purview compliance or the admin monitoring workspace",
+      "The Monitoring hub run history",
+      "The Capacity Metrics app",
+      "The item's endorsement history"
+    ],
+    "correctIndex": 0,
+    "explanation": "Audit logs record item access, permission changes, and exports. The Monitoring hub tracks item runs, not user access.",
+    "teaches": "governance-labels-and-audit"
+  },
+  {
+    "id": "it-01",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "question": "A source table of 400 million rows carries a LastModified column. Nightly loads currently reload everything and no longer fit the window. What should you implement?",
+    "options": [
+      "A watermark-based incremental load with a Delta MERGE",
+      "A full load written with overwrite mode",
+      "Partitioning of the target by LastModified",
+      "A OneLake shortcut to the source"
+    ],
+    "correctIndex": 0,
+    "explanation": "A watermark filters the source to rows changed since the last successful run, and MERGE applies them as an upsert so the target stays correct without a full rewrite.",
+    "teaches": "loading-patterns"
+  },
+  {
+    "id": "it-02",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "question": "A customer dimension must retain the previous address when a customer moves, with the period each address was valid. Which pattern applies?",
+    "options": [
+      "Slowly changing dimension type 2",
+      "Slowly changing dimension type 1",
+      "A full reload each night",
+      "Dynamic data masking on the address column"
+    ],
+    "correctIndex": 0,
+    "explanation": "Type 2 closes the current row with an end date and inserts a new current row, preserving the history and its validity period. Type 1 overwrites and loses it.",
+    "teaches": "loading-patterns"
+  },
+  {
+    "id": "it-03",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "question": "An application must issue INSERT, UPDATE, and DELETE statements over T-SQL against a Fabric analytical store. Which item should you use?",
+    "options": [
+      "A Warehouse",
+      "A Lakehouse SQL analytics endpoint",
+      "An Eventhouse KQL database",
+      "A OneLake shortcut to a Lakehouse"
+    ],
+    "correctIndex": 0,
+    "explanation": "The lakehouse SQL analytics endpoint is read-only. A Warehouse is the T-SQL engine that supports writes and multi-table transactions.",
+    "teaches": "choosing-a-data-store"
+  },
+  {
+    "id": "it-04",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "question": "Millions of IoT telemetry events per hour must be stored and queried with sub-second latency for time-series analysis. Which store fits?",
+    "options": [
+      "An Eventhouse with a KQL database",
+      "A Warehouse",
+      "A Fabric SQL database",
+      "A Lakehouse with hourly Delta appends"
+    ],
+    "correctIndex": 0,
+    "explanation": "Eventhouses are purpose-built for high-volume time-series and telemetry, queried with KQL. A lakehouse with hourly appends adds latency and creates a small-file problem.",
+    "teaches": "choosing-a-data-store"
+  },
+  {
+    "id": "it-05",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "question": "A silver lakehouse must read the bronze lakehouse's tables from another workspace without duplicating storage. What should you create?",
+    "options": [
+      "An internal OneLake shortcut",
+      "A Copy activity on a schedule",
+      "A mirrored database",
+      "A Dataflow Gen2 with staging"
+    ],
+    "correctIndex": 0,
+    "explanation": "An internal shortcut points at data in another Fabric workspace with no copy and no refresh, which is the standard way to build medallion layers without duplication.",
+    "teaches": "shortcuts-and-mirroring"
+  },
+  {
+    "id": "it-06",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "question": "A shortcut to an ADLS Gen2 container works for the administrator who created it but returns an authorisation error for analysts. Why?",
+    "options": [
+      "A shortcut resolves with the caller's own credentials against the target",
+      "Shortcuts cache the creator's token for 24 hours",
+      "Shortcuts only support internal Fabric sources",
+      "The shortcut needs query acceleration enabled"
+    ],
+    "correctIndex": 0,
+    "explanation": "Shortcut traversal uses the calling user's permissions on the underlying storage, so access must be granted at the source as well as in Fabric.",
+    "teaches": "shortcuts-and-mirroring"
+  },
+  {
+    "id": "it-07",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "question": "Analytics are needed on a live Azure SQL Database with near-real-time freshness and no ETL to build or maintain. What should you use?",
+    "options": [
+      "Mirroring",
+      "A OneLake shortcut",
+      "A nightly Copy activity",
+      "A Dataflow Gen2 on a 15-minute schedule"
+    ],
+    "correctIndex": 0,
+    "explanation": "Mirroring continuously replicates an operational database into OneLake as Delta with no pipeline to author. A shortcut cannot point at a transactional database.",
+    "teaches": "shortcuts-and-mirroring"
+  },
+  {
+    "id": "it-08",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "question": "A feed contains repeated rows for the same order id whose values differ, and only the most recent should survive. What should you use?",
+    "options": [
+      "A window function ranked by the modified timestamp, keeping rank 1",
+      "dropDuplicates on the order id",
+      "distinct on all columns",
+      "A left anti join against the target"
+    ],
+    "correctIndex": 0,
+    "explanation": "dropDuplicates keeps an arbitrary row when the duplicates differ. Ranking within a window by an ordering column lets you keep the newest deterministically.",
+    "teaches": "batch-transformation"
+  },
+  {
+    "id": "it-09",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "question": "Fact rows regularly arrive before the dimension rows they reference, breaking the load. What is a standard remedy?",
+    "options": [
+      "Insert an inferred member placeholder in the dimension and update it later",
+      "Discard the fact rows",
+      "Disable referential integrity on the warehouse",
+      "Switch the fact load to a full reload"
+    ],
+    "correctIndex": 0,
+    "explanation": "An inferred member creates a placeholder dimension row so the fact can be keyed immediately, and the placeholder is completed when the real dimension record arrives.",
+    "teaches": "batch-transformation"
+  },
+  {
+    "id": "it-10",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "question": "A stream must be filtered and aggregated with no code and routed to an Eventhouse. What should you use?",
+    "options": [
+      "An Eventstream with the event-processing editor",
+      "Spark structured streaming in a notebook",
+      "A Dataflow Gen2",
+      "A KQL update policy on the destination table"
+    ],
+    "correctIndex": 0,
+    "explanation": "Eventstreams provide low-code stream processing with sources, an editor for filtering and aggregation in flight, and destinations including an Eventhouse.",
+    "teaches": "streaming-engines-and-eventstreams"
+  },
+  {
+    "id": "it-11",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "question": "You need a five-minute moving average that updates every minute over a stream. Which windowing function should you use?",
+    "options": [
+      "A hopping window with a five-minute size and one-minute hop",
+      "A tumbling window of five minutes",
+      "A session window with a five-minute timeout",
+      "A snapshot window"
+    ],
+    "correctIndex": 0,
+    "explanation": "Hopping windows are fixed-size and advance by a smaller hop, so they overlap and produce a moving average. Tumbling windows do not overlap and would emit only every five minutes.",
+    "teaches": "windowing-and-late-data"
+  },
+  {
+    "id": "it-12",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "question": "Events sometimes arrive several seconds after they occurred, and aggregates are landing in the wrong buckets. What should you change?",
+    "options": [
+      "Window on event time and set a watermark for allowed lateness",
+      "Window on processing time and increase the window size",
+      "Increase the Eventstream throughput units",
+      "Switch the destination from a lakehouse to an Eventhouse"
+    ],
+    "correctIndex": 0,
+    "explanation": "Event time is when the event happened; windowing on it puts each event in the correct bucket, and a watermark bounds how long the system waits for stragglers.",
+    "teaches": "windowing-and-late-data"
+  },
+  {
+    "id": "it-13",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "question": "A snowflaked product hierarchy makes report queries slow and hard to write. What transformation is usually appropriate for the analytics model?",
+    "options": [
+      "Denormalise the hierarchy into a single wide dimension",
+      "Normalise it further into more tables",
+      "Partition each level by its key",
+      "Store each level as a separate shortcut"
+    ],
+    "correctIndex": 0,
+    "explanation": "Denormalising trades storage for query simplicity and speed, which is the usual trade in an analytics model where the fact-to-dimension join count dominates.",
+    "teaches": "batch-transformation"
+  },
+  {
+    "id": "it-14",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "question": "A shortcut in Real-Time Intelligence is queried constantly and latency matters more than the extra storage cost. What should you enable?",
+    "options": [
+      "Query acceleration",
+      "A native table copy plus a nightly sync",
+      "Query result caching on the warehouse",
+      "V-Order on the source"
+    ],
+    "correctIndex": 0,
+    "explanation": "Query acceleration caches shortcut data for faster queries, sitting between a plain shortcut and a fully native table in both performance and cost.",
+    "teaches": "streaming-engines-and-eventstreams"
+  },
+  {
+    "id": "mo-01",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "question": "You need one place to see today's pipeline runs, dataflow refreshes, and Spark applications with their statuses. Where do you look?",
+    "options": [
+      "The Monitoring hub",
+      "The Capacity Metrics app",
+      "The admin portal audit log",
+      "The workspace lineage view"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Monitoring hub aggregates runs across item types with filters for status and time. Capacity Metrics shows compute consumption rather than individual runs.",
+    "teaches": "monitoring-fabric-items"
+  },
+  {
+    "id": "mo-02",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "question": "Every item in the workspace has become slow, though nothing is failing. What should you check?",
+    "options": [
+      "The Capacity Metrics app for throttling and overload",
+      "The Spark UI for the last notebook run",
+      "The Delta transaction log for the largest table",
+      "The Eventstream destination health"
+    ],
+    "correctIndex": 0,
+    "explanation": "Uniform slowness without failures is the signature of capacity throttling. The Capacity Metrics app shows consumption, smoothing, and overload against the SKU.",
+    "teaches": "monitoring-fabric-items"
+  },
+  {
+    "id": "mo-03",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "question": "The business must be notified when daily revenue in a KQL table falls below a threshold, not when a job fails. What should you configure?",
+    "options": [
+      "An Activator rule on the query result",
+      "A pipeline On Fail path with an email activity",
+      "A semantic model refresh failure notification",
+      "An alert in the Monitoring hub"
+    ],
+    "correctIndex": 0,
+    "explanation": "Activator alerts on the meaning of the data by watching a stream, a KQL query, or a visual and triggering when a condition holds. The other options report job outcomes.",
+    "teaches": "monitoring-fabric-items"
+  },
+  {
+    "id": "mo-04",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "question": "A Copy activity fails with a file-not-found error, though the file exists. The source path is built from a dynamic expression. What should you inspect first?",
+    "options": [
+      "The activity's resolved input in the run detail",
+      "The pipeline's schedule trigger",
+      "The lakehouse's Delta transaction log",
+      "The capacity's Spark settings"
+    ],
+    "correctIndex": 0,
+    "explanation": "The run detail shows the input as it was actually resolved at run time, which is where an expression that produced the wrong string becomes visible. The definition alone will look correct.",
+    "teaches": "pipeline-and-dataflow-errors"
+  },
+  {
+    "id": "mo-05",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "question": "A Dataflow Gen2 refresh succeeds but a few hundred rows are missing from the output. Where should you look?",
+    "options": [
+      "The error rows for the query",
+      "The refresh history message",
+      "The Spark application log",
+      "The capacity throttling report"
+    ],
+    "correctIndex": 0,
+    "explanation": "Row-level errors do not fail a refresh; they are collected in the query's error rows, which is where a type conversion failure on a subset of rows appears.",
+    "teaches": "pipeline-and-dataflow-errors"
+  },
+  {
+    "id": "mo-06",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "question": "A notebook fails with an out-of-memory error on the driver. What is the most likely cause?",
+    "options": [
+      "A collect or toPandas call pulling a large DataFrame to a single machine",
+      "Data skew across executors",
+      "Too many small files in the source table",
+      "A missing broadcast hint on a join"
+    ],
+    "correctIndex": 0,
+    "explanation": "Driver memory is exhausted by pulling data back to one machine. Skew and small files cause executor-side problems rather than driver out-of-memory.",
+    "teaches": "spark-and-notebook-errors"
+  },
+  {
+    "id": "mo-07",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "question": "In the Spark UI, one task is still running long after all the others in its stage finished. What does this indicate?",
+    "options": [
+      "Data skew on the partitioning key",
+      "An undersized driver",
+      "A missing OPTIMIZE on the target table",
+      "A stale statistics object"
+    ],
+    "correctIndex": 0,
+    "explanation": "A single long-running task in an otherwise complete stage is the signature of skew, where one key holds far more rows than the rest. Salting or adaptive query execution addresses it.",
+    "teaches": "spark-and-notebook-errors"
+  },
+  {
+    "id": "mo-08",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "question": "A Delta table has slowed steadily over months of frequent small appends. What should you run first?",
+    "options": [
+      "OPTIMIZE to compact small files",
+      "VACUUM to reclaim storage",
+      "Repartition the table by a high-cardinality key",
+      "Convert the table to a Warehouse table"
+    ],
+    "correctIndex": 0,
+    "explanation": "Frequent appends create many small files and every read pays a per-file cost. OPTIMIZE compacts them; VACUUM afterwards reclaims the space the old files used.",
+    "teaches": "lakehouse-and-warehouse-optimization"
+  },
+  {
+    "id": "mo-09",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "question": "Queries filter almost always on a single region column with about a dozen distinct values, over a very large table. What is likely to help most?",
+    "options": [
+      "Partitioning or Z-Ordering by that column so filters skip files",
+      "Partitioning by the transaction id",
+      "Disabling V-Order on writes",
+      "Increasing the Spark executor count"
+    ],
+    "correctIndex": 0,
+    "explanation": "Moderate cardinality and a column that is actually filtered on is exactly when partitioning or Z-Ordering pays off. Partitioning by a unique id would create the small-file problem instead.",
+    "teaches": "lakehouse-and-warehouse-optimization"
+  },
+  {
+    "id": "mo-10",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "question": "A join between a 2-billion-row fact table and a 5,000-row dimension is dominated by shuffle time. What should you do?",
+    "options": [
+      "Broadcast the dimension table",
+      "Increase the number of shuffle partitions",
+      "Cache the fact table",
+      "Z-Order the fact table by the join key"
+    ],
+    "correctIndex": 0,
+    "explanation": "Broadcasting sends the small table to every executor and removes the shuffle entirely, which is the single biggest win for a large-to-small join.",
+    "teaches": "realtime-and-query-optimization"
+  },
+  {
+    "id": "mo-11",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "question": "A KQL dashboard over an Eventhouse is slow for queries reaching back 30 days, though recent queries are fast. What should you change?",
+    "options": [
+      "Extend the caching policy so 30 days stays in hot cache",
+      "Extend the retention policy to 90 days",
+      "Add a OneLake shortcut to the table",
+      "Increase the Eventstream throughput"
+    ],
+    "correctIndex": 0,
+    "explanation": "The caching policy governs how much data stays on hot SSD. When the queries reach beyond the hot window they fall back to cold storage and slow down; retention only governs whether data exists at all.",
+    "teaches": "realtime-and-query-optimization"
+  },
+  {
+    "id": "mo-12",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "question": "A Dataflow Gen2 fails on a memory error partway through a large transformation. What is a reasonable first lever?",
+    "options": [
+      "Enable staging so intermediate results are written to the lakehouse",
+      "Disable query folding",
+      "Reduce the refresh frequency",
+      "Convert the destination to an Eventhouse"
+    ],
+    "correctIndex": 0,
+    "explanation": "Staging writes intermediate results out rather than holding them in memory, which frequently rescues a large dataflow. Disabling it is the right move only for simple queries where the write is pure overhead.",
+    "teaches": "pipeline-and-dataflow-errors"
+  },
+  {
+    "id": "mo-13",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "question": "After compacting a large Delta table, storage consumption has not fallen. What should you run, and what must you respect?",
+    "options": [
+      "VACUUM, respecting the retention period so time travel is not broken",
+      "OPTIMIZE again with Z-Order",
+      "A full overwrite of the table",
+      "ANALYZE to refresh statistics"
+    ],
+    "correctIndex": 0,
+    "explanation": "OPTIMIZE writes new compacted files but leaves the originals for time travel. VACUUM removes files no longer referenced, and shortening its retention below the supported window breaks time travel.",
+    "teaches": "lakehouse-and-warehouse-optimization"
+  },
+  {
+    "id": "it-15",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "caseStudyId": "cs-brightline-lakehouse",
+    "question": "Locomotive events must be queryable within seconds of arriving. Which ingestion path fits?",
+    "options": [
+      "An eventstream landing events into an eventhouse",
+      "A nightly data pipeline copy activity",
+      "A Dataflow Gen2 on an hourly schedule",
+      "A notebook run manually each morning"
+    ],
+    "correctIndex": 0,
+    "explanation": "Only a streaming path meets a seconds-level requirement. Every other option is batch, and the shortest of them is an hour behind.",
+    "teaches": "streaming-engines-and-eventstreams"
+  },
+  {
+    "id": "it-16",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "caseStudyId": "cs-brightline-lakehouse",
+    "question": "The vendor's CSV files must be readable from lh_telemetry without being copied. What should you create?",
+    "options": [
+      "A OneLake shortcut to the ADLS Gen2 path",
+      "A Dataflow Gen2 that copies the files hourly",
+      "A pipeline Copy activity into bronze",
+      "A mirrored database over the vendor account"
+    ],
+    "correctIndex": 0,
+    "explanation": "A shortcut references data in place, so the vendor's account stays the system of record. Every other option makes a second copy, which the requirement forbids.",
+    "teaches": "shortcuts-and-mirroring"
+  },
+  {
+    "id": "it-17",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "caseStudyId": "cs-brightline-lakehouse",
+    "question": "Silver has grown to thousands of small Parquet files and the notebook's logic must not change. What should you do?",
+    "options": [
+      "Run table maintenance to compact the files, with V-Order applied",
+      "Rewrite the notebook to append rather than overwrite",
+      "Move the silver table into wh_reporting",
+      "Increase the capacity from F64 to F128"
+    ],
+    "correctIndex": 0,
+    "explanation": "Small-file proliferation is a layout problem and compaction is the direct fix. Rewriting the notebook is ruled out, and a bigger capacity spends money without changing the layout.",
+    "teaches": "lakehouse-and-warehouse-optimization"
+  },
+  {
+    "id": "it-18",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "caseStudyId": "cs-brightline-lakehouse",
+    "question": "Finance runs a nightly T-SQL procedure that writes reconciliation rows. Why must the gold layer stay in wh_reporting?",
+    "options": [
+      "A lakehouse SQL analytics endpoint is read-only",
+      "A lakehouse cannot store Delta tables",
+      "A warehouse is the only item that supports scheduling",
+      "A lakehouse cannot be queried with T-SQL at all"
+    ],
+    "correctIndex": 0,
+    "explanation": "The endpoint serves SELECT but not INSERT. That read-versus-write split is the main reason to keep a warehouse alongside a lakehouse.",
+    "teaches": "choosing-a-data-store"
+  },
+  {
+    "id": "it-19",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "caseStudyId": "cs-brightline-lakehouse",
+    "question": "Engineers must read pipeline run history in BL-Prod without being able to change items. Which workspace role fits?",
+    "options": [
+      "Viewer",
+      "Contributor",
+      "Member",
+      "Admin"
+    ],
+    "correctIndex": 0,
+    "explanation": "Viewer grants read access to items and their run history without any authoring rights. Contributor and above would let engineers edit production directly, which the requirements forbid.",
+    "teaches": "workspace-and-item-access"
+  },
+  {
+    "id": "it-20",
+    "examCode": "dp-700",
+    "domain": "ingest-transform",
+    "kind": "match",
+    "question": "Match each Fabric ingestion option to what it suits.",
+    "pairs": [
+      {
+        "term": "Eventstream",
+        "definition": "Continuous ingestion of streaming events"
+      },
+      {
+        "term": "Data pipeline",
+        "definition": "Orchestrating activities and control flow"
+      },
+      {
+        "term": "Dataflow Gen2",
+        "definition": "Low-code transformation with Power Query"
+      },
+      {
+        "term": "Notebook",
+        "definition": "Code-first transformation at scale with Spark"
+      }
+    ],
+    "explanation": "One streaming option and three batch options that differ by how the work is expressed. A pipeline can invoke the other three, which is why orchestration is its own row.",
+    "teaches": "orchestration-choices"
+  },
+  {
+    "id": "as-14",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "kind": "multi",
+    "question": "Which two are true of a Fabric deployment pipeline? Choose two.",
+    "options": [
+      "It promotes items between assigned workspaces",
+      "It supports deployment rules for stage-specific settings",
+      "It replaces the need for source control",
+      "It automatically writes unit tests"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Pipelines move items stage to stage and let connections differ per stage. Git integration handles version history, which is a separate concern.",
+    "teaches": "lifecycle-and-deployment-pipelines"
+  },
+  {
+    "id": "as-15",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "kind": "multi",
+    "question": "Which two controls restrict what a user can read inside a lakehouse table? Choose two.",
+    "options": [
+      "OneLake data access roles",
+      "Row-level security on the SQL analytics endpoint",
+      "The workspace display name",
+      "The capacity SKU"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Both narrow access below item level. Naming and capacity size have no bearing on who may read which rows.",
+    "teaches": "granular-and-onelake-security"
+  },
+  {
+    "id": "as-16",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "kind": "order",
+    "question": "Put the steps of promoting a change from development to production in order.",
+    "items": [
+      "Deploy from Test to Prod",
+      "Commit the change in the development workspace to Git",
+      "Deploy from Dev to Test",
+      "Validate the change in Test"
+    ],
+    "correctOrder": [
+      1,
+      2,
+      3,
+      0
+    ],
+    "explanation": "Source control captures the change first, then the pipeline moves it one stage at a time. Validating before promoting is what makes the pipeline worth having.",
+    "teaches": "lifecycle-and-deployment-pipelines"
+  },
+  {
+    "id": "as-17",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "kind": "order",
+    "question": "Put the steps of securing a new Fabric workspace in order.",
+    "items": [
+      "Apply sensitivity labels to the items",
+      "Create the workspace on a capacity",
+      "Assign workspace roles to the teams involved",
+      "Configure granular access on individual items"
+    ],
+    "correctOrder": [
+      1,
+      2,
+      3,
+      0
+    ],
+    "explanation": "The workspace exists first, then roles set the broad boundary, then item-level access narrows it, and labelling classifies what is inside. Working outside in avoids granting access you then have to claw back.",
+    "teaches": "workspace-and-item-access"
+  },
+  {
+    "id": "as-18",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "kind": "match",
+    "question": "Match each Fabric workspace role to what it allows.",
+    "pairs": [
+      {
+        "term": "Viewer",
+        "definition": "Read items and their run history"
+      },
+      {
+        "term": "Contributor",
+        "definition": "Create and edit items in the workspace"
+      },
+      {
+        "term": "Member",
+        "definition": "Also share the workspace with others"
+      },
+      {
+        "term": "Admin",
+        "definition": "Also manage the workspace itself"
+      }
+    ],
+    "explanation": "Each role adds to the one before it. Viewer against Contributor is the line that separates reading production from changing it.",
+    "teaches": "workspace-and-item-access"
+  },
+  {
+    "id": "as-19",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "kind": "yesno",
+    "question": "A sensitivity label is applied to a lakehouse in Fabric. Judge each statement.",
+    "statements": [
+      {
+        "text": "The label can flow to items created downstream from it.",
+        "correct": true
+      },
+      {
+        "text": "The label classifies the item and can carry protection.",
+        "correct": true
+      },
+      {
+        "text": "The label changes which workspace role a user holds.",
+        "correct": false
+      },
+      {
+        "text": "The label is recorded for audit purposes.",
+        "correct": true
+      }
+    ],
+    "explanation": "Labels classify, protect and can inherit downstream, and their application is auditable. What they never do is alter role assignments, which are a separate access control.",
+    "teaches": "governance-labels-and-audit"
+  },
+  {
+    "id": "as-20",
+    "examCode": "dp-700",
+    "domain": "analytics-solution",
+    "kind": "dropdown",
+    "question": "Complete the statement about Fabric workspace lifecycle.",
+    "segments": [
+      {
+        "text": "Version history for items comes from "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "Git integration",
+          "the deployment pipeline",
+          "the capacity metrics app"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", while moving a validated change between stages is the job of "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "the deployment pipeline",
+          "a OneLake shortcut",
+          "a workspace role"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "The two are complementary and often confused. Git answers what changed and when; the pipeline answers what is running where.",
+    "teaches": "lifecycle-and-deployment-pipelines"
+  },
+  {
+    "id": "mo-14",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "kind": "multi",
+    "question": "Which two would you check first when a Spark notebook run fails partway through? Choose two.",
+    "options": [
+      "The notebook's run detail and error output",
+      "The Spark application logs for the failed stage",
+      "The workspace display name",
+      "The tenant's domain registration"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Run detail names the failing cell and the logs explain why. Neither of the other two is diagnostic of anything.",
+    "teaches": "spark-and-notebook-errors"
+  },
+  {
+    "id": "mo-15",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "kind": "multi",
+    "question": "Which two improve query performance against a large Delta table? Choose two.",
+    "options": [
+      "Compacting many small files into fewer larger ones",
+      "Applying V-Order when writing",
+      "Renaming the table",
+      "Adding more columns to the table"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Both change how the data is laid out on disk, which is what the read path is sensitive to. Renaming changes nothing and extra columns make scans heavier.",
+    "teaches": "lakehouse-and-warehouse-optimization"
+  },
+  {
+    "id": "mo-16",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "kind": "order",
+    "question": "Put the steps of diagnosing a slow pipeline in order.",
+    "items": [
+      "Apply a fix and re-run to confirm",
+      "Open the pipeline run history",
+      "Identify which activity consumed the most time",
+      "Inspect that activity's inputs and output volume"
+    ],
+    "correctOrder": [
+      1,
+      2,
+      3,
+      0
+    ],
+    "explanation": "Find the run, find the slow step, understand why that step is slow, then change one thing and measure. Skipping straight to a fix is how the wrong thing gets optimised.",
+    "teaches": "monitoring-fabric-items"
+  },
+  {
+    "id": "mo-17",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "kind": "order",
+    "question": "Put the stages of handling a failed nightly load in order.",
+    "items": [
+      "Re-run the load for the affected window",
+      "Detect the failure from monitoring or an alert",
+      "Read the error to establish the cause",
+      "Correct the underlying problem"
+    ],
+    "correctOrder": [
+      1,
+      2,
+      3,
+      0
+    ],
+    "explanation": "Detect, diagnose, fix, then backfill. Re-running before the cause is fixed simply reproduces the failure.",
+    "teaches": "pipeline-and-dataflow-errors"
+  },
+  {
+    "id": "mo-18",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "kind": "match",
+    "question": "Match each Delta maintenance operation to what it does.",
+    "pairs": [
+      {
+        "term": "OPTIMIZE",
+        "definition": "Merge many small files into fewer large ones"
+      },
+      {
+        "term": "VACUUM",
+        "definition": "Remove files the table no longer references"
+      },
+      {
+        "term": "V-Order",
+        "definition": "Write files optimised for the read engine"
+      },
+      {
+        "term": "Partitioning",
+        "definition": "Split data so scans can skip whole folders"
+      }
+    ],
+    "explanation": "The first two are housekeeping run after the fact; the second two are choices made when writing. Running VACUUM expecting compaction is the classic mistake.",
+    "teaches": "lakehouse-and-warehouse-optimization"
+  },
+  {
+    "id": "mo-19",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "kind": "yesno",
+    "question": "An eventstream is feeding a Fabric eventhouse. Judge each statement.",
+    "statements": [
+      {
+        "text": "Events can be queried within seconds of arriving.",
+        "correct": true
+      },
+      {
+        "text": "Late-arriving events can be handled with windowing.",
+        "correct": true
+      },
+      {
+        "text": "The stream must be stopped before the data can be read.",
+        "correct": false
+      },
+      {
+        "text": "Throughput limits are affected by the capacity size.",
+        "correct": true
+      }
+    ],
+    "explanation": "Streaming ingestion is queryable continuously, and windowing is how out-of-order events are reconciled. Nothing needs stopping to read, and capacity governs how much the path can sustain.",
+    "teaches": "windowing-and-late-data"
+  },
+  {
+    "id": "mo-20",
+    "examCode": "dp-700",
+    "domain": "monitor-optimize",
+    "kind": "dropdown",
+    "question": "Complete the statement about diagnosing Fabric workloads.",
+    "segments": [
+      {
+        "text": "To find out why a scheduled item failed you start with "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "its run history",
+          "the capacity SKU",
+          "the workspace role list"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", and to find out whether the capacity itself is the constraint you use "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "the capacity metrics app",
+          "a OneLake shortcut",
+          "a deployment pipeline"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "One question is about a single item and the other is about the resource everything shares. Reaching for capacity metrics first is why teams sometimes scale up to fix a broken query.",
+    "teaches": "monitoring-fabric-items"
+  }
 ]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "cs-harborview-reporting",
+    "examCode": "pl-300",
+    "domain": "visualize-analyze",
+    "title": "Harborview Clinics — one report for five sites",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Harborview Clinics runs five outpatient sites. Each site manager currently keeps their own spreadsheet, and the executive team receives five differently shaped reports every month.",
+          "A single analyst has been asked to replace all of it with one Power BI solution. A first version exists and is being reviewed before it goes wider."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "Appointment and billing data sits in an on-premises SQL Server database. A separate staff roster arrives monthly as an Excel workbook saved to SharePoint.",
+          "The current semantic model imports every table in full and refreshes once each night. Refresh now takes over an hour and occasionally fails.",
+          "The model has no date table. Several measures compute year-to-date figures by filtering on a text column that stores the month name.",
+          "One report page holds fourteen visuals, including three that show the same measure at different grains. Site managers say it is slow to open.",
+          "All five site managers are currently assigned Member on the workspace so they can view the report."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Each site manager must see only their own site's rows, in a single shared report rather than five copies.",
+          "Time intelligence measures such as year-to-date and prior-year must work correctly.",
+          "Refresh must complete reliably, and the on-premises SQL Server must remain reachable after publishing.",
+          "Site managers must be able to view the report but must not be able to edit or republish it.",
+          "Report open time must improve without removing any of the information executives rely on.",
+          "The executive team wants a single monthly figure they can see without opening the full report."
+        ]
+      }
+    ]
+  }
+]
