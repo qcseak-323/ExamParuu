@@ -8,6 +8,13 @@ import {
   VerdictDeckBody,
   type RendererResult,
 } from "@/components/question/renderers";
+import {
+  draftToAnswer,
+  matchItemId,
+  matchSlotId,
+  orderItemId,
+  orderSlotId,
+} from "@/components/question/draft";
 import { gradeQuestion, type SubmittedAnswer } from "@/lib/review";
 import type { Question } from "@/lib/types";
 
@@ -109,26 +116,18 @@ export default function QuestionCard({
           prompt={question.question}
           hint="Drag each step into position — or tap a step, then tap its slot."
           slots={question.correctOrder.map((_, i) => ({
-            id: `pos-${i}`,
+            id: orderSlotId(i),
             label: `Step ${i + 1}`,
           }))}
           items={question.items.map((label, i) => ({
-            id: `item-${i}`,
+            id: orderItemId(i),
             label,
-            answerSlotId: `pos-${question.correctOrder.indexOf(i)}`,
+            answerSlotId: orderSlotId(question.correctOrder.indexOf(i)),
           }))}
           capacity="one"
           emptyLabel="— drop a step here —"
           scoreWord="in the right place"
-          answerFor={(placed) => ({
-            kind: "order",
-            order: question.correctOrder.map((_, position) => {
-              const itemId = Object.keys(placed).find(
-                (id) => placed[id] === `pos-${position}`,
-              );
-              return itemId ? Number(itemId.replace("item-", "")) : -1;
-            }),
-          })}
+          answerFor={(placed) => draftToAnswer(question, placed)}
           onDone={done}
         />
       );
@@ -140,27 +139,18 @@ export default function QuestionCard({
           prompt={question.question}
           hint="Drag a definition onto a term — or tap one, then tap its term."
           slots={question.pairs.map((p, i) => ({
-            id: `term-${i}`,
+            id: matchSlotId(i),
             label: p.term,
           }))}
           items={question.pairs.map((p, i) => ({
-            id: `def-${i}`,
+            id: matchItemId(i),
             label: p.definition,
-            answerSlotId: `term-${i}`,
+            answerSlotId: matchSlotId(i),
           }))}
           capacity="one"
           emptyLabel="— drop a definition here —"
           scoreWord="matched"
-          answerFor={(placed) => ({
-            kind: "match",
-            // Position i holds whichever definition was dropped on term i.
-            placed: question.pairs.map((_, i) => {
-              const defId = Object.keys(placed).find(
-                (id) => placed[id] === `term-${i}`,
-              );
-              return defId ? Number(defId.replace("def-", "")) : -1;
-            }),
-          })}
+          answerFor={(placed) => draftToAnswer(question, placed)}
           onDone={done}
         />
       );

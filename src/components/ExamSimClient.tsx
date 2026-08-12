@@ -5,16 +5,19 @@ import Link from "next/link";
 import { getCatalogEntry, getExamContent } from "@/lib/content";
 import {
   EXAM_PAPER_SIZE,
-  buildSingleAnswerPaper,
+  buildExamPaper,
+  gradeQuestion,
   scoreByDomain,
+  storedAnswer,
 } from "@/lib/review";
+import QuestionCard from "@/components/question/QuestionCard";
+import { draftToAnswer, isAnswered } from "@/components/question/draft";
 import { saveQuizAttempt } from "@/lib/storage";
 import { saveQuizAttemptToDb } from "@/lib/actions";
-import MenuList, { type MenuOption } from "@/components/MenuList";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import ProfessorPortrait from "@/components/ProfessorPortrait";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
-import type { QuizResultEntry, SingleAnswerQuestion } from "@/lib/types";
+import type { Question, QuizResultEntry } from "@/lib/types";
 import { BackGlyph, ForwardGlyph } from "@/components/Glyph";
 
 /**
@@ -59,12 +62,17 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
   const setTrack = useTrackControl();
 
   const [phase, setPhase] = useState<Phase>("briefing");
-  const [paper, setPaper] = useState<SingleAnswerQuestion[]>([]);
+  const [paper, setPaper] = useState<Question[]>([]);
   const [index, setIndex] = useState(0);
-  // One slot per paper question, null while unanswered. An array rather than
-  // an append-only list because the real exam lets you move around the paper
-  // and change answers — which the navigator below now allows too.
-  const [answers, setAnswers] = useState<(number | null)[]>([]);
+  /**
+   * One draft per paper question, `undefined` while untouched.
+   *
+   * Drafts rather than graded answers because the paper is not marked until it
+   * ends, and drafts rather than component state because the navigator
+   * unmounts a question whenever you jump away from it. The shape of each
+   * entry belongs to whichever body rendered it — see components/question/draft.ts.
+   */
+  const [drafts, setDrafts] = useState<unknown[]>([]);
   const [remainingMs, setRemainingMs] = useState(0);
   const [timedOut, setTimedOut] = useState(false);
 
@@ -114,19 +122,19 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
   const finalResults: QuizResultEntry[] = useMemo(
     () =>
       paper.flatMap((q, i) => {
-        const chosen = answers[i];
-        if (chosen === null || chosen === undefined) return [];
+        const answer = draftToAnswer(q, drafts[i]);
+        if (!answer) return [];
         return [
           {
             questionId: q.id,
             domain: q.domain,
-            correct: chosen === q.correctIndex,
-            chosenIndex: chosen,
+            correct: gradeQuestion(q, answer),
+            ...storedAnswer(answer),
             at: 0,
           },
         ];
       }),
-    [paper, answers],
+    [paper, drafts],
   );
 
   // Persist once, when the debrief is reached.
@@ -157,19 +165,13 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
     // EXAM_PAPER_SIZE while a bank has fewer questions than that; once a bank
     // exceeds it, buildExamPaper samples and retakes differ.
     //
-    // Single-answer only for now. The other formats are authored and rendered
-    // (see components/question/), but the Proving needs them as *controlled*
-    // inputs — answers that survive navigating away and back, and that reveal
-    // no verdict until the debrief — which the one-shot checkpoint renderers
-    // do not yet offer.
-    const built = buildSingleAnswerPaper(
-      examCode,
-      attemptsUnused,
-      EXAM_PAPER_SIZE,
-    );
+    // Every authored format, not just four-option items: the bodies are
+    // controlled and silent under `reveal={false}`, which is what the Proving
+    // needs.
+    const built = buildExamPaper(examCode, attemptsUnused, EXAM_PAPER_SIZE);
     setPaper(built);
     setIndex(0);
-    setAnswers(Array<number | null>(built.length).fill(null));
+    setDrafts(Array<unknown>(built.length).fill(undefined));
     setTimedOut(false);
     finishedRef.current = false;
     deadlineRef.current = Date.now() + totalMs;
@@ -178,21 +180,18 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
     playSfx("confirm");
   }
 
-  function answer(optionIndex: number) {
-    setAnswers((prev) => {
+  function setDraft(at: number, draft: unknown) {
+    setDrafts((prev) => {
       const next = [...prev];
-      next[index] = optionIndex;
+      next[at] = draft;
       return next;
     });
-    // Silence is the format: no sounds that betray right or wrong.
-    playSfx("cursor");
+  }
 
-    // Move on like the real exam does; the navigator can bring you back.
-    // Answering the last question stays put — ending the paper is an
-    // explicit act, not a side effect.
-    if (index + 1 < paper.length) {
-      setIndex((i) => i + 1);
-    }
+  function go(to: number) {
+    if (to < 0 || to >= paper.length) return;
+    playSfx("cursor");
+    setIndex(to);
   }
 
   function endPaper() {
@@ -273,19 +272,8 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
     const question = paper[index];
     if (!question) return null;
 
-    const options: MenuOption[] = question.options.map((option, i) => ({
-      id: String(i),
-      label: option,
-      hint:
-        answers[index] === i ? (
-          <>
-            <BackGlyph />
-            your answer
-          </>
-        ) : undefined,
-    }));
     const lowTime = remainingMs < 5 * 60_000;
-    const answeredCount = answers.filter((a) => a !== null).length;
+    const answeredCount = paper.filter((q, i) => isAnswered(q, drafts[i])).length;
     const unanswered = paper.length - answeredCount;
 
     return (
@@ -303,18 +291,44 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
           </span>
         </div>
 
-        <DialogueFrame>
-          <p className="text-body" aria-live="polite">
-            {question.question}
-          </p>
-        </DialogueFrame>
+        {/* `key` is load-bearing: without it React keeps one QuestionCard
+            mounted across a jump and the next question inherits the previous
+            one's internal state. The draft itself lives in `drafts`, so
+            remounting costs nothing. */}
+        <div className="pixel-panel p-5">
+          <QuestionCard
+            key={question.id}
+            question={question}
+            reveal={false}
+            draft={drafts[index]}
+            onDraftChange={(draft) => setDraft(index, draft)}
+            onAnswered={() => {}}
+          />
+        </div>
 
-        <MenuList
-          ariaLabel="Choose your answer"
-          columns={2}
-          options={options}
-          onSelect={(id) => answer(Number(id))}
-        />
+        {/* The real paper moves on a button, not on a click into an answer:
+            a multi-select or an ordering grid is not finished the moment it
+            is first touched. */}
+        <div className="flex items-center justify-between gap-3">
+          <button
+            type="button"
+            disabled={index === 0}
+            onClick={() => go(index - 1)}
+            className="pixel-button tap-target rounded-md bg-[var(--panel)] px-4 py-2 text-body font-medium disabled:opacity-40"
+          >
+            <BackGlyph />
+            Previous
+          </button>
+          <button
+            type="button"
+            disabled={index + 1 >= paper.length}
+            onClick={() => go(index + 1)}
+            className="pixel-button tap-target rounded-md bg-[var(--accent)] px-4 py-2 text-body font-medium text-[var(--accent-foreground)] disabled:opacity-40"
+          >
+            Next
+            <ForwardGlyph />
+          </button>
+        </div>
 
         {/* The review screen every real exam has: jump to any question,
             change any answer, end the paper when you choose to. */}
@@ -338,7 +352,7 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
             aria-label="Jump to question"
           >
             {paper.map((q, i) => {
-              const answered = answers[i] !== null;
+              const answered = isAnswered(q, drafts[i]);
               const current = i === index;
               return (
                 <button
@@ -346,10 +360,7 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
                   type="button"
                   aria-label={`Question ${i + 1}${answered ? ", answered" : ", unanswered"}`}
                   aria-current={current ? "true" : undefined}
-                  onClick={() => {
-                    playSfx("cursor");
-                    setIndex(i);
-                  }}
+                  onClick={() => go(i)}
                   className={`min-h-9 rounded border-2 text-caption font-semibold ${
                     current
                       ? "border-[var(--focus)] ring-2 ring-[var(--focus)]"

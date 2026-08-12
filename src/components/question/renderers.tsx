@@ -375,7 +375,7 @@ export function PlacementBody({
    * Turns the final placement into the answer shape this question stores.
    * Omitted by the learning-path checkpoint, which records no answer.
    */
-  answerFor?: (placed: Record<string, string>) => SubmittedAnswer;
+  answerFor?: (placed: Record<string, string>) => SubmittedAnswer | null;
   onDone: OnDone;
 } & Controllable<Record<string, string>>) {
   const playSfx = useSfx();
