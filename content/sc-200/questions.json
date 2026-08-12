@@ -1,44 +1,1053 @@
 [
-  { "id": "so-01", "examCode": "sc-200", "domain": "soc-environment", "question": "A line-of-business application generates a Defender for Endpoint alert every time it runs from a specific folder on one server. You must stop the noise without affecting detection of the same behaviour elsewhere. What should you create?", "options": ["An alert tuning rule scoped to that device and folder path", "An organisation-wide antivirus exclusion for the folder", "A device group with automation set to No automated response", "A custom detection rule that closes the alert"], "correctIndex": 0, "explanation": "Alert tuning matches on conditions such as folder path and can be scoped to a single device, so the same behaviour still alerts elsewhere. An organisation-wide exclusion would create a hole across the estate.", "teaches": "defender-xdr-notifications-and-tuning" },
-  { "id": "so-02", "examCode": "sc-200", "domain": "soc-environment", "question": "Automated investigations reach a malicious verdict on several devices but no remediation happens; actions sit waiting. What should you change?", "options": ["Raise the device group's automation level to Full", "Enable live response in advanced features", "Increase the alert severity threshold", "Add the devices to the Ungrouped devices group"], "correctIndex": 0, "explanation": "At Semi-automation, remediation actions require approval and queue in the Action center. Full automation applies them automatically.", "teaches": "defender-for-endpoint-configuration" },
-  { "id": "so-03", "examCode": "sc-200", "domain": "soc-environment", "question": "A device matches the rules of three device groups. Which group's settings apply?", "options": ["The one with the highest rank order that matches first", "All three, merged", "The most restrictive one", "Ungrouped devices"], "correctIndex": 0, "explanation": "Device groups are evaluated in rank order and the first matching rule wins. Ungrouped devices is the catch-all evaluated last.", "teaches": "defender-for-endpoint-configuration" },
-  { "id": "so-04", "examCode": "sc-200", "domain": "soc-environment", "question": "You need to deploy attack surface reduction rules across the estate without risking business disruption. What is the correct sequence?", "options": ["Set the rules to audit, review reports, add exclusions, then set to block", "Set the rules to block and add exclusions as complaints arrive", "Set the rules to warn permanently", "Set the rules to not configured and monitor the timeline"], "correctIndex": 0, "explanation": "Audit mode records what would have been blocked without blocking it, so exclusions can be identified before enforcement. Going straight to block is how a line-of-business application breaks.", "teaches": "asr-and-security-policies" },
-  { "id": "so-05", "examCode": "sc-200", "domain": "soc-environment", "question": "A ransomware attack is unfolding and Defender XDR disables the compromised account before any analyst responds, even though the device group is set to Semi-automation. What capability did this?", "options": ["Automatic attack disruption", "An automation rule in Microsoft Sentinel", "Automated investigation and response", "A conditional access policy"], "correctIndex": 0, "explanation": "Attack disruption acts on high-confidence signals independently of the device group's automation level, specifically to contain attacks in progress. Its actions are reversible from the Action center.", "teaches": "automated-investigation-and-attack-disruption" },
-  { "id": "so-06", "examCode": "sc-200", "domain": "soc-environment", "question": "An analyst holds the Microsoft Sentinel Responder role but cannot run a playbook from an incident. What is missing?", "options": ["The Logic App Contributor role", "The Sentinel Contributor role", "Ownership of the Log Analytics workspace", "The Security Administrator role in Entra ID"], "correctIndex": 0, "explanation": "Playbooks are Logic Apps, so running one requires Logic App Contributor in addition to a Sentinel role. Sentinel Responder alone manages incidents but cannot execute the app.", "teaches": "sentinel-roles-and-retention" },
-  { "id": "so-07", "examCode": "sc-200", "domain": "soc-environment", "question": "Firewall logs are high-volume and rarely queried, but must be searchable for a year for compliance. What is the cost-effective approach?", "options": ["Keep them in the Data lake tier and query with KQL jobs when needed", "Keep them in the Analytics tier with a one-year interactive retention", "Export them to a storage account and re-ingest on demand", "Reduce the connector to Minimal event collection"], "correctIndex": 0, "explanation": "The data lake tier stores large volumes cheaply and is queried asynchronously with KQL jobs. Interactive retention in the Analytics tier is the expensive option for data that is rarely touched.", "teaches": "sentinel-roles-and-retention" },
-  { "id": "so-08", "examCode": "sc-200", "domain": "soc-environment", "question": "You must collect a small number of specific Windows Security event IDs from servers, without the volume of the Common set. What should you configure?", "options": ["A data collection rule with a custom XPath filter", "The Common event set in the Windows Security Events via AMA connector", "Windows Event Forwarding to a collector server", "A custom log table in the workspace"], "correctIndex": 0, "explanation": "The Windows Security Events via AMA connector supports a custom XPath query in the data collection rule, which selects exactly the event IDs required.", "teaches": "sentinel-data-connectors" },
-  { "id": "so-09", "examCode": "sc-200", "domain": "soc-environment", "question": "You must onboard logs from several thousand endpoints where installing an agent on each is not permitted. What approach should you use?", "options": ["Windows Event Forwarding to a collector server running the agent", "Syslog via AMA on each endpoint", "The Azure activity connector", "Direct API upload of each event"], "correctIndex": 0, "explanation": "With WEF, endpoints forward events to a collector and only the collector runs the Azure Monitor Agent, which is the standard answer where per-endpoint agents are not possible.", "teaches": "sentinel-data-connectors" },
-  { "id": "so-10", "examCode": "sc-200", "domain": "soc-environment", "question": "Diagnostic settings must be applied consistently to every Azure resource in a subscription, including resources created in future. What should you use?", "options": ["Azure Policy with a DeployIfNotExists effect", "A Sentinel automation rule", "A scheduled analytics rule", "A workbook with a compliance tab"], "correctIndex": 0, "explanation": "Azure Policy applies and enforces diagnostic settings at scale and covers future resources on creation, with a remediation task for those that already exist.", "teaches": "sentinel-data-connectors" },
-  { "id": "so-11", "examCode": "sc-200", "domain": "soc-environment", "question": "A detection must run against the newest data with the lowest possible delay, accepting restrictions on the query it can use. Which analytics rule kind should you create?", "options": ["Near-real-time (NRT)", "Scheduled", "Microsoft security", "Anomaly"], "correctIndex": 0, "explanation": "NRT rules run once a minute over the most recent data specifically to minimise detection latency, at the cost of a restricted query surface.", "teaches": "analytics-and-detection-rules" },
-  { "id": "so-12", "examCode": "sc-200", "domain": "soc-environment", "question": "A scheduled rule generates hundreds of incidents a day, one per matching event on the same host. You need one incident per host per day. What should you configure?", "options": ["Alert grouping in the rule's incident settings, grouped by entity over a 24-hour window", "Event grouping set to one alert per event", "A lower query frequency", "An automation rule that closes duplicates"], "correctIndex": 0, "explanation": "Alert grouping collapses alerts that share entities into a single incident within a chosen time window, which is exactly the requested behaviour.", "teaches": "analytics-and-detection-rules" },
-  { "id": "so-13", "examCode": "sc-200", "domain": "soc-environment", "question": "You try to save an Advanced Hunting query as a custom detection rule and the option is unavailable. What is most likely wrong with the query?", "options": ["It does not return Timestamp, ReportId, and an entity id column", "It uses a summarize operator", "It queries more than one table", "Its time range is longer than 24 hours"], "correctIndex": 0, "explanation": "A custom detection requires those columns so that results can be timestamped, deduplicated, and mapped to impacted entities.", "teaches": "analytics-and-detection-rules" },
-  { "id": "so-14", "examCode": "sc-200", "domain": "soc-environment", "question": "Leadership asks which adversary techniques your detections currently cover and where the gaps are. Where do you look?", "options": ["The MITRE ATT&CK page in Microsoft Sentinel", "The Secure Score in Defender for Cloud", "The threat analytics report list", "The SOC optimization recommendations"], "correctIndex": 0, "explanation": "The MITRE page maps your active analytics rules onto the ATT&CK matrix, showing covered techniques and gaps. Secure Score measures posture, not detection coverage.", "teaches": "analytics-and-detection-rules" },
-  { "id": "so-15", "examCode": "sc-200", "domain": "soc-environment", "question": "Which capability correlates low-fidelity signals from multiple products into a single high-fidelity multi-stage attack detection?", "options": ["Fusion", "Anomaly rules", "Threat intelligence rules", "Near-real-time rules"], "correctIndex": 0, "explanation": "Fusion uses machine learning to combine weak signals across data sources into multi-stage attack incidents. Anomaly rules score deviation from a learned baseline for a single signal.", "teaches": "analytics-and-detection-rules" },
-  { "id": "so-16", "examCode": "sc-200", "domain": "soc-environment", "question": "An analyst reports that a Sentinel alert shows only raw rows with no clickable accounts or hosts, so it cannot be investigated in the graph. What was omitted from the rule?", "options": ["Entity mapping", "Event grouping", "A description and tactics", "An automation rule"], "correctIndex": 0, "explanation": "Entity mapping binds query columns to entity types such as account, host, IP, and file. Without it the alert carries no entities and the investigation graph has nothing to draw.", "teaches": "analytics-and-detection-rules" },
-  { "id": "so-17", "examCode": "sc-200", "domain": "soc-environment", "question": "The SOC lead wants a visual dashboard of ingestion volume and incident trends, not an alert. What should you build?", "options": ["A Microsoft Sentinel workbook", "A scheduled analytics rule", "A hunting query", "A playbook"], "correctIndex": 0, "explanation": "Workbooks visualise KQL results as dashboards. Analytics rules produce alerts and incidents, which is a different output entirely.", "teaches": "sentinel-roles-and-retention" },
-
-  { "id": "ir-01", "examCode": "sc-200", "domain": "incident-response", "question": "You close an incident that turned out to be a penetration test your organisation commissioned. Which classification is correct?", "options": ["Informational, expected activity", "False positive", "True positive", "Leave it unclassified"], "correctIndex": 0, "explanation": "The activity really happened and was correctly detected, so it is not a false positive; it was expected and benign, which is what the informational classification records. These verdicts feed tuning and the detection models.", "teaches": "defender-xdr-incident-queue" },
-  { "id": "ir-02", "examCode": "sc-200", "domain": "incident-response", "question": "A phishing message was delivered before its verdict changed to malicious. You need to know whether it is still in users' inboxes. Which columns in Threat Explorer answer this?", "options": ["Delivery action and delivery location", "Sender IP and authentication results", "Detection technology and threat type", "Subject and recipient domain"], "correctIndex": 0, "explanation": "Delivery action records what the service did — delivered, junked, blocked, replaced — and delivery location records where the message now is, including removal by zero-hour auto purge.", "teaches": "email-and-collaboration-threats" },
-  { "id": "ir-03", "examCode": "sc-200", "domain": "incident-response", "question": "Users clicked a link in a message that was benign at delivery time and weaponised hours later. Which feature would have protected them?", "options": ["Safe Links, which checks the URL at click time", "Safe Attachments dynamic delivery", "Zero-hour auto purge", "A mail flow rule blocking external senders"], "correctIndex": 0, "explanation": "Safe Links rewrites URLs and evaluates them when clicked, so protection continues after the message has been delivered. Safe Attachments applies to files rather than links.", "teaches": "email-and-collaboration-threats" },
-  { "id": "ir-04", "examCode": "sc-200", "domain": "incident-response", "question": "An account has been confirmed compromised. You reset the password, but the attacker retains access. What step was missed?", "options": ["Revoking the user's sessions", "Confirming the user as compromised in ID Protection", "Disabling legacy authentication", "Requiring multifactor authentication"], "correctIndex": 0, "explanation": "Existing refresh tokens remain valid after a password reset. Revoking sessions invalidates them and is the step that actually ends the attacker's access.", "teaches": "identity-compromise" },
-  { "id": "ir-05", "examCode": "sc-200", "domain": "incident-response", "question": "An alert reports a Kerberoasting attempt against an on-premises domain controller. Which product raised it?", "options": ["Microsoft Defender for Identity", "Microsoft Entra ID Protection", "Microsoft Defender for Cloud Apps", "Microsoft Defender for Endpoint"], "correctIndex": 0, "explanation": "Defender for Identity uses sensors on domain controllers to detect on-premises Active Directory attacks such as Kerberoasting, Pass-the-Hash, and reconnaissance. ID Protection scores cloud identity risk only.", "teaches": "identity-compromise" },
-  { "id": "ir-06", "examCode": "sc-200", "domain": "incident-response", "question": "Staff are uploading confidential files to an unsanctioned file-sharing service discovered in proxy logs. Which product addresses this?", "options": ["Microsoft Defender for Cloud Apps", "Microsoft Defender for Cloud", "Microsoft Defender for Endpoint", "Microsoft Purview Audit"], "correctIndex": 0, "explanation": "Defender for Cloud Apps discovers shadow IT from firewall and proxy logs and can govern or block the application. Defender for Cloud protects workloads such as servers and storage, not SaaS usage.", "teaches": "cloud-apps-and-cloud-workloads" },
-  { "id": "ir-07", "examCode": "sc-200", "domain": "incident-response", "question": "A compromised laptop must be cut off from the network, but the user has to remain contactable to answer questions. What action should you take?", "options": ["Selective isolation", "Full isolation", "Restrict app execution", "Run an antivirus scan"], "correctIndex": 0, "explanation": "Selective isolation blocks network access while permitting Outlook and Teams, so the analyst can still reach the user. The Defender connection stays alive in both isolation modes.", "teaches": "endpoint-investigation-and-live-response" },
-  { "id": "ir-08", "examCode": "sc-200", "domain": "incident-response", "question": "Legal requires forensic evidence preserved from a suspected compromised device before it is reimaged. What should you do?", "options": ["Collect an investigation package", "Export the device timeline to CSV", "Run a full antivirus scan", "Start a live response session and take notes"], "correctIndex": 0, "explanation": "The investigation package gathers autoruns, installed programs, network connections, prefetch files, and more into a single archive intended for offline forensic analysis.", "teaches": "endpoint-investigation-and-live-response" },
-  { "id": "ir-09", "examCode": "sc-200", "domain": "incident-response", "question": "You need to pull a specific file from a running endpoint for analysis without disturbing the user. What should you use?", "options": ["Live response and the getfile command", "Collect investigation package", "Stop and quarantine file", "An indicator with the Allow action"], "correctIndex": 0, "explanation": "Live response opens a remote shell where getfile retrieves a named file. Stop and quarantine removes the file rather than retrieving it for analysis.", "teaches": "endpoint-investigation-and-live-response" },
-  { "id": "ir-10", "examCode": "sc-200", "domain": "incident-response", "question": "Every new high-severity Sentinel incident must be assigned to the on-call analyst and posted to a Teams channel. What should you build?", "options": ["An automation rule that assigns the owner and calls a playbook", "A playbook alone, triggered by the workspace", "A workbook with an alert tile", "A near-real-time analytics rule"], "correctIndex": 0, "explanation": "Assignment is native to automation rules; posting to Teams requires a Logic App. The rule handles the Sentinel-side work and invokes the playbook for the external action.", "teaches": "sentinel-incidents-and-case-management" },
-  { "id": "ir-11", "examCode": "sc-200", "domain": "incident-response", "question": "A hunter finds suspicious rows and wants to keep them, with the query and notes, to attach to an incident later. What should they create?", "options": ["A bookmark", "A saved hunting query", "A workbook", "A watchlist"], "correctIndex": 0, "explanation": "A bookmark preserves the result rows, the query that produced them, and the analyst's notes, and can be attached to a new or existing incident.", "teaches": "sentinel-incidents-and-case-management" },
-  { "id": "ir-12", "examCode": "sc-200", "domain": "incident-response", "question": "You must determine whether an attacker actually read the contents of a compromised mailbox. Which audit event answers this?", "options": ["MailItemsAccessed", "UserLoggedIn", "Send", "SearchQueryInitiatedExchange"], "correctIndex": 0, "explanation": "MailItemsAccessed is the Audit (Premium) crucial event that records mailbox items being read, which distinguishes access to the mailbox from actual reading of its contents.", "teaches": "purview-audit-and-graph-logs" },
-  { "id": "ir-13", "examCode": "sc-200", "domain": "incident-response", "question": "You suspect a malicious OAuth application is enumerating your directory through the API rather than the portal. Which log source should you query?", "options": ["Microsoft Graph activity logs", "Microsoft Purview Audit standard events", "Defender for Endpoint device timeline", "Azure activity logs"], "correctIndex": 0, "explanation": "Graph activity logs record API calls made against Microsoft Graph, which is where application-driven directory enumeration appears. They are routed to a workspace with a diagnostic setting.", "teaches": "purview-audit-and-graph-logs" },
-  { "id": "ir-14", "examCode": "sc-200", "domain": "incident-response", "question": "An incident spans a phishing email, a credential theft alert, and anomalous access to a SaaS application. What is the most effective way to investigate?", "options": ["Work the incident as one story, following the shared entities across products", "Investigate each product's alerts separately and close them individually", "Start with the highest-severity alert and ignore the rest", "Escalate to the product team that raised the first alert"], "correctIndex": 0, "explanation": "Correlation across endpoint, identity, email, and cloud apps is why the alerts became one incident. Following the shared entities is what reconstructs a multi-stage attack.", "teaches": "defender-xdr-incident-queue" },
-
-  { "id": "th-01", "examCode": "sc-200", "domain": "threat-hunting", "question": "You must find process creations with a specific command-line argument across all onboarded devices. Which table should you query?", "options": ["DeviceProcessEvents", "DeviceEvents", "DeviceFileEvents", "DeviceNetworkEvents"], "correctIndex": 0, "explanation": "DeviceProcessEvents holds process creation records including the full command line and the parent process, which is what a command-line hunt needs.", "teaches": "advanced-hunting-tables" },
-  { "id": "th-02", "examCode": "sc-200", "domain": "threat-hunting", "question": "You need to identify which recipients received an attachment with a known malicious hash. Which table should you start from?", "options": ["EmailAttachmentInfo, joined to EmailEvents", "DeviceFileEvents", "CloudAppEvents", "AlertEvidence"], "correctIndex": 0, "explanation": "EmailAttachmentInfo records attachment hashes per message, and joining to EmailEvents brings in the recipients and delivery outcome.", "teaches": "advanced-hunting-tables" },
-  { "id": "th-03", "examCode": "sc-200", "domain": "threat-hunting", "question": "A hunting query is slow. Which change is most likely to help?", "options": ["Apply the time filter and where clauses before any join or summarize", "Replace has with contains", "Remove the project operator", "Increase the lookback window"], "correctIndex": 0, "explanation": "Filtering early reduces the volume every downstream operator must handle. Replacing has with contains would be slower and less precise, and removing project increases the data carried.", "teaches": "kql-fundamentals" },
-  { "id": "th-04", "examCode": "sc-200", "domain": "threat-hunting", "question": "You want to detect beaconing by counting outbound connections to a domain per hour. Which function groups the timestamps?", "options": ["bin()", "ago()", "arg_max()", "make_set()"], "correctIndex": 0, "explanation": "bin() rounds a timestamp down to a chosen interval so summarize can count per hour, which is what reveals a regular beaconing cadence.", "teaches": "kql-fundamentals" },
-  { "id": "th-05", "examCode": "sc-200", "domain": "threat-hunting", "question": "A query must return only the most recent record for each device. Which operator does this most directly?", "options": ["summarize arg_max(Timestamp, *) by DeviceId", "top 1 by Timestamp", "distinct DeviceId", "summarize count() by DeviceId"], "correctIndex": 0, "explanation": "arg_max returns the whole row holding the maximum value within each group, which is the idiom for the latest record per entity.", "teaches": "kql-fundamentals" },
-  { "id": "th-06", "examCode": "sc-200", "domain": "threat-hunting", "question": "You want to be notified whenever new rows match a hunting query, without creating an analytics rule or incidents. What should you use?", "options": ["Livestream", "A bookmark", "A summary rule", "A workbook"], "correctIndex": 0, "explanation": "Livestream runs a hunting query continuously and notifies on new matches, which is the way to watch a hypothesis before committing to a detection.", "teaches": "hunting-queries-and-bookmarks" },
-  { "id": "th-07", "examCode": "sc-200", "domain": "threat-hunting", "question": "Leadership asks how exposed the organisation is to a newly reported ransomware campaign, and which mitigations are already in place. Where do you look?", "options": ["The threat analytics report for that campaign", "The MITRE ATT&CK coverage page", "An external threat intelligence feed", "The Secure Score recommendations"], "correctIndex": 0, "explanation": "Threat analytics reports are tenant-aware: each shows affected device counts, mitigations already applied, and the configurations still missing, which is both intelligence and a gap analysis.", "teaches": "threat-analytics-and-graphs" },
-  { "id": "th-08", "examCode": "sc-200", "domain": "threat-hunting", "question": "A single account is confirmed compromised and you must scope containment quickly. Which view shows what that identity could reach?", "options": ["The blast radius hunting graph", "The device timeline", "The alert queue filtered by severity", "The ingestion workbook"], "correctIndex": 0, "explanation": "Blast radius renders the accounts, devices, and resources reachable from a compromised entity, turning one alert into a scoped containment decision.", "teaches": "threat-analytics-and-graphs" },
-  { "id": "th-09", "examCode": "sc-200", "domain": "threat-hunting", "question": "You must search a year of archived logs for an indicator, accepting that results will not return interactively. What should you use?", "options": ["A KQL job over the Data lake tier", "A scheduled analytics rule", "A livestream session", "A summary rule"], "correctIndex": 0, "explanation": "KQL jobs run asynchronously over data-lake-tier data and write their results out, which is what makes a long retrospective search affordable and practical.", "teaches": "notebooks-and-data-lake" }
+  {
+    "id": "so-01",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "A line-of-business application generates a Defender for Endpoint alert every time it runs from a specific folder on one server. You must stop the noise without affecting detection of the same behaviour elsewhere. What should you create?",
+    "options": [
+      "An alert tuning rule scoped to that device and folder path",
+      "An organisation-wide antivirus exclusion for the folder",
+      "A device group with automation set to No automated response",
+      "A custom detection rule that closes the alert"
+    ],
+    "correctIndex": 0,
+    "explanation": "Alert tuning matches on conditions such as folder path and can be scoped to a single device, so the same behaviour still alerts elsewhere. An organisation-wide exclusion would create a hole across the estate.",
+    "teaches": "defender-xdr-notifications-and-tuning"
+  },
+  {
+    "id": "so-02",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "Automated investigations reach a malicious verdict on several devices but no remediation happens; actions sit waiting. What should you change?",
+    "options": [
+      "Raise the device group's automation level to Full",
+      "Enable live response in advanced features",
+      "Increase the alert severity threshold",
+      "Add the devices to the Ungrouped devices group"
+    ],
+    "correctIndex": 0,
+    "explanation": "At Semi-automation, remediation actions require approval and queue in the Action center. Full automation applies them automatically.",
+    "teaches": "defender-for-endpoint-configuration"
+  },
+  {
+    "id": "so-03",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "A device matches the rules of three device groups. Which group's settings apply?",
+    "options": [
+      "The one with the highest rank order that matches first",
+      "All three, merged",
+      "The most restrictive one",
+      "Ungrouped devices"
+    ],
+    "correctIndex": 0,
+    "explanation": "Device groups are evaluated in rank order and the first matching rule wins. Ungrouped devices is the catch-all evaluated last.",
+    "teaches": "defender-for-endpoint-configuration"
+  },
+  {
+    "id": "so-04",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "You need to deploy attack surface reduction rules across the estate without risking business disruption. What is the correct sequence?",
+    "options": [
+      "Set the rules to audit, review reports, add exclusions, then set to block",
+      "Set the rules to block and add exclusions as complaints arrive",
+      "Set the rules to warn permanently",
+      "Set the rules to not configured and monitor the timeline"
+    ],
+    "correctIndex": 0,
+    "explanation": "Audit mode records what would have been blocked without blocking it, so exclusions can be identified before enforcement. Going straight to block is how a line-of-business application breaks.",
+    "teaches": "asr-and-security-policies"
+  },
+  {
+    "id": "so-05",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "A ransomware attack is unfolding and Defender XDR disables the compromised account before any analyst responds, even though the device group is set to Semi-automation. What capability did this?",
+    "options": [
+      "Automatic attack disruption",
+      "An automation rule in Microsoft Sentinel",
+      "Automated investigation and response",
+      "A conditional access policy"
+    ],
+    "correctIndex": 0,
+    "explanation": "Attack disruption acts on high-confidence signals independently of the device group's automation level, specifically to contain attacks in progress. Its actions are reversible from the Action center.",
+    "teaches": "automated-investigation-and-attack-disruption"
+  },
+  {
+    "id": "so-06",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "An analyst holds the Microsoft Sentinel Responder role but cannot run a playbook from an incident. What is missing?",
+    "options": [
+      "The Logic App Contributor role",
+      "The Sentinel Contributor role",
+      "Ownership of the Log Analytics workspace",
+      "The Security Administrator role in Entra ID"
+    ],
+    "correctIndex": 0,
+    "explanation": "Playbooks are Logic Apps, so running one requires Logic App Contributor in addition to a Sentinel role. Sentinel Responder alone manages incidents but cannot execute the app.",
+    "teaches": "sentinel-roles-and-retention"
+  },
+  {
+    "id": "so-07",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "Firewall logs are high-volume and rarely queried, but must be searchable for a year for compliance. What is the cost-effective approach?",
+    "options": [
+      "Keep them in the Data lake tier and query with KQL jobs when needed",
+      "Keep them in the Analytics tier with a one-year interactive retention",
+      "Export them to a storage account and re-ingest on demand",
+      "Reduce the connector to Minimal event collection"
+    ],
+    "correctIndex": 0,
+    "explanation": "The data lake tier stores large volumes cheaply and is queried asynchronously with KQL jobs. Interactive retention in the Analytics tier is the expensive option for data that is rarely touched.",
+    "teaches": "sentinel-roles-and-retention"
+  },
+  {
+    "id": "so-08",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "You must collect a small number of specific Windows Security event IDs from servers, without the volume of the Common set. What should you configure?",
+    "options": [
+      "A data collection rule with a custom XPath filter",
+      "The Common event set in the Windows Security Events via AMA connector",
+      "Windows Event Forwarding to a collector server",
+      "A custom log table in the workspace"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Windows Security Events via AMA connector supports a custom XPath query in the data collection rule, which selects exactly the event IDs required.",
+    "teaches": "sentinel-data-connectors"
+  },
+  {
+    "id": "so-09",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "You must onboard logs from several thousand endpoints where installing an agent on each is not permitted. What approach should you use?",
+    "options": [
+      "Windows Event Forwarding to a collector server running the agent",
+      "Syslog via AMA on each endpoint",
+      "The Azure activity connector",
+      "Direct API upload of each event"
+    ],
+    "correctIndex": 0,
+    "explanation": "With WEF, endpoints forward events to a collector and only the collector runs the Azure Monitor Agent, which is the standard answer where per-endpoint agents are not possible.",
+    "teaches": "sentinel-data-connectors"
+  },
+  {
+    "id": "so-10",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "Diagnostic settings must be applied consistently to every Azure resource in a subscription, including resources created in future. What should you use?",
+    "options": [
+      "Azure Policy with a DeployIfNotExists effect",
+      "A Sentinel automation rule",
+      "A scheduled analytics rule",
+      "A workbook with a compliance tab"
+    ],
+    "correctIndex": 0,
+    "explanation": "Azure Policy applies and enforces diagnostic settings at scale and covers future resources on creation, with a remediation task for those that already exist.",
+    "teaches": "sentinel-data-connectors"
+  },
+  {
+    "id": "so-11",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "A detection must run against the newest data with the lowest possible delay, accepting restrictions on the query it can use. Which analytics rule kind should you create?",
+    "options": [
+      "Near-real-time (NRT)",
+      "Scheduled",
+      "Microsoft security",
+      "Anomaly"
+    ],
+    "correctIndex": 0,
+    "explanation": "NRT rules run once a minute over the most recent data specifically to minimise detection latency, at the cost of a restricted query surface.",
+    "teaches": "analytics-and-detection-rules"
+  },
+  {
+    "id": "so-12",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "A scheduled rule generates hundreds of incidents a day, one per matching event on the same host. You need one incident per host per day. What should you configure?",
+    "options": [
+      "Alert grouping in the rule's incident settings, grouped by entity over a 24-hour window",
+      "Event grouping set to one alert per event",
+      "A lower query frequency",
+      "An automation rule that closes duplicates"
+    ],
+    "correctIndex": 0,
+    "explanation": "Alert grouping collapses alerts that share entities into a single incident within a chosen time window, which is exactly the requested behaviour.",
+    "teaches": "analytics-and-detection-rules"
+  },
+  {
+    "id": "so-13",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "You try to save an Advanced Hunting query as a custom detection rule and the option is unavailable. What is most likely wrong with the query?",
+    "options": [
+      "It does not return Timestamp, ReportId, and an entity id column",
+      "It uses a summarize operator",
+      "It queries more than one table",
+      "Its time range is longer than 24 hours"
+    ],
+    "correctIndex": 0,
+    "explanation": "A custom detection requires those columns so that results can be timestamped, deduplicated, and mapped to impacted entities.",
+    "teaches": "analytics-and-detection-rules"
+  },
+  {
+    "id": "so-14",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "Leadership asks which adversary techniques your detections currently cover and where the gaps are. Where do you look?",
+    "options": [
+      "The MITRE ATT&CK page in Microsoft Sentinel",
+      "The Secure Score in Defender for Cloud",
+      "The threat analytics report list",
+      "The SOC optimization recommendations"
+    ],
+    "correctIndex": 0,
+    "explanation": "The MITRE page maps your active analytics rules onto the ATT&CK matrix, showing covered techniques and gaps. Secure Score measures posture, not detection coverage.",
+    "teaches": "analytics-and-detection-rules"
+  },
+  {
+    "id": "so-15",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "Which capability correlates low-fidelity signals from multiple products into a single high-fidelity multi-stage attack detection?",
+    "options": [
+      "Fusion",
+      "Anomaly rules",
+      "Threat intelligence rules",
+      "Near-real-time rules"
+    ],
+    "correctIndex": 0,
+    "explanation": "Fusion uses machine learning to combine weak signals across data sources into multi-stage attack incidents. Anomaly rules score deviation from a learned baseline for a single signal.",
+    "teaches": "analytics-and-detection-rules"
+  },
+  {
+    "id": "so-16",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "An analyst reports that a Sentinel alert shows only raw rows with no clickable accounts or hosts, so it cannot be investigated in the graph. What was omitted from the rule?",
+    "options": [
+      "Entity mapping",
+      "Event grouping",
+      "A description and tactics",
+      "An automation rule"
+    ],
+    "correctIndex": 0,
+    "explanation": "Entity mapping binds query columns to entity types such as account, host, IP, and file. Without it the alert carries no entities and the investigation graph has nothing to draw.",
+    "teaches": "analytics-and-detection-rules"
+  },
+  {
+    "id": "so-17",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "question": "The SOC lead wants a visual dashboard of ingestion volume and incident trends, not an alert. What should you build?",
+    "options": [
+      "A Microsoft Sentinel workbook",
+      "A scheduled analytics rule",
+      "A hunting query",
+      "A playbook"
+    ],
+    "correctIndex": 0,
+    "explanation": "Workbooks visualise KQL results as dashboards. Analytics rules produce alerts and incidents, which is a different output entirely.",
+    "teaches": "sentinel-roles-and-retention"
+  },
+  {
+    "id": "ir-01",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "question": "You close an incident that turned out to be a penetration test your organisation commissioned. Which classification is correct?",
+    "options": [
+      "Informational, expected activity",
+      "False positive",
+      "True positive",
+      "Leave it unclassified"
+    ],
+    "correctIndex": 0,
+    "explanation": "The activity really happened and was correctly detected, so it is not a false positive; it was expected and benign, which is what the informational classification records. These verdicts feed tuning and the detection models.",
+    "teaches": "defender-xdr-incident-queue"
+  },
+  {
+    "id": "ir-02",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "question": "A phishing message was delivered before its verdict changed to malicious. You need to know whether it is still in users' inboxes. Which columns in Threat Explorer answer this?",
+    "options": [
+      "Delivery action and delivery location",
+      "Sender IP and authentication results",
+      "Detection technology and threat type",
+      "Subject and recipient domain"
+    ],
+    "correctIndex": 0,
+    "explanation": "Delivery action records what the service did — delivered, junked, blocked, replaced — and delivery location records where the message now is, including removal by zero-hour auto purge.",
+    "teaches": "email-and-collaboration-threats"
+  },
+  {
+    "id": "ir-03",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "question": "Users clicked a link in a message that was benign at delivery time and weaponised hours later. Which feature would have protected them?",
+    "options": [
+      "Safe Links, which checks the URL at click time",
+      "Safe Attachments dynamic delivery",
+      "Zero-hour auto purge",
+      "A mail flow rule blocking external senders"
+    ],
+    "correctIndex": 0,
+    "explanation": "Safe Links rewrites URLs and evaluates them when clicked, so protection continues after the message has been delivered. Safe Attachments applies to files rather than links.",
+    "teaches": "email-and-collaboration-threats"
+  },
+  {
+    "id": "ir-04",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "question": "An account has been confirmed compromised. You reset the password, but the attacker retains access. What step was missed?",
+    "options": [
+      "Revoking the user's sessions",
+      "Confirming the user as compromised in ID Protection",
+      "Disabling legacy authentication",
+      "Requiring multifactor authentication"
+    ],
+    "correctIndex": 0,
+    "explanation": "Existing refresh tokens remain valid after a password reset. Revoking sessions invalidates them and is the step that actually ends the attacker's access.",
+    "teaches": "identity-compromise"
+  },
+  {
+    "id": "ir-05",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "question": "An alert reports a Kerberoasting attempt against an on-premises domain controller. Which product raised it?",
+    "options": [
+      "Microsoft Defender for Identity",
+      "Microsoft Entra ID Protection",
+      "Microsoft Defender for Cloud Apps",
+      "Microsoft Defender for Endpoint"
+    ],
+    "correctIndex": 0,
+    "explanation": "Defender for Identity uses sensors on domain controllers to detect on-premises Active Directory attacks such as Kerberoasting, Pass-the-Hash, and reconnaissance. ID Protection scores cloud identity risk only.",
+    "teaches": "identity-compromise"
+  },
+  {
+    "id": "ir-06",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "question": "Staff are uploading confidential files to an unsanctioned file-sharing service discovered in proxy logs. Which product addresses this?",
+    "options": [
+      "Microsoft Defender for Cloud Apps",
+      "Microsoft Defender for Cloud",
+      "Microsoft Defender for Endpoint",
+      "Microsoft Purview Audit"
+    ],
+    "correctIndex": 0,
+    "explanation": "Defender for Cloud Apps discovers shadow IT from firewall and proxy logs and can govern or block the application. Defender for Cloud protects workloads such as servers and storage, not SaaS usage.",
+    "teaches": "cloud-apps-and-cloud-workloads"
+  },
+  {
+    "id": "ir-07",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "question": "A compromised laptop must be cut off from the network, but the user has to remain contactable to answer questions. What action should you take?",
+    "options": [
+      "Selective isolation",
+      "Full isolation",
+      "Restrict app execution",
+      "Run an antivirus scan"
+    ],
+    "correctIndex": 0,
+    "explanation": "Selective isolation blocks network access while permitting Outlook and Teams, so the analyst can still reach the user. The Defender connection stays alive in both isolation modes.",
+    "teaches": "endpoint-investigation-and-live-response"
+  },
+  {
+    "id": "ir-08",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "question": "Legal requires forensic evidence preserved from a suspected compromised device before it is reimaged. What should you do?",
+    "options": [
+      "Collect an investigation package",
+      "Export the device timeline to CSV",
+      "Run a full antivirus scan",
+      "Start a live response session and take notes"
+    ],
+    "correctIndex": 0,
+    "explanation": "The investigation package gathers autoruns, installed programs, network connections, prefetch files, and more into a single archive intended for offline forensic analysis.",
+    "teaches": "endpoint-investigation-and-live-response"
+  },
+  {
+    "id": "ir-09",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "question": "You need to pull a specific file from a running endpoint for analysis without disturbing the user. What should you use?",
+    "options": [
+      "Live response and the getfile command",
+      "Collect investigation package",
+      "Stop and quarantine file",
+      "An indicator with the Allow action"
+    ],
+    "correctIndex": 0,
+    "explanation": "Live response opens a remote shell where getfile retrieves a named file. Stop and quarantine removes the file rather than retrieving it for analysis.",
+    "teaches": "endpoint-investigation-and-live-response"
+  },
+  {
+    "id": "ir-10",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "question": "Every new high-severity Sentinel incident must be assigned to the on-call analyst and posted to a Teams channel. What should you build?",
+    "options": [
+      "An automation rule that assigns the owner and calls a playbook",
+      "A playbook alone, triggered by the workspace",
+      "A workbook with an alert tile",
+      "A near-real-time analytics rule"
+    ],
+    "correctIndex": 0,
+    "explanation": "Assignment is native to automation rules; posting to Teams requires a Logic App. The rule handles the Sentinel-side work and invokes the playbook for the external action.",
+    "teaches": "sentinel-incidents-and-case-management"
+  },
+  {
+    "id": "ir-11",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "question": "A hunter finds suspicious rows and wants to keep them, with the query and notes, to attach to an incident later. What should they create?",
+    "options": [
+      "A bookmark",
+      "A saved hunting query",
+      "A workbook",
+      "A watchlist"
+    ],
+    "correctIndex": 0,
+    "explanation": "A bookmark preserves the result rows, the query that produced them, and the analyst's notes, and can be attached to a new or existing incident.",
+    "teaches": "sentinel-incidents-and-case-management"
+  },
+  {
+    "id": "ir-12",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "question": "You must determine whether an attacker actually read the contents of a compromised mailbox. Which audit event answers this?",
+    "options": [
+      "MailItemsAccessed",
+      "UserLoggedIn",
+      "Send",
+      "SearchQueryInitiatedExchange"
+    ],
+    "correctIndex": 0,
+    "explanation": "MailItemsAccessed is the Audit (Premium) crucial event that records mailbox items being read, which distinguishes access to the mailbox from actual reading of its contents.",
+    "teaches": "purview-audit-and-graph-logs"
+  },
+  {
+    "id": "ir-13",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "question": "You suspect a malicious OAuth application is enumerating your directory through the API rather than the portal. Which log source should you query?",
+    "options": [
+      "Microsoft Graph activity logs",
+      "Microsoft Purview Audit standard events",
+      "Defender for Endpoint device timeline",
+      "Azure activity logs"
+    ],
+    "correctIndex": 0,
+    "explanation": "Graph activity logs record API calls made against Microsoft Graph, which is where application-driven directory enumeration appears. They are routed to a workspace with a diagnostic setting.",
+    "teaches": "purview-audit-and-graph-logs"
+  },
+  {
+    "id": "ir-14",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "question": "An incident spans a phishing email, a credential theft alert, and anomalous access to a SaaS application. What is the most effective way to investigate?",
+    "options": [
+      "Work the incident as one story, following the shared entities across products",
+      "Investigate each product's alerts separately and close them individually",
+      "Start with the highest-severity alert and ignore the rest",
+      "Escalate to the product team that raised the first alert"
+    ],
+    "correctIndex": 0,
+    "explanation": "Correlation across endpoint, identity, email, and cloud apps is why the alerts became one incident. Following the shared entities is what reconstructs a multi-stage attack.",
+    "teaches": "defender-xdr-incident-queue"
+  },
+  {
+    "id": "th-01",
+    "examCode": "sc-200",
+    "domain": "threat-hunting",
+    "question": "You must find process creations with a specific command-line argument across all onboarded devices. Which table should you query?",
+    "options": [
+      "DeviceProcessEvents",
+      "DeviceEvents",
+      "DeviceFileEvents",
+      "DeviceNetworkEvents"
+    ],
+    "correctIndex": 0,
+    "explanation": "DeviceProcessEvents holds process creation records including the full command line and the parent process, which is what a command-line hunt needs.",
+    "teaches": "advanced-hunting-tables"
+  },
+  {
+    "id": "th-02",
+    "examCode": "sc-200",
+    "domain": "threat-hunting",
+    "question": "You need to identify which recipients received an attachment with a known malicious hash. Which table should you start from?",
+    "options": [
+      "EmailAttachmentInfo, joined to EmailEvents",
+      "DeviceFileEvents",
+      "CloudAppEvents",
+      "AlertEvidence"
+    ],
+    "correctIndex": 0,
+    "explanation": "EmailAttachmentInfo records attachment hashes per message, and joining to EmailEvents brings in the recipients and delivery outcome.",
+    "teaches": "advanced-hunting-tables"
+  },
+  {
+    "id": "th-03",
+    "examCode": "sc-200",
+    "domain": "threat-hunting",
+    "question": "A hunting query is slow. Which change is most likely to help?",
+    "options": [
+      "Apply the time filter and where clauses before any join or summarize",
+      "Replace has with contains",
+      "Remove the project operator",
+      "Increase the lookback window"
+    ],
+    "correctIndex": 0,
+    "explanation": "Filtering early reduces the volume every downstream operator must handle. Replacing has with contains would be slower and less precise, and removing project increases the data carried.",
+    "teaches": "kql-fundamentals"
+  },
+  {
+    "id": "th-04",
+    "examCode": "sc-200",
+    "domain": "threat-hunting",
+    "question": "You want to detect beaconing by counting outbound connections to a domain per hour. Which function groups the timestamps?",
+    "options": [
+      "bin()",
+      "ago()",
+      "arg_max()",
+      "make_set()"
+    ],
+    "correctIndex": 0,
+    "explanation": "bin() rounds a timestamp down to a chosen interval so summarize can count per hour, which is what reveals a regular beaconing cadence.",
+    "teaches": "kql-fundamentals"
+  },
+  {
+    "id": "th-05",
+    "examCode": "sc-200",
+    "domain": "threat-hunting",
+    "question": "A query must return only the most recent record for each device. Which operator does this most directly?",
+    "options": [
+      "summarize arg_max(Timestamp, *) by DeviceId",
+      "top 1 by Timestamp",
+      "distinct DeviceId",
+      "summarize count() by DeviceId"
+    ],
+    "correctIndex": 0,
+    "explanation": "arg_max returns the whole row holding the maximum value within each group, which is the idiom for the latest record per entity.",
+    "teaches": "kql-fundamentals"
+  },
+  {
+    "id": "th-06",
+    "examCode": "sc-200",
+    "domain": "threat-hunting",
+    "question": "You want to be notified whenever new rows match a hunting query, without creating an analytics rule or incidents. What should you use?",
+    "options": [
+      "Livestream",
+      "A bookmark",
+      "A summary rule",
+      "A workbook"
+    ],
+    "correctIndex": 0,
+    "explanation": "Livestream runs a hunting query continuously and notifies on new matches, which is the way to watch a hypothesis before committing to a detection.",
+    "teaches": "hunting-queries-and-bookmarks"
+  },
+  {
+    "id": "th-07",
+    "examCode": "sc-200",
+    "domain": "threat-hunting",
+    "question": "Leadership asks how exposed the organisation is to a newly reported ransomware campaign, and which mitigations are already in place. Where do you look?",
+    "options": [
+      "The threat analytics report for that campaign",
+      "The MITRE ATT&CK coverage page",
+      "An external threat intelligence feed",
+      "The Secure Score recommendations"
+    ],
+    "correctIndex": 0,
+    "explanation": "Threat analytics reports are tenant-aware: each shows affected device counts, mitigations already applied, and the configurations still missing, which is both intelligence and a gap analysis.",
+    "teaches": "threat-analytics-and-graphs"
+  },
+  {
+    "id": "th-08",
+    "examCode": "sc-200",
+    "domain": "threat-hunting",
+    "question": "A single account is confirmed compromised and you must scope containment quickly. Which view shows what that identity could reach?",
+    "options": [
+      "The blast radius hunting graph",
+      "The device timeline",
+      "The alert queue filtered by severity",
+      "The ingestion workbook"
+    ],
+    "correctIndex": 0,
+    "explanation": "Blast radius renders the accounts, devices, and resources reachable from a compromised entity, turning one alert into a scoped containment decision.",
+    "teaches": "threat-analytics-and-graphs"
+  },
+  {
+    "id": "th-09",
+    "examCode": "sc-200",
+    "domain": "threat-hunting",
+    "question": "You must search a year of archived logs for an indicator, accepting that results will not return interactively. What should you use?",
+    "options": [
+      "A KQL job over the Data lake tier",
+      "A scheduled analytics rule",
+      "A livestream session",
+      "A summary rule"
+    ],
+    "correctIndex": 0,
+    "explanation": "KQL jobs run asynchronously over data-lake-tier data and write their results out, which is what makes a long retrospective search affordable and practical.",
+    "teaches": "notebooks-and-data-lake"
+  },
+  {
+    "id": "ir-cs-01",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "caseStudyId": "cs-northwind-intrusion",
+    "question": "Northwind's own analysts must be able to isolate a depot server and collect an investigation package, without being able to change Defender security policy. Which Defender XDR role should they hold instead of Security Reader?",
+    "options": [
+      "Security Operator",
+      "Security Administrator",
+      "Global Reader",
+      "Compliance Administrator"
+    ],
+    "correctIndex": 0,
+    "explanation": "Security Operator can take response actions — isolate a device, collect an investigation package, run antivirus scans — but cannot alter security policy. Security Administrator would satisfy the first half of the requirement and break the second.",
+    "teaches": "sentinel-roles-and-retention"
+  },
+  {
+    "id": "ir-cs-02",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "caseStudyId": "cs-northwind-intrusion",
+    "question": "The offshore partner must be able to close Sentinel incidents but must never run live response. Given the roles they already hold, what change is required?",
+    "options": [
+      "None — Sentinel Responder closes incidents and Security Reader cannot run live response",
+      "Replace Security Reader with Security Operator in Defender XDR",
+      "Add the Microsoft Sentinel Contributor role on the workspace",
+      "Grant Security Administrator and remove Sentinel Responder"
+    ],
+    "correctIndex": 0,
+    "explanation": "The pair they hold already lands exactly on the requirement. Sentinel Responder manages incidents, including closing them; live response needs a response-capable Defender XDR role, which Security Reader is not. Every other option adds the ability the requirement forbids.",
+    "teaches": "sentinel-roles-and-retention"
+  },
+  {
+    "id": "ir-cs-03",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "caseStudyId": "cs-northwind-intrusion",
+    "question": "A build server in the BUILD group is confirmed compromised. Why was it not remediated automatically, and what is the supported way to contain it now?",
+    "options": [
+      "BUILD is set to No automated response, so an analyst must isolate the device from its device page",
+      "Automated investigation never runs on servers, so the device must be shut down at the hypervisor",
+      "The device is not onboarded, so the onboarding script must be re-run before it can be contained",
+      "Automatic remediation needs a separate plan, so the licence must be upgraded before isolation works"
+    ],
+    "correctIndex": 0,
+    "explanation": "The automation level is a property of the device group, and BUILD is deliberately set to take no automated action so that build agents are never interrupted. Manual response actions remain available on those devices regardless of the automation level.",
+    "teaches": "automated-investigation-and-attack-disruption"
+  },
+  {
+    "id": "ir-cs-04",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "caseStudyId": "cs-northwind-intrusion",
+    "question": "Hunting queries written during an investigation, and the rows they returned, must stay attached to the incident. What should the analysts use?",
+    "options": [
+      "Bookmarks, attached to the incident",
+      "An analytics rule saved from the query",
+      "The workspace's saved searches",
+      "A workbook pinned to the incident"
+    ],
+    "correctIndex": 0,
+    "explanation": "A bookmark preserves the query, the rows it returned and the analyst's notes, and can be attached to an incident so the next person sees what was already checked. A saved search keeps the query but none of the results or context.",
+    "teaches": "hunting-queries-and-bookmarks"
+  },
+  {
+    "id": "ir-cs-05",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "caseStudyId": "cs-northwind-intrusion",
+    "question": "Data older than 90 days must stay searchable for compliance work without being rehydrated into the interactive tier. What should you use?",
+    "options": [
+      "A search job against the archived data",
+      "A restore of the archived table into the workspace",
+      "An increase of interactive retention to two years",
+      "A continuous export of the table to a storage account"
+    ],
+    "correctIndex": 0,
+    "explanation": "A search job runs over archived data and writes only its results into a new table, leaving the archive where it is. A restore is the operation the requirement rules out: it puts the data back into the interactive tier.",
+    "teaches": "sentinel-roles-and-retention"
+  },
+  {
+    "id": "so-18",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "kind": "multi",
+    "question": "Which two things must exist before Microsoft Sentinel can run a scheduled analytics rule over Defender XDR alerts? Choose two.",
+    "options": [
+      "A Log Analytics workspace with Microsoft Sentinel enabled on it",
+      "The Defender XDR data connector, streaming alerts into that workspace",
+      "A Logic App in the same resource group as the workspace",
+      "A Defender for Cloud Apps session policy"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Sentinel is a solution enabled on a workspace, and a rule can only query data that a connector has actually landed there. A Logic App is needed for a playbook, not for a rule, and Cloud Apps policies are unrelated.",
+    "teaches": "sentinel-data-connectors"
+  },
+  {
+    "id": "so-19",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "kind": "multi",
+    "question": "Which two settings are defined on a Defender for Endpoint device group? Choose two.",
+    "options": [
+      "The automation level applied when a threat is found",
+      "The rank-ordered rule that decides which devices match",
+      "The antivirus signature update channel",
+      "The Sentinel workspace the group's alerts flow to"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "A device group is a matching rule plus the automation level for the devices it catches, and groups are evaluated in rank order. Update channels are set by policy, and alert routing is a property of the connector, not the group.",
+    "teaches": "defender-for-endpoint-configuration"
+  },
+  {
+    "id": "so-20",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "kind": "order",
+    "question": "Put the steps of onboarding a new server estate to Defender for Endpoint in order.",
+    "items": [
+      "Confirm the devices appear in the device inventory",
+      "Choose the onboarding method for the operating system",
+      "Place the devices in a device group with the right automation level",
+      "Confirm licensing and the platform prerequisites"
+    ],
+    "correctOrder": [
+      3,
+      1,
+      0,
+      2
+    ],
+    "explanation": "Licensing decides whether onboarding is possible at all, and the method follows from the operating system. Grouping is last because a device has to be in the inventory before a group rule can match it.",
+    "teaches": "defender-for-endpoint-configuration"
+  },
+  {
+    "id": "so-21",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "kind": "order",
+    "question": "Put the steps of tuning a repeatedly noisy alert in order.",
+    "items": [
+      "Apply the rule and watch whether the queue quietens",
+      "Identify the alert title and the conditions that repeat",
+      "Confirm with the application owner that the activity is expected",
+      "Create a tuning rule scoped to the affected devices"
+    ],
+    "correctOrder": [
+      1,
+      2,
+      3,
+      0
+    ],
+    "explanation": "Tuning is suppression, so the order matters: establish what repeats, establish that it is legitimate, scope the rule as narrowly as the facts allow, then verify the noise actually stopped. Confirming before scoping is what stops a real detection being tuned away.",
+    "teaches": "defender-xdr-notifications-and-tuning"
+  },
+  {
+    "id": "so-22",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "kind": "match",
+    "question": "Match each Microsoft Defender workload to what it primarily watches.",
+    "pairs": [
+      {
+        "term": "Defender for Endpoint",
+        "definition": "Devices and the processes running on them"
+      },
+      {
+        "term": "Defender for Office 365",
+        "definition": "Email and collaboration content"
+      },
+      {
+        "term": "Defender for Identity",
+        "definition": "Signals from on-premises Active Directory"
+      },
+      {
+        "term": "Defender for Cloud Apps",
+        "definition": "Usage and sessions in SaaS applications"
+      }
+    ],
+    "explanation": "The split is by the thing being protected, not by where the product runs. Defender for Identity is the on-premises directory sensor specifically — cloud identity risk is Entra ID Protection.",
+    "teaches": "cloud-apps-and-cloud-workloads"
+  },
+  {
+    "id": "so-23",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "kind": "match",
+    "question": "Match each Microsoft Sentinel component to its job.",
+    "pairs": [
+      {
+        "term": "Data connector",
+        "definition": "Brings a source's logs into the workspace"
+      },
+      {
+        "term": "Analytics rule",
+        "definition": "Turns matching events into incidents"
+      },
+      {
+        "term": "Automation rule",
+        "definition": "Decides what runs when an incident appears"
+      },
+      {
+        "term": "Workbook",
+        "definition": "Visualises what is already in the workspace"
+      }
+    ],
+    "explanation": "Data arrives through a connector, becomes an incident through an analytics rule, and is acted on through an automation rule. A workbook only reads — it never creates or changes an incident.",
+    "teaches": "analytics-and-detection-rules"
+  },
+  {
+    "id": "so-24",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "kind": "yesno",
+    "question": "A Defender for Endpoint device group is set to Full - remediate threats automatically. Judge each statement.",
+    "statements": [
+      {
+        "text": "Automated investigation can remediate a malicious file without waiting for an analyst.",
+        "correct": true
+      },
+      {
+        "text": "Analysts can still take manual response actions on devices in the group.",
+        "correct": true
+      },
+      {
+        "text": "The setting changes which alerts are raised on those devices.",
+        "correct": false
+      },
+      {
+        "text": "A device matching two groups is placed in the higher-ranked one.",
+        "correct": true
+      }
+    ],
+    "explanation": "The automation level governs what happens after an alert fires, never whether it fires. Manual actions are always available on top of automation, and group membership is decided by rank order, first match winning.",
+    "teaches": "automated-investigation-and-attack-disruption"
+  },
+  {
+    "id": "so-25",
+    "examCode": "sc-200",
+    "domain": "soc-environment",
+    "kind": "dropdown",
+    "question": "Complete the statement about how long Microsoft Sentinel data stays reachable.",
+    "segments": [
+      {
+        "text": "Data can be queried normally for the length of the workspace's "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "interactive retention",
+          "archive period",
+          "export window"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", after which it moves to the archive, where it can still be reached with a "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "search job",
+          "workbook",
+          "hunting bookmark"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": " that returns only its results."
+      }
+    ],
+    "explanation": "Interactive retention is the window where ordinary queries work. Beyond it the data is archived rather than deleted, and a search job is the way to reach it without restoring the whole table.",
+    "teaches": "sentinel-roles-and-retention"
+  },
+  {
+    "id": "ir-15",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "kind": "multi",
+    "question": "Which two actions preserve investigative context on a Microsoft Sentinel incident? Choose two.",
+    "options": [
+      "Attach a bookmark holding the query and the rows it returned",
+      "Add a comment recording what was checked and ruled out",
+      "Increase the workspace's retention period",
+      "Move the workspace to a different subscription"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Bookmarks and comments both travel with the incident, which is what lets the next analyst pick it up. Retention governs how long data is queryable and says nothing about a particular investigation.",
+    "teaches": "sentinel-incidents-and-case-management"
+  },
+  {
+    "id": "ir-16",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "kind": "order",
+    "question": "Put the stages of handling a confirmed endpoint compromise in order.",
+    "items": [
+      "Eradicate the persistence the attacker left behind",
+      "Contain the device by isolating it from the network",
+      "Confirm the alert is a true positive",
+      "Recover the device to normal operation"
+    ],
+    "correctOrder": [
+      2,
+      1,
+      0,
+      3
+    ],
+    "explanation": "Confirm, contain, eradicate, recover. Containment comes before eradication because stopping the spread is more urgent than cleaning up, and recovery last because releasing isolation before the persistence is gone re-opens the incident.",
+    "teaches": "endpoint-investigation-and-live-response"
+  },
+  {
+    "id": "ir-17",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "kind": "yesno",
+    "question": "A device is isolated from the Microsoft Defender portal. Judge each statement.",
+    "statements": [
+      {
+        "text": "The device can still reach the Defender for Endpoint service.",
+        "correct": true
+      },
+      {
+        "text": "An analyst can still start a live response session on it.",
+        "correct": true
+      },
+      {
+        "text": "The signed-in user can still browse arbitrary internet sites.",
+        "correct": false
+      },
+      {
+        "text": "Isolation stays in force until it is released from the portal.",
+        "correct": true
+      }
+    ],
+    "explanation": "Isolation cuts the device off from everything except the Defender service itself — which is exactly what keeps live response and the release action working. Nothing lifts it automatically.",
+    "teaches": "endpoint-investigation-and-live-response"
+  },
+  {
+    "id": "th-10",
+    "examCode": "sc-200",
+    "domain": "threat-hunting",
+    "kind": "multi",
+    "question": "Which two KQL operators reduce the number of rows before an aggregation runs? Choose two.",
+    "options": [
+      "where",
+      "take",
+      "summarize",
+      "project-away"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "`where` filters rows on a predicate and `take` caps how many come through. `summarize` is the aggregation itself, and `project-away` drops columns — it never changes the row count.",
+    "teaches": "kql-fundamentals"
+  },
+  {
+    "id": "th-11",
+    "examCode": "sc-200",
+    "domain": "threat-hunting",
+    "kind": "order",
+    "question": "Put the clauses of a hunting query into the order KQL runs them.",
+    "items": [
+      "summarize Count = count() by DeviceName",
+      "DeviceProcessEvents",
+      "where Timestamp > ago(7d)",
+      "top 10 by Count"
+    ],
+    "correctOrder": [
+      1,
+      2,
+      0,
+      3
+    ],
+    "explanation": "A query starts at a table, narrows it, aggregates what is left, then orders the aggregate. Filtering before summarizing is also what keeps the query cheap over a large table.",
+    "teaches": "kql-fundamentals"
+  },
+  {
+    "id": "th-12",
+    "examCode": "sc-200",
+    "domain": "threat-hunting",
+    "kind": "match",
+    "question": "Match each advanced hunting table to what it records.",
+    "pairs": [
+      {
+        "term": "DeviceProcessEvents",
+        "definition": "Process creation on onboarded devices"
+      },
+      {
+        "term": "EmailEvents",
+        "definition": "Message delivery and the verdict applied"
+      },
+      {
+        "term": "IdentityLogonEvents",
+        "definition": "Authentications seen by the identity sensors"
+      },
+      {
+        "term": "CloudAppEvents",
+        "definition": "Activity in connected SaaS applications"
+      }
+    ],
+    "explanation": "The prefix names the source: Device tables come from Defender for Endpoint, Email from Defender for Office 365, Identity from Defender for Identity, and CloudApp from Defender for Cloud Apps.",
+    "teaches": "advanced-hunting-tables"
+  },
+  {
+    "id": "th-13",
+    "examCode": "sc-200",
+    "domain": "threat-hunting",
+    "kind": "dropdown",
+    "question": "Complete the statement about keeping hunting work.",
+    "segments": [
+      {
+        "text": "A hunting query that should keep running and raise incidents becomes "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "an analytics rule",
+          "a bookmark",
+          "a workbook"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", while a single interesting result kept for an investigation becomes "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "a bookmark",
+          "a watchlist",
+          "a playbook"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "Promoting a query to an analytics rule is how a one-off hunt becomes a standing detection. A bookmark goes the other way — it freezes one set of rows and the query that found them.",
+    "teaches": "hunting-queries-and-bookmarks"
+  }
 ]

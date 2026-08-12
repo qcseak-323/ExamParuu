@@ -1,0 +1,38 @@
+[
+  {
+    "id": "cs-northwind-intrusion",
+    "examCode": "sc-200",
+    "domain": "incident-response",
+    "title": "Northwind Logistics — running the security operations centre",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Northwind Logistics runs a distribution network from a head office in Leeds and four regional depots. Its security operations centre is six analysts on a daytime rota, with an offshore partner covering nights and weekends.",
+          "The company finished consolidating onto Microsoft Defender XDR and Microsoft Sentinel last quarter and is now formalising how incidents are triaged, escalated and hunted. Several of the decisions below have not been made yet."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "All users are licensed for Microsoft 365 E5. Defender for Endpoint, Defender for Office 365, Defender for Identity and Defender for Cloud Apps are onboarded and reporting into the Defender portal.",
+          "Microsoft Sentinel runs in a single Log Analytics workspace in the UK South region. The Defender XDR connector is enabled. The workspace keeps 90 days of interactive retention, with archive configured out to two years.",
+          "Servers sit in three Defender for Endpoint device groups. DEPOT-SERVERS and HQ-SERVERS are set to Full - remediate threats automatically. A third group, BUILD, holds twelve continuous integration servers and is set to No automated response.",
+          "The offshore partner's analysts hold the Security Reader role in Defender XDR and the Microsoft Sentinel Responder role on the workspace. Northwind's own analysts hold Security Reader only, which is the point of contention below.",
+          "A line-of-business dispatch application runs on the depot servers from C:\\Northwind\\Dispatch\\. It spawns scripting hosts as part of normal operation and raises a behavioural alert almost every day. The same behaviour anywhere else in the estate would be genuinely suspicious."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Northwind's own analysts must be able to isolate a compromised depot server and collect an investigation package, without gaining the ability to change Defender security policy.",
+          "The offshore partner must be able to close Microsoft Sentinel incidents, but must never be able to run live response against a device.",
+          "Alerts caused by the dispatch application's folder must stop reaching the queue on depot servers, while identical behaviour on head-office servers must continue to alert.",
+          "A compromised build server must be containable by an analyst even though its device group performs no automated remediation.",
+          "Hunting queries written during an investigation, and the rows they returned, must stay attached to the incident so a later analyst can see what was already checked.",
+          "Data older than 90 days must remain searchable for compliance investigations without being rehydrated into the workspace's interactive tier."
+        ]
+      }
+    ]
+  }
+]
