@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useSfx } from "@/components/AudioProvider";
 import type { CaseStudy } from "@/lib/types";
 
@@ -34,12 +34,23 @@ export default function CaseStudyPane({
 }) {
   const playSfx = useSfx();
   const [active, setActive] = useState(0);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const tabs = caseStudy.tabs;
 
+  /**
+   * Focus has to move with the selection, not just the `aria-selected` flag.
+   *
+   * Under a roving tabindex the newly selected tab is the only one with
+   * `tabIndex=0`, so selecting without focusing strands the focus ring on a
+   * tab that is now `tabIndex=-1`: the ring says Overview while the panel
+   * shows Requirements, and Tab out then back re-enters somewhere else again.
+   * Same order as `MenuList.focusIndex` — set the index, then focus it.
+   */
   function move(to: number) {
     const wrapped = (to + tabs.length) % tabs.length;
     playSfx("cursor");
     setActive(wrapped);
+    tabRefs.current[wrapped]?.focus();
   }
 
   return (
@@ -59,6 +70,9 @@ export default function CaseStudyPane({
         {tabs.map((tab, i) => (
           <button
             key={tab.heading}
+            ref={(el) => {
+              tabRefs.current[i] = el;
+            }}
             role="tab"
             type="button"
             id={`${caseStudy.id}-tab-${i}`}
