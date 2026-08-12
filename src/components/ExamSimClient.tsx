@@ -42,6 +42,10 @@ import { BackGlyph, ForwardGlyph } from "@/components/Glyph";
 
 /** Sentinel in `domainFilter` — verified nothing reads that field back. */
 const EXAM_FILTER = "exam";
+
+/** What Tab can reach. Used to keep it inside the break overlay. */
+const FOCUSABLE =
+  'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 const DEFAULT_MINUTES = 45;
 const DEFAULT_PASS = 700;
 
@@ -181,6 +185,65 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
   }, [phase]);
 
   const attemptsUnused = useMemo(() => [], []);
+
+  /**
+   * Both break overlays declare `aria-modal="true"`, which tells assistive
+   * tech that everything outside them is hidden. Nothing was making that true:
+   * focus stayed on the "Take a break" button behind the panel, Tab walked
+   * straight out into the 89 controls underneath — the navigator grid, the
+   * answer options, the case study tabs — and Escape did nothing. Same fix
+   * `StartPrompt` already applies, plus the Tab trap this one needs because it
+   * covers a whole page of controls rather than a title screen.
+   */
+  const breakDialogRef = useRef<HTMLDivElement | null>(null);
+  const breakButtonRef = useRef<HTMLButtonElement | null>(null);
+  const breakWasOpen = useRef(false);
+
+  useEffect(() => {
+    if (breakPhase) {
+      breakWasOpen.current = true;
+      breakDialogRef.current?.querySelector<HTMLElement>(FOCUSABLE)?.focus();
+    } else if (breakWasOpen.current) {
+      breakWasOpen.current = false;
+      // No-ops harmlessly when the break ended the paper and the button is
+      // gone with the rest of the exam screen.
+      breakButtonRef.current?.focus({ preventScroll: true });
+    }
+  }, [breakPhase]);
+
+  useEffect(() => {
+    if (!breakPhase) return;
+    const onKey = (event: KeyboardEvent) => {
+      // Escape cancels the are-you-sure panel only. On "resting" it would be
+      // an accidental way to end a break, and a break cannot be un-taken.
+      if (event.key === "Escape") {
+        if (breakPhase === "confirm") setBreakPhase(null);
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const items = [
+        ...(breakDialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ??
+          []),
+      ];
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const inside =
+        breakDialogRef.current?.contains(document.activeElement) ?? false;
+      if (event.shiftKey && (!inside || document.activeElement === first)) {
+        event.preventDefault();
+        last.focus();
+      } else if (
+        !event.shiftKey &&
+        (!inside || document.activeElement === last)
+      ) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [breakPhase]);
 
   function begin() {
     // A fixed-length paper ordered by blueprint weight. Shorter than
@@ -370,6 +433,7 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
               {marked[index] ? "Marked" : "Mark for review"}
             </button>
             <button
+              ref={breakButtonRef}
               type="button"
               onClick={() => {
                 playSfx("cursor");
@@ -392,6 +456,7 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
         {breakPhase === "confirm" && (
           <div className="start-overlay">
             <div
+              ref={breakDialogRef}
               role="dialog"
               aria-modal="true"
               aria-label="Take a break"
@@ -441,6 +506,7 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
         {breakPhase === "resting" && (
           <div className="start-overlay">
             <div
+              ref={breakDialogRef}
               role="dialog"
               aria-modal="true"
               aria-label="On a break"
@@ -611,7 +677,25 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
   const correct = finalResults.filter((r) => r.correct).length;
   const score = scaledScore(correct, paper.length);
   const passed = score >= passMark;
-  const breakdown = scoreByDomain(examCode, finalResults);
+
+  /**
+   * The breakdown counts the whole paper, not just what was answered.
+   *
+   * `finalResults` deliberately holds only answered questions — the review
+   * deck and XP depend on that shape — but the headline divides by
+   * `paper.length`, so feeding the same array to `scoreByDomain` made the two
+   * halves of the report disagree. A trainer who answered 30 of 60 and got
+   * every one right saw a failing 550 beside five 100% bars, and the domain
+   * totals summed to 30 rather than 60. Unanswered counts against you here
+   * exactly as it does in the headline.
+   */
+  const correctIds = new Set(
+    finalResults.filter((r) => r.correct).map((r) => r.questionId),
+  );
+  const breakdown = scoreByDomain(
+    examCode,
+    paper.map((q) => ({ domain: q.domain, correct: correctIds.has(q.id) })),
+  );
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
