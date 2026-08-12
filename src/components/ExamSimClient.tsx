@@ -75,6 +75,23 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
   const [drafts, setDrafts] = useState<unknown[]>([]);
   const [remainingMs, setRemainingMs] = useState(0);
   const [timedOut, setTimedOut] = useState(false);
+  /** Flagged to come back to. Independent of whether it is answered. */
+  const [marked, setMarked] = useState<boolean[]>([]);
+  /**
+   * Every question the trainer has actually opened.
+   *
+   * Tracked only so a break can lock them. Microsoft's rule is explicit —
+   * "you will not be able to return to the questions that you viewed before
+   * the break" — and it applies whether or not they were answered, which is
+   * why this is separate from `drafts`.
+   */
+  const [viewed, setViewed] = useState<Set<number>>(new Set());
+  /** Indexes sealed by a break. Empty until the first one is taken. */
+  const [locked, setLocked] = useState<Set<number>>(new Set());
+  /** "confirm" is the are-you-sure panel; "resting" is the break itself. */
+  const [breakPhase, setBreakPhase] = useState<null | "confirm" | "resting">(
+    null,
+  );
 
   // Absolute deadline in a ref; the display derives from Date.now() so a
   // backgrounded tab resumes with the correct time, not extra time.
@@ -172,6 +189,10 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
     setPaper(built);
     setIndex(0);
     setDrafts(Array<unknown>(built.length).fill(undefined));
+    setMarked(Array<boolean>(built.length).fill(false));
+    setViewed(new Set([0]));
+    setLocked(new Set());
+    setBreakPhase(null);
     setTimedOut(false);
     finishedRef.current = false;
     deadlineRef.current = Date.now() + totalMs;
@@ -190,8 +211,54 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
 
   function go(to: number) {
     if (to < 0 || to >= paper.length) return;
+    if (locked.has(to)) return;
     playSfx("cursor");
     setIndex(to);
+    setViewed((prev) => new Set(prev).add(to));
+  }
+
+  /** The nearest question in `dir` that a break has not sealed, or null. */
+  function nextOpen(from: number, dir: 1 | -1): number | null {
+    for (let i = from + dir; i >= 0 && i < paper.length; i += dir) {
+      if (!locked.has(i)) return i;
+    }
+    return null;
+  }
+
+  function toggleMark() {
+    playSfx("cursor");
+    setMarked((prev) => {
+      const next = [...prev];
+      next[index] = !next[index];
+      return next;
+    });
+  }
+
+  /**
+   * Start the break. The clock does not stop — Microsoft builds the five
+   * minutes into the exam duration by removing questions rather than by
+   * pausing the timer, so a long break simply costs you the paper.
+   */
+  function startBreak() {
+    playSfx("back");
+    setLocked(new Set(viewed));
+    setBreakPhase("resting");
+  }
+
+  /** Back from the break, onto the first question the break did not seal. */
+  function endBreak() {
+    playSfx("confirm");
+    setBreakPhase(null);
+    const open = paper.findIndex((_, i) => !locked.has(i));
+    // A break taken after seeing every question seals the whole paper. There
+    // is nothing left to return to, so returning ends it rather than
+    // stranding the trainer on a screen with no reachable question.
+    if (open < 0) {
+      endPaper();
+      return;
+    }
+    setIndex(open);
+    setViewed((prev) => new Set(prev).add(open));
   }
 
   function endPaper() {
@@ -274,6 +341,7 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
 
     const lowTime = remainingMs < 5 * 60_000;
     const answeredCount = paper.filter((q, i) => isAnswered(q, drafts[i])).length;
+    const markedCount = marked.filter(Boolean).length;
     const unanswered = paper.length - answeredCount;
 
     return (
@@ -282,14 +350,121 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
           <span>
             Question {index + 1} of {paper.length}
           </span>
-          <span
-            className={
-              lowTime ? "font-semibold text-[var(--danger)]" : undefined
-            }
-          >
-            {formatClock(remainingMs)} left
+          <span className="flex items-center gap-3">
+            <button
+              type="button"
+              aria-pressed={marked[index] ?? false}
+              onClick={toggleMark}
+              className={`pixel-button rounded-md px-3 py-1 text-caption font-semibold ${
+                marked[index]
+                  ? "menu-item--gold"
+                  : "bg-[var(--panel)]"
+              }`}
+            >
+              {marked[index] ? "Marked" : "Mark for review"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                playSfx("cursor");
+                setBreakPhase("confirm");
+              }}
+              className="pixel-button rounded-md bg-[var(--panel)] px-3 py-1 text-caption font-semibold"
+            >
+              Take a break
+            </button>
+            <span
+              className={
+                lowTime ? "font-semibold text-[var(--danger)]" : undefined
+              }
+            >
+              {formatClock(remainingMs)} left
+            </span>
           </span>
         </div>
+
+        {breakPhase === "confirm" && (
+          <div className="start-overlay">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Take a break"
+              className="pixel-panel pixel-panel--raised flex w-full max-w-md flex-col gap-4 p-6"
+            >
+              <p className="font-pixel text-title">Take a break?</p>
+              {/* The real exam shows exactly this tally before a break, and
+                  for the same reason: after it, none of these can be
+                  reached again. */}
+              <p className="prose-measure text-body text-[var(--foreground-muted)]">
+                You have seen {viewed.size} question
+                {viewed.size === 1 ? "" : "s"}, of which{" "}
+                {[...viewed].filter((i) => !isAnswered(paper[i], drafts[i]))
+                  .length}{" "}
+                are unanswered and{" "}
+                {[...viewed].filter((i) => marked[i]).length} are marked for
+                review. Answer or review them now — you will not be able to
+                return to them after your break.
+              </p>
+              <p className="prose-measure text-body font-semibold text-[var(--danger)]">
+                The clock keeps running while you are away.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    playSfx("back");
+                    setBreakPhase(null);
+                  }}
+                  className="pixel-button tap-target rounded-md bg-[var(--panel)] px-5 py-2.5 text-body font-medium"
+                >
+                  Return to exam
+                </button>
+                <button
+                  type="button"
+                  onClick={startBreak}
+                  className="pixel-button tap-target rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
+                >
+                  Start break
+                  <ForwardGlyph />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {breakPhase === "resting" && (
+          <div className="start-overlay">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="On a break"
+              className="pixel-panel pixel-panel--raised flex w-full max-w-md flex-col gap-4 p-6 text-center"
+            >
+              <p className="font-pixel text-display">On a break</p>
+              <p
+                className={`font-pixel text-hero ${
+                  lowTime ? "text-[var(--danger)]" : ""
+                }`}
+                aria-live="polite"
+              >
+                {formatClock(remainingMs)}
+              </p>
+              <p className="prose-measure text-body text-[var(--foreground-muted)]">
+                {paper.length - locked.size} question
+                {paper.length - locked.size === 1 ? "" : "s"} left when you
+                come back. The {locked.size} you already saw are closed.
+              </p>
+              <button
+                type="button"
+                onClick={endBreak}
+                className="pixel-button tap-target w-full rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)]"
+              >
+                Back to the exam
+                <ForwardGlyph />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* `key` is load-bearing: without it React keeps one QuestionCard
             mounted across a jump and the next question inherits the previous
@@ -312,8 +487,11 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
         <div className="flex items-center justify-between gap-3">
           <button
             type="button"
-            disabled={index === 0}
-            onClick={() => go(index - 1)}
+            disabled={nextOpen(index, -1) === null}
+            onClick={() => {
+              const to = nextOpen(index, -1);
+              if (to !== null) go(to);
+            }}
             className="pixel-button tap-target rounded-md bg-[var(--panel)] px-4 py-2 text-body font-medium disabled:opacity-40"
           >
             <BackGlyph />
@@ -321,8 +499,11 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
           </button>
           <button
             type="button"
-            disabled={index + 1 >= paper.length}
-            onClick={() => go(index + 1)}
+            disabled={nextOpen(index, 1) === null}
+            onClick={() => {
+              const to = nextOpen(index, 1);
+              if (to !== null) go(to);
+            }}
             className="pixel-button tap-target rounded-md bg-[var(--accent)] px-4 py-2 text-body font-medium text-[var(--accent-foreground)] disabled:opacity-40"
           >
             Next
@@ -336,6 +517,8 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-caption font-semibold uppercase tracking-[0.08em] text-[var(--foreground-muted)]">
               Question navigator · {answeredCount}/{paper.length} answered
+              {markedCount > 0 ? ` · ${markedCount} marked` : ""}
+              {locked.size > 0 ? ` · ${locked.size} closed` : ""}
             </p>
             <button
               type="button"
@@ -354,24 +537,46 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
             {paper.map((q, i) => {
               const answered = isAnswered(q, drafts[i]);
               const current = i === index;
+              const isLocked = locked.has(i);
+              const isMarked = marked[i] ?? false;
               return (
                 <button
                   key={q.id}
                   type="button"
-                  aria-label={`Question ${i + 1}${answered ? ", answered" : ", unanswered"}`}
+                  // Every state is in the label, not only in colour: locked
+                  // and marked are the two a colour-blind reader would
+                  // otherwise have to infer from a border.
+                  aria-label={`Question ${i + 1}${
+                    answered ? ", answered" : ", unanswered"
+                  }${isMarked ? ", marked for review" : ""}${
+                    isLocked ? ", closed by your break" : ""
+                  }`}
                   aria-current={current ? "true" : undefined}
+                  disabled={isLocked}
                   onClick={() => go(i)}
-                  className={`min-h-9 rounded border-2 text-caption font-semibold ${
+                  className={`relative min-h-9 rounded border-2 text-caption font-semibold ${
                     current
                       ? "border-[var(--focus)] ring-2 ring-[var(--focus)]"
-                      : "border-[var(--border)]"
+                      : isMarked
+                        ? "border-[var(--gold)]"
+                        : "border-[var(--border)]"
                   } ${
-                    answered
-                      ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
-                      : "bg-[var(--panel)] text-[var(--foreground-muted)]"
+                    isLocked
+                      ? "cursor-not-allowed bg-[var(--panel)] opacity-40"
+                      : answered
+                        ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
+                        : "bg-[var(--panel)] text-[var(--foreground-muted)]"
                   }`}
                 >
                   {i + 1}
+                  {isMarked && !isLocked && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute right-0.5 top-0 text-[var(--gold)]"
+                    >
+                      •
+                    </span>
+                  )}
                 </button>
               );
             })}
