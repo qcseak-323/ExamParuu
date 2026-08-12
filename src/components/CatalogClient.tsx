@@ -182,9 +182,13 @@ export default function CatalogClient({
                       {exam.code.toUpperCase()}
                     </span>
                     <div className="flex items-center gap-2">
-                      {exam.status === "beta" && (
+                      {/* Announced needs its own badge rather than falling
+                          through to no badge at all: an unbadged row reads as
+                          GA, which would promise a bookable exam. */}
+                      {(exam.status === "beta" ||
+                        exam.status === "announced") && (
                         <span className="rounded bg-[var(--panel-raised)] px-2 py-0.5 text-caption font-medium text-[var(--foreground-muted)]">
-                          Beta
+                          {exam.status === "beta" ? "Beta" : "Announced"}
                         </span>
                       )}
                       {exam.code === priorityExam && (

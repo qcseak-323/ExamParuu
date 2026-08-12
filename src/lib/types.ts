@@ -353,7 +353,13 @@ export type RemoteProgress = {
   events: LearningEvent[];
 };
 
-export type CatalogStatus = "GA" | "beta" | "retiring";
+/**
+ * `announced` is a real fourth state, not a shade of beta: Microsoft has named
+ * the exam but published no study guide and set no beta date, so there is
+ * nothing to sit and often no official title yet. Calling it GA would promise
+ * a bookable exam and calling it beta would promise one you can sit early.
+ */
+export type CatalogStatus = "GA" | "beta" | "retiring" | "announced";
 
 /**
  * Which regional gym an exam belongs to. Mostly the Microsoft series prefix;

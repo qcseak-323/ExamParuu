@@ -56,6 +56,20 @@
     "sourceUrl": null
   },
   {
+    "code": "ab-610",
+    "title": "Title not yet published by Microsoft",
+    "family": "Copilot & Agents",
+    "series": "ab",
+    "msLevel": "Associate",
+    "status": "announced",
+    "durationMinutes": null,
+    "passingScore": 700,
+    "summary": "Announced by Microsoft with no study guide and no beta date yet. Reported to sit between AB-410 and AB-620, for makers building agents over everyday sources rather than enterprise integrations — unconfirmed until Microsoft publishes it.",
+    "hasContent": false,
+    "catalogVerifiedAt": "2026-08-12",
+    "sourceUrl": null
+  },
+  {
     "code": "ab-620",
     "title": "AI Agent Builder",
     "family": "Copilot & Agents",
