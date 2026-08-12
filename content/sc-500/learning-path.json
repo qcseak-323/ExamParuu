@@ -1,0 +1,104 @@
+{
+  "examCode": "sc-500",
+  "note": "Four paths, one per exam domain. SC-500 is in beta and Microsoft has not yet published a settled set of learning paths for it, so these follow the domains and point at the closest published path; expect the links to move once the exam reaches general availability.",
+  "paths": [
+    {
+      "id": "identity-access-governance",
+      "title": "Manage identity, access, and governance in Azure",
+      "domainId": "identity-access-governance",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/manage-identity-access/",
+      "modules": [
+        {
+          "id": "identity-access-governance-m1",
+          "title": "Secure access with privileged identity and Conditional Access",
+          "sectionIds": ["entra-privileged-access", "rbac-and-roles"],
+          "cardIds": ["fc-sc500-ia-01", "fc-sc500-ia-05", "fc-sc500-ia-06", "fc-sc500-ia-07", "fc-sc500-ia-13"]
+        },
+        {
+          "id": "identity-access-governance-m2",
+          "title": "Secure secrets and keys with Azure Key Vault",
+          "sectionIds": ["key-vault", "backup-and-managed-identities"],
+          "cardIds": ["fc-sc500-ia-02", "fc-sc500-ia-03", "fc-sc500-ia-04", "fc-sc500-ia-12"]
+        },
+        {
+          "id": "identity-access-governance-m3",
+          "title": "Enforce governance with Azure Policy",
+          "sectionIds": ["azure-policy-and-compliance"],
+          "cardIds": ["fc-sc500-ia-08", "fc-sc500-ia-09", "fc-sc500-ia-10", "fc-sc500-ia-11"]
+        }
+      ]
+    },
+    {
+      "id": "storage-databases-networking",
+      "title": "Secure storage, databases, and networking",
+      "domainId": "storage-databases-networking",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/secure-azure-network-infrastructure/",
+      "modules": [
+        {
+          "id": "storage-databases-networking-m1",
+          "title": "Implement security for storage accounts",
+          "sectionIds": ["storage-account-security"],
+          "cardIds": ["fc-sc500-sn-01", "fc-sc500-sn-02", "fc-sc500-sn-03", "fc-sc500-sn-04", "fc-sc500-sn-14"]
+        },
+        {
+          "id": "storage-databases-networking-m2",
+          "title": "Implement security for Azure SQL",
+          "sectionIds": ["database-security"],
+          "cardIds": ["fc-sc500-sn-11", "fc-sc500-sn-12", "fc-sc500-sn-13", "fc-sc500-sn-05", "fc-sc500-sn-06"]
+        },
+        {
+          "id": "storage-databases-networking-m3",
+          "title": "Secure Azure network services",
+          "sectionIds": ["network-security-groups", "private-endpoints-and-link", "azure-firewall-and-wan"],
+          "cardIds": ["fc-sc500-sn-07", "fc-sc500-sn-08", "fc-sc500-sn-09", "fc-sc500-sn-10"]
+        }
+      ]
+    },
+    {
+      "id": "secure-compute",
+      "title": "Secure compute and AI workloads",
+      "domainId": "secure-compute",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/secure-your-cloud-data/",
+      "modules": [
+        {
+          "id": "secure-compute-m1",
+          "title": "Implement security for AI and agents",
+          "sectionIds": ["ai-security-and-agents"],
+          "cardIds": ["fc-sc500-cp-01", "fc-sc500-cp-02", "fc-sc500-cp-03", "fc-sc500-cp-04", "fc-sc500-cp-13"]
+        },
+        {
+          "id": "secure-compute-m2",
+          "title": "Implement security for servers and virtual machines",
+          "sectionIds": ["vm-and-server-security", "defender-for-servers"],
+          "cardIds": ["fc-sc500-cp-05", "fc-sc500-cp-06", "fc-sc500-cp-07", "fc-sc500-cp-08"]
+        },
+        {
+          "id": "secure-compute-m3",
+          "title": "Implement security for application platform services",
+          "sectionIds": ["container-security", "app-platform-security"],
+          "cardIds": ["fc-sc500-cp-09", "fc-sc500-cp-10", "fc-sc500-cp-11", "fc-sc500-cp-12"]
+        }
+      ]
+    },
+    {
+      "id": "security-posture",
+      "title": "Manage and monitor security posture",
+      "domainId": "security-posture",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/sc-200-utilize-kql-for-azure-sentinel/",
+      "modules": [
+        {
+          "id": "security-posture-m1",
+          "title": "Manage security posture with Defender for Cloud",
+          "sectionIds": ["defender-cspm"],
+          "cardIds": ["fc-sc500-sp-01", "fc-sc500-sp-02", "fc-sc500-sp-03", "fc-sc500-sp-09", "fc-sc500-sp-10"]
+        },
+        {
+          "id": "security-posture-m2",
+          "title": "Collect and respond to events in Microsoft Sentinel",
+          "sectionIds": ["sentinel-collection", "sentinel-automation", "security-copilot"],
+          "cardIds": ["fc-sc500-sp-04", "fc-sc500-sp-05", "fc-sc500-sp-06", "fc-sc500-sp-07", "fc-sc500-sp-08"]
+        }
+      ]
+    }
+  ]
+}

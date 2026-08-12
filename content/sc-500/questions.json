@@ -1,0 +1,933 @@
+[
+  {
+    "id": "sn-01",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "caseStudyId": "cs-tessellate-cloudsec",
+    "question": "Access to tessconsignments must be attributable to a person or workload and revocable without rotating a key four systems depend on. What should you do?",
+    "options": [
+      "Disable shared key access so every request is authorised through Microsoft Entra",
+      "Rotate the account key and distribute the new one to the four systems",
+      "Issue an account SAS with a short expiry to each system",
+      "Enable Defender for Storage threat protection on the account"
+    ],
+    "correctIndex": 0,
+    "explanation": "The account key is one credential that grants everything and identifies nobody, and an account SAS is signed with it, so it inherits both problems. Only Entra authorisation makes each request attributable and individually revocable.",
+    "teaches": "storage-account-security"
+  },
+  {
+    "id": "sn-02",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "caseStudyId": "cs-tessellate-cloudsec",
+    "question": "The managed service provider's database administrators must continue to administer the database but must not read commission figures in plain text. What should you implement?",
+    "options": [
+      "Always Encrypted, so the keys stay with the client",
+      "Transparent data encryption with a customer-managed key",
+      "Dynamic data masking on the commission columns",
+      "Database auditing to a Log Analytics workspace"
+    ],
+    "correctIndex": 0,
+    "explanation": "Transparent data encryption protects data at rest and is transparent to anyone querying the database, so a DBA still sees plain text; it is already enabled here. Masking only changes presentation and can be bypassed by a privileged user. Always Encrypted keeps the keys with the client, which is the only option that hides the values from the administrator.",
+    "teaches": "database-security"
+  },
+  {
+    "id": "sn-03",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "caseStudyId": "cs-tessellate-cloudsec",
+    "question": "The platform team's network baseline must apply across all subscriptions and must not be overridable by an application team's own network security group. What should you use?",
+    "options": [
+      "Security admin rules in Azure Virtual Network Manager",
+      "A network security group applied at the subnet level by the platform team",
+      "An Azure Policy with a Deny effect on inbound rules permitting 3389",
+      "Azure Firewall network rules in a hub virtual network"
+    ],
+    "correctIndex": 0,
+    "explanation": "Security admin rules are evaluated before network security groups and cannot be overridden by a subscription owner, which is exactly the requirement. A policy with Deny stops a new rule being created but does nothing about traffic if one already exists, and a subnet NSG can be edited by the team that owns it.",
+    "teaches": "network-security-groups"
+  },
+  {
+    "id": "sn-04",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "caseStudyId": "cs-tessellate-cloudsec",
+    "question": "Traffic to the data services must not traverse a public endpoint at all, and the public endpoints must be able to be disabled. What should you deploy?",
+    "options": [
+      "Private endpoints for each data service",
+      "Service endpoints from the application subnets",
+      "Storage and SQL firewall rules permitting only the application subnets",
+      "An Azure Firewall with application rules for the service host names"
+    ],
+    "correctIndex": 0,
+    "explanation": "A service endpoint still sends traffic to the service's public endpoint and the resource keeps its public IP — which is precisely what the penetration testers flagged. Only a private endpoint projects the resource into the virtual network as a private IP so the public endpoint can be turned off.",
+    "teaches": "private-endpoints-and-link"
+  },
+  {
+    "id": "sn-05",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "caseStudyId": "cs-tessellate-cloudsec",
+    "question": "After the private endpoints are created, applications can reach the storage account by its private IP address but fail when they use its host name. What is missing?",
+    "options": [
+      "A private DNS zone linked to the virtual network, resolving the public host name to the private IP",
+      "A network security group rule permitting outbound traffic to the private endpoint",
+      "A service endpoint on the application subnet",
+      "A user-defined route sending the service prefix to the private endpoint"
+    ],
+    "correctIndex": 0,
+    "explanation": "A private endpoint is only useful if the service's public host name resolves to its private address, which is what a linked private DNS zone does. Reachable by IP but not by name is almost always DNS.",
+    "teaches": "private-endpoints-and-link"
+  },
+  {
+    "id": "sn-06",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "question": "A storage account must never serve anonymous requests, even if a developer tries to make a container public. What should you configure?",
+    "options": [
+      "Set allow blob anonymous access to disabled on the account",
+      "Set the container access level to private",
+      "Add a storage firewall rule denying the public internet",
+      "Require a user delegation SAS for all requests"
+    ],
+    "correctIndex": 0,
+    "explanation": "Disabling anonymous access at the account level removes the option entirely, so no container can be made public. Setting one container private is a per-container decision that the next developer can reverse.",
+    "teaches": "storage-account-security"
+  },
+  {
+    "id": "sn-07",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "question": "An inbound network security group rule permits TCP 443 from the internet. Which additional rule is required for the response traffic to reach the client?",
+    "options": [
+      "None, because a network security group is stateful",
+      "An outbound rule permitting TCP 443 to the internet",
+      "An outbound rule permitting ephemeral ports to the internet",
+      "An application security group rule for the return path"
+    ],
+    "correctIndex": 0,
+    "explanation": "Network security groups are stateful, so allowing a flow implicitly permits its return traffic. Writing a matching outbound rule is unnecessary, and believing it is required is a common misconception this question targets.",
+    "teaches": "network-security-groups"
+  },
+  {
+    "id": "sn-08",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "question": "You must filter outbound traffic from a subnet by fully qualified domain name over HTTPS. Which Azure Firewall rule type should you use?",
+    "options": [
+      "An application rule",
+      "A network rule",
+      "A DNAT rule",
+      "A security admin rule"
+    ],
+    "correctIndex": 0,
+    "explanation": "Application rules are the ones that filter by FQDN for HTTP, HTTPS, and MSSQL. Network rules work at address and port level, and DNAT rules translate inbound connections.",
+    "teaches": "azure-firewall-and-wan"
+  },
+  {
+    "id": "sn-09",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "question": "In which order does Azure Firewall process its rule collections?",
+    "options": [
+      "DNAT rules, then network rules, then application rules",
+      "Application rules, then network rules, then DNAT rules",
+      "Network rules, then application rules, then DNAT rules",
+      "All three are evaluated together by priority alone"
+    ],
+    "correctIndex": 0,
+    "explanation": "The order is fixed and is examined directly. A network rule that matches will therefore short-circuit an application rule you expected to apply, which is a frequent cause of confusion when FQDN filtering appears to be ignored.",
+    "teaches": "azure-firewall-and-wan"
+  },
+  {
+    "id": "sn-10",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "question": "A connection between two virtual machines is being dropped and you must determine which rule is responsible. What should you use?",
+    "options": [
+      "Network Watcher IP flow verify and effective security rules",
+      "Azure Firewall diagnostic logs",
+      "Defender for Cloud recommendations for the virtual machines",
+      "The activity log for the network security group"
+    ],
+    "correctIndex": 0,
+    "explanation": "IP flow verify tests a specific five-tuple and names the rule that allowed or denied it, and effective security rules shows the combined result of every NSG and security admin rule on the interface. The activity log records who changed a rule, not what a packet did.",
+    "teaches": "network-security-groups"
+  },
+  {
+    "id": "sn-11",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "question": "You must inspect TLS-encrypted outbound traffic and detect intrusion attempts at the network edge. What is required?",
+    "options": [
+      "Azure Firewall Premium",
+      "Azure Firewall Standard with application rules",
+      "A network security group with application security groups",
+      "Azure Virtual Network Manager security admin rules"
+    ],
+    "correctIndex": 0,
+    "explanation": "TLS inspection and the intrusion detection and prevention system are Premium tier features. Standard can filter by FQDN but cannot see inside an encrypted session.",
+    "teaches": "azure-firewall-and-wan"
+  },
+  {
+    "id": "sn-12",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "question": "Malware must be detected in files as they are uploaded to a storage account. What should you enable?",
+    "options": [
+      "Defender for Storage, with malware scanning on upload",
+      "A storage firewall restricted to trusted Microsoft services",
+      "Immutable blob storage with a time-based retention policy",
+      "Customer-managed keys for the storage account"
+    ],
+    "correctIndex": 0,
+    "explanation": "Malware scanning on upload is a Defender for Storage capability. The other options control who reaches the account or how data is protected at rest, and none of them inspects content.",
+    "teaches": "storage-account-security"
+  },
+  {
+    "id": "sn-13",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "question": "You must know which Azure SQL configuration settings deviate from a recommended security baseline. What should you use?",
+    "options": [
+      "SQL vulnerability assessment",
+      "Advanced Threat Protection for Azure SQL",
+      "Database auditing to a Log Analytics workspace",
+      "Dynamic data masking recommendations"
+    ],
+    "correctIndex": 0,
+    "explanation": "Vulnerability assessment scans configuration against a baseline and reports the deviations. Threat protection alerts on suspicious activity, and auditing records what happened — state, event, and record respectively.",
+    "teaches": "database-security"
+  },
+  {
+    "id": "sn-14",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "kind": "multi",
+    "question": "Which two are true of a user delegation SAS? Choose two.",
+    "options": [
+      "It is signed with Microsoft Entra credentials rather than the account key",
+      "It can be revoked by revoking the user delegation key",
+      "It grants permanent access that cannot be time-limited",
+      "It requires shared key access to be enabled on the account"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Being signed with Entra credentials is what makes a user delegation SAS attributable and revocable. An account SAS is the one that depends on the account key, which is why disabling shared key access blocks it.",
+    "teaches": "storage-account-security"
+  },
+  {
+    "id": "sn-15",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "kind": "order",
+    "question": "Put the steps of moving a storage account onto a private endpoint in order.",
+    "items": [
+      "Disable public network access on the storage account",
+      "Create the private endpoint in the application subnet",
+      "Verify that applications resolve the account host name to the private IP",
+      "Link a private DNS zone for the storage service to the virtual network"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "The endpoint is created, DNS is linked so the name resolves privately, resolution is verified, and only then is the public path closed. Disabling public access before DNS works takes the application offline.",
+    "teaches": "private-endpoints-and-link"
+  },
+  {
+    "id": "sn-16",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "kind": "yesno",
+    "question": "A private endpoint has been created for an Azure SQL logical server. Judge each statement.",
+    "statements": [
+      { "text": "The server can be reached over a private IP address inside the virtual network.", "correct": true },
+      { "text": "A private DNS zone is needed for the server's host name to resolve privately.", "correct": true },
+      { "text": "The public endpoint is disabled automatically when the private endpoint is created.", "correct": false },
+      { "text": "Public network access can be disabled separately on the server.", "correct": true }
+    ],
+    "explanation": "Creating a private endpoint adds a private path; it does not remove the public one. Disabling public network access is a separate, deliberate step, and forgetting it leaves the resource exposed despite the private endpoint.",
+    "teaches": "private-endpoints-and-link"
+  },
+  {
+    "id": "sn-17",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "kind": "dropdown",
+    "question": "Complete the statement about protecting data in Azure SQL.",
+    "segments": [
+      { "text": "To stop a database administrator reading a column in plain text you would use " },
+      {
+        "blankId": "b1",
+        "options": ["Always Encrypted", "transparent data encryption", "dynamic data masking"],
+        "correctIndex": 0
+      },
+      { "text": ", while to protect the data files at rest you would rely on " },
+      {
+        "blankId": "b2",
+        "options": ["transparent data encryption", "Always Encrypted", "database auditing"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "The two encryption features solve different threats: TDE protects the files if someone takes them, while Always Encrypted protects the values from anyone with database access, including the administrator.",
+    "teaches": "database-security"
+  },
+  {
+    "id": "ia-01",
+    "examCode": "sc-500",
+    "domain": "identity-access-governance",
+    "question": "Administrators must hold no standing privilege over production subscriptions, and each elevation must be approved and time-bound. What should you implement?",
+    "options": [
+      "Eligible Azure resource role assignments in Privileged Identity Management",
+      "Active Owner assignments scoped to each resource group",
+      "A Conditional Access policy requiring multifactor authentication for Azure management",
+      "Resource locks on the production resource groups"
+    ],
+    "correctIndex": 0,
+    "explanation": "Eligible assignments remove privilege at rest and the role settings supply approval and duration. Multifactor authentication proves who is elevating but leaves the privilege permanently held.",
+    "teaches": "entra-privileged-access"
+  },
+  {
+    "id": "ia-02",
+    "examCode": "sc-500",
+    "domain": "identity-access-governance",
+    "question": "A principal must be able to read one specific secret in a Key Vault and nothing else. Which access model supports this?",
+    "options": [
+      "Azure RBAC, with a role assignment scoped to the individual secret",
+      "A vault access policy granting Get on secrets",
+      "A vault access policy granting List and Get on secrets",
+      "A managed identity with the Key Vault Contributor role"
+    ],
+    "correctIndex": 0,
+    "explanation": "Access policies apply to the whole vault, so any secret permission covers every secret in it. Only the RBAC model scopes to an individual secret, which is one of the main reasons it is now recommended.",
+    "teaches": "key-vault"
+  },
+  {
+    "id": "ia-03",
+    "examCode": "sc-500",
+    "domain": "identity-access-governance",
+    "question": "A Key Vault must not be permanently destroyed by anyone, including a subscription owner, before its retention period expires. What should you enable?",
+    "options": [
+      "Purge protection",
+      "Soft delete",
+      "A CanNotDelete resource lock",
+      "A ReadOnly resource lock"
+    ],
+    "correctIndex": 0,
+    "explanation": "Soft delete is always on and allows recovery, but a privileged user can still purge. Purge protection removes that ability for the retention period. A resource lock can be removed by whoever has permission to manage locks.",
+    "teaches": "key-vault"
+  },
+  {
+    "id": "ia-04",
+    "examCode": "sc-500",
+    "domain": "identity-access-governance",
+    "question": "You must find credentials that have been hard-coded into virtual machine disks and container images rather than stored in Key Vault. What should you use?",
+    "options": [
+      "Defender CSPM secret scanning",
+      "Defender for Key Vault",
+      "Azure Policy with an Audit effect on Key Vault usage",
+      "Microsoft Entra Permissions Management"
+    ],
+    "correctIndex": 0,
+    "explanation": "Secret scanning in Defender CSPM finds credentials that never reached a vault. Defender for Key Vault watches access to secrets that are already in one, which is the opposite problem.",
+    "teaches": "key-vault"
+  },
+  {
+    "id": "ia-05",
+    "examCode": "sc-500",
+    "domain": "identity-access-governance",
+    "question": "A team must be able to create and delete resources in a subscription but must not be able to grant anyone else access. Which built-in role should you assign?",
+    "options": [
+      "Contributor",
+      "Owner",
+      "User Access Administrator",
+      "Reader"
+    ],
+    "correctIndex": 0,
+    "explanation": "Contributor manages resources but cannot create role assignments. Owner adds the ability to grant access, and User Access Administrator is the mirror image — access management without resource management.",
+    "teaches": "rbac-and-roles"
+  },
+  {
+    "id": "ia-06",
+    "examCode": "sc-500",
+    "domain": "identity-access-governance",
+    "question": "Every storage account created in a subscription must have a diagnostic setting, and the setting must also be added to accounts that already exist. What should you configure?",
+    "options": [
+      "An Azure Policy with a DeployIfNotExists effect, plus a remediation task",
+      "An Azure Policy with a Deny effect on accounts without a diagnostic setting",
+      "An Azure Policy with an Audit effect and a compliance report",
+      "A resource lock on each existing storage account"
+    ],
+    "correctIndex": 0,
+    "explanation": "DeployIfNotExists creates the missing setting, but by itself only on create or update — a remediation task is what applies it to resources that already exist. Deny blocks new non-compliant resources without fixing any existing ones.",
+    "teaches": "azure-policy-and-compliance"
+  },
+  {
+    "id": "ia-07",
+    "examCode": "sc-500",
+    "domain": "identity-access-governance",
+    "question": "A DeployIfNotExists policy assignment reports resources as non-compliant but never remediates them. What is the most likely cause?",
+    "options": [
+      "The assignment's managed identity lacks the role needed to perform the deployment",
+      "The policy definition uses the wrong effect",
+      "The assignment is scoped to a management group rather than a subscription",
+      "The policy has not been added to an initiative"
+    ],
+    "correctIndex": 0,
+    "explanation": "Remediating effects act through a managed identity created with the assignment, and that identity must hold rights sufficient to make the change. Without them the evaluation still runs and reports, but the deployment fails.",
+    "teaches": "azure-policy-and-compliance"
+  },
+  {
+    "id": "ia-08",
+    "examCode": "sc-500",
+    "domain": "identity-access-governance",
+    "question": "An Owner reports that they cannot delete a resource group even though they hold full permissions. What is the most likely reason?",
+    "options": [
+      "A CanNotDelete resource lock is applied",
+      "The resource group contains resources from another subscription",
+      "Their role assignment is eligible rather than active",
+      "Azure Policy is denying the delete operation"
+    ],
+    "correctIndex": 0,
+    "explanation": "Resource locks apply regardless of role, so an Owner is blocked until the lock is removed. That is exactly why locks are used as a guard against accidental deletion of production resources.",
+    "teaches": "azure-policy-and-compliance"
+  },
+  {
+    "id": "ia-09",
+    "examCode": "sc-500",
+    "domain": "identity-access-governance",
+    "question": "Backup data must survive an attacker who has obtained Contributor rights on the backup vault. Which combination helps most?",
+    "options": [
+      "Soft delete with multi-user authorisation through a resource guard",
+      "A ReadOnly lock on the recovery services vault",
+      "Customer-managed keys on the backup storage",
+      "Geo-redundant storage for the vault"
+    ],
+    "correctIndex": 0,
+    "explanation": "Multi-user authorisation requires a second, separately privileged approver before destructive operations, and soft delete retains deleted backup data meanwhile. Redundancy and encryption protect against loss and disclosure, not against a privileged attacker deleting backups.",
+    "teaches": "backup-and-managed-identities"
+  },
+  {
+    "id": "ia-10",
+    "examCode": "sc-500",
+    "domain": "identity-access-governance",
+    "question": "A container running in Azure Container Apps must read a secret from Key Vault with no credential in its configuration. What should you use?",
+    "options": [
+      "A managed identity granted a Key Vault RBAC role",
+      "A service principal with a client secret in an environment variable",
+      "A vault access policy granting the container app's subscription access",
+      "An account key stored in the container image"
+    ],
+    "correctIndex": 0,
+    "explanation": "A managed identity has its credential created, rotated, and protected by Azure, which is what removes the stored secret. Everything else in the list stores a credential somewhere that has to be looked after.",
+    "teaches": "backup-and-managed-identities"
+  },
+  {
+    "id": "ia-11",
+    "examCode": "sc-500",
+    "domain": "identity-access-governance",
+    "question": "You must identify principals holding permissions far broader than they have actually used. What should you use?",
+    "options": [
+      "Microsoft Entra Permissions Management",
+      "Azure Policy compliance reporting",
+      "A resource lock audit across subscriptions",
+      "Defender for Key Vault alerts"
+    ],
+    "correctIndex": 0,
+    "explanation": "Permissions Management compares permissions granted against permissions used and reports the gap, which is what turns 'probably overprivileged' into evidence. Policy compliance reports on resource configuration, not on how permissions are exercised.",
+    "teaches": "rbac-and-roles"
+  },
+  {
+    "id": "ia-12",
+    "examCode": "sc-500",
+    "domain": "identity-access-governance",
+    "kind": "multi",
+    "question": "Which two are true of Azure custom roles? Choose two.",
+    "options": [
+      "They can only be assigned within the scopes listed in assignableScopes",
+      "They can exclude specific operations by using notActions",
+      "They can create deny assignments for other principals",
+      "They are inherited automatically by every management group"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Assignable scopes bound where a custom role may be used, and notActions subtracts from the granted actions. Deny assignments are created only by Azure-managed services, never authored in a role definition.",
+    "teaches": "rbac-and-roles"
+  },
+  {
+    "id": "ia-13",
+    "examCode": "sc-500",
+    "domain": "identity-access-governance",
+    "kind": "order",
+    "question": "Put the steps of enforcing a regulatory standard with Azure Policy in order.",
+    "items": [
+      "Create remediation tasks for the resources that already exist",
+      "Assign the initiative at a management group scope",
+      "Select the initiative that represents the standard",
+      "Review the compliance results to find non-compliant resources"
+    ],
+    "correctOrder": [2, 1, 3, 0],
+    "explanation": "The standard is selected as an initiative, assigned at a scope broad enough to cover the estate, evaluated, and only then remediated. Remediating before evaluation has run means acting on an unknown set.",
+    "teaches": "azure-policy-and-compliance"
+  },
+  {
+    "id": "ia-14",
+    "examCode": "sc-500",
+    "domain": "identity-access-governance",
+    "kind": "match",
+    "question": "Match each credential option to when it is the right choice.",
+    "pairs": [
+      { "term": "System-assigned managed identity", "definition": "One Azure resource that should own its own identity" },
+      { "term": "User-assigned managed identity", "definition": "Several Azure resources that must share one identity" },
+      { "term": "Federated credential", "definition": "A workload outside Azure, such as a GitHub Actions job" },
+      { "term": "Client secret", "definition": "The last resort when no other option is supported" }
+    ],
+    "explanation": "The first three store no secret at all and differ only by what holds the identity. A client secret is the fallback precisely because it is the one that has to be stored and rotated by somebody.",
+    "teaches": "backup-and-managed-identities"
+  },
+  {
+    "id": "cp-01",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "question": "Virtual machines must be administered without any public IP address and without exposing a management port. What should you deploy?",
+    "options": [
+      "Azure Bastion",
+      "Just-in-time VM access",
+      "A point-to-site VPN to the virtual network",
+      "A jump box with a network security group restricting source addresses"
+    ],
+    "correctIndex": 0,
+    "explanation": "Bastion provides RDP and SSH through the portal over TLS, so no virtual machine needs a public IP at all. Just-in-time still assumes a public endpoint exists and merely narrows when it is open, and a jump box is itself a machine that must be exposed.",
+    "teaches": "vm-and-server-security"
+  },
+  {
+    "id": "cp-02",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "question": "Virtual machines with public IP addresses must have management ports closed by default and opened only for an approved request and duration. What should you enable?",
+    "options": [
+      "Just-in-time VM access in Defender for Cloud",
+      "Azure Bastion for the virtual network",
+      "Adaptive network hardening recommendations",
+      "A network security group with a deny-all inbound rule"
+    ],
+    "correctIndex": 0,
+    "explanation": "Just-in-time keeps the port closed and opens it for a requested source and time window after approval, shrinking exposure from permanent to minutes. A static deny rule would close the port with no way to work.",
+    "teaches": "vm-and-server-security"
+  },
+  {
+    "id": "cp-03",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "question": "Servers running in an on-premises data centre and in AWS must receive Defender for Servers protection and Azure Policy evaluation. What is required?",
+    "options": [
+      "Onboard them to Azure Arc so they appear as Azure resources",
+      "Create Azure virtual machines and migrate the workloads",
+      "Connect the AWS account with a multicloud connector only",
+      "Install the Azure Monitor Agent on each server"
+    ],
+    "correctIndex": 0,
+    "explanation": "Arc projects a server into Azure as a resource, which is what lets Defender for Servers, Policy, and machine configuration apply to it. A multicloud connector brings in AWS posture findings but does not by itself deliver server-level protection.",
+    "teaches": "vm-and-server-security"
+  },
+  {
+    "id": "cp-04",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "question": "File integrity monitoring and just-in-time VM access are required. Which Defender for Servers plan do you need?",
+    "options": [
+      "Plan 2",
+      "Plan 1",
+      "Foundational CSPM, which includes both",
+      "Defender CSPM"
+    ],
+    "correctIndex": 0,
+    "explanation": "Plan 1 provides endpoint detection and response only. File integrity monitoring, just-in-time access, vulnerability assessment, and agentless scanning all arrive with Plan 2, and naming any of them in a question points there.",
+    "teaches": "defender-for-servers"
+  },
+  {
+    "id": "cp-05",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "question": "You must inventory software and find vulnerabilities on virtual machines without installing anything on them or consuming their resources. What should you use?",
+    "options": [
+      "Agentless scanning in Defender for Servers",
+      "Microsoft Defender for Endpoint on each machine",
+      "Azure machine configuration with a custom policy",
+      "A network vulnerability scanner in the same subnet"
+    ],
+    "correctIndex": 0,
+    "explanation": "Agentless scanning snapshots the disk and analyses it out of band, which gives coverage with no footprint on the workload. The trade is that it is periodic rather than real time, so it complements the agent rather than replacing it.",
+    "teaches": "defender-for-servers"
+  },
+  {
+    "id": "cp-06",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "question": "A virtual machine must attest that its boot process has not been tampered with. What should you configure?",
+    "options": [
+      "Trusted launch with secure boot, vTPM, and integrity monitoring",
+      "Azure Disk Encryption using BitLocker inside the guest",
+      "Server-side encryption with a customer-managed key",
+      "A confidential virtual machine size with memory encryption"
+    ],
+    "correctIndex": 0,
+    "explanation": "Secure boot and a virtual TPM produce the measurements that integrity monitoring attests. Disk encryption protects data at rest, and a confidential VM protects memory from the host — neither speaks to boot integrity.",
+    "teaches": "vm-and-server-security"
+  },
+  {
+    "id": "cp-07",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "question": "Container images must be scanned for vulnerabilities when pushed to Azure Container Registry and rescanned as new vulnerabilities are published. What should you enable?",
+    "options": [
+      "Defender for Containers",
+      "Defender for Servers Plan 2",
+      "Azure Policy for AKS",
+      "Defender CSPM agentless scanning"
+    ],
+    "correctIndex": 0,
+    "explanation": "Registry image scanning on push and continuous rescanning are Defender for Containers capabilities. Azure Policy for AKS enforces admission rules inside the cluster rather than examining images in the registry.",
+    "teaches": "container-security"
+  },
+  {
+    "id": "cp-08",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "question": "Pods in an AKS cluster must obtain Microsoft Entra tokens to reach Azure services without any stored secret. What should you configure?",
+    "options": [
+      "Workload identity",
+      "The Container Registry admin account",
+      "A Kubernetes secret holding a service principal credential",
+      "Azure Policy for AKS with a privileged container restriction"
+    ],
+    "correctIndex": 0,
+    "explanation": "Workload identity federates the pod's Kubernetes service account token for an Entra token, so nothing is stored. A Kubernetes secret is precisely the stored credential the requirement rules out.",
+    "teaches": "container-security"
+  },
+  {
+    "id": "cp-09",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "question": "A new Web Application Firewall must be introduced without breaking a legitimate application on its first day. How should it be deployed?",
+    "options": [
+      "In detection mode first, so false positives can be found and excluded",
+      "In prevention mode with the managed rule set at its lowest paranoia level",
+      "In prevention mode scoped to one URL path at a time",
+      "In detection mode permanently, with alerts reviewed daily"
+    ],
+    "correctIndex": 0,
+    "explanation": "Detection mode logs what would have been blocked so exclusions can be written before enforcement. Leaving it in detection permanently never protects anything, which is why the answer is detection first rather than detection only.",
+    "teaches": "app-platform-security"
+  },
+  {
+    "id": "cp-10",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "question": "An AI agent has been compromised. You must determine what it could have reached, not merely what it did. What should you use?",
+    "options": [
+      "Blast radius analysis for Microsoft Entra Agent ID in Defender XDR",
+      "The Purview audit log filtered to the agent",
+      "Defender for AI Services alerts",
+      "The Data and AI security dashboard in Defender for Cloud"
+    ],
+    "correctIndex": 0,
+    "explanation": "Blast radius analysis answers the potential-reach question by examining what the agent identity is entitled to. Audit logs and alerts describe what actually happened, which is a different and narrower question.",
+    "teaches": "ai-security-and-agents"
+  },
+  {
+    "id": "cp-11",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "question": "Traffic to Microsoft Foundry model endpoints must be rate limited, subject to token budgets, and use centrally held keys. What should you deploy?",
+    "options": [
+      "AI Gateway in Azure API Management",
+      "Azure Firewall Premium with TLS inspection",
+      "Defender for AI Services",
+      "Guardrails configured in Foundry"
+    ],
+    "correctIndex": 0,
+    "explanation": "Token limits, rate limiting, and centralised key handling are AI Gateway features in API Management. Guardrails filter prompt and response content, and Defender for AI Services raises alerts — neither manages consumption.",
+    "teaches": "ai-security-and-agents"
+  },
+  {
+    "id": "cp-12",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "kind": "multi",
+    "question": "Which two describe Azure Bastion? Choose two.",
+    "options": [
+      "It provides RDP and SSH through the browser over TLS",
+      "It removes the need for virtual machines to have public IP addresses",
+      "It opens management ports for an approved time window",
+      "It scans virtual machine disks for vulnerabilities"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Bastion is a managed jump service reached through the portal. Opening a port for a time window is just-in-time access, and disk scanning is Defender for Servers — two adjacent controls that this question separates.",
+    "teaches": "vm-and-server-security"
+  },
+  {
+    "id": "cp-13",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "kind": "order",
+    "question": "Put the steps of protecting an API behind Azure API Management in order.",
+    "items": [
+      "Apply a rate limit and quota policy per subscription",
+      "Import the back-end API into API Management",
+      "Restrict the back end so it accepts traffic only from API Management",
+      "Add a policy that validates the JWT on incoming requests"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "The API is fronted, then authenticated, then throttled, and finally the back end is closed so nobody can bypass the gateway. Closing the back end before the gateway works would take the API offline.",
+    "teaches": "app-platform-security"
+  },
+  {
+    "id": "cp-14",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "kind": "match",
+    "question": "Match each compute protection to what it defends against.",
+    "pairs": [
+      { "term": "Azure Bastion", "definition": "Management ports exposed to the internet" },
+      { "term": "Trusted launch", "definition": "Tampering with the boot process" },
+      { "term": "Confidential VM", "definition": "The host reading the guest's memory" },
+      { "term": "Agentless scanning", "definition": "Vulnerabilities on machines with no agent installed" }
+    ],
+    "explanation": "Each addresses a different layer — network reachability, boot integrity, memory confidentiality, and visibility. Matching the control to the threat is more reliable than remembering feature lists.",
+    "teaches": "defender-for-servers"
+  },
+  {
+    "id": "cp-15",
+    "examCode": "sc-500",
+    "domain": "secure-compute",
+    "kind": "dropdown",
+    "question": "Complete the statement about securing AI workloads.",
+    "segments": [
+      { "text": "An assistant surfacing documents a user could always open but never found indicates " },
+      {
+        "blankId": "b1",
+        "options": ["over-permissioned content", "a failure of the assistant's content filters", "a missing Defender for AI plan"],
+        "correctIndex": 0
+      },
+      { "text": ", so the first remedy is " },
+      {
+        "blankId": "b2",
+        "options": ["permission hygiene and sensitivity labelling", "blocking the assistant for those users", "disabling search indexing"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "The assistant is behaving correctly by honouring permissions, which is why the fix is upstream in how content is shared and labelled rather than in the AI product itself.",
+    "teaches": "ai-security-and-agents"
+  },
+  {
+    "id": "sp-01",
+    "examCode": "sc-500",
+    "domain": "security-posture",
+    "question": "Posture findings and recommendations must cover AWS accounts alongside Azure subscriptions in a single view. What should you configure?",
+    "options": [
+      "A multicloud connector for AWS in Microsoft Defender for Cloud",
+      "Azure Arc for every AWS EC2 instance",
+      "A Microsoft Sentinel data connector for AWS CloudTrail",
+      "Defender External Attack Surface Management for the AWS domains"
+    ],
+    "correctIndex": 0,
+    "explanation": "A multicloud connector brings the AWS account into Defender for Cloud so recommendations and secure score span both clouds. A Sentinel connector brings logs for detection, which is a different job, and Arc addresses servers rather than account posture.",
+    "teaches": "defender-cspm"
+  },
+  {
+    "id": "sp-02",
+    "examCode": "sc-500",
+    "domain": "security-posture",
+    "question": "You must prioritise remediation by the routes an attacker could actually take rather than by individual finding severity. What should you use?",
+    "options": [
+      "Attack path analysis in Defender CSPM",
+      "Secure score recommendations in foundational CSPM",
+      "The regulatory compliance dashboard",
+      "Defender Vulnerability Management findings"
+    ],
+    "correctIndex": 0,
+    "explanation": "Attack path analysis chains findings — exposure, vulnerability, and reachable credential — into a route and ranks by that chain. It is a Defender CSPM feature, not part of the free foundational tier.",
+    "teaches": "defender-cspm"
+  },
+  {
+    "id": "sp-03",
+    "examCode": "sc-500",
+    "domain": "security-posture",
+    "question": "Windows Security event ingestion into Microsoft Sentinel has become the largest line item in the security budget. What is the most direct control?",
+    "options": [
+      "Data collection rules that narrow which event set is gathered",
+      "Moving the workspace to a cheaper Azure region",
+      "Reducing the workspace retention period to 30 days",
+      "Disabling the Microsoft security analytics rules"
+    ],
+    "correctIndex": 0,
+    "explanation": "Data collection rules decide what is collected in the first place, which is the main cost lever. Shortening retention reduces storage cost but not ingestion, and disabling analytics rules saves nothing while removing detection.",
+    "teaches": "sentinel-collection"
+  },
+  {
+    "id": "sp-04",
+    "examCode": "sc-500",
+    "domain": "security-posture",
+    "question": "A high-volume firewall log must be retained cheaply for occasional investigation, and it will never need an analytics rule. Which table plan fits?",
+    "options": [
+      "The auxiliary or basic plan",
+      "The analytics plan",
+      "Archive with no active plan",
+      "A custom log table on the analytics plan"
+    ],
+    "correctIndex": 0,
+    "explanation": "The cheaper plans suit high-volume, low-value logs precisely because alerting is not required. Choosing analytics for such a table is the classic overspend, and choosing a cheap plan for a table you must alert on is the classic mistake in the other direction.",
+    "teaches": "sentinel-collection"
+  },
+  {
+    "id": "sp-05",
+    "examCode": "sc-500",
+    "domain": "security-posture",
+    "question": "An incident matching a known benign pattern must be closed automatically without any external action. What should you configure?",
+    "options": [
+      "An automation rule in Microsoft Sentinel",
+      "A playbook triggered on the incident",
+      "A scheduled analytics rule with a suppression period",
+      "A watchlist containing the benign entities"
+    ],
+    "correctIndex": 0,
+    "explanation": "Closing, assigning, or re-prioritising an incident is exactly what an automation rule does inside Sentinel. A playbook is a Logic App and is the right answer when work must happen outside Sentinel.",
+    "teaches": "sentinel-automation"
+  },
+  {
+    "id": "sp-06",
+    "examCode": "sc-500",
+    "domain": "security-posture",
+    "question": "A playbook must disable a user account in Microsoft Entra ID when an incident is created. What must be in place for it to succeed?",
+    "options": [
+      "A managed identity for the playbook, granted a role that permits disabling accounts",
+      "An automation rule with a higher priority than the analytics rule",
+      "The playbook owner holding Global Administrator at the time it runs",
+      "A custom log table storing the affected account names"
+    ],
+    "correctIndex": 0,
+    "explanation": "A playbook acts as its own identity, so that identity must hold the necessary permission. The person who authored it is not present when it runs, which is why relying on their rights does not work.",
+    "teaches": "sentinel-automation"
+  },
+  {
+    "id": "sp-07",
+    "examCode": "sc-500",
+    "domain": "security-posture",
+    "question": "You must onboard a security product into Sentinel with its connector, analytics rules, workbooks, and playbooks together. What should you use?",
+    "options": [
+      "A content hub solution",
+      "A data connector alone, then build the rules by hand",
+      "A custom log table and a scheduled analytics rule",
+      "An Azure Policy assignment for the workspace"
+    ],
+    "correctIndex": 0,
+    "explanation": "Content hub solutions package everything for a product, which is the expected onboarding route and removes a large amount of hand-building that is easy to get subtly wrong.",
+    "teaches": "sentinel-collection"
+  },
+  {
+    "id": "sp-08",
+    "examCode": "sc-500",
+    "domain": "security-posture",
+    "question": "You must discover internet-facing assets belonging to the organisation that no team has registered. What should you use?",
+    "options": [
+      "Microsoft Defender External Attack Surface Management",
+      "Defender CSPM cloud security explorer",
+      "Azure Resource Graph queries across subscriptions",
+      "Network Watcher topology"
+    ],
+    "correctIndex": 0,
+    "explanation": "EASM approaches the estate from outside and finds assets nobody recorded, which is exactly why it catches what an inventory query cannot. Resource Graph can only report resources that exist in the subscriptions you know about.",
+    "teaches": "defender-cspm"
+  },
+  {
+    "id": "sp-09",
+    "examCode": "sc-500",
+    "domain": "security-posture",
+    "question": "Microsoft Security Copilot is being provisioned. What determines its capacity and cost?",
+    "options": [
+      "Security compute units",
+      "The number of users assigned a Copilot licence",
+      "The volume of data ingested into Sentinel",
+      "The number of plugins enabled"
+    ],
+    "correctIndex": 0,
+    "explanation": "Security compute units are the provisioned capacity and the billed unit. Copilot is not licensed per seat, which is a distinction the exam draws deliberately because it differs from most Microsoft products.",
+    "teaches": "security-copilot"
+  },
+  {
+    "id": "sp-10",
+    "examCode": "sc-500",
+    "domain": "security-posture",
+    "question": "An analyst asks Security Copilot about Intune device compliance and receives an answer that appears confident but wrong. What should you check first?",
+    "options": [
+      "Whether the Intune plugin is enabled for the workspace",
+      "Whether the analyst holds the Security Copilot owner role",
+      "Whether enough security compute units are provisioned",
+      "Whether a promptbook exists for device compliance"
+    ],
+    "correctIndex": 0,
+    "explanation": "Copilot answers from what its enabled plugins can reach, and a disabled plugin produces an answer built on nothing rather than a refusal. That failure mode is exactly why plugin configuration is examined.",
+    "teaches": "security-copilot"
+  },
+  {
+    "id": "sp-11",
+    "examCode": "sc-500",
+    "domain": "security-posture",
+    "kind": "multi",
+    "question": "Which two capabilities require the paid Defender CSPM plan rather than foundational CSPM? Choose two.",
+    "options": [
+      "Attack path analysis",
+      "The cloud security explorer",
+      "Security recommendations and secure score",
+      "The regulatory compliance dashboard for the Microsoft Cloud Security Benchmark"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Attack paths and the security explorer are built on the security graph and belong to the paid plan. Recommendations, secure score, and benchmark compliance come with the free foundational tier.",
+    "teaches": "defender-cspm"
+  },
+  {
+    "id": "sp-12",
+    "examCode": "sc-500",
+    "domain": "security-posture",
+    "kind": "order",
+    "question": "Put the steps of onboarding a network appliance's logs into Microsoft Sentinel in order.",
+    "items": [
+      "Write an analytics rule over the collected data",
+      "Install the content hub solution for the appliance",
+      "Configure the appliance to send CEF to the forwarder",
+      "Deploy a forwarder running the Azure Monitor Agent"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "The solution supplies the connector and rules, the forwarder gives the appliance somewhere to send to, the appliance is pointed at it, and detection is written once data is arriving. Writing rules before any data exists cannot be validated.",
+    "teaches": "sentinel-collection"
+  },
+  {
+    "id": "sp-13",
+    "examCode": "sc-500",
+    "domain": "security-posture",
+    "kind": "match",
+    "question": "Match each posture or detection surface to what it is for.",
+    "pairs": [
+      { "term": "Defender CSPM", "definition": "Finding and prioritising misconfiguration across clouds" },
+      { "term": "Microsoft Sentinel", "definition": "Collecting events and raising incidents from them" },
+      { "term": "Defender EASM", "definition": "Discovering internet-facing assets from outside" },
+      { "term": "Security Copilot", "definition": "Reasoning over security data through enabled plugins" }
+    ],
+    "explanation": "Posture, detection, discovery, and assistance are four distinct jobs. Questions in this domain usually resolve to picking the right one rather than knowing any of them in depth.",
+    "teaches": "defender-cspm"
+  },
+  {
+    "id": "sp-14",
+    "examCode": "sc-500",
+    "domain": "security-posture",
+    "kind": "yesno",
+    "question": "A playbook has been created in Microsoft Sentinel to respond to incidents. Judge each statement.",
+    "statements": [
+      { "text": "It is implemented as an Azure Logic App.", "correct": true },
+      { "text": "An automation rule can call it when an incident is created.", "correct": true },
+      { "text": "A playbook triggered on an incident receives the whole incident rather than one alert.", "correct": true },
+      { "text": "It runs with the permissions of whoever authored it.", "correct": false }
+    ],
+    "explanation": "Playbooks are Logic Apps invoked by automation rules or directly, and an incident trigger carries the full incident with its alerts and entities. They act through their own managed identity, not the author's account.",
+    "teaches": "sentinel-automation"
+  }
+]

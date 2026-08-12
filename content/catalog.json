@@ -482,11 +482,11 @@
     "series": "sc",
     "msLevel": "Associate",
     "status": "beta",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Secure cloud and AI workloads end to end — the 2026 successor to the retiring AZ-500.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-12",
     "sourceUrl": null
   },
   {

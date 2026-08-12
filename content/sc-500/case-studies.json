@@ -1,0 +1,40 @@
+[
+  {
+    "id": "cs-tessellate-cloudsec",
+    "examCode": "sc-500",
+    "domain": "storage-databases-networking",
+    "title": "Tessellate Logistics — closing an Azure estate",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Tessellate Logistics runs freight brokerage across three regions on Azure, with a smaller estate still in AWS from an acquisition. A penetration test has just reported, and the platform team has one quarter to close the findings before the customer audit that follows.",
+          "The estate is large enough that application teams own their own subscriptions, and the platform team owns the landing zone. Anything the platform team enforces must not be removable by a subscription owner, because two of the findings were caused by exactly that."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "A storage account named tessconsignments holds scanned consignment notes. Shared key access is enabled, and the account key has been pasted into three application configuration files and one contractor's laptop. The account is reachable from the public internet.",
+          "An Azure SQL database holds broker commission data. The database administrators are a managed service provider, and the finance director has objected that the provider can read commission figures in plain text. Transparent data encryption is enabled.",
+          "Application teams write their own network security groups. During the test, one team added an inbound rule permitting 3389 from any address to a subnet that the platform team had believed was closed, and nobody noticed for eleven days.",
+          "Virtual machines are reached over RDP using public IP addresses. Management ports are open permanently.",
+          "Some data services are reached over service endpoints. The penetration testers noted that the storage and SQL resources still have public endpoints and public IP addresses even where a service endpoint exists.",
+          "The AWS accounts are not connected to anything in Azure. The security team has no single view of posture across both clouds.",
+          "Sentinel is deployed and ingesting. Windows Security events are being collected in full from 4,000 servers and the bill has become the largest line item in the security budget."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Access to tessconsignments must be attributable to a person or workload and revocable without rotating a key that four systems depend on.",
+          "The managed service provider's database administrators must not be able to read commission figures in plain text, while continuing to administer the database.",
+          "A network baseline defined by the platform team must be enforced across all subscriptions and must not be overridable by an application team's own network security group.",
+          "Virtual machines must be administered without a public IP address and without any permanently open management port.",
+          "Traffic to data services must not traverse a public endpoint at all, and the public endpoints should be able to be disabled.",
+          "Posture findings and recommendations must cover the AWS accounts alongside Azure in one view."
+        ]
+      }
+    ]
+  }
+]

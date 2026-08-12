@@ -1,0 +1,75 @@
+{
+  "examCode": "SC-500",
+  "examName": "Implementing End-to-End Security Controls for Cloud and AI Workloads",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for SC-500. Unlike the GA exams, this study guide carries no 'Skills measured as of <date>' line — SC-500 is in beta and Microsoft is publishing a single undated skills list. Re-check learn.microsoft.com before the exam, and expect this outline to be dated once the exam reaches general availability.",
+  "domains": [
+    {
+      "id": "identity-access-governance",
+      "name": "Manage identity, access, and governance",
+      "weight": "20-25%",
+      "subtopics": [
+        "Implement and configure Privileged Identity Management and Conditional Access policies",
+        "Implement authentication methods including multifactor authentication and passwordless",
+        "Configure identity for applications, including enterprise applications and app registrations",
+        "Manage OAuth permission grants and consent settings",
+        "Implement and configure managed identities for Azure resources",
+        "Deploy Azure Key Vault and configure its settings, access, and firewall",
+        "Manage keys, secrets, and certificates, and implement Defender for Key Vault",
+        "Scan for secrets by using Defender Cloud Security Posture Management",
+        "Implement security controls with Azure Policy, resource locks, and infrastructure as code",
+        "Manage built-in and custom role assignments and remediate overprivileged access with Azure RBAC"
+      ]
+    },
+    {
+      "id": "storage-databases-networking",
+      "name": "Secure storage, databases, and networking",
+      "weight": "25-30%",
+      "subtopics": [
+        "Implement and configure security for storage accounts, including firewall rules and access policies",
+        "Implement Defender for Storage threat protection configurations",
+        "Implement platform-level security configurations in Azure SQL and configure database auditing",
+        "Configure Defender for Databases protection across Azure database services",
+        "Implement and manage network security groups and application security groups",
+        "Configure network access policies by using Azure Virtual Network Manager",
+        "Configure security for an Azure Virtual WAN and for VPN connections",
+        "Implement and configure Microsoft Entra Private Access",
+        "Configure Azure private endpoints and Private Link services to secure access to resources",
+        "Implement and configure Azure Firewall and evaluate effective rules with Network Watcher"
+      ]
+    },
+    {
+      "id": "secure-compute",
+      "name": "Secure compute",
+      "weight": "20-25%",
+      "subtopics": [
+        "Identify overexposure of data in SharePoint and AI risks by using Purview DSPM",
+        "Configure real-time protection for Copilot Studio agents and Conditional Access for Entra Agent ID",
+        "Analyse blast radius for Entra Agent ID risks by using Defender XDR and manage agent access",
+        "Configure AI Gateway in Azure API Management and guardrails for agent security in Foundry",
+        "Enable Defender for AI Service and monitor the Data and AI security dashboard",
+        "Implement disk encryption, Azure Bastion, and just-in-time VM access",
+        "Extend security controls to hybrid and multicloud servers by using Azure Arc",
+        "Onboard servers to Defender for Servers and configure vulnerability scanning and EDR",
+        "Configure VM security features including secure boot, vTPM, and integrity monitoring",
+        "Implement security controls for containers, AKS, Container Registry, Functions, Logic Apps, App Service, and API Management"
+      ]
+    },
+    {
+      "id": "security-posture",
+      "name": "Manage and monitor security posture",
+      "weight": "20-25%",
+      "subtopics": [
+        "Identify security risks by using Defender CSPM and evaluate compliance against frameworks",
+        "Enable and configure Defender for Cloud workload protection plans",
+        "Connect hybrid cloud and multicloud environments including AWS and GCP to Defender for Cloud",
+        "Configure Defender Vulnerability Management settings and discover assets with Defender EASM",
+        "Create and connect Microsoft Sentinel workspaces and assign roles",
+        "Implement content hub solutions and configure Microsoft data connectors",
+        "Implement syslog, CEF, and Windows Security event collection with data collection rules",
+        "Create custom log tables and implement data retention in Microsoft Sentinel data stores",
+        "Implement automation rules and playbooks in Microsoft Sentinel",
+        "Configure workspaces, permissions, plugins, and agents for Microsoft Security Copilot"
+      ]
+    }
+  ]
+}

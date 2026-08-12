@@ -1,0 +1,174 @@
+[
+  {
+    "domainId": "identity-access-governance",
+    "sections": [
+      {
+        "id": "entra-privileged-access",
+        "heading": "Privileged access and Conditional Access",
+        "paragraphs": [
+          "Privileged Identity Management converts standing administrative rights into eligible assignments that must be activated, with a maximum duration, a multifactor challenge, a justification, and optionally an approver. The effect is that a compromised administrator account holds nothing at rest. PIM covers Microsoft Entra roles, Azure resource roles scoped anywhere from a management group down to a single resource, and group membership through PIM for Groups.",
+          "Conditional Access decides what must be true before access is granted. For an engineering estate the policies that matter are requiring phishing-resistant authentication strength for administrative roles, requiring a compliant or hybrid-joined device for management surfaces, and blocking legacy authentication outright. Every policy must exclude break-glass accounts, and every new policy should run in report-only first — a Conditional Access mistake is the fastest way to lock an organisation out of its own subscription."
+        ]
+      },
+      {
+        "id": "key-vault",
+        "heading": "Azure Key Vault",
+        "paragraphs": [
+          "Key Vault stores keys, secrets, and certificates, and its access model comes in two flavours. The legacy access policy model grants a principal a list of permitted operations on the whole vault. Azure RBAC is the recommended model, because permissions are role assignments that can be scoped to an individual secret and are managed the same way as every other Azure permission. Soft delete is on and cannot be turned off; purge protection is the additional setting that prevents even a privileged user from permanently destroying a vault or its contents before the retention period expires.",
+          "Network exposure is controlled by the vault firewall, which can be set to deny public access and permit only selected virtual networks or, better, a private endpoint. Two Defender capabilities apply: Defender for Key Vault watches for anomalous access patterns such as an unusual principal enumerating secrets, and Defender CSPM secret scanning finds credentials that were never put in a vault at all — hard-coded in a virtual machine's disk, in a container image, or in code."
+        ]
+      },
+      {
+        "id": "rbac-and-roles",
+        "heading": "Azure RBAC and overprivileged access",
+        "paragraphs": [
+          "Azure role-based access control assigns a role definition to a principal at a scope, and assignments inherit downward from management group to subscription to resource group to resource. Built-in roles cover most needs; a custom role is defined by listing allowed actions and, crucially, notActions, and can only be assigned within the scopes named in its assignable scopes. The distinction between Owner, Contributor, and User Access Administrator is examined directly: Contributor can create and delete anything but cannot grant access, and User Access Administrator can grant access but cannot manage resources.",
+          "Overprivileged access is found rather than assumed. Defender for Cloud and Microsoft Entra Permissions Management report which permissions a principal actually used against which it holds, and the remediation is to replace a broad role with a narrower one or to make the assignment eligible in PIM. Deny assignments exist but are created only by Azure-managed services such as blueprints and managed applications, not by administrators directly."
+        ]
+      },
+      {
+        "id": "azure-policy-and-compliance",
+        "heading": "Azure Policy, initiatives, and compliance",
+        "paragraphs": [
+          "Azure Policy evaluates resources against rules and takes an effect. Audit records non-compliance without stopping anything, Deny blocks the deployment outright, DeployIfNotExists and Modify remediate — deploying a missing diagnostic setting or adding a required tag — and those two require a managed identity with enough rights to perform the remediation, which is the detail most often missed. Existing resources are brought into line with a remediation task, because DeployIfNotExists only fires on create or update by itself.",
+          "Initiatives group policies so that a regulatory standard can be assigned as one object, and Microsoft Defender for Cloud's regulatory compliance dashboard is built on exactly this: standards such as the Microsoft Cloud Security Benchmark, PCI DSS, and ISO 27001 are initiatives whose compliance state is rolled up per control. Resource locks are a blunter instrument that sits outside policy — CanNotDelete allows changes but blocks deletion, ReadOnly blocks both — and they apply regardless of role, which means an Owner is stopped by a lock until they remove it."
+        ]
+      },
+      {
+        "id": "backup-and-managed-identities",
+        "heading": "Managed identities and backup protection",
+        "paragraphs": [
+          "A managed identity gives an Azure resource a credential that Azure creates, rotates, and protects, so nothing is stored in configuration. System-assigned identities live and die with one resource; user-assigned identities are standalone and shared across many. Workload identity federation extends the same idea to workloads outside Azure — a GitHub Actions or Kubernetes workload exchanges its own issuer-signed token for an Azure token with no secret at all. The ranking to remember is managed identity, then federated credential, then certificate, and a client secret only when nothing else is possible.",
+          "Backup is a security control because ransomware targets it first. Azure Backup soft delete retains deleted backup data for a retention period so it can be recovered, multi-user authorisation places a resource guard in front of destructive operations so that a second, separately privileged approver is required, and immutable vaults prevent retention being shortened at all. Together these mean an attacker who reaches the backup vault with Contributor still cannot destroy the recovery path."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "storage-databases-networking",
+    "sections": [
+      {
+        "id": "storage-account-security",
+        "heading": "Storage account security",
+        "paragraphs": [
+          "A storage account's exposure is decided by a few settings that are examined repeatedly. Allow blob anonymous access should be off, so that no container can be made public even if somebody tries. Allow shared key access should be off too, which forces every request to use Microsoft Entra authorisation rather than the account key — the account key is a single credential that grants everything and cannot be scoped or attributed to a person. Where a shared access signature is unavoidable, a user delegation SAS signed with Entra credentials is preferred over an account SAS, because it can be revoked by revoking the delegation key and its actions are attributable.",
+          "The storage firewall denies public network access and permits selected virtual networks, IP ranges, or resource instances; the trusted Microsoft services exception is what allows platform services through without opening the firewall generally. A private endpoint goes further by giving the account a private IP inside the virtual network so traffic never traverses the public endpoint at all. Defender for Storage adds threat protection — malware scanning on upload and sensitive data threat detection — which detects rather than prevents, and is therefore complementary to the configuration controls rather than a substitute for them."
+        ]
+      },
+      {
+        "id": "database-security",
+        "heading": "Azure SQL security and auditing",
+        "paragraphs": [
+          "Azure SQL security is layered. Microsoft Entra authentication with a group set as the SQL administrator replaces shared SQL logins. Transparent data encryption protects data at rest and is on by default, with a customer-managed key in Key Vault as the option when the organisation must hold the key. Always Encrypted is different in kind: the keys stay with the client, so even a database administrator sees ciphertext, which is what a question about protecting data from privileged insiders is pointing at. Dynamic data masking only obscures results for unprivileged users and is a presentation control, not encryption.",
+          "Auditing writes database events to a Log Analytics workspace, a storage account, or an event hub, and it can be set at server level so that every database inherits it. Defender for Databases adds SQL vulnerability assessment, which scans configuration against a baseline, and Advanced Threat Protection, which raises alerts for SQL injection patterns and anomalous access. The exam expects the split: auditing is the record of what happened, vulnerability assessment is the state of the configuration, and threat protection is the alert that something looks wrong."
+        ]
+      },
+      {
+        "id": "network-security-groups",
+        "heading": "Network security groups and segmentation",
+        "paragraphs": [
+          "A network security group is a stateful filter applied to a subnet or a network interface, with rules processed in priority order until the first match. Default rules permit traffic within the virtual network and outbound to the internet and deny inbound from the internet, and those defaults sit at the lowest priorities so any explicit rule beats them. Because the filter is stateful, allowing an inbound flow implicitly permits its return traffic — writing a matching outbound rule is unnecessary and is a common misunderstanding.",
+          "Application security groups let rules name a logical group of network interfaces rather than an address range, so a rule reads 'web tier may reach data tier on 1433' and stays correct as machines are added. Azure Virtual Network Manager applies security admin rules centrally across many virtual networks, and those rules are evaluated before network security groups and cannot be overridden by a subscription owner's own NSG — which is the mechanism for a platform team to enforce a baseline that application teams cannot weaken. Network Watcher's effective security rules and IP flow verify are the diagnostics that answer why a specific flow was allowed or dropped."
+        ]
+      },
+      {
+        "id": "private-endpoints-and-link",
+        "heading": "Private endpoints, Private Link, and service endpoints",
+        "paragraphs": [
+          "A service endpoint extends a virtual network's identity to an Azure PaaS service so that the service's firewall can permit that subnet, but traffic still goes to the service's public endpoint and the resource keeps its public IP. A private endpoint instead projects the specific resource into the virtual network as a private IP, so traffic never leaves the private address space and the public endpoint can be disabled entirely. Private endpoints are the recommended pattern, and the difference is a standard exam question.",
+          "A private endpoint only works if name resolution cooperates: the service's public host name must resolve to the private IP, which is done with a private DNS zone linked to the virtual network. When a private endpoint is reachable by IP but not by name, DNS is nearly always the cause. Private Link service is the other direction — it lets an organisation publish its own service, sitting behind a standard load balancer, for consumers to reach through their own private endpoints."
+        ]
+      },
+      {
+        "id": "azure-firewall-and-wan",
+        "heading": "Azure Firewall, Virtual WAN, and VPN",
+        "paragraphs": [
+          "Azure Firewall is a managed stateful firewall with three rule collection types processed in a fixed order: DNAT rules first, then network rules, then application rules. Application rules are the ones that filter by fully qualified domain name for HTTP, HTTPS, and MSSQL, and the Premium tier adds TLS inspection, an intrusion detection and prevention system, and URL filtering. Firewall Policy is the modern container for rules and can be inherited by child policies, so a central baseline is written once and extended regionally.",
+          "Azure Virtual WAN provides a managed hub-and-spoke backbone; a secured virtual hub is one with Azure Firewall or a partner appliance deployed into it, and routing intent then sends all internet-bound and private traffic through that inspection point. For VPN, the security-relevant choices are IKEv2 with a strong custom IPsec policy, certificate-based rather than shared-key authentication for point-to-site, and integrating point-to-site with Microsoft Entra so Conditional Access can apply. Microsoft Entra Private Access is the newer alternative that replaces a network-level VPN with per-application access governed by Conditional Access."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "secure-compute",
+    "sections": [
+      {
+        "id": "ai-security-and-agents",
+        "heading": "Securing AI workloads and agent identities",
+        "paragraphs": [
+          "Generative AI creates a data-exposure problem before it creates a model problem: an assistant answers within the user's existing permissions, so content that was over-shared but undiscovered becomes reachable on request. The first controls are therefore SharePoint permission hygiene, restricted site access, and sensitivity labels with encryption, whose permissions are honoured when content is used to ground an answer. Purview DSPM for AI reports which AI applications are in use and which prompts and responses involved sensitive data.",
+          "Agents are identities in their own right. Microsoft Entra Agent ID gives an agent a first-class identity so that Conditional Access can apply to it, its access can be managed and revoked, and Defender XDR can analyse the blast radius of a compromised agent — what it could reach, not merely what it did. On the platform side, AI Gateway in Azure API Management fronts Microsoft Foundry with token limits, rate limiting, and centralised key handling; guardrails in Foundry filter prompts and responses; Defender for AI Services raises alerts for attacks such as prompt injection and data exfiltration; and the Data and AI security dashboard in Defender for Cloud is where the posture of all of it is read."
+        ]
+      },
+      {
+        "id": "vm-and-server-security",
+        "heading": "Virtual machine and server security",
+        "paragraphs": [
+          "Management access is the first thing to close. Azure Bastion provides browser-based RDP and SSH through the portal over TLS, so no virtual machine needs a public IP and no management port is exposed. Just-in-time VM access is the complement where a public IP still exists: the management port stays closed in the network security group and is opened for a requested source and duration after an approved request, which shrinks the exposure window from permanent to minutes.",
+          "At the platform layer, a trusted launch virtual machine enables secure boot and a virtual TPM, and integrity monitoring then attests that boot was not tampered with. Confidential virtual machines go further by encrypting memory so the host cannot read it. Disk encryption comes in two forms and they are not interchangeable: server-side encryption with a platform or customer-managed key is on by default and protects data at rest in storage, while Azure Disk Encryption uses BitLocker or dm-crypt inside the guest. Azure Arc extends all of this — Defender for Servers, Azure Policy, and machine configuration — to servers running on-premises or in another cloud, by projecting them into Azure as resources."
+        ]
+      },
+      {
+        "id": "defender-for-servers",
+        "heading": "Defender for Servers",
+        "paragraphs": [
+          "Defender for Servers brings endpoint detection and response, vulnerability management, and posture controls to virtual machines and Arc-enabled servers, and it comes in two plans. Plan 1 is endpoint detection and response through Microsoft Defender for Endpoint only. Plan 2 adds vulnerability assessment, file integrity monitoring, just-in-time VM access, adaptive application controls, network hardening, and agentless scanning — so a question that mentions file integrity monitoring or JIT is pointing at Plan 2.",
+          "Agentless scanning takes a snapshot of the disk and analyses it out of band, which finds software inventory, vulnerabilities, and secrets without installing anything or consuming resources on the workload; it trades real-time detection for coverage, and is used alongside the agent rather than instead of it. Vulnerability management findings roll into Defender for Cloud's recommendations and secure score, which is what turns a scanner's output into a prioritised list rather than a report nobody reads."
+        ]
+      },
+      {
+        "id": "container-security",
+        "heading": "Container and Kubernetes security",
+        "paragraphs": [
+          "Defender for Containers covers the container lifecycle in three places: scanning images in Azure Container Registry when they are pushed and continuously afterwards, detecting runtime threats in the cluster through a sensor, and assessing the Kubernetes configuration itself for weaknesses such as privileged containers or an exposed dashboard. Registry access should use Microsoft Entra authentication with the AcrPull role rather than the admin account, which is a shared credential that should stay disabled.",
+          "Inside Azure Kubernetes Service the controls that matter are Microsoft Entra integration with Kubernetes RBAC so cluster access follows directory identity, a private cluster so the API server has no public endpoint, workload identity so pods obtain Entra tokens without stored secrets, and Azure Policy for AKS, which enforces admission rules such as forbidding privileged containers. For the smaller compute services, the pattern repeats: authentication in front of Azure Functions and App Service, network access restricted with private endpoints or access restrictions, and secrets pulled from Key Vault by a managed identity rather than held in application settings."
+        ]
+      },
+      {
+        "id": "app-platform-security",
+        "heading": "Application platform and API protection",
+        "paragraphs": [
+          "Azure Web Application Firewall runs on Application Gateway or Front Door and protects against the common web attack classes using managed rule sets based on the OWASP core rule set. It runs in detection mode first so that false positives can be found and excluded, then in prevention mode; deploying straight to prevention is what breaks a legitimate application on day one. Custom rules handle rate limiting, geo-filtering, and application-specific exclusions.",
+          "API Management protects back-end APIs by terminating client traffic and applying policies: validating a JWT so only authenticated callers reach the back end, rate limiting and quotas per subscription, IP filtering, and schema validation to reject malformed requests before they arrive. Products and subscriptions decide who may call which APIs. The same instance is what fronts AI endpoints as an AI Gateway, applying token limits and centralised key handling to model traffic, which is why the two topics appear together in this exam."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "security-posture",
+    "sections": [
+      {
+        "id": "defender-cspm",
+        "heading": "Defender for Cloud and CSPM",
+        "paragraphs": [
+          "Defender for Cloud has two halves. Cloud security posture management is free at the foundational level and produces recommendations and a secure score against the Microsoft Cloud Security Benchmark. Defender CSPM is the paid plan and adds attack path analysis, the cloud security explorer for querying the resource graph, agentless scanning, and secret scanning. Attack path analysis is the capability worth knowing by name: it chains findings into a route an attacker could actually take — an internet-exposed virtual machine with a critical vulnerability holding a credential that reaches a storage account — and prioritises by that chain rather than by individual severity.",
+          "Workload protection plans are enabled per resource type — servers, storage, databases, containers, Key Vault, App Service, AI services — and each adds detections for that workload. Multicloud connectors bring AWS and GCP accounts in, so recommendations, secure score, and workload protection apply across all three clouds. The regulatory compliance dashboard maps findings to standards, and Defender External Attack Surface Management approaches the same estate from outside, discovering internet-facing assets the organisation may not know it owns."
+        ]
+      },
+      {
+        "id": "sentinel-collection",
+        "heading": "Microsoft Sentinel data collection",
+        "paragraphs": [
+          "Microsoft Sentinel is built on a Log Analytics workspace, and the workspace design decision comes first: one workspace is simplest for correlation and cost, while multiple workspaces are driven by data residency or tenancy boundaries, with cross-workspace queries joining them. Content hub solutions package connectors, analytics rules, workbooks, and playbooks for a product and are the expected way to onboard a source rather than building each piece by hand.",
+          "Data connectors cover Microsoft sources natively; syslog and Common Event Format from network appliances arrive through the Azure Monitor Agent on a forwarder; and Windows Security events are collected with data collection rules that choose which event set is gathered, which is the main cost control. Table plans matter as much as connectors: the analytics plan is fully queryable and alertable, the basic and auxiliary plans are much cheaper for high-volume, low-value logs but restrict querying and alerting, and archive holds data at the lowest cost for long retention with search jobs to bring it back. Choosing the wrong plan is either an unnecessary bill or a log that cannot be alerted on."
+        ]
+      },
+      {
+        "id": "sentinel-automation",
+        "heading": "Sentinel automation and response",
+        "paragraphs": [
+          "Analytics rules turn data into incidents — scheduled KQL rules, near-real-time rules, Microsoft security rules that promote alerts from other products, and anomaly and threat intelligence rules. Rules can group related alerts into a single incident and map entities so that a user or host is recognised across sources, which is what makes an incident investigable rather than a list of rows.",
+          "Automation has two layers that are easy to confuse. Automation rules run in Sentinel and perform lightweight actions — assigning an owner, changing severity, closing an incident that matches a known benign pattern, or calling a playbook — and they are also where the order of automation is controlled. Playbooks are Azure Logic Apps triggered by an incident, alert, or entity, and they perform the real work: isolating a device, disabling an account, opening a ticket, posting to a channel. A playbook needs permission to act, which comes from a managed identity granted the necessary roles, and a playbook triggered on an incident receives the whole incident rather than a single alert."
+        ]
+      },
+      {
+        "id": "security-copilot",
+        "heading": "Microsoft Security Copilot",
+        "paragraphs": [
+          "Security Copilot is provisioned by allocating security compute units, which are the capacity the service runs on and the thing that is actually billed. Workspaces hold the configuration, and roles decide who may use it and who may administer it — the owner role manages plugins and settings while contributors use it. Data is processed within the tenant's compliance boundary, and the audit of who asked what is part of the product rather than an add-on.",
+          "Plugins are how Copilot reaches data: Microsoft plugins for Defender XDR, Sentinel, Intune, Entra, and Purview, plus third-party and custom plugins. Promptbooks are saved sequences of prompts for a repeatable task such as summarising an incident or analysing a suspicious script, and agents extend this to work that runs without being asked. The limitation to hold onto is that Copilot answers from the data its enabled plugins can reach — a question about a product whose plugin is not enabled produces a confident answer built on nothing."
+        ]
+      }
+    ]
+  }
+]
