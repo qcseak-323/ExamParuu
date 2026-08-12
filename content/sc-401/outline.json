@@ -1,0 +1,58 @@
+{
+  "examCode": "SC-401",
+  "examName": "Administering Information Security in Microsoft 365",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for SC-401, 'Skills measured as of July 28, 2026'. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "information-protection",
+      "name": "Implement information protection",
+      "weight": "30-35%",
+      "subtopics": [
+        "Identify sensitive information requirements and translate them into built-in or custom sensitive info types",
+        "Create and manage custom sensitive info types and implement document fingerprinting",
+        "Create and manage exact data match (EDM) based sensitive information types",
+        "Create and manage trainable classifiers",
+        "Monitor classification and label usage with Data explorer and Content explorer",
+        "Configure optical character recognition support for sensitive info types",
+        "Define and create sensitivity labels for items and containers, with protection and content marking",
+        "Configure publishing and auto-labeling policies for sensitivity labels",
+        "Plan and implement the Purview Information Protection client and scanner",
+        "Design and implement Purview Message Encryption and Advanced Message Encryption"
+      ]
+    },
+    {
+      "id": "dlp-and-retention",
+      "name": "Implement data loss prevention and retention",
+      "weight": "30-35%",
+      "subtopics": [
+        "Design data loss prevention policies based on organisational requirements",
+        "Implement roles and permissions for data loss prevention",
+        "Create and manage data loss prevention policies and configure them for Adaptive Protection",
+        "Interpret policy and rule precedence in data loss prevention",
+        "Create file policies in Microsoft Defender for Cloud Apps using a DLP policy",
+        "Specify device requirements for Endpoint DLP and configure advanced rules for devices",
+        "Configure Endpoint DLP settings and just-in-time protection, and monitor endpoint activities",
+        "Plan retention and disposition with retention labels and adaptive policy scopes",
+        "Configure retention label policies to publish and to auto-apply labels",
+        "Interpret policy precedence using Policy lookup, and recover retained content"
+      ]
+    },
+    {
+      "id": "risks-alerts-activities",
+      "name": "Manage risks, alerts, and activities",
+      "weight": "30-35%",
+      "subtopics": [
+        "Implement roles, permissions, and connectors for Insider Risk Management",
+        "Configure Insider Risk Management settings, policy indicators, and policy templates",
+        "Manage forensic evidence settings and insider risk levels for Adaptive Protection",
+        "Manage insider risk alerts, cases, and the notice template workflow",
+        "Assign Purview Audit (Premium) licences and investigate activities with Purview Audit",
+        "Configure audit retention policies and analyse activities with Activity explorer",
+        "Respond to data loss prevention alerts and to Purview alerts in Microsoft Defender XDR",
+        "Perform searches by using eDiscovery",
+        "Implement Purview and workload controls to protect content used by AI services",
+        "Implement prerequisites, roles, policies, and monitoring for DSPM for AI"
+      ]
+    }
+  ]
+}

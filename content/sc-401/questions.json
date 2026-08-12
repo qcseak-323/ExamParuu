@@ -1,0 +1,933 @@
+[
+  {
+    "id": "ip-01",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "caseStudyId": "cs-marrowfield-purview",
+    "question": "Patient identifiers must be detected with almost no false positives, using the authoritative list of 1.9 million valid values, and that list must not leave the organisation in readable form. What should you implement?",
+    "options": [
+      "An exact data match based sensitive information type",
+      "A custom sensitive information type using a regular expression for the identifier format",
+      "A custom trainable classifier trained on documents containing identifiers",
+      "Document fingerprinting of the clinical system's export template"
+    ],
+    "correctIndex": 0,
+    "explanation": "EDM matches against a hashed and salted upload of the organisation's real data, so a value either is in the table or is not — which is what eliminates false positives. A regular expression matches the format and would flag every string that merely looks like an identifier.",
+    "teaches": "trainable-classifiers-and-edm"
+  },
+  {
+    "id": "ip-02",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "caseStudyId": "cs-marrowfield-purview",
+    "question": "The 40 TB of on-premises file shares must be inventoried before anything about them is changed. What should you deploy, and in what mode?",
+    "options": [
+      "The Purview Information Protection scanner in discovery mode",
+      "The Purview Information Protection scanner in enforcement mode",
+      "A service-side auto-labelling policy scoped to the file shares",
+      "Endpoint DLP with the file shares added as a network share location"
+    ],
+    "correctIndex": 0,
+    "explanation": "The scanner is the only listed instrument that reaches on-premises shares, and discovery mode produces the inventory without applying anything. Auto-labelling policies cover Exchange, SharePoint, and OneDrive, not arbitrary file shares.",
+    "teaches": "information-protection-client-and-scanner"
+  },
+  {
+    "id": "ip-03",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "caseStudyId": "cs-marrowfield-purview",
+    "question": "Documents already stored in SharePoint and OneDrive must be labelled without any user opening them. What should you configure?",
+    "options": [
+      "A service-side auto-labelling policy",
+      "Client-side auto-labelling configured on the sensitivity label",
+      "A label publishing policy with a default label for documents",
+      "A retention label policy set to auto-apply"
+    ],
+    "correctIndex": 0,
+    "explanation": "Only service-side auto-labelling reaches content at rest that nobody opens. Client-side labelling runs inside the Office application and therefore requires a user to open the file, and a default label applies only to newly created documents.",
+    "teaches": "label-policies-and-auto-labeling"
+  },
+  {
+    "id": "ip-04",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "caseStudyId": "cs-marrowfield-purview",
+    "question": "A referral letter sent to the wrong external consultant must be withdrawable after it has been delivered. What do you need?",
+    "options": [
+      "Advanced Message Encryption, so the message can be revoked",
+      "Message Encryption with the Do Not Forward template",
+      "A DLP policy that blocks referral letters to external recipients",
+      "A sensitivity label that applies Encrypt Only to referral letters"
+    ],
+    "correctIndex": 0,
+    "explanation": "Revocation of an individual message is an Advanced Message Encryption capability. Do Not Forward and Encrypt Only restrict what the recipient may do but cannot withdraw access afterwards, and a blocking DLP policy would prevent legitimate referrals.",
+    "teaches": "message-encryption"
+  },
+  {
+    "id": "ip-05",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "caseStudyId": "cs-marrowfield-purview",
+    "question": "Clinical directors have said that anything blocking a doctor mid-consultation will be reversed. How should labelling behave in the Office applications?",
+    "options": [
+      "Configure client-side auto-labelling to recommend the label with a prompt the user can decline",
+      "Configure client-side auto-labelling to apply the label automatically",
+      "Set a mandatory default label and require justification to change it",
+      "Disable client-side labelling and rely entirely on service-side policies"
+    ],
+    "correctIndex": 0,
+    "explanation": "Recommendation is the client-side option that leaves the clinician in control while still steering them, which is what the political constraint demands. Automatic application and mandatory labelling both interrupt the consultation, which is the stated failure mode.",
+    "teaches": "label-policies-and-auto-labeling"
+  },
+  {
+    "id": "ip-06",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "question": "You must detect documents that are résumés, regardless of what specific text they contain. What should you use?",
+    "options": [
+      "A pre-trained trainable classifier",
+      "A custom sensitive information type with a keyword dictionary",
+      "Document fingerprinting of a résumé template",
+      "An exact data match sensitive information type"
+    ],
+    "correctIndex": 0,
+    "explanation": "A trainable classifier recognises what a document is about rather than a string it contains, and résumés are one of the categories Microsoft ships pre-trained. Fingerprinting only recognises documents derived from one specific template.",
+    "teaches": "trainable-classifiers-and-edm"
+  },
+  {
+    "id": "ip-07",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "question": "A sensitivity label is applied to a Microsoft 365 group. What does that label control?",
+    "options": [
+      "Privacy, external member access, and unmanaged device access for the container",
+      "Encryption of every file stored in the group's SharePoint site",
+      "The retention period applied to the group's mailbox",
+      "Which users may be added to the group by an administrator"
+    ],
+    "correctIndex": 0,
+    "explanation": "Container labels govern the container's settings and do not encrypt the files inside it — a file must carry its own item label for that. This is the single most frequently confused point in the labelling domain.",
+    "teaches": "sensitivity-labels"
+  },
+  {
+    "id": "ip-08",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "question": "How many sensitivity labels can be applied to a single document at one time?",
+    "options": [
+      "One",
+      "One per label policy that targets the user",
+      "Any number, provided they come from different sublabel groups",
+      "Two — one item label and one container label"
+    ],
+    "correctIndex": 0,
+    "explanation": "A document carries exactly one sensitivity label. Retention labels are a separate independent axis, so an item may hold one of each, but never two sensitivity labels.",
+    "teaches": "sensitivity-labels"
+  },
+  {
+    "id": "ip-09",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "question": "Before switching on a new auto-labelling policy across the tenant, you must know how many items it would label and which. What should you do?",
+    "options": [
+      "Run the policy in simulation mode and review the results",
+      "Apply the policy to a pilot group of users first",
+      "Use Content explorer to count items matching the sensitive information type",
+      "Enable the policy and monitor Activity explorer for the first week"
+    ],
+    "correctIndex": 0,
+    "explanation": "Simulation evaluates the policy across the real content set and reports exactly what it would have labelled without labelling anything. Content explorer shows what is already labelled rather than what the new policy would do.",
+    "teaches": "label-policies-and-auto-labeling"
+  },
+  {
+    "id": "ip-10",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "question": "A finance team must be able to apply a Highly Confidential label that no other department sees. What should you configure?",
+    "options": [
+      "A separate label publishing policy scoped to the finance team, with a higher priority",
+      "A sublabel of Highly Confidential restricted by an auto-labelling policy",
+      "A container label applied to the finance SharePoint site",
+      "An administrative unit containing the finance team"
+    ],
+    "correctIndex": 0,
+    "explanation": "Publishing policies decide which users see which labels, and priority resolves the overlap when a user is in scope of more than one. Auto-labelling decides when a label is applied, not who can see it in the picker.",
+    "teaches": "label-policies-and-auto-labeling"
+  },
+  {
+    "id": "ip-11",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "question": "Scanned passport images stored in SharePoint are not being detected by a policy that correctly finds the same details in Word documents. What should you enable?",
+    "options": [
+      "Optical character recognition support for sensitive information types",
+      "Document fingerprinting for the passport template",
+      "A trainable classifier for identity documents",
+      "Exact data match using a table of passport numbers"
+    ],
+    "correctIndex": 0,
+    "explanation": "The details are inside an image, so no text-based scan can see them until OCR is enabled. The other options all still depend on extractable text or on holding the authoritative values in advance.",
+    "teaches": "data-classification-and-sit"
+  },
+  {
+    "id": "ip-12",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "question": "A DLP policy is flagging documents that contain a single number resembling a credit card. You need it to fire only where many appear together. What should you adjust?",
+    "options": [
+      "The instance count on the sensitive information type in the rule",
+      "The confidence level required by the rule",
+      "The priority of the rule within the policy",
+      "The locations the policy is scoped to"
+    ],
+    "correctIndex": 0,
+    "explanation": "Instance count is the volume threshold — how many matches must appear before the rule fires. Confidence describes how much supporting evidence accompanied each individual match, which is a different dial.",
+    "teaches": "data-classification-and-sit"
+  },
+  {
+    "id": "ip-13",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "question": "An encrypted document labelled by your organisation is emailed to a partner outside the tenant. What happens to the label's permissions?",
+    "options": [
+      "They travel with the file and are still enforced outside the tenant",
+      "They are stripped when the file leaves the tenant boundary",
+      "They apply only if the partner tenant trusts your labels",
+      "They are replaced by the partner tenant's default label"
+    ],
+    "correctIndex": 0,
+    "explanation": "Encryption applied by a sensitivity label persists with the file wherever it goes, which is what makes labelling a data-centric control rather than a location-based one.",
+    "teaches": "sensitivity-labels"
+  },
+  {
+    "id": "ip-14",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "question": "You must recognise every document derived from a specific blank claim form, including copies staff have filled in. What should you create?",
+    "options": [
+      "A sensitive information type based on document fingerprinting of the blank form",
+      "A trainable classifier seeded with completed claim forms",
+      "An exact data match type built from the claim reference numbers",
+      "A keyword dictionary of the form's field labels"
+    ],
+    "correctIndex": 0,
+    "explanation": "Fingerprinting converts the blank form into a pattern so that anything derived from it is matched. A classifier would need hundreds of samples and would still recognise a category rather than this specific form.",
+    "teaches": "data-classification-and-sit"
+  },
+  {
+    "id": "ip-15",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "question": "External recipients with no Microsoft account must be able to read a protected message. How do they authenticate?",
+    "options": [
+      "Through the encryption portal, using a one-time passcode",
+      "By creating a Microsoft account before the message can be opened",
+      "By being invited as a B2B guest in the sender's tenant",
+      "By installing the Purview Information Protection client"
+    ],
+    "correctIndex": 0,
+    "explanation": "Message Encryption delivers a wrapper that takes the recipient to a portal where a one-time passcode is sufficient, which is exactly what makes it usable with recipients who have no relationship to the tenant.",
+    "teaches": "message-encryption"
+  },
+  {
+    "id": "ip-16",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "kind": "multi",
+    "question": "Which two are true of exact data match sensitive information types? Choose two.",
+    "options": [
+      "The sensitive data is hashed and salted before upload",
+      "The data table must be refreshed on a schedule to stay current",
+      "They are trained from a seed set of several hundred sample documents",
+      "They detect content by subject matter rather than by value"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "EDM uploads only hashes and depends on a refreshed table to reflect current values. Training from samples and detecting by subject matter both describe trainable classifiers, which is the other half of this comparison.",
+    "teaches": "trainable-classifiers-and-edm"
+  },
+  {
+    "id": "ip-17",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "kind": "multi",
+    "question": "Which two settings can a sensitivity label apply to an item? Choose two.",
+    "options": [
+      "Encryption with a defined set of permissions",
+      "Content marking such as a watermark or footer",
+      "A retention period with disposition review",
+      "External sharing settings for the SharePoint site"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Encryption and content marking are item label settings. Retention and disposition belong to retention labels, and external sharing is a container label setting — three different instruments that this question deliberately mixes.",
+    "teaches": "sensitivity-labels"
+  },
+  {
+    "id": "ip-18",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "kind": "order",
+    "question": "Put the steps of classifying historical on-premises file shares in order.",
+    "items": [
+      "Switch the scanner to enforcement so labels are applied in place",
+      "Install and configure the Purview Information Protection scanner",
+      "Review the inventory to see what sensitive content exists and where",
+      "Run the scanner in discovery mode to build an inventory"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "Discover, review, enforce is the expected pattern. Enforcing before anyone has looked at the inventory applies protection to content nobody has understood, which is how a share full of business-critical files becomes unreadable overnight.",
+    "teaches": "information-protection-client-and-scanner"
+  },
+  {
+    "id": "ip-19",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "kind": "match",
+    "question": "Match each classification instrument to what it recognises.",
+    "pairs": [
+      { "term": "Built-in sensitive information type", "definition": "A well-known pattern such as a credit card number" },
+      { "term": "Exact data match", "definition": "A value present in the organisation's own uploaded table" },
+      { "term": "Trainable classifier", "definition": "A category of document, learned from samples" },
+      { "term": "Document fingerprinting", "definition": "Any document derived from a specific blank form" }
+    ],
+    "explanation": "Two of these match values and two match documents. Choosing between them is almost always decided by whether the organisation holds an authoritative list and how much false positive noise is tolerable.",
+    "teaches": "trainable-classifiers-and-edm"
+  },
+  {
+    "id": "ip-20",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "kind": "yesno",
+    "question": "A sensitivity label has been published to all users with a policy that sets it as the default for documents. Judge each statement.",
+    "statements": [
+      { "text": "The policy can require a justification when a user lowers the label.", "correct": true },
+      { "text": "The policy can require that all documents carry a label.", "correct": true },
+      { "text": "The default label is applied to documents that already exist in SharePoint.", "correct": false },
+      { "text": "Where several policies target a user, the highest priority one applies.", "correct": true }
+    ],
+    "explanation": "Justification, mandatory labelling, and priority are all publishing policy features. A default label applies to newly created documents only — reaching existing content requires a service-side auto-labelling policy instead.",
+    "teaches": "label-policies-and-auto-labeling"
+  },
+  {
+    "id": "dr-01",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "A new DLP policy must be introduced without generating a wave of business escalations on its first day. How should it be deployed?",
+    "options": [
+      "In test mode with policy tips, so users are warned and nothing is blocked",
+      "Enabled with block and override, so users can proceed with a justification",
+      "Enabled with block and no override, scoped to one department first",
+      "In test mode with no notifications, then enabled with block"
+    ],
+    "correctIndex": 0,
+    "explanation": "Test mode with tips shows both the administrator the true match rate and the user what is coming, without stopping anyone. Test mode with no notifications gathers the data but forfeits the chance to prepare users.",
+    "teaches": "dlp-policy-design"
+  },
+  {
+    "id": "dr-02",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "Two DLP policies match the same action. One allows with a policy tip, the other blocks. What happens?",
+    "options": [
+      "The action is blocked, because the most restrictive action wins across policies",
+      "The action is allowed, because the first policy evaluated applies",
+      "The action is allowed, because a policy tip and a block cancel out",
+      "The user is prompted to choose which policy to satisfy"
+    ],
+    "correctIndex": 0,
+    "explanation": "Across policies all matches contribute and the most restrictive action wins. Within a single policy the first matching rule in priority order applies, which is the distinction the exam draws.",
+    "teaches": "dlp-rules-and-precedence"
+  },
+  {
+    "id": "dr-03",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "Users at elevated insider risk must be blocked from an action that merely produces a policy tip for everyone else. What should you configure?",
+    "options": [
+      "Adaptive Protection, so enforcement follows the user's insider risk level",
+      "Two DLP policies, one scoped to a manually maintained group of risky users",
+      "A DLP rule with a higher priority targeting the risky users",
+      "An Insider Risk policy that blocks the action directly"
+    ],
+    "correctIndex": 0,
+    "explanation": "Adaptive Protection is the integration between Insider Risk Management and DLP that varies enforcement by calculated risk level. Maintaining a group by hand cannot keep up with a score that changes daily, and Insider Risk policies detect rather than block.",
+    "teaches": "dlp-rules-and-precedence"
+  },
+  {
+    "id": "dr-04",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "Endpoint DLP policies have been created but no endpoint activity is appearing at all. What is the most likely cause?",
+    "options": [
+      "The devices have not been onboarded",
+      "The policies are scoped to the wrong sensitive information type",
+      "Just-in-time protection has not been enabled",
+      "The devices are running macOS rather than Windows"
+    ],
+    "correctIndex": 0,
+    "explanation": "Without onboarding there is no agent reporting anything, so nothing appears regardless of policy content. A scoping mistake would produce some activity and the wrong matches rather than complete silence.",
+    "teaches": "endpoint-dlp"
+  },
+  {
+    "id": "dr-05",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "Uploads to cloud services from Google Chrome must be visible to Endpoint DLP. What is required?",
+    "options": [
+      "The Microsoft Purview extension installed in Chrome",
+      "Chrome added to the restricted app group",
+      "Chrome added to the unallowed Bluetooth apps list",
+      "Just-in-time protection enabled for the devices"
+    ],
+    "correctIndex": 0,
+    "explanation": "Microsoft Edge is instrumented natively; every other browser needs the Purview extension before uploads can be seen or controlled. Adding a browser to the restricted app group blocks it from opening sensitive files rather than giving visibility of uploads.",
+    "teaches": "endpoint-dlp"
+  },
+  {
+    "id": "dr-06",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "Every document in a SharePoint site must be kept for seven years with no user action and no visible marking. What should you use?",
+    "options": [
+      "A retention policy applied to the site",
+      "A retention label published to the site's users",
+      "A sensitivity label with a seven-year setting",
+      "An eDiscovery hold on the site"
+    ],
+    "correctIndex": 0,
+    "explanation": "Retention policies apply in bulk to a location, invisibly, with nothing for a user to do. Retention labels are visible and applied per item, and an eDiscovery hold is for a legal matter rather than a standing schedule.",
+    "teaches": "retention-labels-and-policies"
+  },
+  {
+    "id": "dr-07",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "A retention policy says delete after three years and a retention label on the same item says retain for seven. What happens to the item?",
+    "options": [
+      "It is retained for seven years, because retention wins over deletion and the longest period wins",
+      "It is deleted after three years, because the policy applies to the whole location",
+      "It is deleted after three years, because the shortest period always wins",
+      "The conflict blocks both settings until an administrator resolves it"
+    ],
+    "correctIndex": 0,
+    "explanation": "The precedence principles apply in a fixed order: retention beats deletion, then the longest retention period wins. The shortest-period rule applies only where every applicable setting is a deletion.",
+    "teaches": "retention-precedence-and-recovery"
+  },
+  {
+    "id": "dr-08",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "A user deleted a document from a SharePoint library that was covered by a retention policy. Where does the document go?",
+    "options": [
+      "The Preservation Hold library, where an administrator can recover it",
+      "The site recycle bin, from which it is purged after 93 days",
+      "It is deleted immediately, because retention does not prevent user deletion",
+      "The Recoverable Items folder in the site owner's mailbox"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Preservation Hold library is where retained SharePoint and OneDrive content goes when a user deletes it — invisible to the user, recoverable by an administrator. The Recoverable Items folder is the Exchange equivalent.",
+    "teaches": "retention-precedence-and-recovery"
+  },
+  {
+    "id": "dr-09",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "A retention policy must always cover the Legal department, including people who join it next year, without anyone editing the policy. What should you configure?",
+    "options": [
+      "An adaptive policy scope querying the department attribute",
+      "A static scope listing the current Legal mailboxes",
+      "A retention label auto-applied to Legal content",
+      "A dynamic distribution group added to the policy"
+    ],
+    "correctIndex": 0,
+    "explanation": "Adaptive scopes run a query over user, group, or site attributes and re-evaluate it, so membership stays current. A static scope is a snapshot that goes stale the moment somebody joins.",
+    "teaches": "retention-labels-and-policies"
+  },
+  {
+    "id": "dr-10",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "Contract documents must be retained for six years starting from the date each contract ends, not from the date it was created. What should you configure?",
+    "options": [
+      "A retention label with event-based retention",
+      "A retention policy with a six-year retain-and-delete setting",
+      "An adaptive policy scope over the contracts site",
+      "A disposition review on a six-year retention label"
+    ],
+    "correctIndex": 0,
+    "explanation": "Event-based retention starts the clock when the event is recorded rather than at creation, which is exactly the requirement. A standard retention setting counts from creation or last modification.",
+    "teaches": "retention-labels-and-policies"
+  },
+  {
+    "id": "dr-11",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "An analyst must be able to review DLP alerts and see the matched content, but must not be able to change any policy. What should you assign?",
+    "options": [
+      "A DLP-specific reader role that grants alert and content visibility without authoring rights",
+      "The Compliance Administrator role",
+      "The Global Reader role",
+      "Ownership of the DLP policies in question"
+    ],
+    "correctIndex": 0,
+    "explanation": "Purview separates authoring from investigation precisely so an analyst can do their job without the power to weaken policy. Compliance Administrator includes authoring, which is what the requirement forbids.",
+    "teaches": "dlp-policy-design"
+  },
+  {
+    "id": "dr-12",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "You must know exactly which retention settings are affecting one particular mailbox. What should you use?",
+    "options": [
+      "Policy lookup",
+      "Content explorer",
+      "Activity explorer",
+      "The disposition review queue"
+    ],
+    "correctIndex": 0,
+    "explanation": "Policy lookup lists every retention setting that applies to a given mailbox or site, which is how a question about unexpected retention is actually resolved. The explorers show content and activity rather than which rules apply.",
+    "teaches": "retention-precedence-and-recovery"
+  },
+  {
+    "id": "dr-13",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "A DLP policy must stop sensitive files being copied to USB storage on managed laptops. Which location must the policy include?",
+    "options": [
+      "Devices",
+      "SharePoint sites",
+      "On-premises repositories",
+      "Teams chat and channel messages"
+    ],
+    "correctIndex": 0,
+    "explanation": "Copying to removable media is an endpoint activity, so the Devices location is what brings Endpoint DLP into scope. Every other location covers content held in a service rather than actions taken on a laptop.",
+    "teaches": "endpoint-dlp"
+  },
+  {
+    "id": "dr-14",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "Access to a file must be held until the DLP policy has finished evaluating it, so unclassified content cannot be leaked while a scan is pending. What should you enable?",
+    "options": [
+      "Just-in-time protection",
+      "Adaptive Protection",
+      "Block with override",
+      "A file path exclusion for the scan directory"
+    ],
+    "correctIndex": 0,
+    "explanation": "Just-in-time protection is the setting that defers access until evaluation completes. Adaptive Protection varies enforcement by risk, and block with override decides what happens once a match has already been found.",
+    "teaches": "endpoint-dlp"
+  },
+  {
+    "id": "dr-15",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "question": "A user says a policy tip named one policy but a colleague reported a different message for the same action. What explains this?",
+    "options": [
+      "The tip comes from a single matching rule, even though several policies may have matched",
+      "Policy tips are randomly selected from all matching policies",
+      "Policy tips are cached per user and can be out of date",
+      "The two users are covered by different label publishing policies"
+    ],
+    "correctIndex": 0,
+    "explanation": "All matching policies contribute to the enforcement outcome, but the tip a user sees comes from one rule — which is why troubleshooting from the tip alone is misleading.",
+    "teaches": "dlp-rules-and-precedence"
+  },
+  {
+    "id": "dr-16",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "kind": "multi",
+    "question": "Which two conditions can a DLP rule evaluate? Choose two.",
+    "options": [
+      "That the content carries a specific sensitivity label",
+      "That the content is being shared with people outside the organisation",
+      "That the user has activated an eligible role in PIM",
+      "That the device has been enrolled in the last 30 days"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Labels and sharing scope are core DLP conditions. Role activation and enrolment age belong to identity and device management and are not visible to a DLP rule.",
+    "teaches": "dlp-policy-design"
+  },
+  {
+    "id": "dr-17",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "kind": "order",
+    "question": "Put the retention precedence principles in the order they are applied.",
+    "items": [
+      "The longest retention period wins",
+      "Retention wins over deletion",
+      "Where all settings delete, the shortest deletion period wins",
+      "An explicit label beats an inherited policy"
+    ],
+    "correctOrder": [1, 0, 3, 2],
+    "explanation": "Nothing is deleted while any rule says keep, so retention beats deletion first. Then the longest keep wins, then an explicit label outranks an inherited policy, and only where everything deletes does the shortest period decide.",
+    "teaches": "retention-precedence-and-recovery"
+  },
+  {
+    "id": "dr-18",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "kind": "order",
+    "question": "Put the steps of rolling out a data loss prevention policy in order.",
+    "items": [
+      "Turn the policy on with block and override",
+      "Define the sensitive information types and conditions the rule will match",
+      "Review the matches and tune confidence and instance count",
+      "Run the policy in test mode with policy tips"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "Conditions are defined, tested against real traffic without blocking, tuned on the evidence, and only then enforced. Tuning before there is any match data is guesswork.",
+    "teaches": "dlp-policy-design"
+  },
+  {
+    "id": "dr-19",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "kind": "match",
+    "question": "Match each retention instrument to what it does.",
+    "pairs": [
+      { "term": "Retention policy", "definition": "Applies invisibly and in bulk to every item in a location" },
+      { "term": "Retention label", "definition": "Applies visibly to an individual item and can mark it a record" },
+      { "term": "Adaptive policy scope", "definition": "Targets a query over attributes instead of a static list" },
+      { "term": "Preservation Hold library", "definition": "Holds retained SharePoint content a user has deleted" }
+    ],
+    "explanation": "The first two differ by granularity and visibility, the third decides what a policy covers, and the fourth is where the content actually goes when someone tries to destroy it.",
+    "teaches": "retention-labels-and-policies"
+  },
+  {
+    "id": "dr-20",
+    "examCode": "sc-401",
+    "domain": "dlp-and-retention",
+    "kind": "dropdown",
+    "question": "Complete the statement about data loss prevention precedence.",
+    "segments": [
+      { "text": "Within a single DLP policy, the actions applied come from " },
+      {
+        "blankId": "b1",
+        "options": ["the first matching rule in priority order", "every matching rule combined", "the last rule created"],
+        "correctIndex": 0
+      },
+      { "text": ", while across several policies the outcome is " },
+      {
+        "blankId": "b2",
+        "options": ["the most restrictive action", "the least restrictive action", "whichever policy has the lower priority number"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "Rules inside a policy are ordered and the first match decides; policies do not have that relationship and simply combine, with the strictest action winning. Mixing the two rules up is the standard error here.",
+    "teaches": "dlp-rules-and-precedence"
+  },
+  {
+    "id": "ra-01",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "A departing-employee Insider Risk policy has been created and enabled, but after three weeks it has produced no alerts at all. What should you check first?",
+    "options": [
+      "Whether the HR connector is configured and supplying resignation dates",
+      "Whether the policy has been assigned a higher priority",
+      "Whether forensic evidence capture has been enabled",
+      "Whether the users hold Audit Premium licences"
+    ],
+    "correctIndex": 0,
+    "explanation": "The departing-employee template is triggered by a resignation date, which only arrives through the HR connector. Without it there is no triggering event, so nobody is ever scored and the policy silently produces nothing.",
+    "teaches": "insider-risk-management"
+  },
+  {
+    "id": "ra-02",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "An investigator complains that insider risk alerts show anonymised identifiers rather than names. What explains this?",
+    "options": [
+      "Pseudonymisation is enabled by default, and a separate role is needed to see identities",
+      "The HR connector has not supplied display names",
+      "The alerts relate to guest users who have no profile in the tenant",
+      "Forensic evidence capture has not been configured"
+    ],
+    "correctIndex": 0,
+    "explanation": "Insider Risk Management anonymises usernames by default as a privacy control, and the roles are deliberately separated so triage can happen without exposing who the person is.",
+    "teaches": "insider-risk-management"
+  },
+  {
+    "id": "ra-03",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "When is a user's activity scored by an Insider Risk Management policy?",
+    "options": [
+      "Only after a triggering event such as a resignation date or a high-severity DLP match",
+      "Continuously from the moment the policy is enabled",
+      "Only while the user is in an active case",
+      "Whenever the user opens content carrying a sensitivity label"
+    ],
+    "correctIndex": 0,
+    "explanation": "Scoring begins at a triggering event defined by the policy template, not continuously. This is the design point that keeps the product proportionate, and it is examined directly.",
+    "teaches": "insider-risk-policies-and-alerts"
+  },
+  {
+    "id": "ra-04",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "A mailbox was compromised and you must determine which individual messages the attacker read. What do you need?",
+    "options": [
+      "Purview Audit (Premium) licensing on that user, in place before the incident",
+      "Purview Audit (Standard), which records mailbox access by default",
+      "An eDiscovery case with a hold on the mailbox",
+      "Activity explorer filtered to the affected mailbox"
+    ],
+    "correctIndex": 0,
+    "explanation": "MailItemsAccessed is an Audit Premium event and it is not retroactive — assigning the licence after the incident produces nothing for the period before it. That timing detail is the point of the question.",
+    "teaches": "purview-audit"
+  },
+  {
+    "id": "ra-05",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "You must produce a current inventory of every document in the tenant carrying the Highly Confidential label. Which tool?",
+    "options": [
+      "Content explorer",
+      "Activity explorer",
+      "Policy lookup",
+      "The disposition review queue"
+    ],
+    "correctIndex": 0,
+    "explanation": "Content explorer answers 'where is it now' with a browsable inventory. Activity explorer answers 'what has been happening', which is the distinction this pair of tools is built around.",
+    "teaches": "activity-explorer-and-alerts"
+  },
+  {
+    "id": "ra-06",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "You must find out what a specific user did with a labelled document over the last month, including whether they copied it to USB. Which tool?",
+    "options": [
+      "Activity explorer",
+      "Content explorer",
+      "The insider risk case dashboard",
+      "Purview Audit retention policies"
+    ],
+    "correctIndex": 0,
+    "explanation": "Activity explorer is the behaviour stream — label changes, DLP matches, file operations, and endpoint activities — and it records what happened whether or not any policy blocked it.",
+    "teaches": "activity-explorer-and-alerts"
+  },
+  {
+    "id": "ra-07",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "Legal has asked you to preserve one custodian's mailbox and OneDrive for an ongoing dispute. What should you do first?",
+    "options": [
+      "Create an eDiscovery case, add the custodian, and place the hold",
+      "Run a content search across the custodian's locations and export the results",
+      "Apply a retention policy covering the custodian's mailbox and OneDrive",
+      "Place the custodian's account on litigation hold in Exchange only"
+    ],
+    "correctIndex": 0,
+    "explanation": "A content search finds content but preserves nothing, so anything deleted between the search and the hold is gone. The hold must come first, which is the sequencing the exam builds these questions around.",
+    "teaches": "ediscovery"
+  },
+  {
+    "id": "ra-08",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "Staff are pasting confidential material into a third-party AI website. You must see this activity. What is required?",
+    "options": [
+      "The Purview browser extension deployed, plus device onboarding, feeding DSPM for AI",
+      "A sensitivity label with encryption applied to all confidential documents",
+      "An Insider Risk policy using the data leaks template",
+      "A retention policy covering the users' OneDrive accounts"
+    ],
+    "correctIndex": 0,
+    "explanation": "Visibility of third-party AI sites depends on the browser extension and onboarded devices; those are DSPM for AI's stated prerequisites. Labelling and retention protect content but do not report what was pasted into a website.",
+    "teaches": "dspm-for-ai"
+  },
+  {
+    "id": "ra-09",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "Users are discovering documents through an AI assistant that they could technically always open but would never have found. What is the underlying problem?",
+    "options": [
+      "Over-permissioned content, which the assistant surfaces because it answers within the user's existing permissions",
+      "The assistant ignoring sensitivity labels when grounding its answers",
+      "Missing retention labels on the affected sites",
+      "Audit logging not capturing the assistant's queries"
+    ],
+    "correctIndex": 0,
+    "explanation": "The assistant respects permissions — that is precisely why it exposes the problem. Content nobody could find by browsing becomes reachable on request, so the remedy is permission hygiene and labelling rather than restricting the assistant.",
+    "teaches": "dspm-for-ai"
+  },
+  {
+    "id": "ra-10",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "An insider risk alert has been confirmed and the appropriate response is a recorded reminder of policy rather than an investigation. What should you use?",
+    "options": [
+      "Issue a notice from a notice template",
+      "Escalate the case for investigation",
+      "Escalate the case to an eDiscovery case",
+      "Dismiss the alert and add the user to a priority user group"
+    ],
+    "correctIndex": 0,
+    "explanation": "Notice templates are the lightweight remediation, and their use is recorded — which is what makes them evidence of a proportionate response. Escalation is for cases that need a formal process.",
+    "teaches": "insider-risk-policies-and-alerts"
+  },
+  {
+    "id": "ra-11",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "Which indicator source must be configured before an Insider Risk policy can use device signals such as copying files to USB?",
+    "options": [
+      "Indicators enabled in Insider Risk settings, with devices onboarded",
+      "An adaptive policy scope covering the device owners",
+      "A retention label applied to the affected files",
+      "Content explorer permissions for the investigators"
+    ],
+    "correctIndex": 0,
+    "explanation": "Indicators are switched on globally in settings before any policy can use them, and device indicators additionally need onboarded devices. A policy referencing an indicator that was never enabled simply never fires.",
+    "teaches": "insider-risk-management"
+  },
+  {
+    "id": "ra-12",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "How long does Purview Audit (Standard) retain audit records?",
+    "options": [
+      "180 days",
+      "90 days",
+      "One year",
+      "Ten years"
+    ],
+    "correctIndex": 0,
+    "explanation": "Standard retains for 180 days. Audit Premium raises this to one year with a ten-year add-on available, and it is the licence that unlocks audit retention policies and the intelligent events.",
+    "teaches": "purview-audit"
+  },
+  {
+    "id": "ra-13",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "A DLP alert and an endpoint detection appear to relate to the same user and the same file. Where can an analyst see them as one incident?",
+    "options": [
+      "Microsoft Defender XDR, where Purview alerts surface alongside other Defender alerts",
+      "Content explorer, filtered to the affected file",
+      "Policy lookup for the user's mailbox",
+      "The disposition review queue"
+    ],
+    "correctIndex": 0,
+    "explanation": "Purview alerts flow into Defender XDR so that signals from different products can be correlated into one incident rather than triaged as unrelated events.",
+    "teaches": "activity-explorer-and-alerts"
+  },
+  {
+    "id": "ra-14",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "Forensic evidence capture is required for a small group of high-risk users. What is true of it?",
+    "options": [
+      "It is opt-in, must be explicitly configured, and is scoped to specific users and policies",
+      "It is enabled by default once Insider Risk Management is licensed",
+      "It applies automatically to every user in an active case",
+      "It records device activity for all onboarded devices in the tenant"
+    ],
+    "correctIndex": 0,
+    "explanation": "Forensic evidence is deliberately not on by default, given what it captures. It has to be turned on, configured, and scoped — which is the privacy-by-design point the exam tests.",
+    "teaches": "insider-risk-management"
+  },
+  {
+    "id": "ra-15",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "question": "Which eDiscovery capability lets a reviewer collapse near-identical documents and group emails into conversations?",
+    "options": [
+      "The premium analytics features, including near-duplicate detection and email threading",
+      "Content search with a keyword query",
+      "A hold placed on the custodians' mailboxes",
+      "Activity explorer filtered by the custodians"
+    ],
+    "correctIndex": 0,
+    "explanation": "Near-duplicate detection and email threading are premium eDiscovery analytics applied to a review set. Content search and holds find and preserve content but do nothing to reduce a reviewer's workload.",
+    "teaches": "ediscovery"
+  },
+  {
+    "id": "ra-16",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "kind": "multi",
+    "question": "Which two are true of Microsoft Purview Audit (Premium)? Choose two.",
+    "options": [
+      "It is licensed per user",
+      "Its intelligent events are not retroactive",
+      "It is enabled by default for every tenant",
+      "It replaces the need for an eDiscovery hold"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Premium requires per-user licensing and only produces its high-value events from the point the licence is in place. Standard is the tier that is on by default, and holds preserve content, which auditing never does.",
+    "teaches": "purview-audit"
+  },
+  {
+    "id": "ra-17",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "kind": "order",
+    "question": "Put the steps of an eDiscovery matter in order.",
+    "items": [
+      "Add search results to a review set and tag them",
+      "Create the case and add the custodians",
+      "Run searches across the custodians' content",
+      "Place a hold so custodian content is preserved"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "Preservation comes before searching, because content deleted between a search and a hold is gone for good. Placing the hold late is the mistake these questions are built to catch.",
+    "teaches": "ediscovery"
+  },
+  {
+    "id": "ra-18",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "kind": "match",
+    "question": "Match each Purview surface to the question it answers.",
+    "pairs": [
+      { "term": "Content explorer", "definition": "Which items carry this label right now, and where are they" },
+      { "term": "Activity explorer", "definition": "What did people do with labelled content over time" },
+      { "term": "Purview Audit", "definition": "What administrative and mailbox events occurred across the estate" },
+      { "term": "DSPM for AI", "definition": "Which AI applications are in use and what sensitive data reached them" }
+    ],
+    "explanation": "The first is an inventory, the second and third are histories at different scopes, and the fourth is specific to AI usage. Reaching for the wrong one is the most common error in this domain.",
+    "teaches": "activity-explorer-and-alerts"
+  },
+  {
+    "id": "ra-19",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "kind": "yesno",
+    "question": "An Insider Risk Management policy has been created from the data theft by departing users template. Judge each statement.",
+    "statements": [
+      { "text": "A connector supplying resignation dates is required for the policy to trigger.", "correct": true },
+      { "text": "The indicators the policy uses must be enabled in settings first.", "correct": true },
+      { "text": "Confirming an alert creates a case that an investigator can work.", "correct": true },
+      { "text": "The policy blocks the user from copying files once risk is detected.", "correct": false }
+    ],
+    "explanation": "Insider Risk Management detects, scores, and escalates; it does not block. Blocking based on insider risk is what Adaptive Protection delivers by handing the risk level to data loss prevention.",
+    "teaches": "insider-risk-policies-and-alerts"
+  },
+  {
+    "id": "ra-20",
+    "examCode": "sc-401",
+    "domain": "risks-alerts-activities",
+    "kind": "dropdown",
+    "question": "Complete the statement about investigating with Purview.",
+    "segments": [
+      { "text": "To list every file currently carrying a sensitivity label you would use " },
+      {
+        "blankId": "b1",
+        "options": ["Content explorer", "Activity explorer", "Policy lookup"],
+        "correctIndex": 0
+      },
+      { "text": ", and to see what a user did with those files last week you would use " },
+      {
+        "blankId": "b2",
+        "options": ["Activity explorer", "Content explorer", "the disposition review queue"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "One is an inventory of the present and the other is a history of behaviour. Nearly every question in this area reduces to choosing correctly between the two.",
+    "teaches": "activity-explorer-and-alerts"
+  }
+]

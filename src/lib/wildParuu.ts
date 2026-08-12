@@ -43,9 +43,10 @@ export const WILD_PARUU: Record<string, WildParuu> = {
   "sc-900": { sheet: "wild-armadillo" },
   // SC-200 shares the Bastion Cliffs with SC-900.
   "sc-200": { sheet: "wild-armadillo" },
-  // SC-300 became playable on 2026-08-12 and shares the Bastion Cliffs with
-  // SC-900 and SC-200.
+  // SC-300 and SC-401 became playable on 2026-08-12 and share the Bastion
+  // Cliffs with SC-900 and SC-200.
   "sc-300": { sheet: "wild-armadillo" },
+  "sc-401": { sheet: "wild-armadillo" },
   "ab-900": { sheet: "wild-snail" },
   // AB-730 and AB-731 became playable on 2026-08-12 and share Agent Atoll with
   // AB-900. Same reuse as az-104 and the rest: without an entry here both would

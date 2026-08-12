@@ -1,0 +1,96 @@
+{
+  "examCode": "sc-401",
+  "note": "Three paths, one per exam domain, following Microsoft's SC-401 learning paths. Module titles follow Microsoft Learn; the sections and cards behind each are this site's own.",
+  "paths": [
+    {
+      "id": "information-protection",
+      "title": "Implement information protection in Microsoft 365",
+      "domainId": "information-protection",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/implement-information-protection/",
+      "modules": [
+        {
+          "id": "information-protection-m1",
+          "title": "Classify data for protection and governance",
+          "sectionIds": ["data-classification-and-sit", "trainable-classifiers-and-edm"],
+          "cardIds": ["fc-sc401-ip-01", "fc-sc401-ip-02", "fc-sc401-ip-03", "fc-sc401-ip-04", "fc-sc401-ip-18"]
+        },
+        {
+          "id": "information-protection-m2",
+          "title": "Create and manage sensitive information types",
+          "sectionIds": ["trainable-classifiers-and-edm"],
+          "cardIds": ["fc-sc401-ip-05", "fc-sc401-ip-06", "fc-sc401-ip-17"]
+        },
+        {
+          "id": "information-protection-m3",
+          "title": "Apply and manage sensitivity labels",
+          "sectionIds": ["sensitivity-labels", "label-policies-and-auto-labeling"],
+          "cardIds": ["fc-sc401-ip-07", "fc-sc401-ip-08", "fc-sc401-ip-09", "fc-sc401-ip-10", "fc-sc401-ip-11"]
+        },
+        {
+          "id": "information-protection-m4",
+          "title": "Protect information in Windows, file shares, and Exchange",
+          "sectionIds": ["information-protection-client-and-scanner", "message-encryption"],
+          "cardIds": ["fc-sc401-ip-12", "fc-sc401-ip-13", "fc-sc401-ip-14", "fc-sc401-ip-15", "fc-sc401-ip-16"]
+        }
+      ]
+    },
+    {
+      "id": "dlp-and-retention",
+      "title": "Implement data loss prevention and retention",
+      "domainId": "dlp-and-retention",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/implement-data-loss-prevention-retention/",
+      "modules": [
+        {
+          "id": "dlp-and-retention-m1",
+          "title": "Prevent data loss in Microsoft Purview",
+          "sectionIds": ["dlp-policy-design"],
+          "cardIds": ["fc-sc401-dr-01", "fc-sc401-dr-02", "fc-sc401-dr-03", "fc-sc401-dr-04", "fc-sc401-dr-05"]
+        },
+        {
+          "id": "dlp-and-retention-m2",
+          "title": "Configure DLP policies for Adaptive Protection",
+          "sectionIds": ["dlp-rules-and-precedence"],
+          "cardIds": ["fc-sc401-dr-06", "fc-sc401-dr-16", "fc-sc401-dr-17"]
+        },
+        {
+          "id": "dlp-and-retention-m3",
+          "title": "Implement and monitor Endpoint DLP",
+          "sectionIds": ["endpoint-dlp"],
+          "cardIds": ["fc-sc401-dr-07", "fc-sc401-dr-08", "fc-sc401-dr-09"]
+        },
+        {
+          "id": "dlp-and-retention-m4",
+          "title": "Manage the data lifecycle with retention",
+          "sectionIds": ["retention-labels-and-policies", "retention-precedence-and-recovery"],
+          "cardIds": ["fc-sc401-dr-10", "fc-sc401-dr-11", "fc-sc401-dr-12", "fc-sc401-dr-13", "fc-sc401-dr-14", "fc-sc401-dr-15"]
+        }
+      ]
+    },
+    {
+      "id": "risks-alerts-activities",
+      "title": "Manage insider risk, alerts, and activities",
+      "domainId": "risks-alerts-activities",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/manage-insider-risk-information-protection/",
+      "modules": [
+        {
+          "id": "risks-alerts-activities-m1",
+          "title": "Implement Microsoft Purview Insider Risk Management",
+          "sectionIds": ["insider-risk-management", "insider-risk-policies-and-alerts"],
+          "cardIds": ["fc-sc401-ra-01", "fc-sc401-ra-02", "fc-sc401-ra-03", "fc-sc401-ra-04", "fc-sc401-ra-05", "fc-sc401-ra-06"]
+        },
+        {
+          "id": "risks-alerts-activities-m2",
+          "title": "Search and investigate with Purview Audit and eDiscovery",
+          "sectionIds": ["purview-audit", "activity-explorer-and-alerts", "ediscovery"],
+          "cardIds": ["fc-sc401-ra-07", "fc-sc401-ra-08", "fc-sc401-ra-09", "fc-sc401-ra-10", "fc-sc401-ra-11", "fc-sc401-ra-12"]
+        },
+        {
+          "id": "risks-alerts-activities-m3",
+          "title": "Protect data used by AI services",
+          "sectionIds": ["dspm-for-ai"],
+          "cardIds": ["fc-sc401-ra-13", "fc-sc401-ra-14", "fc-sc401-ra-15"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-marrowfield-purview",
+    "examCode": "sc-401",
+    "domain": "information-protection",
+    "title": "Marrowfield Clinics — classifying twenty years of records",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Marrowfield Clinics runs eleven outpatient sites and a central administration office. It holds patient records going back twenty years, and a regulator has given it nine months to demonstrate that sensitive records are classified, that they cannot leave the organisation unnoticed, and that they are disposed of on a defensible schedule.",
+          "Microsoft 365 E5 with Purview is licensed for all 1,400 staff. A small compliance team is doing the work, and the clinical directors have made clear that anything which blocks a doctor mid-consultation will be escalated and reversed."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "Patient identifiers use a Marrowfield-specific format — two letters, a hyphen, and eight digits — that no built-in sensitive information type recognises. The compliance team holds an authoritative list of every valid identifier, currently 1.9 million rows, exported nightly from the clinical system.",
+          "Roughly 40 TB of historical documents sit on two on-premises Windows file shares. Nothing on those shares has ever been classified, and nobody knows what is on them. They are not part of Microsoft 365 and there is no plan to migrate them this year.",
+          "Referral letters are sent by email to consultants at other organisations, many of whom have no Microsoft account. Twice in the last year a letter went to the wrong external address, and in both cases the clinic wanted to withdraw it and could not.",
+          "Sensitivity labels exist but nothing applies them automatically. Staff were asked to label documents by hand and largely have not; Content explorer shows fewer than 3% of items carry any label.",
+          "Endpoint DLP has not been deployed. Devices are enrolled and already onboarded to Microsoft Defender for Endpoint. Staff use Microsoft Edge, but the research team uses Firefox.",
+          "Purview Audit is on the default configuration. Last month a mailbox was compromised and the security team could not determine which messages the attacker had actually opened."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Detection of patient identifiers must produce almost no false positives, because clinical staff have already threatened to ignore policy tips they consider noise. The authoritative list must be used rather than a pattern alone, and it must not leave the organisation in readable form.",
+          "The historical file shares must be inventoried before anything is changed, so the compliance team can see what exists and where before applying protection in place.",
+          "Existing documents already sitting in SharePoint and OneDrive must be labelled without any user opening them.",
+          "A referral letter sent to the wrong external recipient must be withdrawable after the fact.",
+          "The research team's Firefox uploads must be visible to Endpoint DLP, not only Edge.",
+          "In a future mailbox compromise, the security team must be able to determine which individual messages were read."
+        ]
+      }
+    ]
+  }
+]

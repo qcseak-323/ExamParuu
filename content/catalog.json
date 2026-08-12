@@ -468,10 +468,10 @@
     "series": "sc",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Protect and govern sensitive data with Microsoft Purview — classification, DLP, retention and insider risk.",
-    "hasContent": false,
+    "hasContent": true,
     "catalogVerifiedAt": "2026-08-12",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/sc-401"
   },

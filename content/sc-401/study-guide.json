@@ -1,0 +1,153 @@
+[
+  {
+    "domainId": "information-protection",
+    "sections": [
+      {
+        "id": "data-classification-and-sit",
+        "heading": "Sensitive information types",
+        "paragraphs": [
+          "A sensitive information type is a pattern that Microsoft Purview looks for inside content. Built-in types cover the well-known formats — credit card numbers, national identifiers, bank account numbers — and each combines a primary pattern with supporting evidence and a confidence level. Confidence matters as much as the pattern: a bare sixteen-digit string is a weak match, while the same string near the words 'card number' and passing a checksum is a strong one. Policies are tuned by requiring a minimum confidence and a minimum instance count, which is how 'one credit card in a document' is distinguished from 'a spreadsheet of ten thousand'.",
+          "Custom sensitive information types are built when the organisation has its own format — an employee number, a case reference, a policy identifier — using a regular expression or a keyword list plus supporting elements. Document fingerprinting turns a blank form into a pattern, so any document derived from that template is recognised. Optical character recognition extends all of this to text inside images, which is what catches a passport scan or a screenshot of a spreadsheet that would otherwise be invisible to a text-based scan."
+        ]
+      },
+      {
+        "id": "trainable-classifiers-and-edm",
+        "heading": "Trainable classifiers and exact data match",
+        "paragraphs": [
+          "Trainable classifiers recognise content by what it is about rather than by a pattern it contains. Pre-trained classifiers ship for common categories such as résumés, source code, harassment, and profanity. A custom trainable classifier is taught from a seed set of positive samples — Microsoft's guidance is a few hundred documents — and is then tested against a second set so its accuracy can be reviewed and republished. Use a classifier when the target is a category of document, and a sensitive information type when the target is a string.",
+          "Exact data match takes the opposite approach and matches against the organisation's own data rather than a pattern. A sensitive information database — a table of real customer or patient identifiers — is hashed and salted, uploaded, and refreshed on a schedule, and only the hashes leave the premises. The result is a match with essentially no false positives, because a number either is in the table or is not. EDM is the answer whenever a question stresses very high volume with very low tolerance for false positives."
+        ]
+      },
+      {
+        "id": "sensitivity-labels",
+        "heading": "Sensitivity labels and their settings",
+        "paragraphs": [
+          "A sensitivity label is metadata that travels with content and can carry enforcement. Label scope decides what it can be applied to: items such as files and emails, containers such as Teams, Microsoft 365 Groups and SharePoint sites, Power BI items, or schematised data assets. Item labels can apply encryption with a defined set of permissions, content marking in the form of headers, footers and watermarks, and controls on whether the content may be accessed offline. Container labels do something quite different — they govern privacy, external member access, and unmanaged device access for the container, and they do not encrypt the files inside it.",
+          "Labels are ordered, and order carries meaning: a label further down the list is more restrictive, which is what makes it possible to require justification for lowering a label. Sublabels group variations under a parent, and the parent itself cannot be applied. Only one sensitivity label may be applied to an item at a time, which is the crucial difference from retention labels, and encryption applied by a label persists with the file wherever it travels — including outside the tenant, which is why a label is a data-centric control rather than a location-based one."
+        ]
+      },
+      {
+        "id": "label-policies-and-auto-labeling",
+        "heading": "Label policies and automatic labelling",
+        "paragraphs": [
+          "A label publishing policy decides which users see which labels, sets a default label for documents and email, and can require a justification when a user lowers a label or removes one. It can also mandate that all documents and email carry a label at all. Publishing policies have priority, and where a user is in scope of several the one with the highest priority applies, which is how an exception is granted to a single group without rewriting the baseline.",
+          "Automatic labelling exists in two places and the distinction is examined constantly. Client-side auto-labelling runs in the Office application as the user types, is configured on the label itself, and can either apply the label or merely recommend it with a prompt the user can decline. Service-side auto-labelling policies run in Exchange, SharePoint, and OneDrive without any user involvement, apply to content at rest as well as in transit, and cannot recommend — they either label or they do not. Only the service-side policy reaches files that already exist and that nobody opens, and it is always run in simulation first so its effect can be measured before it is switched on."
+        ]
+      },
+      {
+        "id": "information-protection-client-and-scanner",
+        "heading": "The Information Protection client and scanner",
+        "paragraphs": [
+          "The Microsoft Purview Information Protection client extends labelling to Windows File Explorer and to file types the Office applications do not handle, letting a user right-click a file to classify and protect it. It is also what supports labelling of PDFs and generic file types through protection-only encapsulation.",
+          "The Information Protection scanner is the bulk instrument for data that is not in Microsoft 365 at all. It runs on a Windows server, crawls on-premises file shares and SharePoint Server libraries, and reports what sensitive content exists where. It runs in discovery mode first, producing an inventory without changing anything, and is then switched to enforcement so that labels and protection are applied in place. This two-stage pattern — discover, review, enforce — is the expected answer whenever a scenario involves years of accumulated files on a share that nobody has catalogued."
+        ]
+      },
+      {
+        "id": "message-encryption",
+        "heading": "Message encryption",
+        "paragraphs": [
+          "Microsoft Purview Message Encryption protects email sent to recipients outside the organisation, including those with no Microsoft account, by delivering a wrapper that takes the recipient to a portal where they authenticate with a one-time passcode or a supported identity. It is applied by a sensitivity label, by an Exchange mail flow rule, or by the sender choosing an option in Outlook, and the common protection templates are Encrypt Only, which allows any action but forbids removing the protection, and Do Not Forward, which additionally blocks forward, print, and copy.",
+          "Advanced Message Encryption adds the controls an organisation needs after the message has left. Custom branded templates carry the organisation's logo and disclaimer, an expiry date can be set so the message becomes unreadable after a period, and access to an individual encrypted message can be revoked outright. Revocation and expiry only work for messages the recipient reads through the portal, which is the practical limit the exam expects you to know."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "dlp-and-retention",
+    "sections": [
+      {
+        "id": "dlp-policy-design",
+        "heading": "Designing data loss prevention policies",
+        "paragraphs": [
+          "A data loss prevention policy is scoped to locations — Exchange, SharePoint, OneDrive, Teams chat and channel messages, devices, on-premises repositories, Fabric and Power BI, and third-party apps — and then carries rules describing conditions and the actions to take. Conditions detect sensitive information types, sensitivity labels, retention labels, or document properties, and can distinguish content shared inside the organisation from content shared outside it, which is usually the real trigger.",
+          "Actions run from the gentle to the absolute: notify the user with a policy tip, generate an alert for administrators, block the action with an override the user may take with a business justification, or block outright with no override. Deploying in test mode with policy tips first is the standard sequence, because a DLP policy that blocks on its first day generates a queue of angry business exceptions and usually gets switched off. Roles are separated too — a compliance administrator authors policy, while a DLP-specific reader role lets an analyst see alerts and matched content without the power to change what is enforced."
+        ]
+      },
+      {
+        "id": "dlp-rules-and-precedence",
+        "heading": "Rule precedence and Adaptive Protection",
+        "paragraphs": [
+          "Within a policy, rules are evaluated in priority order, and the actions of the first matching rule are applied along with the most restrictive of the notifications. Across policies, all matching policies contribute, and the most restrictive action wins — a block anywhere defeats an allow. Because policy tips come from a single rule, the tip a user sees may not name every policy that matched, which is a common source of confusion when troubleshooting.",
+          "Adaptive Protection links data loss prevention to Insider Risk Management, so the enforcement a user meets depends on the risk level Insider Risk has calculated for them. A user at low risk sees a policy tip; the same action by a user at elevated risk is blocked. This is the answer whenever a scenario asks for stronger controls on risky users without applying those controls to everyone, and it is the reason the two products are examined together rather than separately."
+        ]
+      },
+      {
+        "id": "endpoint-dlp",
+        "heading": "Endpoint DLP",
+        "paragraphs": [
+          "Endpoint DLP extends policy to activities on a managed Windows or macOS device: copying to removable media, copying to a network share, printing, pasting into another application, uploading to an unallowed browser or cloud service, and accessing by an unallowed application. The device must be onboarded — the same onboarding used by Microsoft Defender for Endpoint — and Microsoft Edge is handled natively while other browsers require the Purview extension to see and control uploads.",
+          "Endpoint settings are configured tenant-wide and then referenced by policies: file path exclusions to stop the agent inspecting build directories, restricted app groups, unallowed Bluetooth apps, and the service domain list that decides which sites count as allowed destinations. Just-in-time protection is the strictest option — access to a file is held until the policy has been evaluated, so unclassified content is not leaked while a scan is still pending. Everything the agent observes appears in Activity explorer whether or not a policy blocked it, which makes Activity explorer the correct place to look when asked what a user actually did."
+        ]
+      },
+      {
+        "id": "retention-labels-and-policies",
+        "heading": "Retention labels and retention policies",
+        "paragraphs": [
+          "Retention answers two opposite risks at once: keeping content long enough to satisfy a regulator, and deleting it soon enough to limit exposure. A retention policy applies a retain-and-delete setting to every item in a location, invisibly and in bulk. A retention label is applied to an individual item, is visible, and can carry disposition review, mark the item as a record, and start its clock from an event rather than from creation. Labels are the instrument when individual items must be treated differently; policies are the instrument when a whole location must meet one rule.",
+          "Adaptive policy scopes replace a static list of locations with a query over user, group, or site attributes, so a policy that covers the Legal department keeps covering it as people join and leave. Label policies publish labels for users to apply, or auto-apply them by matching sensitive information types, keywords, or trainable classifiers. An item can carry one sensitivity label and one retention label at the same time — they are independent axes, and confusing them is the mistake this domain is designed to catch."
+        ]
+      },
+      {
+        "id": "retention-precedence-and-recovery",
+        "heading": "Retention precedence and recovering content",
+        "paragraphs": [
+          "When several retention settings apply to the same item, four principles resolve the conflict in a fixed order. Retention wins over deletion, so content is never deleted while any rule still says to keep it. The longest retention period wins. An explicit label beats an inherited policy. And where two rules both delete, the shortest deletion period wins. Policy lookup is the tool that shows every retention setting affecting a given mailbox or site, which is how a question about 'why is this item still here' is actually answered.",
+          "Recovery depends on where the content lived. In SharePoint and OneDrive, content under retention that a user deletes is moved to the Preservation Hold library, invisible to the user but recoverable by an administrator until the retention period ends. In Exchange, the Recoverable Items folder serves the same purpose. Neither is a backup and neither is unlimited, but both mean that a user cannot destroy something a retention rule was protecting — which is precisely the assurance a regulator asks for."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "risks-alerts-activities",
+    "sections": [
+      {
+        "id": "insider-risk-management",
+        "heading": "Insider Risk Management foundations",
+        "paragraphs": [
+          "Insider Risk Management detects risky activity by people inside the organisation — data theft by a departing employee, leaks of sensitive information, security policy violations. It is built on indicators, which must be switched on in settings before any policy can use them, and on connectors that bring in signals the Microsoft 365 estate cannot see by itself. The HR connector is the important one: it supplies resignation dates and performance-improvement dates, and without it the departing-employee template has no trigger and quietly produces nothing.",
+          "Privacy is designed into the product. By default, usernames are pseudonymised in alerts and reports so that investigators see an anonymised identifier rather than a person, and the roles are separated so that an analyst can triage alerts while only an investigator can see the identities and the underlying content. Forensic evidence capture, which records visual evidence of activity on a device, is opt-in, requires explicit configuration, and is scoped to specific users and policies — the exam expects you to know it is not on by default."
+        ]
+      },
+      {
+        "id": "insider-risk-policies-and-alerts",
+        "heading": "Insider risk policies, triggers, and cases",
+        "paragraphs": [
+          "A policy is created from a template — data theft by departing users, data leaks, data leaks by priority users, security policy violations, risky browser usage, and others — and each template fixes which triggering event starts scoring a user and which indicators are available. This is the part most often misunderstood: a user is not scored continuously, but only after a triggering event such as a resignation date arriving or a DLP policy match of high severity. Priority content, priority user groups, and priority physical assets raise scores for the things the organisation actually cares about.",
+          "Alerts are triaged, and confirming an alert creates a case. Within a case an investigator sees the user's activity over time, can view the content involved, and resolves it by dismissing it, issuing a notice from a template, escalating for investigation, or escalating to an eDiscovery case for a legal process. Notice templates are the lightweight remediation — a reminder of policy sent to the user — and their use is recorded, which is what makes them evidence of a proportionate response rather than an informal word."
+        ]
+      },
+      {
+        "id": "purview-audit",
+        "heading": "Purview Audit",
+        "paragraphs": [
+          "Purview Audit records what happened across the Microsoft 365 estate. Audit (Standard) is enabled by default and retains audit records for 180 days. Audit (Premium) requires per-user licensing and raises retention to one year, with a ten-year add-on available, and it is what enables audit retention policies that keep particular record types for longer than the default. It also unlocks the high-value events used in investigations — most notably MailItemsAccessed, which shows whether a compromised mailbox was actually read rather than merely accessed, and Send, and SearchQueryInitiated.",
+          "The licensing detail is examined directly: the intelligent events only appear for users who hold the Premium licence, and they are not retroactive. Assigning the licence after an incident does not produce records for the period before it, which is why the recommendation is to license the users who matter before anything happens rather than in response to it."
+        ]
+      },
+      {
+        "id": "activity-explorer-and-alerts",
+        "heading": "Activity explorer, Content explorer, and alerts",
+        "paragraphs": [
+          "Content explorer answers 'where is it now' — it shows the current inventory of items carrying a given sensitivity label, retention label, or sensitive information type, browsable down to the individual file. Activity explorer answers 'what has been happening' — a stream of label changes, DLP matches, file operations, and endpoint activities over time. Reading one when the question asks the other is the classic mistake: an inventory question wants Content explorer, a behaviour question wants Activity explorer. Access to both is gated by roles that decide whether a viewer sees only the counts or the underlying content as well.",
+          "DLP alerts are managed in the Purview portal's alerts view, where an alert can be assigned, investigated with the matched content in view, and resolved. Purview alerts also surface in Microsoft Defender XDR alongside alerts from the other Defender products, which is what lets an analyst see that a DLP match and an endpoint detection belong to the same incident rather than treating them as two unrelated events."
+        ]
+      },
+      {
+        "id": "ediscovery",
+        "heading": "eDiscovery",
+        "paragraphs": [
+          "eDiscovery finds and preserves content for a legal or regulatory process. Content search runs a query across mailboxes, sites, and Teams and exports the results, but preserves nothing. eDiscovery cases add the ability to place a hold, so that custodians' content is preserved even if they try to delete it, and to manage custodians, communications, and review sets. The premium capabilities add analytics such as near-duplicate detection and email threading, plus review set filtering and tagging.",
+          "The sequence the exam expects is fixed: create the case, add custodians, place the hold — before searching, because a search does not preserve anything and content deleted between search and hold is gone. Then search, add results to a review set, review and tag, and export. Placing the hold late is the error the question is usually built around."
+        ]
+      },
+      {
+        "id": "dspm-for-ai",
+        "heading": "Protecting data used by AI services",
+        "paragraphs": [
+          "Generative AI creates a specific data-security problem: an assistant answers using whatever the user already has permission to open, so over-permissioned content that nobody ever found by browsing is suddenly surfaced on request. The controls are therefore mostly the existing ones applied properly — sensitivity labels with encryption, because a label's permissions are honoured when content is used to ground a response, SharePoint permission hygiene and restricted site access, and DLP policies that stop labelled content being sent to a third-party AI service.",
+          "Data Security Posture Management for AI is the dedicated surface. It discovers which AI applications are in use, both Microsoft and third-party, reports on prompts and responses that involved sensitive information, and offers one-click policies covering common risks. It has prerequisites — device onboarding for endpoint signals and the Purview browser extension for third-party AI sites — and its own roles, so that an administrator can be given visibility of AI activity without being given the rest of Purview."
+        ]
+      }
+    ]
+  }
+]
