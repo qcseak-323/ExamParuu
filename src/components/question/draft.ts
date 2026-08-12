@@ -107,3 +107,46 @@ export function draftToAnswer(
 export function isAnswered(question: Question, draft: unknown): boolean {
   return draftToAnswer(question, draft) !== null;
 }
+
+/**
+ * The correct answer as a sentence.
+ *
+ * The practice battle's teaching beat is spoken by the trainer's Paruu — "the
+ * move that lands here is X" — and it used to build X by indexing
+ * `options[correctIndex]`. Five of the six shapes have no such string, so each
+ * one describes itself here instead. Without this the battle could only ever
+ * teach four-option questions.
+ */
+export function correctAnswerSummary(question: Question): string {
+  switch (question.kind) {
+    case undefined:
+    case "single":
+      return `"${question.options[question.correctIndex]}"`;
+
+    case "multi":
+      return question.correctIndexes
+        .map((i) => `"${question.options[i]}"`)
+        .join(" and ");
+
+    case "order":
+      return question.correctOrder
+        .map((itemIndex, position) => `${position + 1}. ${question.items[itemIndex]}`)
+        .join(" · ");
+
+    case "match":
+      return question.pairs
+        .map((p) => `${p.term} → ${p.definition}`)
+        .join(" · ");
+
+    case "yesno":
+      return question.statements
+        .map((s, i) => `${i + 1}. ${s.correct ? "yes" : "no"}`)
+        .join(" · ");
+
+    case "dropdown":
+      return question.segments
+        .filter((s): s is Extract<typeof s, { blankId: string }> => "blankId" in s)
+        .map((b) => `"${b.options[b.correctIndex]}"`)
+        .join(", then ");
+  }
+}

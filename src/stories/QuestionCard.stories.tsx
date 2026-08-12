@@ -16,10 +16,10 @@ import type { Question } from "@/lib/types";
 
 function Harness({
   question,
-  reveal = true,
+  mode = "teach",
 }: {
   question: Question;
-  reveal?: boolean;
+  mode?: "teach" | "verdict" | "input";
 }) {
   // Holds the draft the way ExamSimClient will, so the no-reveal stories
   // exercise the controlled path rather than the internal-state one.
@@ -29,9 +29,9 @@ function Harness({
       <div className="pixel-panel" style={{ maxWidth: 720, padding: "1.5rem" }}>
         <QuestionCard
           question={question}
-          reveal={reveal}
-          draft={reveal ? undefined : draft}
-          onDraftChange={reveal ? undefined : setDraft}
+          mode={mode}
+          draft={mode === "input" ? draft : undefined}
+          onDraftChange={mode === "input" ? setDraft : undefined}
           onAnswered={() => {}}
         />
       </div>
@@ -169,17 +169,30 @@ export const StormWatch: Story = {
    which answer is currently held. */
 
 export const ExamSingle: Story = {
-  args: { ...Single.args, reveal: false },
+  args: { ...Single.args, mode: "input" },
 };
 
 export const ExamMulti: Story = {
-  args: { ...Multi.args, reveal: false },
+  args: { ...Multi.args, mode: "input" },
 };
 
 export const ExamDropdown: Story = {
-  args: { ...Dropdown.args, reveal: false },
+  args: { ...Dropdown.args, mode: "input" },
 };
 
 export const ExamYesNo: Story = {
-  args: { ...YesNo.args, reveal: false },
+  args: { ...YesNo.args, mode: "input" },
+};
+
+/* --- Verdict mode: the practice battle ------------------------------------
+   Right and wrong are marked, but the explanation and any Continue stay out —
+   the trainer's Paruu speaks the explanation in the resolved beat, and
+   printing it here too would say everything twice. */
+
+export const BattleVerdictSingle: Story = {
+  args: { ...Single.args, mode: "verdict" },
+};
+
+export const BattleVerdictMulti: Story = {
+  args: { ...Multi.args, mode: "verdict" },
 };

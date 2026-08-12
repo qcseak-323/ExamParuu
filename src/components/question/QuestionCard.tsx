@@ -6,6 +6,7 @@ import {
   PlacementBody,
   SingleChoiceBody,
   VerdictDeckBody,
+  type AnswerMode,
   type RendererResult,
 } from "@/components/question/renderers";
 import {
@@ -44,17 +45,18 @@ export type AnsweredQuestion = {
 
 export default function QuestionCard({
   question,
-  reveal = true,
+  mode = "teach",
   draft,
   onDraftChange,
   onAnswered,
 }: {
   question: Question;
   /**
-   * False on the Proving: collect an answer, judge nothing, render no buttons
-   * of its own. See the note on `Controllable` in renderers.tsx.
+   * How much to give away. `input` on the Proving, `verdict` in the practice
+   * battle, `teach` in the learning path. See the note on `Controllable` in
+   * renderers.tsx.
    */
-  reveal?: boolean;
+  mode?: AnswerMode;
   /**
    * The in-progress answer, held by the caller so it survives the question
    * being unmounted and remounted by a navigator. Opaque here — each body
@@ -69,8 +71,8 @@ export default function QuestionCard({
   // body that reads a draft is always the same body that wrote it.
   const controlled = <T,>() =>
     onDraftChange
-      ? { reveal, value: draft as T, onChange: onDraftChange as (v: T) => void }
-      : { reveal };
+      ? { mode, value: draft as T, onChange: onDraftChange as (v: T) => void }
+      : { mode };
 
   const done = (r: RendererResult) =>
     onAnswered({

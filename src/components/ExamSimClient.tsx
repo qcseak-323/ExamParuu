@@ -166,7 +166,7 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
     // exceeds it, buildExamPaper samples and retakes differ.
     //
     // Every authored format, not just four-option items: the bodies are
-    // controlled and silent under `reveal={false}`, which is what the Proving
+    // controlled and silent under `mode="input"`, which is what the Proving
     // needs.
     const built = buildExamPaper(examCode, attemptsUnused, EXAM_PAPER_SIZE);
     setPaper(built);
@@ -299,7 +299,7 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
           <QuestionCard
             key={question.id}
             question={question}
-            reveal={false}
+            mode="input"
             draft={drafts[index]}
             onDraftChange={(draft) => setDraft(index, draft)}
             onAnswered={() => {}}

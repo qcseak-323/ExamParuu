@@ -43,17 +43,22 @@ export type OnDone = (result: RendererResult) => void;
 /**
  * What every body accepts on top of its own content.
  *
- * ── `reveal` ──
+ * ── `mode` ──
  *
- * True (the default) is the teaching behaviour: mark the answer right or
- * wrong, show the score and the explanation, and gate on a Check or Continue
- * button. False makes the body a **pure input** — it collects an answer,
- * shows what was picked, and judges nothing. That is not a styling choice: the
- * Proving's briefing promises "No feedback until the end", so a body that
- * colours an option green mid-paper breaks the format.
+ * Three states, because the three callers want three different amounts, and a
+ * single boolean was quietly conflating them:
  *
- * With `reveal` false the body also renders no buttons of its own, because the
- * exam owns navigation — its question navigator moves you, not a Continue.
+ *   `teach`   verdict, explanation and a Check/Continue button. The learning
+ *             path, and the default.
+ *   `verdict` mark it right or wrong, but no explanation and no buttons. The
+ *             practice battle, whose Paruu speaks the explanation itself — a
+ *             body that also printed it would say everything twice.
+ *   `input`   a pure input: collect an answer, show what was picked, judge
+ *             nothing. The Proving's briefing promises "No feedback until the
+ *             end", so an option turning green mid-paper breaks the format.
+ *
+ * Only `teach` renders buttons. In the other two the caller owns what happens
+ * next — the exam's navigator, or the battle's attack.
  *
  * ── `value` / `onChange` ──
  *
@@ -62,8 +67,10 @@ export type OnDone = (result: RendererResult) => void;
  * come back; uncontrolled state would silently discard the answer. Omit both
  * and the body keeps its own state, which is what the learning path wants.
  */
+export type AnswerMode = "teach" | "verdict" | "input";
+
 type Controllable<T> = {
-  reveal?: boolean;
+  mode?: AnswerMode;
   value?: T;
   onChange?: (value: T) => void;
 };
@@ -136,7 +143,7 @@ export function SingleChoiceBody({
   options,
   correctIndex,
   explanation,
-  reveal = true,
+  mode = "teach",
   value,
   onChange,
   onDone,
@@ -157,7 +164,7 @@ export function SingleChoiceBody({
   const menu: MenuOption[] = options.map((label, i) => ({
     id: String(i),
     label,
-    tone: !reveal
+    tone: mode === "input"
       ? "default"
       : picked === null
         ? "default"
@@ -175,18 +182,23 @@ export function SingleChoiceBody({
         ariaLabel="Choose your answer"
         columns={2}
         options={menu}
-        selectedId={!reveal && picked !== null ? String(picked) : undefined}
+        selectedId={
+          mode === "input" && picked !== null ? String(picked) : undefined
+        }
         // Locked after answering only when a verdict is on screen. In the exam
         // an answer stays changeable until the paper ends.
-        disabled={reveal && picked !== null}
+        disabled={mode !== "input" && picked !== null}
         onSelect={(id) => {
           const i = Number(id);
           setPicked(i);
-          if (reveal) playSfx(i === correctIndex ? "correct" : "wrong");
+          if (mode !== "input") playSfx(i === correctIndex ? "correct" : "wrong");
           else playSfx("cursor");
         }}
       />
-      {reveal && picked !== null && (
+      {/* Explanation and Continue are the teaching beat. In `verdict` the
+          battle's Paruu speaks the explanation, so printing it here would say
+          everything twice; in `input` nothing is judged at all. */}
+      {mode === "teach" && picked !== null && (
         <>
           <p className="prose-measure text-body text-[var(--foreground-muted)]">
             {explanation}
@@ -211,7 +223,7 @@ export function SingleChoiceBody({
 export function MultiSelectBody({
   prompt,
   options,
-  reveal = true,
+  mode = "teach",
   value,
   onChange,
   onDone,
@@ -232,7 +244,7 @@ export function MultiSelectBody({
   const [checkedState, setChecked] = useState(false);
   // With no verdict there is nothing to check, so the body never enters the
   // checked phase and stays editable for the whole paper.
-  const checked = reveal && checkedState;
+  const checked = mode === "verdict" || (mode === "teach" && checkedState);
 
   const total = options.length;
   // Scored per option, not all-or-nothing: getting three of four right is
@@ -299,7 +311,10 @@ export function MultiSelectBody({
         })}
       </div>
 
-      {!reveal ? null : !checked ? (
+      {/* Actions belong to teaching only. In `verdict` the marks are already
+          applied and the caller drives what happens next; in `input` nothing
+          is judged. */}
+      {mode !== "teach" ? null : !checked ? (
         <CheckButton
           // Untouched distractors used to score as correct, so an empty
           // submission paid shards for zero engagement.
@@ -359,7 +374,7 @@ export function PlacementBody({
   emptyLabel,
   scoreWord,
   answerFor,
-  reveal = true,
+  mode = "teach",
   value,
   onChange,
   onDone,
@@ -389,7 +404,7 @@ export function PlacementBody({
       half-finished drag is interaction state, not an answer. */
   const [held, setHeld] = useState<string | null>(null);
   const [checkedState, setChecked] = useState(false);
-  const checked = reveal && checkedState;
+  const checked = mode === "verdict" || (mode === "teach" && checkedState);
 
   const total = items.length;
   const score = items.filter((i) => placed[i.id] === i.answerSlotId).length;
@@ -550,7 +565,10 @@ export function PlacementBody({
         </div>
       )}
 
-      {!reveal ? null : !checked ? (
+      {/* Actions belong to teaching only. In `verdict` the marks are already
+          applied and the caller drives what happens next; in `input` nothing
+          is judged. */}
+      {mode !== "teach" ? null : !checked ? (
         <CheckButton
           disabled={Object.keys(placed).length < total}
           onClick={() => {
@@ -586,7 +604,7 @@ export function VerdictDeckBody({
   prompt,
   cards,
   variant = "definition",
-  reveal = true,
+  mode = "teach",
   value,
   onChange,
   onDone,
@@ -657,7 +675,7 @@ export function VerdictDeckBody({
             : `Not quite — that is not the definition of “${card.term}”.`,
     });
     // The fling is a flourish. Under reduced motion the card simply resolves.
-    if (!prefs.reducedMotion && reveal) {
+    if (!prefs.reducedMotion && mode !== "input") {
       setLeaving({
         term: card.term,
         definition: card.definition,
@@ -780,7 +798,7 @@ export function VerdictDeckBody({
             </button>
           </div>
         </>
-      ) : reveal ? (
+      ) : mode === "teach" ? (
         <>
           <p className="text-body font-semibold">
             {correctCount}/{cards.length} judged correctly
@@ -813,10 +831,9 @@ export function VerdictDeckBody({
         </div>
       )}
 
-      {/* The verdict in words, never only in motion. Suppressed entirely
-          without `reveal` — on a paper this is exactly the feedback the
-          format forbids. */}
-      {reveal && (
+      {/* The verdict in words, never only in motion. Suppressed in `input`
+          mode — on a paper this is exactly the feedback the format forbids. */}
+      {mode !== "input" && (
         <p
           role="status"
           aria-live="polite"
@@ -851,7 +868,7 @@ export function DropdownBody({
   prompt,
   segments,
   explanation,
-  reveal = true,
+  mode = "teach",
   value,
   onChange,
   onDone,
@@ -875,7 +892,7 @@ export function DropdownBody({
     {},
   );
   const [checkedState, setChecked] = useState(false);
-  const checked = reveal && checkedState;
+  const checked = mode === "verdict" || (mode === "teach" && checkedState);
 
   const total = blanks.length;
   const score = blanks.filter(
@@ -922,7 +939,7 @@ export function DropdownBody({
                     : // No verdict: a filled blank still has to look answered,
                       // or a 60-question paper gives no way to see at a glance
                       // which blanks are still empty.
-                      !reveal && chosen
+                      mode === "input" && chosen
                       ? "border-[var(--gold)]"
                       : ""
               }`}
@@ -941,7 +958,10 @@ export function DropdownBody({
         })}
       </p>
 
-      {!reveal ? null : !checked ? (
+      {/* Actions belong to teaching only. In `verdict` the marks are already
+          applied and the caller drives what happens next; in `input` nothing
+          is judged. */}
+      {mode !== "teach" ? null : !checked ? (
         <CheckButton
           disabled={!allFilled}
           onClick={() => {

@@ -15,9 +15,18 @@ import {
 import { shuffle } from "@/lib/shuffle";
 import {
   getReviewSummary,
-  isSingleAnswer,
+  gradeQuestion,
   selectReviewQuestions,
+  storedAnswer,
 } from "@/lib/review";
+import QuestionCard, {
+  type AnsweredQuestion,
+} from "@/components/question/QuestionCard";
+import {
+  correctAnswerSummary,
+  draftToAnswer,
+  isAnswered,
+} from "@/components/question/draft";
 import { saveQuizAttempt } from "@/lib/storage";
 import { saveQuizAttemptToDb } from "@/lib/actions";
 import { GLITCHLING, GLITCHLING_PALETTE, type PalType } from "@/lib/pals";
@@ -34,11 +43,7 @@ import { useBattleTransition } from "@/components/battle/BattleTransition";
 import MenuList, { type MenuOption } from "@/components/MenuList";
 import DialogueBox, { DialogueFrame } from "@/components/DialogueBox";
 import { useSfx, useTrackControl } from "@/components/AudioProvider";
-import type {
-  Flashcard,
-  QuizResultEntry,
-  SingleAnswerQuestion,
-} from "@/lib/types";
+import type { Flashcard, Question, QuizResultEntry } from "@/lib/types";
 import { ForwardGlyph } from "@/components/Glyph";
 
 const COUNT_OPTIONS = [5, 10, 20, "all"] as const;
@@ -249,16 +254,24 @@ export default function QuizClient({
    * redemption round's fixed set; `count` overrides the length picker.
    */
   const [pending, setPending] = useState<{
-    only: SingleAnswerQuestion[] | null;
+    only: Question[] | null;
     count: number | null;
   }>({ only: null, count: null });
   const [domainFilter, setDomainFilter] = useState<string>(initialDomain);
   const [countChoice, setCountChoice] =
     useState<(typeof COUNT_OPTIONS)[number]>(10);
 
-  const [activeQuestions, setActiveQuestions] = useState<SingleAnswerQuestion[]>([]);
+  const [activeQuestions, setActiveQuestions] = useState<Question[]>([]);
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
+  /**
+   * The in-progress answer for the question on screen.
+   *
+   * Cleared on every advance. Unlike the Proving there is no navigator here —
+   * a battle question is answered once and left behind — so one slot is
+   * enough where the exam needs an array.
+   */
+  const [draft, setDraft] = useState<unknown>(undefined);
   const [results, setResults] = useState<QuizResultEntry[]>([]);
 
   const [playerHp, setPlayerHp] = useState(PLAYER_MAX_HP);
@@ -316,7 +329,7 @@ export default function QuizClient({
    * Every way into a battle goes through this, and every one of them is
    * already wrapped in a blackout — so the full beat is dark, cue, cast, fight.
    */
-  function beginBattle(only?: SingleAnswerQuestion[], count?: number) {
+  function beginBattle(only?: Question[], count?: number) {
     setPending({ only: only ?? null, count: count ?? null });
     setPhase("entering");
   }
@@ -329,26 +342,19 @@ export default function QuizClient({
   // which re-fights exactly the questions just missed. `forcedCount` overrides
   // the length picker; `?wild=N` was its only caller and is gone, so it is
   // currently always null and kept as the seam for a fixed-length battle.
-  function startBattle(only: SingleAnswerQuestion[] | null, forcedCount: number | null) {
+  function startBattle(only: Question[] | null, forcedCount: number | null) {
     const wanted =
       forcedCount ??
       (countChoice === "all" ? Number.MAX_SAFE_INTEGER : countChoice);
 
-    let pool: SingleAnswerQuestion[];
+    let pool: Question[];
     if (only) {
       pool = shuffle(only);
     } else if (domainFilter === REVIEW_FILTER) {
       // Weighted by what the trainer keeps getting wrong, not by chance.
-      pool = selectReviewQuestions(examCode, allAttempts, wanted).filter(
-        isSingleAnswer,
-      );
+      pool = selectReviewQuestions(examCode, allAttempts, wanted);
     } else {
-      // Practice is a battle — HP, a foe, a four-option menu — so it serves
-      // the same single-answer shape the other battles do. The formats that
-      // need a drag surface are the Proving's.
-      pool = shuffle(
-        getQuestionsByDomain(examCode, domainFilter).filter(isSingleAnswer),
-      );
+      pool = shuffle(getQuestionsByDomain(examCode, domainFilter));
     }
 
     const n = only ? pool.length : Math.min(wanted, pool.length);
@@ -356,6 +362,7 @@ export default function QuizClient({
     setActiveQuestions(pool.slice(0, n));
     setIndex(0);
     setSelected(null);
+    setDraft(undefined);
     setResults([]);
     setPlayerHp(PLAYER_MAX_HP);
     setFoeMaxHp(foeMaxHpFor(n));
@@ -412,11 +419,26 @@ export default function QuizClient({
     finish(results, "fled");
   }
 
-  function answer(optionIndex: number) {
+  /** Grade whatever is in the draft and take the turn. */
+  function submitDraft(current: unknown) {
+    const question = activeQuestions[index];
+    const submitted = draftToAnswer(question, current);
+    if (!submitted) return;
+    answer({
+      correct: gradeQuestion(question, submitted),
+      answer: submitted,
+      partial: { correct: 0, total: 0 },
+    });
+  }
+
+  function answer(result: AnsweredQuestion) {
     if (turn !== "asking") return;
 
     const question = activeQuestions[index];
-    const isCorrect = optionIndex === question.correctIndex;
+    // All-or-nothing, the same verdict the Proving uses. A 3-of-4 multi-select
+    // landing a partial hit would make the HP bar say something the score
+    // report does not.
+    const isCorrect = result.correct;
 
     const nextResults: QuizResultEntry[] = [
       ...results,
@@ -424,7 +446,7 @@ export default function QuizClient({
         questionId: question.id,
         domain: question.domain,
         correct: isCorrect,
-        chosenIndex: optionIndex,
+        ...storedAnswer(result.answer),
         at: Date.now(),
       },
     ];
@@ -441,7 +463,9 @@ export default function QuizClient({
     else if (nextPlayerHp <= 0) nextOutcome = "defeat";
     else if (index + 1 >= activeQuestions.length) nextOutcome = "survived";
 
-    setSelected(optionIndex);
+    setSelected(
+      result.answer?.kind === "single" ? result.answer.index : null,
+    );
     setResults(nextResults);
     setFoeHp(nextFoeHp);
     setPlayerHp(nextPlayerHp);
@@ -467,6 +491,7 @@ export default function QuizClient({
     }
     setIndex((i) => Math.min(i + 1, activeQuestions.length - 1));
     setSelected(null);
+    setDraft(undefined);
     setTurn("asking");
   }
 
@@ -638,7 +663,8 @@ export default function QuizClient({
 
   if (phase === "battle") {
     const question = activeQuestions[index];
-    const isCorrect = selected === question.correctIndex;
+    // The verdict was decided in `answer`; the last result carries it.
+    const isCorrect = results[results.length - 1]?.correct ?? false;
 
     // Opens in a new tab on purpose: reading mid-battle should not cost the run.
     const studyHref = studyHrefForQuestion(question);
@@ -650,15 +676,11 @@ export default function QuizClient({
       `Question (${question.id}): ${question.question}\n\nWhat's wrong with this question?\n`,
     )}`;
 
-    const answerOptions: MenuOption[] = question.options.map((option, i) => {
-      let tone: MenuOption["tone"] = "default";
-      if (turn === "resolved") {
-        if (i === question.correctIndex) tone = "correct";
-        else if (i === selected) tone = "wrong";
-        else tone = "muted";
-      }
-      return { id: String(i), label: option, tone };
-    });
+    // A single pick is a complete answer, so it attacks on the click and the
+    // one-tap loop survives. Every other shape needs assembling first, so it
+    // gets an explicit Attack button — an ordering grid is not finished the
+    // moment it is first touched.
+    const singleTap = question.kind === undefined || question.kind === "single";
 
     /**
      * The teaching beat.
@@ -675,8 +697,10 @@ export default function QuizClient({
         ]
       : [
           `${palName}'s answer missed! ${foeName} struck back!`,
-          `The move that lands here is "${question.options[question.correctIndex]}". ${question.explanation}`,
-          selected !== null
+          `The move that lands here is ${correctAnswerSummary(question)}. ${question.explanation}`,
+          // The "you picked X" beat only exists for a single choice; for a
+          // grid or a sequence there is no one wrong thing to name.
+          singleTap && selected !== null
             ? `"${question.options[selected]}" looked right, but it isn't what the question was asking for. Worth remembering — this one catches people out.`
             : "Take a moment with that one before pressing on.",
         ];
@@ -834,12 +858,30 @@ export default function QuizClient({
               </p>
             </DialogueFrame>
 
-            <MenuList
-              ariaLabel="Choose your answer"
-              columns={2}
-              options={answerOptions}
-              onSelect={(id) => answer(Number(id))}
+            {/* `input`: nothing is judged until the attack lands. */}
+            <QuestionCard
+              key={question.id}
+              question={question}
+              mode="input"
+              draft={draft}
+              onDraftChange={(next) => {
+                setDraft(next);
+                if (singleTap) submitDraft(next);
+              }}
+              onAnswered={() => {}}
             />
+
+            {!singleTap && (
+              <button
+                type="button"
+                disabled={!isAnswered(question, draft)}
+                onClick={() => submitDraft(draft)}
+                className="pixel-button tap-target w-fit rounded-md bg-[var(--accent)] px-5 py-2.5 text-body font-medium text-[var(--accent-foreground)] disabled:opacity-40"
+              >
+                Attack
+                <ForwardGlyph />
+              </button>
+            )}
 
             {/* Practice-mode privilege: the vocabulary is available BEFORE
                 committing an answer. Collapsed by default so it's a choice,
@@ -900,13 +942,20 @@ export default function QuizClient({
               />
             )}
 
-            <MenuList
-              ariaLabel="Answer review"
-              columns={2}
-              options={answerOptions}
-              onSelect={() => {}}
-              disabled
-            />
+            {/* `verdict`: right and wrong are marked, but the explanation
+                and any Continue stay out — the pal speaks the explanation in
+                the resolved beat, and printing it here would say everything
+                twice. */}
+            <div className="pointer-events-none">
+              <QuestionCard
+                key={`review-${question.id}`}
+                question={question}
+                mode="verdict"
+                draft={draft}
+                onDraftChange={() => {}}
+                onAnswered={() => {}}
+              />
+            </div>
 
             <a
               href={mailtoHref}
@@ -1004,7 +1053,7 @@ export default function QuizClient({
                   steps like that did not flip with the theme the way the rest
                   of the UI does; `--success` does. */}
               <p className="prose-measure mt-2 text-[var(--success)]">
-                Correct answer: {q.options[q.correctIndex]}
+                Correct answer: {correctAnswerSummary(q)}
               </p>
               <p className="prose-measure mt-1 text-[var(--foreground-muted)]">
                 {q.explanation}
