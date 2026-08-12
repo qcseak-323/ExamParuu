@@ -33,6 +33,13 @@ export type QuestionBase = {
    * mapping degrades to the old behaviour instead of breaking.
    */
   teaches?: string;
+  /**
+   * The case study this question is asked against, if any.
+   *
+   * Optional, so the 440 questions authored before case studies existed are
+   * standalone by omission — the same bargain `kind` and `teaches` struck.
+   */
+  caseStudyId?: string;
 };
 
 /**
@@ -104,6 +111,30 @@ export type Question =
       kind: "dropdown";
       segments: QuestionSegment[];
     });
+
+/**
+ * A case study: one scenario, several questions.
+ *
+ * Microsoft's version presents a company background across tabs — overview,
+ * existing environment, requirements — and then asks several questions
+ * against it. The skill being tested is partly holding that context, which is
+ * why the questions cannot simply be scattered through the paper: they arrive
+ * as a block with the scenario alongside them.
+ *
+ * Questions belong to a case through their own `caseStudyId` rather than
+ * being nested here, so they stay in the ordinary bank — countable by the
+ * coverage gate, reachable by the review deck, and weighted into the paper by
+ * the same domain quota as everything else.
+ */
+export type CaseStudy = {
+  id: string;
+  examCode: string;
+  /** Which skills area the case sits in, for paper weighting. */
+  domain: string;
+  title: string;
+  /** Read in order; the first is the one that opens. */
+  tabs: { heading: string; paragraphs: string[] }[];
+};
 
 /** The historic shape, narrowed. Battles and `buildRecall` only serve these. */
 export type SingleAnswerQuestion = Extract<

@@ -59,6 +59,7 @@ import az104Questions from "../../content/az-104/questions.json";
 import az104Flashcards from "../../content/az-104/flashcards.json";
 import az104StudyGuide from "../../content/az-104/study-guide.json";
 import az104Path from "../../content/az-104/learning-path.json";
+import az104CaseStudies from "../../content/az-104/case-studies.json";
 
 import pl900Outline from "../../content/pl-900/outline.json";
 import pl900Questions from "../../content/pl-900/questions.json";
@@ -67,6 +68,7 @@ import pl900StudyGuide from "../../content/pl-900/study-guide.json";
 import pl900Path from "../../content/pl-900/learning-path.json";
 
 import type {
+  CaseStudy,
   Outline,
   Question,
   Flashcard,
@@ -84,6 +86,8 @@ type ExamContent = {
   flashcards: Flashcard[];
   studyGuide: StudyGuideDomain[];
   learningPath: ExamLearningPath;
+  /** Absent until an exam has authored any. */
+  caseStudies?: CaseStudy[];
 };
 
 const examRegistry: Record<string, ExamContent> = {
@@ -142,6 +146,7 @@ const examRegistry: Record<string, ExamContent> = {
     flashcards: az104Flashcards as Flashcard[],
     studyGuide: az104StudyGuide as StudyGuideDomain[],
     learningPath: az104Path as ExamLearningPath,
+    caseStudies: az104CaseStudies as CaseStudy[],
   },
   "dp-900": {
     outline: dp900Outline as Outline,
@@ -184,6 +189,16 @@ export function getCatalogEntry(examCode: string): CatalogEntry | undefined {
 
 export function getExamContent(examCode: string): ExamContent | undefined {
   return examRegistry[examCode];
+}
+
+/** The scenario a question is asked against, if it belongs to a case study. */
+export function getCaseStudyForQuestion(
+  question: Question,
+): CaseStudy | undefined {
+  if (!question.caseStudyId) return undefined;
+  return getExamContent(question.examCode)?.caseStudies?.find(
+    (c) => c.id === question.caseStudyId,
+  );
 }
 
 export function getExamCodesWithContent(): string[] {
@@ -378,6 +393,102 @@ export function validateContent(): string[] {
       if (question.teaches && !sectionIds.has(question.teaches)) {
         problems.push(
           `${examCode}: question ${question.id} teaches "${question.teaches}", which is not a section id`,
+        );
+      }
+
+      /*
+       * Shape checks per kind.
+       *
+       * TypeScript proves the union is satisfied at compile time, but every
+       * question is JSON cast to `Question` at the module boundary — so an
+       * index out of range or a `correctOrder` that is not a permutation
+       * type-checks fine and then grades as unanswerable at run time. These
+       * are the mistakes hand-authoring actually makes.
+       */
+      const bad = (why: string) =>
+        problems.push(`${examCode}: question ${question.id} ${why}`);
+
+      switch (question.kind) {
+        case undefined:
+        case "single":
+          if (
+            question.correctIndex < 0 ||
+            question.correctIndex >= question.options.length
+          ) {
+            bad("has a correctIndex outside its options");
+          }
+          break;
+        case "multi":
+          if (question.correctIndexes.length === 0) bad("has no correct answer");
+          if (
+            new Set(question.correctIndexes).size !==
+            question.correctIndexes.length
+          ) {
+            bad("repeats an index in correctIndexes");
+          }
+          if (
+            question.correctIndexes.some(
+              (i) => i < 0 || i >= question.options.length,
+            )
+          ) {
+            bad("has a correctIndexes entry outside its options");
+          }
+          break;
+        case "order": {
+          const sorted = [...question.correctOrder].sort((a, b) => a - b);
+          const expected = question.items.map((_, i) => i);
+          if (sorted.join() !== expected.join()) {
+            bad("has a correctOrder that is not a permutation of its items");
+          }
+          break;
+        }
+        case "match":
+          if (question.pairs.length < 2) bad("needs at least two pairs");
+          break;
+        case "yesno":
+          if (question.statements.length < 2) bad("needs at least two statements");
+          break;
+        case "dropdown": {
+          const blanks = question.segments.filter(
+            (s): s is Extract<typeof s, { blankId: string }> => "blankId" in s,
+          );
+          if (blanks.length === 0) bad("has no blanks");
+          if (new Set(blanks.map((b) => b.blankId)).size !== blanks.length) {
+            bad("repeats a blankId");
+          }
+          for (const blank of blanks) {
+            if (
+              blank.correctIndex < 0 ||
+              blank.correctIndex >= blank.options.length
+            ) {
+              bad(`has blank "${blank.blankId}" pointing outside its options`);
+            }
+          }
+          break;
+        }
+      }
+
+      if (
+        question.caseStudyId &&
+        !content.caseStudies?.some((c) => c.id === question.caseStudyId)
+      ) {
+        bad(`belongs to unknown case study "${question.caseStudyId}"`);
+      }
+    }
+
+    for (const caseStudy of content.caseStudies ?? []) {
+      if (!domainIds.has(caseStudy.domain)) {
+        problems.push(
+          `${examCode}: case study ${caseStudy.id} has unknown domain "${caseStudy.domain}"`,
+        );
+      }
+      if (caseStudy.tabs.length === 0) {
+        problems.push(`${examCode}: case study ${caseStudy.id} has no tabs`);
+      }
+      // A case study nothing points at renders nowhere, which is silent.
+      if (!content.questions.some((q) => q.caseStudyId === caseStudy.id)) {
+        problems.push(
+          `${examCode}: case study ${caseStudy.id} has no questions`,
         );
       }
     }

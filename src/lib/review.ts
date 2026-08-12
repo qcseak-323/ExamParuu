@@ -362,17 +362,102 @@ export function buildExamPaper(
   }
 
   const paper: Question[] = [];
-  domains.forEach((domain, i) => {
+  const taken = new Set<string>();
+  const takenCases = new Set<string>();
+
+  /**
+   * Fill up to `room` questions from `ordered`, never splitting a case study.
+   *
+   * A case study is atomic. Half of one is worse than none: the scenario is
+   * still read in full, the paper still spends the reading time, and the
+   * questions that would have paid for it are missing. So a case is taken
+   * whole or skipped, and it is skipped when the whole block will not fit.
+   */
+  function fill(ordered: Question[], room: number): Question[] {
+    const picked: Question[] = [];
+    for (const question of ordered) {
+      if (picked.length >= room) break;
+      if (taken.has(question.id)) continue;
+
+      if (!question.caseStudyId) {
+        picked.push(question);
+        taken.add(question.id);
+        continue;
+      }
+
+      if (takenCases.has(question.caseStudyId)) continue;
+      const block = ordered.filter(
+        (q) => q.caseStudyId === question.caseStudyId && !taken.has(q.id),
+      );
+      if (picked.length + block.length > room) continue;
+      takenCases.add(question.caseStudyId);
+      for (const q of block) {
+        picked.push(q);
+        taken.add(q.id);
+      }
+    }
+    return picked;
+  }
+
+  const byDomain = domains.map((domain) => {
     const all = getQuestionsByDomain(examCode, domain.id);
     const pool = only ? all.filter(only) : all;
     const unseen = pool.filter((q) => !history.has(q.id));
     const seen = pool.filter((q) => history.has(q.id));
     // Unseen first, then previously-seen to top up a thin domain.
-    const ordered = [...shuffleLocal(unseen), ...shuffleLocal(seen)];
-    paper.push(...ordered.slice(0, quota[i]));
+    return [...shuffleLocal(unseen), ...shuffleLocal(seen)];
   });
 
-  return shuffleLocal(paper);
+  byDomain.forEach((ordered, i) => paper.push(...fill(ordered, quota[i])));
+
+  /*
+   * Backfill.
+   *
+   * A quota can exceed what its domain actually has — the blueprint says a
+   * domain is worth 20% but only fourteen questions are authored for it — and
+   * without this the paper simply comes up short, which is not something a
+   * real exam does. Anything left over is taken from the domains that do have
+   * spare, so the length is exact and the weighting is as close as the
+   * content allows.
+   */
+  let shortfall = count - paper.length;
+  for (const ordered of byDomain) {
+    if (shortfall <= 0) break;
+    const extra = fill(ordered, shortfall);
+    paper.push(...extra);
+    shortfall -= extra.length;
+  }
+
+  return groupCaseStudies(shuffleLocal(paper));
+}
+
+/**
+ * Pull each case study's questions into one contiguous run.
+ *
+ * A case study is a block of the paper, not a theme sprinkled through it —
+ * the scenario is read once and then answered against several times, and
+ * shuffling its questions apart would make the reader re-read it for each
+ * one. The block lands where its first question fell, so the shuffle still
+ * decides ordering; it just cannot split a case.
+ *
+ * Standalone questions keep their shuffled positions exactly.
+ */
+function groupCaseStudies(paper: Question[]): Question[] {
+  const seen = new Set<string>();
+  const out: Question[] = [];
+
+  for (const question of paper) {
+    const caseId = question.caseStudyId;
+    if (!caseId) {
+      out.push(question);
+      continue;
+    }
+    if (seen.has(caseId)) continue;
+    seen.add(caseId);
+    out.push(...paper.filter((q) => q.caseStudyId === caseId));
+  }
+
+  return out;
 }
 
 /**

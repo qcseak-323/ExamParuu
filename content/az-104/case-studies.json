@@ -1,0 +1,38 @@
+[
+  {
+    "id": "cs-contoso-migration",
+    "examCode": "az-104",
+    "domain": "virtual-networking",
+    "title": "Contoso Manufacturing — hybrid network migration",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Contoso Manufacturing runs three plants — Derby, Porto and Penang — and a head office in Derby. The company is moving its shared services into Azure over the next two quarters and has asked you to design and operate the network estate.",
+          "A single Azure subscription, Contoso-Prod, sits under a management group named Contoso. A second subscription, Contoso-Dev, was created by the application team last year and is not yet under that management group."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "Derby hosts an on-premises datacentre connected to Azure by a site-to-site VPN terminating on a virtual network gateway in a hub virtual network named vnet-hub (10.0.0.0/16). The gateway sits in GatewaySubnet.",
+          "Two spoke virtual networks are peered to vnet-hub: vnet-app (10.1.0.0/16) and vnet-data (10.2.0.0/16). Neither has a gateway of its own. The peerings were created with default settings.",
+          "A third virtual network, vnet-legacy (10.1.0.0/16), exists in Contoso-Dev and is not peered to anything.",
+          "All virtual machines run in vnet-app. They have no public IP addresses and reach the internet today through a public load balancer that was recently replaced with an internal one.",
+          "A storage account named contosoplantlogs receives telemetry from all three plants. It is currently reachable from any network."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Virtual machines in vnet-app and vnet-data must reach the Derby datacentre without deploying a gateway in either spoke.",
+          "Virtual machines in vnet-app must be able to reach the internet for operating-system updates. Administrators must not add a public IP address to any virtual machine.",
+          "Administrators must be able to open an RDP session to any virtual machine without exposing port 3389 to the internet and without giving any machine a public IP address.",
+          "The contosoplantlogs storage account must be reachable from vnet-data and from the Derby datacentre over the VPN, using a private address, and must not be reachable from the public internet.",
+          "vnet-legacy must eventually be joined to the hub. Any proposal must account for its addressing.",
+          "Cost must be kept as low as the other requirements allow."
+        ]
+      }
+    ]
+  }
+]

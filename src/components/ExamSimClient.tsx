@@ -2,7 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { getCatalogEntry, getExamContent } from "@/lib/content";
+import {
+  getCaseStudyForQuestion,
+  getCatalogEntry,
+  getExamContent,
+} from "@/lib/content";
+import CaseStudyPane from "@/components/question/CaseStudyPane";
 import {
   EXAM_PAPER_SIZE,
   buildExamPaper,
@@ -339,6 +344,7 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
     const question = paper[index];
     if (!question) return null;
 
+    const caseStudy = getCaseStudyForQuestion(question);
     const lowTime = remainingMs < 5 * 60_000;
     const answeredCount = paper.filter((q, i) => isAnswered(q, drafts[i])).length;
     const markedCount = marked.filter(Boolean).length;
@@ -464,6 +470,20 @@ export default function ExamSimClient({ examCode }: { examCode: string }) {
               </button>
             </div>
           </div>
+        )}
+
+        {/* Keyed on the CASE, not the question: the pane stays mounted
+            across the case's questions so the tab a trainer opened is still
+            open on the next one. Re-finding the requirements tab five times
+            in a row is not the skill being tested. */}
+        {caseStudy && (
+          <CaseStudyPane
+            key={caseStudy.id}
+            caseStudy={caseStudy}
+            questionCount={
+              paper.filter((q) => q.caseStudyId === caseStudy.id).length
+            }
+          />
         )}
 
         {/* `key` is load-bearing: without it React keeps one QuestionCard
