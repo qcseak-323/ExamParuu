@@ -1,0 +1,45 @@
+{
+  "examCode": "AB-731",
+  "examName": "AI Transformation Leader",
+  "note": "Domain weights follow Microsoft's published skills-measured outline for AB-731, 'Skills measured as of July 22, 2026'. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "business-value",
+      "name": "Identify the business value of generative AI solutions",
+      "weight": "35-40%",
+      "subtopics": [
+        "How generative AI differs from other kinds of AI",
+        "Pretrained against fine-tuned models, and matching a model to a need",
+        "Cost drivers including tokens, and return-on-investment considerations",
+        "Challenges: fabrications, reliability and bias",
+        "Prompt engineering, grounding and retrieval-augmented generation",
+        "The machine learning lifecycle and security considerations for AI systems"
+      ]
+    },
+    {
+      "id": "microsoft-ai-capabilities",
+      "name": "Identify benefits, capabilities, and opportunities for Microsoft's AI apps and services",
+      "weight": "35-40%",
+      "subtopics": [
+        "Mapping business processes and use cases to Copilot",
+        "Differences between Copilot versions and across Microsoft 365 apps",
+        "Copilot Studio and Microsoft Graph capabilities",
+        "When to use Researcher or Analyst",
+        "Build, buy or extend, and the Microsoft 365 Copilot extensibility framework",
+        "Foundry Tools capabilities and matching a model to a business need"
+      ]
+    },
+    {
+      "id": "adoption-strategy",
+      "name": "Identify an implementation and adoption strategy for Microsoft's AI apps and services",
+      "weight": "20-25%",
+      "subtopics": [
+        "Why responsible AI matters, and establishing governance principles",
+        "Establishing an AI council and an adoption team",
+        "Common barriers to adoption and an AI champions programme",
+        "Impacts on data, security, privacy and cost",
+        "Copilot licence types and Foundry Tools subscription models"
+      ]
+    }
+  ]
+}

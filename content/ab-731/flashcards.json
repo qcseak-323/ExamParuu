@@ -1,0 +1,191 @@
+[
+  {
+    "id": "fc-bv-01",
+    "examCode": "ab-731",
+    "domain": "business-value",
+    "front": "Generative vs traditional AI",
+    "back": "Traditional AI classifies, predicts or detects. Generative AI produces new content from a prompt."
+  },
+  {
+    "id": "fc-bv-02",
+    "examCode": "ab-731",
+    "domain": "business-value",
+    "front": "Pretrained model",
+    "back": "A model trained on broad data before you ever see it. The default starting point."
+  },
+  {
+    "id": "fc-bv-03",
+    "examCode": "ab-731",
+    "domain": "business-value",
+    "front": "Fine-tuning vs grounding",
+    "back": "Fine-tuning retrains with your examples and is expensive. Grounding supplies your data at request time and is usually the right first answer."
+  },
+  {
+    "id": "fc-bv-04",
+    "examCode": "ab-731",
+    "domain": "business-value",
+    "front": "Tokens",
+    "back": "The billable units of text going in and coming out. Longer prompts, bigger context and longer answers all cost more."
+  },
+  {
+    "id": "fc-bv-05",
+    "examCode": "ab-731",
+    "domain": "business-value",
+    "front": "Total cost of ownership",
+    "back": "The ROI case has to include usage, integration and oversight — not the licence price alone."
+  },
+  {
+    "id": "fc-bv-06",
+    "examCode": "ab-731",
+    "domain": "business-value",
+    "front": "Known limits",
+    "back": "Fabrications, inconsistent reliability and inherited bias are properties of the technology, not defects awaiting a patch."
+  },
+  {
+    "id": "fc-bv-07",
+    "examCode": "ab-731",
+    "domain": "business-value",
+    "front": "Prompt engineering",
+    "back": "Stating role, format, constraints and an example measurably improves output."
+  },
+  {
+    "id": "fc-bv-08",
+    "examCode": "ab-731",
+    "domain": "business-value",
+    "front": "Grounding",
+    "back": "Connecting a model to your own content so answers are specific and citable."
+  },
+  {
+    "id": "fc-bv-09",
+    "examCode": "ab-731",
+    "domain": "business-value",
+    "front": "Retrieval-augmented generation",
+    "back": "Retrieve the relevant passages first, then answer from them. Current and citable without retraining."
+  },
+  {
+    "id": "fc-mac-01",
+    "examCode": "ab-731",
+    "domain": "microsoft-ai-capabilities",
+    "front": "Copilot in each app",
+    "back": "Drafting in Word, analysing in Excel, summarising threads in Outlook, recapping in Teams."
+  },
+  {
+    "id": "fc-mac-02",
+    "examCode": "ab-731",
+    "domain": "microsoft-ai-capabilities",
+    "front": "Microsoft Graph",
+    "back": "The layer that grounds licensed Copilot in your organisation's own data, making answers business-specific."
+  },
+  {
+    "id": "fc-mac-03",
+    "examCode": "ab-731",
+    "domain": "microsoft-ai-capabilities",
+    "front": "Mapping a process to Copilot",
+    "back": "Start from the app the work already happens in, not from the technology."
+  },
+  {
+    "id": "fc-mac-04",
+    "examCode": "ab-731",
+    "domain": "microsoft-ai-capabilities",
+    "front": "Researcher",
+    "back": "The agent for multi-step investigation across many sources."
+  },
+  {
+    "id": "fc-mac-05",
+    "examCode": "ab-731",
+    "domain": "microsoft-ai-capabilities",
+    "front": "Analyst",
+    "back": "The agent for reasoning over data to produce figures and charts."
+  },
+  {
+    "id": "fc-mac-06",
+    "examCode": "ab-731",
+    "domain": "microsoft-ai-capabilities",
+    "front": "Build, buy or extend",
+    "back": "Extend the existing Copilot when the gap is knowledge; build in Copilot Studio when the gap is behaviour."
+  },
+  {
+    "id": "fc-mac-07",
+    "examCode": "ab-731",
+    "domain": "microsoft-ai-capabilities",
+    "front": "Foundry Tools",
+    "back": "The pro-code end: a model catalogue, Azure AI Search for retrieval, plus vision and language capabilities."
+  },
+  {
+    "id": "fc-mac-08",
+    "examCode": "ab-731",
+    "domain": "microsoft-ai-capabilities",
+    "front": "Azure AI Search",
+    "back": "The retrieval service behind grounded answers over your own indexed content."
+  },
+  {
+    "id": "fc-mac-09",
+    "examCode": "ab-731",
+    "domain": "microsoft-ai-capabilities",
+    "front": "Choosing a model",
+    "back": "A trade-off of capability, latency and cost. The right answer is the smallest model that reliably does the job."
+  },
+  {
+    "id": "fc-as-01",
+    "examCode": "ab-731",
+    "domain": "adoption-strategy",
+    "front": "Responsible AI Standard",
+    "back": "Fairness, reliability and safety, privacy and security, inclusiveness, transparency, accountability."
+  },
+  {
+    "id": "fc-as-02",
+    "examCode": "ab-731",
+    "domain": "adoption-strategy",
+    "front": "Governance",
+    "back": "Turning principles into owned decisions: which use cases are approved, what review they need, and who can say no."
+  },
+  {
+    "id": "fc-as-03",
+    "examCode": "ab-731",
+    "domain": "adoption-strategy",
+    "front": "AI council",
+    "back": "A cross-functional body with real authority over AI strategy and oversight."
+  },
+  {
+    "id": "fc-as-04",
+    "examCode": "ab-731",
+    "domain": "adoption-strategy",
+    "front": "Adoption team",
+    "back": "The group that owns the rollout itself, distinct from the council that sets policy."
+  },
+  {
+    "id": "fc-as-05",
+    "examCode": "ab-731",
+    "domain": "adoption-strategy",
+    "front": "Barriers to adoption",
+    "back": "No clear use case, no visible sponsorship, fear about job security, and no time set aside to learn."
+  },
+  {
+    "id": "fc-as-06",
+    "examCode": "ab-731",
+    "domain": "adoption-strategy",
+    "front": "AI champions programme",
+    "back": "Spreading capability peer to peer, which works because the person showing you a prompt sits next to you."
+  },
+  {
+    "id": "fc-as-07",
+    "examCode": "ab-731",
+    "domain": "adoption-strategy",
+    "front": "Copilot licence types",
+    "back": "Included with some subscriptions, purchased monthly per user, or consumed pay-as-you-go."
+  },
+  {
+    "id": "fc-as-08",
+    "examCode": "ab-731",
+    "domain": "adoption-strategy",
+    "front": "Foundry subscription models",
+    "back": "Consumption-based, with commitment tiers where volume is predictable."
+  },
+  {
+    "id": "fc-as-09",
+    "examCode": "ab-731",
+    "domain": "adoption-strategy",
+    "front": "Choosing a cost model",
+    "back": "Depends on how steady and concentrated usage is, and whether committing buys a better rate."
+  }
+]

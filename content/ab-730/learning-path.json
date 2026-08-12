@@ -1,0 +1,138 @@
+{
+  "examCode": "AB-730",
+  "note": "Learning path structure mirrors the domains of Microsoft's published skills outline. All teaching content is original to ExamParuu. No code-prefixed Microsoft Learn path is published for this exam, so msLearnUrl is null and the study-guide sections stand in as modules.",
+  "paths": [
+    {
+      "id": "gen-ai-fundamentals",
+      "title": "Get started with AI for business productivity",
+      "domainId": "gen-ai-fundamentals",
+      "msLearnUrl": null,
+      "modules": [
+        {
+          "id": "gen-ai-fundamentals-m1",
+          "title": "How Copilot keeps your work private",
+          "sectionIds": [
+            "how-copilot-keeps-your-work-private"
+          ],
+          "cardIds": [
+            "fc-gaf-01",
+            "fc-gaf-02",
+            "fc-gaf-03"
+          ]
+        },
+        {
+          "id": "gen-ai-fundamentals-m2",
+          "title": "Context, chat and agents",
+          "sectionIds": [
+            "context-chat-and-agents"
+          ],
+          "cardIds": [
+            "fc-gaf-04",
+            "fc-gaf-05",
+            "fc-gaf-06"
+          ]
+        },
+        {
+          "id": "gen-ai-fundamentals-m3",
+          "title": "Risks, and how to verify",
+          "sectionIds": [
+            "risks-and-how-to-verify"
+          ],
+          "cardIds": [
+            "fc-gaf-07",
+            "fc-gaf-08",
+            "fc-gaf-09"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prompts-conversations",
+      "title": "Work with prompts and agents in Microsoft 365 Copilot",
+      "domainId": "prompts-conversations",
+      "msLearnUrl": null,
+      "modules": [
+        {
+          "id": "prompts-conversations-m1",
+          "title": "Writing an effective prompt",
+          "sectionIds": [
+            "writing-an-effective-prompt"
+          ],
+          "cardIds": [
+            "fc-pc-01",
+            "fc-pc-02",
+            "fc-pc-03"
+          ]
+        },
+        {
+          "id": "prompts-conversations-m2",
+          "title": "Saving, scheduling and sharing prompts",
+          "sectionIds": [
+            "saving-scheduling-and-sharing-prompts"
+          ],
+          "cardIds": [
+            "fc-pc-04",
+            "fc-pc-05",
+            "fc-pc-06"
+          ]
+        },
+        {
+          "id": "prompts-conversations-m3",
+          "title": "Conversations and agents",
+          "sectionIds": [
+            "conversations-and-agents"
+          ],
+          "cardIds": [
+            "fc-pc-07",
+            "fc-pc-08",
+            "fc-pc-09"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "draft-analyze",
+      "title": "Draft and analyze business content with Copilot",
+      "domainId": "draft-analyze",
+      "msLearnUrl": null,
+      "modules": [
+        {
+          "id": "draft-analyze-m1",
+          "title": "Drafting documents and communications",
+          "sectionIds": [
+            "drafting-documents-and-communications"
+          ],
+          "cardIds": [
+            "fc-da-01",
+            "fc-da-02",
+            "fc-da-03"
+          ]
+        },
+        {
+          "id": "draft-analyze-m2",
+          "title": "Moving insight between apps",
+          "sectionIds": [
+            "moving-insight-between-apps"
+          ],
+          "cardIds": [
+            "fc-da-04",
+            "fc-da-05",
+            "fc-da-06"
+          ]
+        },
+        {
+          "id": "draft-analyze-m3",
+          "title": "Meetings, Pages, memory and instructions",
+          "sectionIds": [
+            "meetings-pages-memory-and-instructions"
+          ],
+          "cardIds": [
+            "fc-da-07",
+            "fc-da-08",
+            "fc-da-09"
+          ]
+        }
+      ]
+    }
+  ]
+}

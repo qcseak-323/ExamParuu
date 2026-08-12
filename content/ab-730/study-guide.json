@@ -1,0 +1,89 @@
+[
+  {
+    "domainId": "gen-ai-fundamentals",
+    "sections": [
+      {
+        "heading": "How Copilot keeps your work private",
+        "paragraphs": [
+          "Microsoft 365 Copilot answers from content you already have permission to see. It honours the permissions on the underlying files and sites, so it cannot surface a document you could not open yourself. Your prompts and responses are not used to train the underlying foundation models.",
+          "Because access is inherited rather than granted, the fastest way to change what Copilot can reach is to change the permissions on the content itself. An over-shared site is the usual reason a response contains something the reader did not expect to see."
+        ],
+        "id": "how-copilot-keeps-your-work-private"
+      },
+      {
+        "heading": "Context, chat and agents",
+        "paragraphs": [
+          "A response is shaped by the context available to it: the files you can reach, the app you are working in, and where enabled the web. The same prompt asked in Word and in Teams can return different things because the surrounding context differs.",
+          "A chat experience is a general conversation. An agent is scoped: it carries its own instructions, its own knowledge sources and its own suggested prompts, so it behaves consistently for one particular task. Build one when several people repeat the same job and you want the same framing every time."
+        ],
+        "id": "context-chat-and-agents"
+      },
+      {
+        "heading": "Risks, and how to verify",
+        "paragraphs": [
+          "Three risks matter for everyday use. A fabrication is a fluent answer that is simply wrong. Prompt injection is hostile text hidden inside content the model reads, attempting to redirect it. Over-reliance is accepting output without checking it.",
+          "The mitigation is proportionate verification: follow the citations, confirm figures against the source, and keep a human review step wherever output leaves the organisation or affects a decision. Sensitivity labels and data protection policies also restrict what a prompt is allowed to return."
+        ],
+        "id": "risks-and-how-to-verify"
+      }
+    ]
+  },
+  {
+    "domainId": "prompts-conversations",
+    "sections": [
+      {
+        "heading": "Writing an effective prompt",
+        "paragraphs": [
+          "A good prompt states the goal, the audience, the format and the sources to use. Vague prompts produce generic output, so naming the deliverable, such as a five-bullet summary for the leadership team, does more than any amount of rephrasing.",
+          "Referencing the right resources matters as much as the wording. Pointing at a specific file, meeting or site narrows what the model draws on and makes the answer checkable, because the citation leads somewhere you can open."
+        ],
+        "id": "writing-an-effective-prompt"
+      },
+      {
+        "heading": "Saving, scheduling and sharing prompts",
+        "paragraphs": [
+          "A prompt that works is worth keeping. Saving it makes it reusable, scheduling it runs it on a recurring basis without anyone retyping it, and sharing it gives colleagues the same starting point rather than each inventing their own.",
+          "This is the practical difference between one person using AI and a team using it. A shared prompt library is what stops the same weekly report being requested nine different ways."
+        ],
+        "id": "saving-scheduling-and-sharing-prompts"
+      },
+      {
+        "heading": "Conversations and agents",
+        "paragraphs": [
+          "Conversations persist. You can find previous chats, rename one so it is recognisable later, delete one you no longer want, and add a conversation to a notebook so its content sits alongside related work.",
+          "For agents, check the Agent Store before building anything, because an existing agent may already cover the need. When you do build, a template is the quickest start, and the pieces to configure are its instructions, the knowledge it can draw on, its capabilities and the suggested prompts users see first. Then share it with the team who need it."
+        ],
+        "id": "conversations-and-agents"
+      }
+    ]
+  },
+  {
+    "domainId": "draft-analyze",
+    "sections": [
+      {
+        "heading": "Drafting documents and communications",
+        "paragraphs": [
+          "Copilot can create a document from a prompt alone, or generate one from an existing document, turning a proposal into a briefing or a long report into a management summary aimed at a different reader.",
+          "The generated draft is a starting point, not a deliverable. The value is in skipping the blank page; the judgment about what to keep, cut and correct stays with the person whose name is on it."
+        ],
+        "id": "drafting-documents-and-communications"
+      },
+      {
+        "heading": "Moving insight between apps",
+        "paragraphs": [
+          "Work rarely stays in one app. Insight generated in a chat can move into a document, a summary can become slides, and figures can move into a workbook for analysis.",
+          "Keeping the chain visible matters. When a number travels from a source file into a summary and then into a deck, the citation is what lets a reader trace it back."
+        ],
+        "id": "moving-insight-between-apps"
+      },
+      {
+        "heading": "Meetings, Pages, memory and instructions",
+        "paragraphs": [
+          "In meetings, Copilot can summarise what was discussed, list decisions and action items, and answer questions about what was said, which is useful both to those who attended and those who did not.",
+          "Copilot Pages turn a response into a shared, editable surface several people can work on together. Memory and custom instructions let Copilot carry standing preferences such as tone, role and recurring context, so they do not have to be restated in every prompt."
+        ],
+        "id": "meetings-pages-memory-and-instructions"
+      }
+    ]
+  }
+]

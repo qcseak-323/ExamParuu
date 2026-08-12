@@ -1,0 +1,191 @@
+[
+  {
+    "id": "fc-gaf-01",
+    "examCode": "ab-730",
+    "domain": "gen-ai-fundamentals",
+    "front": "Permission inheritance",
+    "back": "Copilot can only surface content you already have permission to open — it never widens access, so an unexpected result usually means the content is over-shared."
+  },
+  {
+    "id": "fc-gaf-02",
+    "examCode": "ab-730",
+    "domain": "gen-ai-fundamentals",
+    "front": "Model training",
+    "back": "Your prompts and responses are not used to train the underlying foundation models."
+  },
+  {
+    "id": "fc-gaf-03",
+    "examCode": "ab-730",
+    "domain": "gen-ai-fundamentals",
+    "front": "Context",
+    "back": "The files you can reach, the app you are in and, where enabled, the web. The same prompt in different apps can return different answers."
+  },
+  {
+    "id": "fc-gaf-04",
+    "examCode": "ab-730",
+    "domain": "gen-ai-fundamentals",
+    "front": "Chat vs agent",
+    "back": "Chat is a general conversation. An agent is scoped, carrying its own instructions, knowledge and suggested prompts so it behaves the same way every time."
+  },
+  {
+    "id": "fc-gaf-05",
+    "examCode": "ab-730",
+    "domain": "gen-ai-fundamentals",
+    "front": "When to build an agent",
+    "back": "When several people repeat the same task and you want consistent framing, knowledge and tone across all of them."
+  },
+  {
+    "id": "fc-gaf-06",
+    "examCode": "ab-730",
+    "domain": "gen-ai-fundamentals",
+    "front": "Suggested prompts",
+    "back": "Starter prompts shown to a user when they open an agent, so they know what it is good for without being told."
+  },
+  {
+    "id": "fc-gaf-07",
+    "examCode": "ab-730",
+    "domain": "gen-ai-fundamentals",
+    "front": "Fabrication",
+    "back": "A fluent, confident answer that is factually wrong. The reason citation checking is a habit rather than an option."
+  },
+  {
+    "id": "fc-gaf-08",
+    "examCode": "ab-730",
+    "domain": "gen-ai-fundamentals",
+    "front": "Prompt injection",
+    "back": "Hostile instructions hidden inside content the model reads, written to redirect what it does."
+  },
+  {
+    "id": "fc-gaf-09",
+    "examCode": "ab-730",
+    "domain": "gen-ai-fundamentals",
+    "front": "Over-reliance",
+    "back": "Accepting AI output without verification. Mitigated by human review wherever output leaves the organisation or drives a decision."
+  },
+  {
+    "id": "fc-pc-01",
+    "examCode": "ab-730",
+    "domain": "prompts-conversations",
+    "front": "Parts of a good prompt",
+    "back": "Goal, audience, format and the sources to draw on. Naming the deliverable beats rephrasing."
+  },
+  {
+    "id": "fc-pc-02",
+    "examCode": "ab-730",
+    "domain": "prompts-conversations",
+    "front": "Referencing a resource",
+    "back": "Pointing at a specific file, meeting or site narrows the context and makes the answer checkable through its citation."
+  },
+  {
+    "id": "fc-pc-03",
+    "examCode": "ab-730",
+    "domain": "prompts-conversations",
+    "front": "Why prompts get vague answers",
+    "back": "Because the prompt did not say who the answer is for or what shape it should take."
+  },
+  {
+    "id": "fc-pc-04",
+    "examCode": "ab-730",
+    "domain": "prompts-conversations",
+    "front": "Saving a prompt",
+    "back": "Keeps a prompt that works so it can be reused rather than reinvented."
+  },
+  {
+    "id": "fc-pc-05",
+    "examCode": "ab-730",
+    "domain": "prompts-conversations",
+    "front": "Scheduling a prompt",
+    "back": "Runs a saved prompt on a recurring basis without anyone retyping it."
+  },
+  {
+    "id": "fc-pc-06",
+    "examCode": "ab-730",
+    "domain": "prompts-conversations",
+    "front": "Sharing a prompt",
+    "back": "Gives colleagues the same tested starting point — the basis of a team prompt library."
+  },
+  {
+    "id": "fc-pc-07",
+    "examCode": "ab-730",
+    "domain": "prompts-conversations",
+    "front": "Managing conversations",
+    "back": "Chats can be found again, renamed for recognition, deleted, or added to a notebook alongside related work."
+  },
+  {
+    "id": "fc-pc-08",
+    "examCode": "ab-730",
+    "domain": "prompts-conversations",
+    "front": "Agent Store",
+    "back": "Check it before building. An existing agent may already cover the need."
+  },
+  {
+    "id": "fc-pc-09",
+    "examCode": "ab-730",
+    "domain": "prompts-conversations",
+    "front": "Configuring an agent",
+    "back": "Its instructions, the knowledge it can draw on, its capabilities and its suggested prompts — then share it with the people who need it."
+  },
+  {
+    "id": "fc-da-01",
+    "examCode": "ab-730",
+    "domain": "draft-analyze",
+    "front": "Document from a prompt",
+    "back": "Copilot drafts a new document from a description alone, skipping the blank page."
+  },
+  {
+    "id": "fc-da-02",
+    "examCode": "ab-730",
+    "domain": "draft-analyze",
+    "front": "Document from a document",
+    "back": "Generate one artefact from another — a briefing from a proposal, or a summary from a long report."
+  },
+  {
+    "id": "fc-da-03",
+    "examCode": "ab-730",
+    "domain": "draft-analyze",
+    "front": "Management summary",
+    "back": "A short version of a longer document, rewritten for a reader who will not read the original."
+  },
+  {
+    "id": "fc-da-04",
+    "examCode": "ab-730",
+    "domain": "draft-analyze",
+    "front": "Moving insight between apps",
+    "back": "Chat output into a document, a summary into slides, figures into a workbook."
+  },
+  {
+    "id": "fc-da-05",
+    "examCode": "ab-730",
+    "domain": "draft-analyze",
+    "front": "Why citations matter downstream",
+    "back": "They let a reader trace a number back through the summary to its source file."
+  },
+  {
+    "id": "fc-da-06",
+    "examCode": "ab-730",
+    "domain": "draft-analyze",
+    "front": "Draft as a starting point",
+    "back": "The generated text is a first pass. Judgment about what to keep and correct stays with the author."
+  },
+  {
+    "id": "fc-da-07",
+    "examCode": "ab-730",
+    "domain": "draft-analyze",
+    "front": "Copilot in meetings",
+    "back": "Summarises discussion, lists decisions and action items, and answers questions about what was said."
+  },
+  {
+    "id": "fc-da-08",
+    "examCode": "ab-730",
+    "domain": "draft-analyze",
+    "front": "Copilot Pages",
+    "back": "Turns a response into a shared, editable surface several people can work on together."
+  },
+  {
+    "id": "fc-da-09",
+    "examCode": "ab-730",
+    "domain": "draft-analyze",
+    "front": "Memory and instructions",
+    "back": "Standing preferences such as tone, role and recurring context, so they need not be restated in every prompt."
+  }
+]

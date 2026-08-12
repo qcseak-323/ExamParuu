@@ -16,11 +16,32 @@
  * Run:  node "02 - Tooling/challenge-coverage.mjs"
  */
 
-import { readFileSync } from "node:fs";
+import { readdirSync, existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = process.cwd();
-const EXAMS = ["dp-600", "ab-900", "az-900", "ai-901", "dp-900", "sc-900", "pl-900", "az-104", "pl-300", "sc-200", "dp-700"];
+
+/**
+ * Discovered from disk, never listed by hand.
+ *
+ * This was a hardcoded array of eleven codes, and adding AB-730 and AB-731 on
+ * 2026-08-12 proved why that is unsafe: both new exams were skipped in
+ * silence, the module count did not move, and the gate reported a pass it had
+ * not actually checked. A gate that quietly ignores new content is worse than
+ * no gate, because it reads as assurance.
+ *
+ * Any directory under content/ carrying both a questions file and a learning
+ * path is an exam with modules to measure.
+ */
+const EXAMS = readdirSync(join(ROOT, "content"), { withFileTypes: true })
+  .filter((d) => d.isDirectory())
+  .map((d) => d.name)
+  .filter(
+    (code) =>
+      existsSync(join(ROOT, "content", code, "questions.json")) &&
+      existsSync(join(ROOT, "content", code, "learning-path.json")),
+  )
+  .sort();
 
 const MATCH_SIZE = 4;
 const REVERSE_DISTRACTORS = 3;

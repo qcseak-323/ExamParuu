@@ -1,0 +1,138 @@
+{
+  "examCode": "AB-731",
+  "note": "Learning path structure mirrors the domains of Microsoft's published skills outline. All teaching content is original to ExamParuu. No code-prefixed Microsoft Learn path is published for this exam, so msLearnUrl is null and the study-guide sections stand in as modules.",
+  "paths": [
+    {
+      "id": "business-value",
+      "title": "Understand the business value of generative AI",
+      "domainId": "business-value",
+      "msLearnUrl": null,
+      "modules": [
+        {
+          "id": "business-value-m1",
+          "title": "What makes generative AI different",
+          "sectionIds": [
+            "what-makes-generative-ai-different"
+          ],
+          "cardIds": [
+            "fc-bv-01",
+            "fc-bv-02",
+            "fc-bv-03"
+          ]
+        },
+        {
+          "id": "business-value-m2",
+          "title": "Cost, ROI and the honest limits",
+          "sectionIds": [
+            "cost-roi-and-the-honest-limits"
+          ],
+          "cardIds": [
+            "fc-bv-04",
+            "fc-bv-05",
+            "fc-bv-06"
+          ]
+        },
+        {
+          "id": "business-value-m3",
+          "title": "Prompting, grounding and RAG",
+          "sectionIds": [
+            "prompting-grounding-and-rag"
+          ],
+          "cardIds": [
+            "fc-bv-07",
+            "fc-bv-08",
+            "fc-bv-09"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "microsoft-ai-capabilities",
+      "title": "Explore Microsoft's AI apps and services",
+      "domainId": "microsoft-ai-capabilities",
+      "msLearnUrl": null,
+      "modules": [
+        {
+          "id": "microsoft-ai-capabilities-m1",
+          "title": "Copilot across Microsoft 365",
+          "sectionIds": [
+            "copilot-across-microsoft-365"
+          ],
+          "cardIds": [
+            "fc-mac-01",
+            "fc-mac-02",
+            "fc-mac-03"
+          ]
+        },
+        {
+          "id": "microsoft-ai-capabilities-m2",
+          "title": "Researcher, Analyst and building your own",
+          "sectionIds": [
+            "researcher-analyst-and-building-your-own"
+          ],
+          "cardIds": [
+            "fc-mac-04",
+            "fc-mac-05",
+            "fc-mac-06"
+          ]
+        },
+        {
+          "id": "microsoft-ai-capabilities-m3",
+          "title": "Foundry Tools",
+          "sectionIds": [
+            "foundry-tools"
+          ],
+          "cardIds": [
+            "fc-mac-07",
+            "fc-mac-08",
+            "fc-mac-09"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adoption-strategy",
+      "title": "Lead AI adoption across an organization",
+      "domainId": "adoption-strategy",
+      "msLearnUrl": null,
+      "modules": [
+        {
+          "id": "adoption-strategy-m1",
+          "title": "Responsible AI and governance",
+          "sectionIds": [
+            "responsible-ai-and-governance"
+          ],
+          "cardIds": [
+            "fc-as-01",
+            "fc-as-02",
+            "fc-as-03"
+          ]
+        },
+        {
+          "id": "adoption-strategy-m2",
+          "title": "Planning adoption",
+          "sectionIds": [
+            "planning-adoption"
+          ],
+          "cardIds": [
+            "fc-as-04",
+            "fc-as-05",
+            "fc-as-06"
+          ]
+        },
+        {
+          "id": "adoption-strategy-m3",
+          "title": "Licensing and cost models",
+          "sectionIds": [
+            "licensing-and-cost-models"
+          ],
+          "cardIds": [
+            "fc-as-07",
+            "fc-as-08",
+            "fc-as-09"
+          ]
+        }
+      ]
+    }
+  ]
+}

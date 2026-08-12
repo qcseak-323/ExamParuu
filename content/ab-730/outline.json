@@ -1,0 +1,43 @@
+{
+  "examCode": "AB-730",
+  "examName": "AI Business Professional",
+  "note": "Domain weights follow Microsoft's published skills-measured outline for AB-730, 'Skills measured as of July 22, 2026'. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "gen-ai-fundamentals",
+      "name": "Understand generative AI fundamentals",
+      "weight": "25-30%",
+      "subtopics": [
+        "How Copilot keeps organizational information private and secure",
+        "How context — your files, web data, the app you are in — shapes a response",
+        "The difference between a chat experience and an agent experience",
+        "Common risks including fabrications, prompt injection and over-reliance",
+        "Verification steps such as citation checks and human review"
+      ]
+    },
+    {
+      "id": "prompts-conversations",
+      "name": "Manage prompts and conversations by using AI",
+      "weight": "35-40%",
+      "subtopics": [
+        "Writing an effective prompt and choosing what to reference in it",
+        "Saving, scheduling and sharing a prompt",
+        "Finding, renaming and deleting conversations",
+        "Adding a conversation to a notebook",
+        "Agent Store versus building an agent, and configuring one that has knowledge"
+      ]
+    },
+    {
+      "id": "draft-analyze",
+      "name": "Draft and analyze business content by using AI",
+      "weight": "25-30%",
+      "subtopics": [
+        "Creating a document from a prompt or from an existing document",
+        "Generating a management summary",
+        "Moving data and insights between Microsoft 365 apps",
+        "Using Copilot for meetings and Copilot Pages for collaboration",
+        "How Copilot uses memory and instructions"
+      ]
+    }
+  ]
+}

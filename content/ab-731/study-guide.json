@@ -1,0 +1,89 @@
+[
+  {
+    "domainId": "business-value",
+    "sections": [
+      {
+        "heading": "What makes generative AI different",
+        "paragraphs": [
+          "Traditional AI classifies, predicts or detects. Generative AI produces new content, whether text, images or code, from a prompt. That difference decides which problems it suits: drafting, summarising and ideation rather than forecasting a number from history.",
+          "Models arrive pretrained on broad data. Fine-tuning adapts a model with your own examples and is expensive; grounding supplies your data at request time and is usually the cheaper, faster answer to the complaint that it does not know about our business."
+        ],
+        "id": "what-makes-generative-ai-different"
+      },
+      {
+        "heading": "Cost, ROI and the honest limits",
+        "paragraphs": [
+          "Generative AI is metered largely in tokens, the units of text going in and coming out. Longer prompts, larger grounding payloads and longer answers all cost more, which makes prompt and context design a cost decision as well as a quality one.",
+          "Set the return-on-investment case against total cost of ownership rather than licence price alone. And be candid about the limits: fabrications, inconsistent reliability and bias inherited from training data are properties of the technology, not defects to be waited out."
+        ],
+        "id": "cost-roi-and-the-honest-limits"
+      },
+      {
+        "heading": "Prompting, grounding and RAG",
+        "paragraphs": [
+          "Prompt engineering measurably changes output quality. Stating the role, the format and the constraints, and giving an example, all reduce ambiguity.",
+          "Grounding connects the model to your own content. Retrieval-augmented generation is the common pattern: retrieve the relevant passages first, then have the model answer from them. It is what makes answers current and citable without retraining anything, and it makes data quality a first-order concern."
+        ],
+        "id": "prompting-grounding-and-rag"
+      }
+    ]
+  },
+  {
+    "domainId": "microsoft-ai-capabilities",
+    "sections": [
+      {
+        "heading": "Copilot across Microsoft 365",
+        "paragraphs": [
+          "Copilot appears differently in each app: drafting in Word, analysing in Excel, summarising threads in Outlook, recapping in Teams. Mapping a business process to Copilot begins with identifying which app the work already happens in.",
+          "Versions differ in what they can reach. The licensed Microsoft 365 Copilot experience is grounded in your organisation's data through Microsoft Graph, which is what makes answers specific to your business rather than general."
+        ],
+        "id": "copilot-across-microsoft-365"
+      },
+      {
+        "heading": "Researcher, Analyst and building your own",
+        "paragraphs": [
+          "Researcher and Analyst are specialised agents. Reach for Researcher when the task is multi-step investigation across many sources, and for Analyst when the task is reasoning over data to produce figures and charts.",
+          "When nothing off the shelf fits, the choice is build, buy or extend. Copilot Studio builds agents with low code, and the Microsoft 365 Copilot extensibility framework extends the existing Copilot rather than replacing it, usually the cheaper route when the gap is knowledge rather than behaviour."
+        ],
+        "id": "researcher-analyst-and-building-your-own"
+      },
+      {
+        "heading": "Foundry Tools",
+        "paragraphs": [
+          "Foundry Tools cover the pro-code end: a catalogue of models, Azure AI Search for retrieval, and vision and language capabilities to compose into an application.",
+          "Matching a model to a need is a trade-off between capability, latency and cost. The largest model is rarely the right default; the question is the smallest model that reliably does the job."
+        ],
+        "id": "foundry-tools"
+      }
+    ]
+  },
+  {
+    "domainId": "adoption-strategy",
+    "sections": [
+      {
+        "heading": "Responsible AI and governance",
+        "paragraphs": [
+          "Responsible AI is a leadership responsibility rather than a compliance afterthought. The Microsoft Responsible AI Standard sets out fairness, reliability and safety, privacy and security, inclusiveness, transparency and accountability.",
+          "Governance turns those principles into decisions someone owns: which use cases are approved, what review a use case needs before launch, and who is able to say no. An AI council, cross-functional and with real authority, is the usual mechanism."
+        ],
+        "id": "responsible-ai-and-governance"
+      },
+      {
+        "heading": "Planning adoption",
+        "paragraphs": [
+          "Adoption fails for predictable reasons: no clear use case, no visible sponsorship, fear about job security, and no time set aside to learn. Each has a different remedy, so naming the actual barrier matters more than general enthusiasm.",
+          "An adoption team owns the rollout, and an AI champions programme spreads capability through peers rather than formal training. Champions work because the person who shows you a useful prompt sits next to you."
+        ],
+        "id": "planning-adoption"
+      },
+      {
+        "heading": "Licensing and cost models",
+        "paragraphs": [
+          "Copilot licensing comes in several shapes: included with some subscriptions, purchased monthly per user, or consumed pay-as-you-go. Which fits depends on how concentrated usage is across the organisation.",
+          "Foundry Tools are consumption-based, with commitment tiers available where volume is predictable. Either way the question is the same: what is the workload, how steady is it, and does committing buy a better rate than paying as you go."
+        ],
+        "id": "licensing-and-cost-models"
+      }
+    ]
+  }
+]
