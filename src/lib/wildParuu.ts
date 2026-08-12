@@ -44,6 +44,12 @@ export const WILD_PARUU: Record<string, WildParuu> = {
   // SC-200 shares the Bastion Cliffs with SC-900.
   "sc-200": { sheet: "wild-armadillo" },
   "ab-900": { sheet: "wild-snail" },
+  // AB-730 and AB-731 became playable on 2026-08-12 and share Agent Atoll with
+  // AB-900. Same reuse as az-104 and the rest: without an entry here both would
+  // fall back to the Glitchling, which is correct for a route with no art but
+  // wrong for one whose region already has a species.
+  "ab-730": { sheet: "wild-snail" },
+  "ab-731": { sheet: "wild-snail" },
   "pl-900": { sheet: "wild-hedgehog" },
   // Same reuse as az-104: PL-300 shares the Mangroves with PL-900.
   "pl-300": { sheet: "wild-hedgehog" },
