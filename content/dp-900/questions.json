@@ -4,7 +4,12 @@
     "examCode": "dp-900",
     "domain": "core-data-concepts",
     "question": "A dataset consists of JSON documents where products carry different fields — some have sizes, some voltages, some expiry dates — but every field is labelled. How is this data best classified?",
-    "options": ["Structured", "Semi-structured", "Unstructured", "Binary"],
+    "options": [
+      "Structured",
+      "Semi-structured",
+      "Unstructured",
+      "Binary"
+    ],
     "correctIndex": 1,
     "explanation": "Semi-structured data carries its schema with it: labelled fields that can vary record to record, as in JSON. Structured data would demand the same fixed columns for every record; unstructured data has no field labels at all.",
     "teaches": "representing-data"
@@ -29,7 +34,12 @@
     "examCode": "dp-900",
     "domain": "core-data-concepts",
     "question": "An analytics team scans just three columns of a very wide table across billions of rows. Which file format is designed to make that scan fast and cheap?",
-    "options": ["CSV", "JSON", "Avro", "Parquet"],
+    "options": [
+      "CSV",
+      "JSON",
+      "Avro",
+      "Parquet"
+    ],
     "correctIndex": 3,
     "explanation": "Parquet is columnar: values are grouped by column, so a query touching three columns reads only those columns' data. Row-oriented formats like CSV, JSON, and Avro must read whole records.",
     "teaches": "representing-data"
@@ -114,7 +124,12 @@
     "examCode": "dp-900",
     "domain": "core-data-concepts",
     "question": "Which format is row-based, human-readable, and the most universal interchange format for tabular data files?",
-    "options": ["Parquet", "ORC", "Delimited text (CSV)", "Avro"],
+    "options": [
+      "Parquet",
+      "ORC",
+      "Delimited text (CSV)",
+      "Avro"
+    ],
     "correctIndex": 2,
     "explanation": "CSV is plain delimited text: row-oriented, readable in any editor, and understood by effectively every data tool — the lowest common denominator of tabular exchange.",
     "teaches": "representing-data"
@@ -154,7 +169,12 @@
     "examCode": "dp-900",
     "domain": "core-data-concepts",
     "question": "A spreadsheet-like table where every row has exactly the same typed columns is an example of which kind of data?",
-    "options": ["Unstructured", "Semi-structured", "Structured", "Streamed"],
+    "options": [
+      "Unstructured",
+      "Semi-structured",
+      "Structured",
+      "Streamed"
+    ],
     "correctIndex": 2,
     "explanation": "A fixed schema of rows and identical typed columns is the definition of structured data — the shape relational tables and SQL are built around.",
     "teaches": "representing-data"
@@ -164,7 +184,12 @@
     "examCode": "dp-900",
     "domain": "relational-data",
     "question": "Customer addresses were being stored on every order row, and updating one customer's address meant editing hundreds of rows. Splitting customers into their own table linked by key solves this. What is this practice called?",
-    "options": ["Indexing", "Normalization", "Partitioning", "Denormalization"],
+    "options": [
+      "Indexing",
+      "Normalization",
+      "Partitioning",
+      "Denormalization"
+    ],
     "correctIndex": 1,
     "explanation": "Normalization splits data into related tables so each fact is stored once — eliminating exactly this update anomaly. Denormalization is the deliberate reverse, used for read-heavy analytics.",
     "teaches": "relational-concepts"
@@ -189,7 +214,12 @@
     "examCode": "dp-900",
     "domain": "relational-data",
     "question": "Analysts repeatedly need the same complex join of five tables, presented as if it were a single table they can SELECT from. Which database object provides this?",
-    "options": ["An index", "A stored procedure", "A view", "A primary key"],
+    "options": [
+      "An index",
+      "A stored procedure",
+      "A view",
+      "A primary key"
+    ],
     "correctIndex": 2,
     "explanation": "A view is a saved query exposed as a virtual table — the join is written once and queried like a table. A stored procedure is executable logic; an index accelerates lookups.",
     "teaches": "relational-concepts"
@@ -199,7 +229,12 @@
     "examCode": "dp-900",
     "domain": "relational-data",
     "question": "Lookups by customer surname are slow because the engine scans the whole table. Which object is designed to speed up such lookups?",
-    "options": ["A view", "A foreign key", "An index on the surname column", "A trigger"],
+    "options": [
+      "A view",
+      "A foreign key",
+      "An index on the surname column",
+      "A trigger"
+    ],
     "correctIndex": 2,
     "explanation": "An index lets the engine seek directly to matching rows instead of scanning everything — the database equivalent of a book's index.",
     "teaches": "relational-concepts"
@@ -344,7 +379,12 @@
     "examCode": "dp-900",
     "domain": "nonrelational-data",
     "question": "Which Cosmos DB API is designed for graph data — entities with many relationships, queried by traversing connections?",
-    "options": ["NoSQL API", "Apache Cassandra API", "Apache Gremlin API", "Table API"],
+    "options": [
+      "NoSQL API",
+      "Apache Cassandra API",
+      "Apache Gremlin API",
+      "Table API"
+    ],
     "correctIndex": 2,
     "explanation": "Gremlin is the graph traversal API — the fit for social networks, recommendations, and other highly connected data. The NoSQL API serves JSON documents; Cassandra serves wide-column workloads.",
     "teaches": "cosmos-db"
@@ -489,7 +529,12 @@
     "examCode": "dp-900",
     "domain": "analytics-workload",
     "question": "A report must show how monthly revenue has changed across the past three years. Which visualization is the standard choice?",
-    "options": ["A pie chart", "A line chart", "A card", "A scatter plot"],
+    "options": [
+      "A pie chart",
+      "A line chart",
+      "A card",
+      "A scatter plot"
+    ],
     "correctIndex": 1,
     "explanation": "Trends over time are the line chart's job. Pies show contribution to a whole, cards show a single headline number, and scatter plots relate two measures.",
     "teaches": "power-bi"
@@ -514,7 +559,12 @@
     "examCode": "dp-900",
     "domain": "analytics-workload",
     "question": "A single headline number — today's total sales — must dominate the top of a dashboard. Which visual fits?",
-    "options": ["A map", "A matrix", "A card or KPI visual", "A stacked bar chart"],
+    "options": [
+      "A map",
+      "A matrix",
+      "A card or KPI visual",
+      "A stacked bar chart"
+    ],
     "correctIndex": 2,
     "explanation": "Cards and KPI visuals exist to present one number prominently, optionally against a target. Tables, maps, and bars answer different questions.",
     "teaches": "power-bi"
@@ -548,5 +598,401 @@
     "correctIndex": 0,
     "explanation": "Event Hubs is the event-ingestion service: producers publish streams to it at massive scale, and processors like Stream Analytics consume from it.",
     "teaches": "real-time-analytics"
+  },
+  {
+    "id": "dp900-cd-13",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "question": "Which describes semi-structured data?",
+    "options": [
+      "Data with tags or keys but no fixed table schema",
+      "Data stored only in rows and columns",
+      "Data with no internal organisation at all",
+      "Data that must be queried with SQL"
+    ],
+    "correctIndex": 0,
+    "explanation": "JSON and XML carry their own structure through keys and tags without conforming to a fixed schema. Rows and columns are structured; images and video are unstructured.",
+    "teaches": "representing-data"
+  },
+  {
+    "id": "dp900-cd-14",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "question": "Which workload is characterised by many small, fast reads and writes of individual records?",
+    "options": [
+      "Transactional",
+      "Analytical",
+      "Archival",
+      "Batch reporting"
+    ],
+    "correctIndex": 0,
+    "explanation": "Transactional systems serve day-to-day operations one record at a time. Analytical workloads read large volumes to summarise them.",
+    "teaches": "stores-and-workloads"
+  },
+  {
+    "id": "dp900-cd-15",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "kind": "multi",
+    "question": "Which two are examples of unstructured data? Choose two.",
+    "options": [
+      "A video recording",
+      "A scanned photograph",
+      "A customer table",
+      "A JSON configuration file"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Media files carry no internal field structure. A table is structured and JSON is semi-structured because its keys describe the values.",
+    "teaches": "representing-data"
+  },
+  {
+    "id": "dp900-cd-16",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "kind": "multi",
+    "question": "Which two tasks typically belong to a data engineer? Choose two.",
+    "options": [
+      "Building pipelines that move and transform data",
+      "Managing the storage and formats data lands in",
+      "Designing the visual layout of a report",
+      "Approving expenditure on licences"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Data engineers build and operate the plumbing. Report layout belongs to the data analyst, and budget approval to no data role at all.",
+    "teaches": "data-roles"
+  },
+  {
+    "id": "dp900-cd-17",
+    "examCode": "dp-900",
+    "domain": "core-data-concepts",
+    "kind": "match",
+    "question": "Match each data role to its main responsibility.",
+    "pairs": [
+      {
+        "term": "Data engineer",
+        "definition": "Build pipelines and manage data stores"
+      },
+      {
+        "term": "Data analyst",
+        "definition": "Model data and build reports from it"
+      },
+      {
+        "term": "Database administrator",
+        "definition": "Keep databases available and secure"
+      },
+      {
+        "term": "Data scientist",
+        "definition": "Apply statistics and machine learning"
+      }
+    ],
+    "explanation": "Engineer moves data, analyst explains it, administrator keeps it running, scientist predicts from it. Engineer against analyst is the pair most often confused.",
+    "teaches": "data-roles"
+  },
+  {
+    "id": "dp900-rd-10",
+    "examCode": "dp-900",
+    "domain": "relational-data",
+    "question": "What does a primary key guarantee about a table?",
+    "options": [
+      "Every row can be uniquely identified",
+      "Every column contains a value",
+      "Rows are stored in sorted order",
+      "The table can be joined to any other table"
+    ],
+    "correctIndex": 0,
+    "explanation": "A primary key is the unique identifier for a row. Physical ordering is the job of a clustered index, which is a separate idea.",
+    "teaches": "relational-concepts"
+  },
+  {
+    "id": "dp900-rd-11",
+    "examCode": "dp-900",
+    "domain": "relational-data",
+    "question": "Which Azure service is a fully managed relational database where Microsoft handles patching and backups?",
+    "options": [
+      "Azure SQL Database",
+      "SQL Server on an Azure virtual machine",
+      "Azure Blob Storage",
+      "Azure Cosmos DB"
+    ],
+    "correctIndex": 0,
+    "explanation": "Azure SQL Database is platform as a service. Running SQL Server on a virtual machine leaves the operating system and patching to you.",
+    "teaches": "azure-relational-services"
+  },
+  {
+    "id": "dp900-rd-12",
+    "examCode": "dp-900",
+    "domain": "relational-data",
+    "kind": "multi",
+    "question": "Which two are relational database objects? Choose two.",
+    "options": [
+      "A view",
+      "An index",
+      "A blob container",
+      "A message queue"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Views present a stored query as a table and indexes speed up lookups. Containers and queues belong to storage and messaging services.",
+    "teaches": "relational-concepts"
+  },
+  {
+    "id": "dp900-rd-13",
+    "examCode": "dp-900",
+    "domain": "relational-data",
+    "kind": "match",
+    "question": "Match each SQL statement to what it does.",
+    "pairs": [
+      {
+        "term": "SELECT",
+        "definition": "Read rows from a table"
+      },
+      {
+        "term": "INSERT",
+        "definition": "Add new rows to a table"
+      },
+      {
+        "term": "UPDATE",
+        "definition": "Change values in existing rows"
+      },
+      {
+        "term": "DELETE",
+        "definition": "Remove rows from a table"
+      }
+    ],
+    "explanation": "The four basic data manipulation statements. Note that all of them act on rows, unlike CREATE and ALTER, which act on the table itself.",
+    "teaches": "relational-concepts"
+  },
+  {
+    "id": "dp900-rd-14",
+    "examCode": "dp-900",
+    "domain": "relational-data",
+    "kind": "match",
+    "question": "Match each Azure relational option to what it gives you.",
+    "pairs": [
+      {
+        "term": "Azure SQL Database",
+        "definition": "A managed single database"
+      },
+      {
+        "term": "Azure SQL Managed Instance",
+        "definition": "Near-full SQL Server compatibility, managed"
+      },
+      {
+        "term": "SQL Server on a virtual machine",
+        "definition": "Full control, and full responsibility"
+      },
+      {
+        "term": "Azure Database for PostgreSQL",
+        "definition": "A managed open-source engine"
+      }
+    ],
+    "explanation": "The three SQL Server options trade compatibility and control against how much Microsoft manages for you. Pick by what you must keep control of.",
+    "teaches": "azure-relational-services"
+  },
+  {
+    "id": "dp900-nr-8",
+    "examCode": "dp-900",
+    "domain": "nonrelational-data",
+    "question": "Which Azure Cosmos DB feature lets a database serve users in several parts of the world with low latency?",
+    "options": [
+      "Global distribution across regions",
+      "Automatic index rebuilding",
+      "Columnstore compression",
+      "Transparent data encryption"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cosmos DB replicates data to regions you choose so reads happen close to the user. The other three are storage and security features, not placement.",
+    "teaches": "cosmos-db"
+  },
+  {
+    "id": "dp900-nr-9",
+    "examCode": "dp-900",
+    "domain": "nonrelational-data",
+    "question": "Which access tier suits blobs that are rarely read but must stay immediately available?",
+    "options": [
+      "Cool",
+      "Hot",
+      "Archive",
+      "Premium"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cool lowers storage cost for infrequent access while keeping data online. Archive is cheaper still but must be rehydrated before it can be read.",
+    "teaches": "azure-storage-capabilities"
+  },
+  {
+    "id": "dp900-nr-10",
+    "examCode": "dp-900",
+    "domain": "nonrelational-data",
+    "kind": "multi",
+    "question": "Which two are reasons to choose a non-relational store over a relational one? Choose two.",
+    "options": [
+      "The shape of the data varies between records",
+      "Very high write throughput is needed at scale",
+      "Complex multi-table joins are central to the workload",
+      "Strict foreign key enforcement is required"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Flexible shape and horizontal scale are what non-relational stores are for. Joins and enforced referential integrity are exactly what relational engines do best.",
+    "teaches": "azure-storage-capabilities"
+  },
+  {
+    "id": "dp900-nr-11",
+    "examCode": "dp-900",
+    "domain": "nonrelational-data",
+    "kind": "match",
+    "question": "Match each non-relational data model to its shape.",
+    "pairs": [
+      {
+        "term": "Key-value",
+        "definition": "A unique key pointing at a value"
+      },
+      {
+        "term": "Document",
+        "definition": "A self-describing record such as JSON"
+      },
+      {
+        "term": "Column-family",
+        "definition": "Rows grouped into columns read together"
+      },
+      {
+        "term": "Graph",
+        "definition": "Nodes joined by relationships"
+      }
+    ],
+    "explanation": "Each model suits a different access pattern. Graph is the one to reach for when the connections matter more than the records.",
+    "teaches": "cosmos-db"
+  },
+  {
+    "id": "dp900-aw-13",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "question": "In an ETL process, what happens during the transform stage?",
+    "options": [
+      "Data is cleaned and reshaped into the target format",
+      "Data is copied unchanged to its destination",
+      "Data is deleted from the source",
+      "Data is encrypted for transport"
+    ],
+    "correctIndex": 0,
+    "explanation": "Transform is where cleansing, joining and reshaping happen. Extract reads from the source and load writes to the destination.",
+    "teaches": "large-scale-analytics"
+  },
+  {
+    "id": "dp900-aw-14",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "question": "Which describes stream processing?",
+    "options": [
+      "Handling events continuously as they arrive",
+      "Processing a large set of data on a schedule",
+      "Storing data for long-term archival",
+      "Enforcing constraints as rows are written"
+    ],
+    "correctIndex": 0,
+    "explanation": "Streaming works on events in flight, with results available in near real time. Batch waits until a body of data has accumulated.",
+    "teaches": "real-time-analytics"
+  },
+  {
+    "id": "dp900-aw-15",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "kind": "multi",
+    "question": "Which two are stages in a typical Power BI workflow? Choose two.",
+    "options": [
+      "Connecting to and transforming a data source",
+      "Publishing a report to a workspace for sharing",
+      "Provisioning the physical servers that store the data",
+      "Writing the firewall rules for the network"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Power BI runs from getting data through modelling to publishing and sharing. Infrastructure provisioning sits outside the product entirely.",
+    "teaches": "power-bi"
+  },
+  {
+    "id": "dp900-aw-16",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "kind": "multi",
+    "question": "Which two describe a data warehouse? Choose two.",
+    "options": [
+      "It is optimised for reading and aggregating large volumes",
+      "It usually holds data modelled for analysis rather than transactions",
+      "It is designed for many small concurrent record updates",
+      "It stores only unprocessed raw files"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "A warehouse serves analytical reads over modelled, conformed data. Small frequent updates describe a transactional database, and raw files describe a data lake.",
+    "teaches": "large-scale-analytics"
+  },
+  {
+    "id": "dp900-aw-17",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "kind": "match",
+    "question": "Match each analytics concept to its description.",
+    "pairs": [
+      {
+        "term": "Data lake",
+        "definition": "Raw files kept in their original form"
+      },
+      {
+        "term": "Data warehouse",
+        "definition": "Modelled data organised for analysis"
+      },
+      {
+        "term": "ETL",
+        "definition": "Transform the data before loading it"
+      },
+      {
+        "term": "ELT",
+        "definition": "Load the data first, transform it in place"
+      }
+    ],
+    "explanation": "Lake against warehouse is raw against modelled; ETL against ELT is only the order of two steps, and where the compute happens.",
+    "teaches": "large-scale-analytics"
+  },
+  {
+    "id": "dp900-aw-18",
+    "examCode": "dp-900",
+    "domain": "analytics-workload",
+    "kind": "match",
+    "question": "Match each Power BI element to what it is.",
+    "pairs": [
+      {
+        "term": "Report",
+        "definition": "Pages of visuals over one semantic model"
+      },
+      {
+        "term": "Dashboard",
+        "definition": "A single page of pinned tiles"
+      },
+      {
+        "term": "Semantic model",
+        "definition": "The tables and relationships behind visuals"
+      },
+      {
+        "term": "Workspace",
+        "definition": "A container for sharing this content"
+      }
+    ],
+    "explanation": "A report is multi-page and tied to one model; a dashboard is one page and can pin from several. That distinction is regularly tested.",
+    "teaches": "power-bi"
   }
 ]

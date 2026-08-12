@@ -19,7 +19,12 @@
     "examCode": "sc-900",
     "domain": "sci-concepts",
     "question": "A security strategy assumes attackers may already be inside, verifies every request explicitly, and grants the minimum access needed. Which model is this?",
-    "options": ["Defense-in-depth", "Zero Trust", "Shared responsibility", "Federation"],
+    "options": [
+      "Defense-in-depth",
+      "Zero Trust",
+      "Shared responsibility",
+      "Federation"
+    ],
     "correctIndex": 1,
     "explanation": "Verify explicitly, least-privilege access, assume breach — the three principles of Zero Trust, replacing the old idea that being inside the network means being trusted.",
     "teaches": "security-and-compliance-concepts"
@@ -29,7 +34,12 @@
     "examCode": "sc-900",
     "domain": "sci-concepts",
     "question": "Layering physical security, identity checks, network controls, and data encryption so that a breach of one layer meets the next is called what?",
-    "options": ["Zero Trust", "Defense-in-depth", "GRC", "Single sign-on"],
+    "options": [
+      "Zero Trust",
+      "Defense-in-depth",
+      "GRC",
+      "Single sign-on"
+    ],
     "correctIndex": 1,
     "explanation": "Defense-in-depth is the layered strategy: multiple independent protections, each slowing or stopping what got past the previous one.",
     "teaches": "security-and-compliance-concepts"
@@ -39,7 +49,12 @@
     "examCode": "sc-900",
     "domain": "sci-concepts",
     "question": "A user signs in with a password and an Authenticator prompt (authentication), and the system then decides they may read but not edit a document. What is that second decision called?",
-    "options": ["Federation", "Authorization", "Hashing", "Auditing"],
+    "options": [
+      "Federation",
+      "Authorization",
+      "Hashing",
+      "Auditing"
+    ],
     "correctIndex": 1,
     "explanation": "Authentication proves who you are; authorization decides what you may do once proven. Read-but-not-edit is an authorization decision.",
     "teaches": "identity-concepts"
@@ -49,7 +64,12 @@
     "examCode": "sc-900",
     "domain": "sci-concepts",
     "question": "Two partner organisations want each other's users to access shared resources by signing in with their own home accounts. Which identity concept enables this?",
-    "options": ["Federation — a trust between identity providers", "Hashing", "Defense-in-depth", "Smart lockout"],
+    "options": [
+      "Federation — a trust between identity providers",
+      "Hashing",
+      "Defense-in-depth",
+      "Smart lockout"
+    ],
     "correctIndex": 0,
     "explanation": "Federation establishes trust between identity providers so one organisation's IdP vouches for its users to another's resources — cross-organisation single sign-on.",
     "teaches": "identity-concepts"
@@ -89,7 +109,12 @@
     "examCode": "sc-900",
     "domain": "entra",
     "question": "An organisation deploys AI agents and wants each governed with its own identity rather than borrowing a user's account. Which Entra identity type addresses this?",
-    "options": ["Agent ID", "Hybrid identity", "Guest identity", "Break-glass account"],
+    "options": [
+      "Agent ID",
+      "Hybrid identity",
+      "Guest identity",
+      "Break-glass account"
+    ],
     "correctIndex": 0,
     "explanation": "Agent ID is the newer Entra identity type for AI agents — their own governed identities with lifecycle and access control, instead of impersonating humans.",
     "teaches": "entra-id-and-identity-types"
@@ -99,7 +124,12 @@
     "examCode": "sc-900",
     "domain": "entra",
     "question": "Users sign in to cloud services with the same accounts that exist in on-premises Active Directory, kept in sync with Entra ID. What is this arrangement called?",
-    "options": ["Federation with a partner", "Hybrid identity", "Passwordless authentication", "An access review"],
+    "options": [
+      "Federation with a partner",
+      "Hybrid identity",
+      "Passwordless authentication",
+      "An access review"
+    ],
     "correctIndex": 1,
     "explanation": "Hybrid identity synchronises on-premises AD accounts with Entra ID so one identity works both on-premises and in the cloud.",
     "teaches": "entra-id-and-identity-types"
@@ -139,7 +169,12 @@
     "examCode": "sc-900",
     "domain": "entra",
     "question": "Policy: sign-ins from outside trusted locations must complete MFA; non-compliant devices are blocked entirely. Which Entra capability enforces this at every sign-in?",
-    "options": ["Conditional Access", "Compliance Manager", "Azure Firewall", "Access packages"],
+    "options": [
+      "Conditional Access",
+      "Compliance Manager",
+      "Azure Firewall",
+      "Access packages"
+    ],
     "correctIndex": 0,
     "explanation": "Conditional Access evaluates signals — location, device state, user, risk — at sign-in and applies the decision: allow, require MFA, or block. It is Zero Trust's 'verify explicitly' in practice.",
     "teaches": "entra-access-management"
@@ -194,7 +229,12 @@
     "examCode": "sc-900",
     "domain": "entra",
     "question": "Project access granted months ago is never cleaned up. Which Entra ID Governance capability puts recurring human review on group memberships and role assignments?",
-    "options": ["Access reviews", "Smart lockout", "DDoS Protection", "Content explorer"],
+    "options": [
+      "Access reviews",
+      "Smart lockout",
+      "DDoS Protection",
+      "Content explorer"
+    ],
     "correctIndex": 0,
     "explanation": "Access reviews schedule periodic recertification: reviewers confirm or revoke access, so rights granted for a purpose expire with the purpose.",
     "teaches": "entra-governance-and-protection"
@@ -219,7 +259,12 @@
     "examCode": "sc-900",
     "domain": "security-solutions",
     "question": "Administrators currently RDP to VMs over public IP addresses. Security wants management access through the portal over TLS with no public IPs or exposed ports. Which service?",
-    "options": ["Azure Bastion", "Azure DDoS Protection", "Azure Firewall", "Microsoft Sentinel"],
+    "options": [
+      "Azure Bastion",
+      "Azure DDoS Protection",
+      "Azure Firewall",
+      "Microsoft Sentinel"
+    ],
     "correctIndex": 0,
     "explanation": "Azure Bastion brokers RDP/SSH through the portal over TLS — VMs need no public IP and no open management ports, removing the classic attack surface.",
     "teaches": "azure-infrastructure-security"
@@ -259,7 +304,12 @@
     "examCode": "sc-900",
     "domain": "security-solutions",
     "question": "A retail site is being flooded with junk traffic intended to knock it offline. Which Azure service exists specifically to absorb such attacks?",
-    "options": ["Azure DDoS Protection", "Azure Key Vault", "Access reviews", "Retention policies"],
+    "options": [
+      "Azure DDoS Protection",
+      "Azure Key Vault",
+      "Access reviews",
+      "Retention policies"
+    ],
     "correctIndex": 0,
     "explanation": "DDoS Protection defends against distributed denial-of-service floods, absorbing volumetric attacks before they reach your applications.",
     "teaches": "azure-infrastructure-security"
@@ -314,7 +364,12 @@
     "examCode": "sc-900",
     "domain": "security-solutions",
     "question": "A security team wants signals from Microsoft services and third-party systems collected in one cloud-native service that detects threats with analytics rules and responds with automation playbooks. Which service?",
-    "options": ["Microsoft Sentinel", "Azure Bastion", "Compliance Manager", "Entra ID Protection"],
+    "options": [
+      "Microsoft Sentinel",
+      "Azure Bastion",
+      "Compliance Manager",
+      "Entra ID Protection"
+    ],
     "correctIndex": 0,
     "explanation": "That is Sentinel's whole shape: connectors ingest from everywhere, analytics rules detect across correlated data, incidents support investigation, and playbooks automate response.",
     "teaches": "sentinel-siem-soar"
@@ -519,7 +574,12 @@
     "examCode": "sc-900",
     "domain": "compliance-solutions",
     "question": "Legal must search mailboxes and documents related to a lawsuit and place a hold so nothing relevant can be deleted. Which Purview solution is this?",
-    "options": ["eDiscovery", "DLP", "Smart lockout", "Defender TI"],
+    "options": [
+      "eDiscovery",
+      "DLP",
+      "Smart lockout",
+      "Defender TI"
+    ],
     "correctIndex": 0,
     "explanation": "eDiscovery searches across mailboxes, sites, chats, and files, and places legal holds preserving evidence — with case management around it.",
     "teaches": "purview-risk-and-audit"
@@ -537,6 +597,402 @@
     ],
     "correctIndex": 0,
     "explanation": "Insider Risk Management watches for risky internal behaviour — unusual downloads, deletions, pre-departure activity — raising cases while preserving fairness through pseudonymisation.",
+    "teaches": "purview-risk-and-audit"
+  },
+  {
+    "id": "sc900-sc-6",
+    "examCode": "sc-900",
+    "domain": "sci-concepts",
+    "question": "Which principle of the Zero Trust model assumes an attacker may already be inside the network?",
+    "options": [
+      "Assume breach",
+      "Verify explicitly",
+      "Use least privilege access",
+      "Encrypt everything"
+    ],
+    "correctIndex": 0,
+    "explanation": "Assume breach means designing as though the perimeter has already failed, which is why segmentation and continuous verification matter.",
+    "teaches": "security-and-compliance-concepts"
+  },
+  {
+    "id": "sc900-sc-7",
+    "examCode": "sc-900",
+    "domain": "sci-concepts",
+    "kind": "multi",
+    "question": "Which two describe the difference between authentication and authorization? Choose two.",
+    "options": [
+      "Authentication establishes who you are",
+      "Authorization decides what you may do",
+      "Authentication decides which resources you may reach",
+      "Authorization proves your identity"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Identity first, permissions second. The two wrong options simply swap the definitions, which is exactly how the exam tests it.",
+    "teaches": "identity-concepts"
+  },
+  {
+    "id": "sc900-sc-8",
+    "examCode": "sc-900",
+    "domain": "sci-concepts",
+    "kind": "match",
+    "question": "Match each security concept to its meaning.",
+    "pairs": [
+      {
+        "term": "Confidentiality",
+        "definition": "Only the right people can read the data"
+      },
+      {
+        "term": "Integrity",
+        "definition": "The data has not been altered"
+      },
+      {
+        "term": "Availability",
+        "definition": "The data is there when it is needed"
+      },
+      {
+        "term": "Least privilege",
+        "definition": "Grant only the access actually required"
+      }
+    ],
+    "explanation": "The first three are the CIA triad. Least privilege is a practice that mainly protects confidentiality and integrity.",
+    "teaches": "security-and-compliance-concepts"
+  },
+  {
+    "id": "sc900-en-12",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "question": "Which Microsoft Entra feature evaluates signals such as location and device state to decide whether to allow a sign-in?",
+    "options": [
+      "Conditional Access",
+      "Privileged Identity Management",
+      "Entitlement management",
+      "Access reviews"
+    ],
+    "correctIndex": 0,
+    "explanation": "Conditional Access is the policy engine applied at sign-in. The others govern privileged roles, access packages and periodic recertification.",
+    "teaches": "entra-access-management"
+  },
+  {
+    "id": "sc900-en-13",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "question": "What does multifactor authentication require?",
+    "options": [
+      "Evidence from more than one category, such as something you know and something you have",
+      "Two different passwords",
+      "A password changed at every sign-in",
+      "Sign-in from a corporate network"
+    ],
+    "correctIndex": 0,
+    "explanation": "The factors must be of different kinds — knowledge, possession or inherence. Two passwords are two of the same category and add little.",
+    "teaches": "entra-authentication"
+  },
+  {
+    "id": "sc900-en-14",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "kind": "multi",
+    "question": "Which two are identity types in Microsoft Entra ID? Choose two.",
+    "options": [
+      "A user",
+      "A service principal",
+      "A subnet",
+      "A storage container"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "People and workloads both need identities — users for people, service principals and managed identities for applications. Subnets and containers are resources, not identities.",
+    "teaches": "entra-id-and-identity-types"
+  },
+  {
+    "id": "sc900-en-15",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "kind": "multi",
+    "question": "Which two problems does single sign-on address? Choose two.",
+    "options": [
+      "Users repeatedly entering credentials across applications",
+      "Password reuse driven by having too many passwords",
+      "Data being stored in the wrong region",
+      "Malware running on an unmanaged device"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Single sign-on reduces both friction and the password sprawl that leads to reuse. Residency and endpoint threats are different problems entirely.",
+    "teaches": "entra-authentication"
+  },
+  {
+    "id": "sc900-en-16",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "kind": "match",
+    "question": "Match each Microsoft Entra capability to what it does.",
+    "pairs": [
+      {
+        "term": "Conditional Access",
+        "definition": "Apply conditions to each sign-in attempt"
+      },
+      {
+        "term": "Privileged Identity Management",
+        "definition": "Grant admin roles just in time"
+      },
+      {
+        "term": "Access reviews",
+        "definition": "Periodically recertify who still needs access"
+      },
+      {
+        "term": "Entitlement management",
+        "definition": "Bundle resources into requestable packages"
+      }
+    ],
+    "explanation": "One governs the moment of sign-in, the other three govern the lifecycle of access over time.",
+    "teaches": "entra-governance-and-protection"
+  },
+  {
+    "id": "sc900-en-17",
+    "examCode": "sc-900",
+    "domain": "entra",
+    "kind": "match",
+    "question": "Match each authentication method to what it is.",
+    "pairs": [
+      {
+        "term": "Password",
+        "definition": "Something you know"
+      },
+      {
+        "term": "Authenticator app",
+        "definition": "Something you have"
+      },
+      {
+        "term": "Fingerprint",
+        "definition": "Something you are"
+      },
+      {
+        "term": "Passwordless sign-in",
+        "definition": "Verification with no password at all"
+      }
+    ],
+    "explanation": "The three categories are the basis of multifactor authentication. Passwordless combines possession and inherence and removes the weakest factor.",
+    "teaches": "entra-authentication"
+  },
+  {
+    "id": "sc900-ss-16",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "question": "What does Microsoft Sentinel provide?",
+    "options": [
+      "Cloud-native security information and event management with automated response",
+      "Antivirus scanning on individual devices",
+      "Encryption of data at rest in storage accounts",
+      "Identity governance for privileged roles"
+    ],
+    "correctIndex": 0,
+    "explanation": "Sentinel is the SIEM and SOAR platform: it collects signals across the estate, correlates them into incidents and can automate the response.",
+    "teaches": "sentinel-siem-soar"
+  },
+  {
+    "id": "sc900-ss-17",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "question": "What does Microsoft Defender for Cloud's secure score represent?",
+    "options": [
+      "How closely your resources follow recommended security practices",
+      "The number of active attacks against your estate",
+      "How much your security tooling costs each month",
+      "The percentage of users with multifactor authentication"
+    ],
+    "correctIndex": 0,
+    "explanation": "Secure score measures posture against recommendations and rises as you remediate them. It is a measure of readiness, not of attacks under way.",
+    "teaches": "defender-for-cloud"
+  },
+  {
+    "id": "sc900-ss-18",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "question": "Which Azure feature filters inbound and outbound traffic to a subnet or network interface?",
+    "options": [
+      "A network security group",
+      "Azure Bastion",
+      "Azure Key Vault",
+      "Microsoft Entra ID"
+    ],
+    "correctIndex": 0,
+    "explanation": "Network security groups carry the allow and deny rules applied to traffic. Bastion provides private management access and Key Vault stores secrets.",
+    "teaches": "azure-infrastructure-security"
+  },
+  {
+    "id": "sc900-ss-19",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "kind": "multi",
+    "question": "Which two signals does Microsoft Defender XDR bring together into a single incident? Choose two.",
+    "options": [
+      "Alerts from endpoints",
+      "Alerts from email and collaboration",
+      "Monthly billing statements",
+      "Datacenter capacity forecasts"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Defender XDR correlates alerts across endpoints, email, identity and cloud apps so one attack appears as one incident rather than four.",
+    "teaches": "defender-xdr"
+  },
+  {
+    "id": "sc900-ss-20",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "kind": "multi",
+    "question": "Which two are ways Azure Key Vault protects an application? Choose two.",
+    "options": [
+      "Secrets are stored centrally rather than in code",
+      "Access to each secret can be controlled and audited",
+      "It scans virtual machines for malware",
+      "It replaces the need for network security groups"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Key Vault removes credentials from source code and puts every retrieval behind permissions and an audit trail. It does not do endpoint or network protection.",
+    "teaches": "azure-infrastructure-security"
+  },
+  {
+    "id": "sc900-ss-21",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "kind": "match",
+    "question": "Match each Microsoft security service to what it protects.",
+    "pairs": [
+      {
+        "term": "Defender for Endpoint",
+        "definition": "Devices and what runs on them"
+      },
+      {
+        "term": "Defender for Office 365",
+        "definition": "Email and collaboration content"
+      },
+      {
+        "term": "Defender for Cloud",
+        "definition": "Cloud resources and their posture"
+      },
+      {
+        "term": "Microsoft Sentinel",
+        "definition": "The whole estate, as correlated signals"
+      }
+    ],
+    "explanation": "The Defender products each guard a surface; Sentinel sits above them and reasons across everything they report.",
+    "teaches": "defender-xdr"
+  },
+  {
+    "id": "sc900-ss-22",
+    "examCode": "sc-900",
+    "domain": "security-solutions",
+    "kind": "match",
+    "question": "Match each Azure security feature to its role.",
+    "pairs": [
+      {
+        "term": "Network security group",
+        "definition": "Allow or deny traffic by rule"
+      },
+      {
+        "term": "Azure Firewall",
+        "definition": "Managed, stateful filtering for a network"
+      },
+      {
+        "term": "Azure DDoS Protection",
+        "definition": "Absorb volumetric attacks on public endpoints"
+      },
+      {
+        "term": "Azure Bastion",
+        "definition": "Reach a virtual machine without a public IP"
+      }
+    ],
+    "explanation": "All four are network defences at different scales, from a rule on one interface up to protecting an entire virtual network.",
+    "teaches": "azure-infrastructure-security"
+  },
+  {
+    "id": "sc900-cp-10",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "question": "What does a sensitivity label applied to a document do?",
+    "options": [
+      "Classifies it and can apply protection such as encryption",
+      "Deletes it after a set period",
+      "Moves it to a different SharePoint site",
+      "Prevents it from being opened offline"
+    ],
+    "correctIndex": 0,
+    "explanation": "Sensitivity labels classify content and can enforce encryption, marking and access limits that travel with the file. Timed deletion is a retention label.",
+    "teaches": "purview-information-protection"
+  },
+  {
+    "id": "sc900-cp-11",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "question": "Where can you find Microsoft's audit reports and compliance certifications?",
+    "options": [
+      "The Service Trust Portal",
+      "The Azure pricing calculator",
+      "Microsoft Entra admin center",
+      "Azure Monitor"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Service Trust Portal publishes independent audit reports and certifications for Microsoft's cloud services.",
+    "teaches": "service-trust-and-privacy"
+  },
+  {
+    "id": "sc900-cp-12",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "kind": "multi",
+    "question": "Which two can a data loss prevention policy do? Choose two.",
+    "options": [
+      "Block an email containing credit card numbers",
+      "Warn a user before they share a sensitive file",
+      "Encrypt the disks of a virtual machine",
+      "Assign a security role in Dataverse"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "DLP acts on content in motion — blocking, warning or overriding when sensitive information is about to leave. Disk encryption and role assignment are unrelated controls.",
+    "teaches": "purview-compliance-management"
+  },
+  {
+    "id": "sc900-cp-13",
+    "examCode": "sc-900",
+    "domain": "compliance-solutions",
+    "kind": "match",
+    "question": "Match each Microsoft Purview capability to what it does.",
+    "pairs": [
+      {
+        "term": "Sensitivity labels",
+        "definition": "Classify content and protect it"
+      },
+      {
+        "term": "Retention policies",
+        "definition": "Keep or delete content on a schedule"
+      },
+      {
+        "term": "Insider risk management",
+        "definition": "Spot risky activity by people inside"
+      },
+      {
+        "term": "eDiscovery",
+        "definition": "Find and preserve content for a case"
+      }
+    ],
+    "explanation": "Two of these govern the content itself and two govern what people do with it. Sensitivity against retention is the pair to keep straight: protection versus lifespan.",
     "teaches": "purview-risk-and-audit"
   }
 ]

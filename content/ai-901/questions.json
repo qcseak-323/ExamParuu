@@ -4,7 +4,12 @@
     "examCode": "ai-901",
     "domain": "ai-concepts",
     "question": "A bank discovers its loan-approval model approves applications from one demographic group at a much higher rate than others with similar finances. Which responsible AI principle is being violated?",
-    "options": ["Transparency", "Fairness", "Accountability", "Reliability and safety"],
+    "options": [
+      "Transparency",
+      "Fairness",
+      "Accountability",
+      "Reliability and safety"
+    ],
     "correctIndex": 1,
     "explanation": "Fairness requires an AI system to treat all groups equitably. A model that systematically disadvantages a demographic group with comparable financial profiles has learned bias — the fairness principle demands examining data and outcomes to correct it.",
     "teaches": "responsible-ai-principles"
@@ -14,7 +19,12 @@
     "examCode": "ai-901",
     "domain": "ai-concepts",
     "question": "Before releasing an AI feature that recommends medication dosages, a team runs extensive testing across edge cases and unexpected inputs. Which responsible AI principle drives this work?",
-    "options": ["Inclusiveness", "Privacy and security", "Reliability and safety", "Fairness"],
+    "options": [
+      "Inclusiveness",
+      "Privacy and security",
+      "Reliability and safety",
+      "Fairness"
+    ],
     "correctIndex": 2,
     "explanation": "Reliability and safety is about systems working dependably even in unexpected conditions — and rigorous testing before release matters most where errors cause real harm, as with medical guidance.",
     "teaches": "responsible-ai-principles"
@@ -24,7 +34,12 @@
     "examCode": "ai-901",
     "domain": "ai-concepts",
     "question": "A company adds a clear notice telling customers when they are chatting with an AI assistant rather than a human, and publishes what the assistant can and cannot do. Which principle is this?",
-    "options": ["Transparency", "Fairness", "Reliability and safety", "Inclusiveness"],
+    "options": [
+      "Transparency",
+      "Fairness",
+      "Reliability and safety",
+      "Inclusiveness"
+    ],
     "correctIndex": 0,
     "explanation": "Transparency means people are informed about how an AI system works, its limitations, and when they are interacting with AI at all. Disclosure notices and published limitations are its classic implementations.",
     "teaches": "responsible-ai-principles"
@@ -34,7 +49,12 @@
     "examCode": "ai-901",
     "domain": "ai-concepts",
     "question": "An AI-powered screen reader describes images aloud so blind users can browse the web fully. Which responsible AI principle does this exemplify?",
-    "options": ["Accountability", "Inclusiveness", "Privacy and security", "Transparency"],
+    "options": [
+      "Accountability",
+      "Inclusiveness",
+      "Privacy and security",
+      "Transparency"
+    ],
     "correctIndex": 1,
     "explanation": "Inclusiveness holds that AI should empower everyone, explicitly including people with disabilities — assistive capabilities like describing the visual world are its flagship example.",
     "teaches": "responsible-ai-principles"
@@ -44,7 +64,12 @@
     "examCode": "ai-901",
     "domain": "ai-concepts",
     "question": "A company decides that a named human review board — not the model — is answerable for every automated hiring decision, with an appeal path for candidates. Which principle is being implemented?",
-    "options": ["Accountability", "Fairness", "Transparency", "Reliability and safety"],
+    "options": [
+      "Accountability",
+      "Fairness",
+      "Transparency",
+      "Reliability and safety"
+    ],
     "correctIndex": 0,
     "explanation": "Accountability keeps people and organisations answerable for what their AI does. Governance structures — human review, clear ownership of outcomes, appeal routes — are how that principle takes shape.",
     "teaches": "responsible-ai-principles"
@@ -84,7 +109,12 @@
     "examCode": "ai-901",
     "domain": "ai-concepts",
     "question": "A deployed model gives usefully varied, creative answers in a brainstorming app, but the same settings make its answers inconsistent in a policy-lookup app. Which configuration parameter should be lowered for the policy app?",
-    "options": ["The token limit", "Temperature", "The number of deployments", "The prompt length"],
+    "options": [
+      "The token limit",
+      "Temperature",
+      "The number of deployments",
+      "The prompt length"
+    ],
     "correctIndex": 1,
     "explanation": "Temperature controls output randomness: high values produce varied, creative responses; low values make output focused and repeatable — which is what consistent policy answers need.",
     "teaches": "generative-models-and-configuration"
@@ -94,7 +124,12 @@
     "examCode": "ai-901",
     "domain": "ai-concepts",
     "question": "A system takes the goal 'arrange next week's project review', then checks calendars, books a room, and sends invitations using connected tools. Which kind of AI workload is this?",
-    "options": ["Text analysis", "Speech synthesis", "Agentic AI", "Information extraction"],
+    "options": [
+      "Text analysis",
+      "Speech synthesis",
+      "Agentic AI",
+      "Information extraction"
+    ],
     "correctIndex": 2,
     "explanation": "An agent takes a goal, reasons about the steps, and uses tools to act — booking the meeting rather than merely drafting text about it. Acting toward a goal with tools is the signature of agentic AI.",
     "teaches": "identifying-ai-workloads"
@@ -104,7 +139,12 @@
     "examCode": "ai-901",
     "domain": "ai-concepts",
     "question": "A legal team needs the names of people, organisations, and dates automatically found and labelled in thousands of contracts. Which text analysis technique is this?",
-    "options": ["Sentiment analysis", "Entity detection", "Summarization", "Speech recognition"],
+    "options": [
+      "Sentiment analysis",
+      "Entity detection",
+      "Summarization",
+      "Speech recognition"
+    ],
     "correctIndex": 1,
     "explanation": "Entity detection finds and classifies named things — people, places, organisations, dates — in text. Keyword extraction would surface main terms without classifying them; sentiment scores tone.",
     "teaches": "identifying-ai-workloads"
@@ -114,7 +154,12 @@
     "examCode": "ai-901",
     "domain": "ai-concepts",
     "question": "A product team wants incoming app-store reviews automatically scored as positive, negative, or neutral so unhappy users get responses first. Which technique fits?",
-    "options": ["Sentiment analysis", "Keyword extraction", "Image classification", "Speech synthesis"],
+    "options": [
+      "Sentiment analysis",
+      "Keyword extraction",
+      "Image classification",
+      "Speech synthesis"
+    ],
     "correctIndex": 0,
     "explanation": "Scoring text as positive, negative, or neutral is sentiment analysis — the standard tool for triaging reviews and feedback by emotional tone.",
     "teaches": "identifying-ai-workloads"
@@ -124,7 +169,12 @@
     "examCode": "ai-901",
     "domain": "ai-concepts",
     "question": "Analysts receive 30-page research reports and want two-paragraph versions that keep the key findings. Which text analysis technique produces this?",
-    "options": ["Entity detection", "Keyword extraction", "Summarization", "Sentiment analysis"],
+    "options": [
+      "Entity detection",
+      "Keyword extraction",
+      "Summarization",
+      "Sentiment analysis"
+    ],
     "correctIndex": 2,
     "explanation": "Summarization condenses long text while preserving its meaning. Keyword extraction would return a list of terms, not readable condensed prose.",
     "teaches": "identifying-ai-workloads"
@@ -149,7 +199,12 @@
     "examCode": "ai-901",
     "domain": "ai-concepts",
     "question": "A warehouse app must not only say that a photo contains boxes, but locate each box in the image with a bounding region. Which computer vision capability is this?",
-    "options": ["Image classification", "Object detection", "Image generation", "Optical character recognition"],
+    "options": [
+      "Image classification",
+      "Object detection",
+      "Image generation",
+      "Optical character recognition"
+    ],
     "correctIndex": 1,
     "explanation": "Image classification labels the whole image; object detection finds each individual object and localises it with bounding regions. Needing positions, not just a label, is the tell for detection.",
     "teaches": "speech-vision-and-extraction"
@@ -174,7 +229,12 @@
     "examCode": "ai-901",
     "domain": "ai-concepts",
     "question": "An insurer wants the policy number, claim amount, and incident date pulled automatically out of scanned claim forms into a database. Which AI workload is this?",
-    "options": ["Generative AI", "Information extraction", "Speech synthesis", "Image generation"],
+    "options": [
+      "Generative AI",
+      "Information extraction",
+      "Speech synthesis",
+      "Image generation"
+    ],
     "correctIndex": 1,
     "explanation": "Turning unstructured content — like scanned forms — into structured fields is information extraction. Nothing new is being generated; existing content is being read into data.",
     "teaches": "speech-vision-and-extraction"
@@ -537,6 +597,402 @@
     ],
     "correctIndex": 1,
     "explanation": "Foundry's loop runs catalog → deployment → playground experimentation → SDK client against the same deployment. The playground and the app exercise one deployed model, so what you tested is what ships.",
+    "teaches": "prompts-and-model-deployment"
+  },
+  {
+    "id": "ai901-co-18",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "Which AI workload is being used when a system reads a scanned invoice and returns the supplier name and total as structured fields?",
+    "options": [
+      "Document intelligence",
+      "Computer vision",
+      "Natural language processing",
+      "Knowledge mining"
+    ],
+    "correctIndex": 0,
+    "explanation": "Document intelligence extracts structured field values from forms and documents. Plain computer vision would describe the image rather than return named fields.",
+    "teaches": "speech-vision-and-extraction"
+  },
+  {
+    "id": "ai901-co-19",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "What does the temperature setting of a generative model control?",
+    "options": [
+      "How varied the output is",
+      "How many tokens the model may return",
+      "How recent the training data is",
+      "How many documents are searched"
+    ],
+    "correctIndex": 0,
+    "explanation": "A low temperature makes the model pick likely tokens and produce consistent output; a high one makes it more varied. Length is controlled by max tokens, not temperature.",
+    "teaches": "generative-models-and-configuration"
+  },
+  {
+    "id": "ai901-co-20",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "question": "A recruitment model recommends fewer candidates from one region because the historical data under-represents them. Which responsible AI principle is at stake?",
+    "options": [
+      "Fairness",
+      "Reliability and safety",
+      "Transparency",
+      "Accountability"
+    ],
+    "correctIndex": 0,
+    "explanation": "Fairness concerns systems treating groups equitably. Skewed training data producing skewed recommendations is the textbook fairness failure.",
+    "teaches": "responsible-ai-principles"
+  },
+  {
+    "id": "ai901-co-21",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "kind": "multi",
+    "question": "Which two tasks are natural language processing workloads? Choose two.",
+    "options": [
+      "Determining whether a review is positive or negative",
+      "Identifying the language a message is written in",
+      "Counting the people in a photograph",
+      "Forecasting next month's sales from history"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Sentiment and language detection both operate on text. Counting people is computer vision, and forecasting from numeric history is classical machine learning.",
+    "teaches": "identifying-ai-workloads"
+  },
+  {
+    "id": "ai901-co-22",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "kind": "multi",
+    "question": "Which two are characteristics of a large language model? Choose two.",
+    "options": [
+      "It predicts the next token in a sequence",
+      "Its knowledge is fixed at training time unless grounded",
+      "It always returns the same answer for the same prompt",
+      "It stores every document it was trained on for retrieval"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Generation is token-by-token prediction, and the model knows nothing after its training cut-off unless you ground it with your own data. Output varies with sampling settings, and training does not keep a retrievable copy of the corpus.",
+    "teaches": "generative-models-and-configuration"
+  },
+  {
+    "id": "ai901-co-23",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "kind": "multi",
+    "question": "Which two practices support the transparency principle of responsible AI? Choose two.",
+    "options": [
+      "Telling users they are interacting with an AI system",
+      "Explaining what data the system uses to reach a result",
+      "Encrypting the model weights at rest",
+      "Load-balancing requests across regions"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Transparency is about people understanding what the system is and how it decides. Encryption and load balancing are security and reliability measures.",
+    "teaches": "responsible-ai-principles"
+  },
+  {
+    "id": "ai901-co-24",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "kind": "match",
+    "question": "Match each AI workload to the task it performs.",
+    "pairs": [
+      {
+        "term": "Computer vision",
+        "definition": "Interpret the contents of an image"
+      },
+      {
+        "term": "Speech",
+        "definition": "Convert between spoken audio and text"
+      },
+      {
+        "term": "Natural language processing",
+        "definition": "Interpret the meaning of written text"
+      },
+      {
+        "term": "Generative AI",
+        "definition": "Produce new original content from a prompt"
+      }
+    ],
+    "explanation": "The split is by the kind of input each workload reads and what it returns. Generative AI is the only one whose output is new content rather than an interpretation.",
+    "teaches": "identifying-ai-workloads"
+  },
+  {
+    "id": "ai901-co-25",
+    "examCode": "ai-901",
+    "domain": "ai-concepts",
+    "kind": "match",
+    "question": "Match each responsible AI principle to what it asks of a system.",
+    "pairs": [
+      {
+        "term": "Fairness",
+        "definition": "Treat all groups of people equitably"
+      },
+      {
+        "term": "Reliability and safety",
+        "definition": "Perform consistently and fail safely"
+      },
+      {
+        "term": "Privacy and security",
+        "definition": "Protect the data the system uses"
+      },
+      {
+        "term": "Inclusiveness",
+        "definition": "Work for people of all abilities"
+      }
+    ],
+    "explanation": "Fairness is about outcomes across groups; inclusiveness is about who can use the system at all. The two are commonly confused.",
+    "teaches": "responsible-ai-principles"
+  },
+  {
+    "id": "ai901-fd-24",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "You want a model to answer using your company's own documents rather than only what it learned in training. What is this approach called?",
+    "options": [
+      "Grounding",
+      "Fine-tuning",
+      "Quantization",
+      "Tokenization"
+    ],
+    "correctIndex": 0,
+    "explanation": "Grounding supplies your own content to the model at request time so answers cite it. Fine-tuning changes the model's weights and is a heavier, slower option.",
+    "teaches": "prompts-and-model-deployment"
+  },
+  {
+    "id": "ai901-fd-25",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "What is the purpose of a system message in a chat completion request?",
+    "options": [
+      "To set the model's role and rules for the conversation",
+      "To store the conversation for later auditing",
+      "To choose which region the model runs in",
+      "To limit how many tokens the reply may use"
+    ],
+    "correctIndex": 0,
+    "explanation": "The system message frames behaviour — persona, tone and constraints — before any user turn. It is instruction, not storage or infrastructure configuration.",
+    "teaches": "chat-clients-and-agents"
+  },
+  {
+    "id": "ai901-fd-26",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "Which capability turns a recording of a meeting into written text?",
+    "options": [
+      "Speech to text",
+      "Text to speech",
+      "Speech translation",
+      "Language detection"
+    ],
+    "correctIndex": 0,
+    "explanation": "Speech to text transcribes audio. Text to speech is the reverse, and translation additionally changes the language.",
+    "teaches": "text-and-speech-in-foundry"
+  },
+  {
+    "id": "ai901-fd-27",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "Which task is image generation rather than computer vision?",
+    "options": [
+      "Producing a picture of a product from a written description",
+      "Detecting the objects present in a photograph",
+      "Reading the text printed on a sign",
+      "Deciding whether two faces match"
+    ],
+    "correctIndex": 0,
+    "explanation": "Generation creates a new image from a prompt. The other three all analyse an image that already exists.",
+    "teaches": "vision-and-image-generation"
+  },
+  {
+    "id": "ai901-fd-28",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "question": "What does deploying a model in Azure AI Foundry give you?",
+    "options": [
+      "An endpoint your application can call",
+      "A copy of the model's training data",
+      "A dedicated physical server",
+      "An offline installer for the model"
+    ],
+    "correctIndex": 0,
+    "explanation": "A deployment exposes the model as a callable endpoint with a name and quota. Training data is never included and the hosting is managed.",
+    "teaches": "prompts-and-model-deployment"
+  },
+  {
+    "id": "ai901-fd-29",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "kind": "multi",
+    "question": "Which two things does an AI agent add beyond a plain chat completion? Choose two.",
+    "options": [
+      "It can call tools to take actions",
+      "It can keep state across turns of a task",
+      "It removes the need for a language model",
+      "It guarantees the answer is factually correct"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Tool use and persistent state are what make an agent more than a single request and reply. It still runs on a model, and nothing about being an agent makes output true.",
+    "teaches": "chat-clients-and-agents"
+  },
+  {
+    "id": "ai901-fd-30",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "kind": "multi",
+    "question": "Which two are good prompt engineering practices? Choose two.",
+    "options": [
+      "State the desired format of the answer",
+      "Give an example of a correct response",
+      "Keep the prompt as short as possible in every case",
+      "Ask several unrelated questions in one prompt"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Specifying format and showing an example both reduce ambiguity. Brevity is not a goal in itself, and bundling unrelated questions degrades every answer in the set.",
+    "teaches": "prompts-and-model-deployment"
+  },
+  {
+    "id": "ai901-fd-31",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "kind": "multi",
+    "question": "Which two inputs can content understanding extract structured information from? Choose two.",
+    "options": [
+      "A scanned purchase order",
+      "A recorded support call",
+      "A firewall routing table",
+      "A virtual machine disk image"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Content understanding works over documents, images, audio and video — unstructured content people produce. Infrastructure artefacts are not its input.",
+    "teaches": "content-understanding"
+  },
+  {
+    "id": "ai901-fd-32",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "kind": "match",
+    "question": "Match each speech capability to what it does.",
+    "pairs": [
+      {
+        "term": "Speech to text",
+        "definition": "Transcribe spoken audio into writing"
+      },
+      {
+        "term": "Text to speech",
+        "definition": "Read written text aloud in a chosen voice"
+      },
+      {
+        "term": "Speech translation",
+        "definition": "Render spoken words in another language"
+      },
+      {
+        "term": "Speaker recognition",
+        "definition": "Identify who is talking"
+      }
+    ],
+    "explanation": "The first three convert between forms; only speaker recognition answers a question about the person rather than the words.",
+    "teaches": "text-and-speech-in-foundry"
+  },
+  {
+    "id": "ai901-fd-33",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "kind": "match",
+    "question": "Match each model setting to its effect.",
+    "pairs": [
+      {
+        "term": "Temperature",
+        "definition": "How varied the wording of the output is"
+      },
+      {
+        "term": "Max tokens",
+        "definition": "How long the reply is allowed to be"
+      },
+      {
+        "term": "System message",
+        "definition": "The role and rules the model follows"
+      },
+      {
+        "term": "Grounding data",
+        "definition": "The source the answer should draw on"
+      }
+    ],
+    "explanation": "Two of these shape how the model writes, and two shape what it writes about. Confusing temperature with max tokens is the usual slip.",
+    "teaches": "generative-models-and-configuration"
+  },
+  {
+    "id": "ai901-fd-34",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "kind": "match",
+    "question": "Match each vision task to its description.",
+    "pairs": [
+      {
+        "term": "Image classification",
+        "definition": "Assign a single label to a whole image"
+      },
+      {
+        "term": "Object detection",
+        "definition": "Locate and label each item in an image"
+      },
+      {
+        "term": "Optical character recognition",
+        "definition": "Read text that appears in an image"
+      },
+      {
+        "term": "Image generation",
+        "definition": "Create a new image from a description"
+      }
+    ],
+    "explanation": "Classification labels the picture; detection labels things inside it and says where they are. That location is the distinction the exam tests.",
+    "teaches": "vision-and-image-generation"
+  },
+  {
+    "id": "ai901-fd-35",
+    "examCode": "ai-901",
+    "domain": "foundry-implementation",
+    "kind": "match",
+    "question": "Match each Azure AI Foundry concept to what it is.",
+    "pairs": [
+      {
+        "term": "Model catalog",
+        "definition": "The set of models you can choose from"
+      },
+      {
+        "term": "Deployment",
+        "definition": "A named endpoint serving one model"
+      },
+      {
+        "term": "Prompt flow",
+        "definition": "An orchestrated sequence of prompt steps"
+      },
+      {
+        "term": "Evaluation",
+        "definition": "A measured comparison of output quality"
+      }
+    ],
+    "explanation": "Catalog is choice, deployment is serving, prompt flow is orchestration and evaluation is measurement — one per stage of getting a model into use.",
     "teaches": "prompts-and-model-deployment"
   }
 ]

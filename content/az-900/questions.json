@@ -49,7 +49,12 @@
     "examCode": "az-900",
     "domain": "cloud-concepts",
     "question": "A hospital must keep patient records on-premises to satisfy regulators, but wants its public website and appointment system to run in Azure. Which cloud model is this?",
-    "options": ["Public cloud", "Private cloud", "Community cloud", "Hybrid cloud"],
+    "options": [
+      "Public cloud",
+      "Private cloud",
+      "Community cloud",
+      "Hybrid cloud"
+    ],
     "correctIndex": 3,
     "explanation": "Combining on-premises (private) infrastructure for regulated workloads with public cloud services for everything else is the definition of the hybrid model — and regulated data residency is its classic use case.",
     "teaches": "cloud-models-and-use-cases"
@@ -119,7 +124,12 @@
     "examCode": "az-900",
     "domain": "cloud-concepts",
     "question": "When an Azure region became unavailable, an application automatically shifted its workload to a healthy region and kept serving users. Which cloud benefit does this best illustrate?",
-    "options": ["Reliability", "Elasticity", "Manageability", "Predictable cost"],
+    "options": [
+      "Reliability",
+      "Elasticity",
+      "Manageability",
+      "Predictable cost"
+    ],
     "correctIndex": 0,
     "explanation": "Reliability is a system's ability to recover from failure and continue functioning — a decentralised design that self-heals by moving work to healthy regions is its textbook illustration.",
     "teaches": "benefits-of-the-cloud"
@@ -279,7 +289,12 @@
     "examCode": "az-900",
     "domain": "architecture-services",
     "question": "A bank must connect its datacenter to Azure with a dedicated private connection that never traverses the public internet. Which service provides this?",
-    "options": ["Azure VPN Gateway", "VNet peering", "Azure DNS", "ExpressRoute"],
+    "options": [
+      "Azure VPN Gateway",
+      "VNet peering",
+      "Azure DNS",
+      "ExpressRoute"
+    ],
     "correctIndex": 3,
     "explanation": "ExpressRoute is a private, dedicated circuit between on-premises infrastructure and Azure. A VPN Gateway also connects the two, but its encrypted tunnel still travels over the public internet.",
     "teaches": "compute-and-networking"
@@ -319,7 +334,12 @@
     "examCode": "az-900",
     "domain": "architecture-services",
     "question": "Seven years of compliance records must be kept as cheaply as possible; retrieval will be rare and can tolerate a wait of several hours. Which Blob access tier fits?",
-    "options": ["Hot", "Cool", "Archive", "Premium"],
+    "options": [
+      "Hot",
+      "Cool",
+      "Archive",
+      "Premium"
+    ],
     "correctIndex": 2,
     "explanation": "The archive tier has the lowest storage cost and is designed for data that is almost never read — the trade-off being that retrieval takes hours and costs more. Hot and cool serve data that still gets accessed.",
     "teaches": "storage-services"
@@ -577,6 +597,402 @@
     ],
     "correctIndex": 0,
     "explanation": "Application Insights instruments the application itself, tracking requests, failures, dependencies, and performance, with alerting on anomalies — application performance monitoring as part of Azure Monitor.",
+    "teaches": "monitoring-tools"
+  },
+  {
+    "id": "az900-cc-12",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "question": "Which cloud benefit describes adding capacity automatically when demand rises and removing it when demand falls?",
+    "options": [
+      "Elasticity",
+      "High availability",
+      "Governance",
+      "Disaster recovery"
+    ],
+    "correctIndex": 0,
+    "explanation": "Elasticity is capacity following demand in both directions. High availability is about staying up when something fails, which is a different promise.",
+    "teaches": "benefits-of-the-cloud"
+  },
+  {
+    "id": "az900-cc-13",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "question": "In the shared responsibility model, who is always responsible for the data itself?",
+    "options": [
+      "The customer",
+      "The cloud provider",
+      "It depends on the region",
+      "The datacenter operator"
+    ],
+    "correctIndex": 0,
+    "explanation": "Data, identities and access are always the customer's, in every service model. What shifts between IaaS, PaaS and SaaS is everything below that.",
+    "teaches": "cloud-service-types"
+  },
+  {
+    "id": "az900-cc-14",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "kind": "multi",
+    "question": "Which two are characteristics of a consumption-based pricing model? Choose two.",
+    "options": [
+      "You pay only for the resources you use",
+      "There is no upfront capital cost",
+      "You reserve hardware for a fixed term",
+      "Costs are identical every month"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Consumption pricing converts capital expenditure into operating expenditure that tracks usage. Fixed monthly cost describes a reservation, which is the opposite arrangement.",
+    "teaches": "benefits-of-the-cloud"
+  },
+  {
+    "id": "az900-cc-15",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "kind": "multi",
+    "question": "Which two statements describe a hybrid cloud? Choose two.",
+    "options": [
+      "It combines on-premises infrastructure with public cloud",
+      "Workloads can move between the two environments",
+      "All resources are owned by a single tenant in one datacenter",
+      "It removes the need to manage any physical hardware"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Hybrid is the deliberate combination of private and public with workloads able to sit in either. If no hardware remains, it is simply public cloud.",
+    "teaches": "cloud-models-and-use-cases"
+  },
+  {
+    "id": "az900-cc-16",
+    "examCode": "az-900",
+    "domain": "cloud-concepts",
+    "kind": "match",
+    "question": "Match each cloud service type to what the provider manages.",
+    "pairs": [
+      {
+        "term": "Infrastructure as a service",
+        "definition": "Hardware and virtualization only"
+      },
+      {
+        "term": "Platform as a service",
+        "definition": "Also the operating system and runtime"
+      },
+      {
+        "term": "Software as a service",
+        "definition": "The entire application"
+      },
+      {
+        "term": "On-premises",
+        "definition": "Nothing — you manage all of it"
+      }
+    ],
+    "explanation": "Each step hands one more layer to the provider. Reading the ladder in order is the quickest way to place any service in an exam question.",
+    "teaches": "cloud-service-types"
+  },
+  {
+    "id": "az900-as-16",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "question": "What is an Azure region?",
+    "options": [
+      "A set of datacenters within a latency-defined perimeter",
+      "A single physical building",
+      "A billing boundary for a subscription",
+      "A group of subscriptions under one policy"
+    ],
+    "correctIndex": 0,
+    "explanation": "A region is a geographic area containing one or more datacenters close enough to serve as one deployment target. Management groups are the policy grouping.",
+    "teaches": "regions-zones-and-datacenters"
+  },
+  {
+    "id": "az900-as-17",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "question": "Which storage option is designed for large amounts of unstructured data such as images and backups?",
+    "options": [
+      "Blob storage",
+      "Azure Files",
+      "Azure Table storage",
+      "Azure Queue storage"
+    ],
+    "correctIndex": 0,
+    "explanation": "Blob storage holds arbitrary unstructured objects. Files provides an SMB share, Table holds key-value rows and Queue carries messages.",
+    "teaches": "storage-services"
+  },
+  {
+    "id": "az900-as-18",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "question": "Which service lets you run containers without managing the underlying virtual machines?",
+    "options": [
+      "Azure Container Instances",
+      "Azure Virtual Machines",
+      "Azure Virtual Network",
+      "Azure Backup"
+    ],
+    "correctIndex": 0,
+    "explanation": "Container Instances runs a container directly with no host to size or patch. Virtual Machines is the option that hands you the host to manage.",
+    "teaches": "compute-and-networking"
+  },
+  {
+    "id": "az900-as-19",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "kind": "multi",
+    "question": "Which two does using availability zones protect a workload against? Choose two.",
+    "options": [
+      "Failure of a single datacenter",
+      "A localized power or cooling outage",
+      "An entire region becoming unavailable",
+      "A mistake in your application code"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Zones are physically separate locations inside one region, so they cover datacenter-level faults. Losing the whole region needs a second region, and no infrastructure feature fixes a bug.",
+    "teaches": "regions-zones-and-datacenters"
+  },
+  {
+    "id": "az900-as-20",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "kind": "multi",
+    "question": "Which two are true of Microsoft Entra ID? Choose two.",
+    "options": [
+      "It is a cloud-based identity and access service",
+      "It can provide single sign-on to many applications",
+      "It is a replacement for Azure Virtual Network",
+      "It stores application data for your workloads"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Entra ID authenticates people and applications and issues the tokens behind single sign-on. It is an identity service, not networking or storage.",
+    "teaches": "identity-access-and-security"
+  },
+  {
+    "id": "az900-as-21",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "kind": "match",
+    "question": "Match each Azure compute option to what it suits.",
+    "pairs": [
+      {
+        "term": "Virtual machines",
+        "definition": "Full control of the operating system"
+      },
+      {
+        "term": "Azure App Service",
+        "definition": "Hosting a web app without managing servers"
+      },
+      {
+        "term": "Azure Functions",
+        "definition": "Running small code blocks on a trigger"
+      },
+      {
+        "term": "Azure Kubernetes Service",
+        "definition": "Orchestrating containers at scale"
+      }
+    ],
+    "explanation": "The list runs from most control to most managed. The question is always how much of the stack you want to be responsible for.",
+    "teaches": "compute-and-networking"
+  },
+  {
+    "id": "az900-as-22",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "kind": "match",
+    "question": "Match each Azure scope to what it contains.",
+    "pairs": [
+      {
+        "term": "Management group",
+        "definition": "One or more subscriptions"
+      },
+      {
+        "term": "Subscription",
+        "definition": "A billing and access boundary"
+      },
+      {
+        "term": "Resource group",
+        "definition": "A container for related resources"
+      },
+      {
+        "term": "Resource",
+        "definition": "A single service instance"
+      }
+    ],
+    "explanation": "The four nest from widest to narrowest, and policy applied at any level flows down. Knowing the order answers most governance questions.",
+    "teaches": "resources-subscriptions-management-groups"
+  },
+  {
+    "id": "az900-as-23",
+    "examCode": "az-900",
+    "domain": "architecture-services",
+    "kind": "match",
+    "question": "Match each Azure storage service to its use.",
+    "pairs": [
+      {
+        "term": "Blob storage",
+        "definition": "Unstructured objects such as images"
+      },
+      {
+        "term": "Azure Files",
+        "definition": "A file share reachable over SMB"
+      },
+      {
+        "term": "Queue storage",
+        "definition": "Messages passed between components"
+      },
+      {
+        "term": "Table storage",
+        "definition": "Simple key-value structured rows"
+      }
+    ],
+    "explanation": "Four services, four shapes of data. Blob against Files is the pair most often confused: objects versus a mounted share.",
+    "teaches": "storage-services"
+  },
+  {
+    "id": "az900-mg-15",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "question": "Which tool estimates what a planned Azure deployment will cost before you build it?",
+    "options": [
+      "The pricing calculator",
+      "Azure Advisor",
+      "Azure Monitor",
+      "Microsoft Cost Management"
+    ],
+    "correctIndex": 0,
+    "explanation": "The pricing calculator prices a design you have not deployed. Cost Management reports on spending that has already happened.",
+    "teaches": "cost-management"
+  },
+  {
+    "id": "az900-mg-16",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "question": "What does an Azure resource lock set to ReadOnly prevent?",
+    "options": [
+      "Any change or deletion of the resource",
+      "Only deletion of the resource",
+      "Users from reading the resource",
+      "The resource from being moved between regions"
+    ],
+    "correctIndex": 0,
+    "explanation": "ReadOnly blocks modification as well as deletion. The CanNotDelete lock is the one that allows changes but stops removal.",
+    "teaches": "governance-and-compliance"
+  },
+  {
+    "id": "az900-mg-17",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "question": "Which service collects metrics and logs from Azure resources and raises alerts on them?",
+    "options": [
+      "Azure Monitor",
+      "Azure Policy",
+      "Azure Blueprints",
+      "Azure Arc"
+    ],
+    "correctIndex": 0,
+    "explanation": "Azure Monitor is the telemetry platform for metrics, logs and alerting. Policy governs configuration rather than observing behaviour.",
+    "teaches": "monitoring-tools"
+  },
+  {
+    "id": "az900-mg-18",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "kind": "multi",
+    "question": "Which two can help reduce Azure spending? Choose two.",
+    "options": [
+      "Buying reserved instances for steady workloads",
+      "Shutting down virtual machines outside working hours",
+      "Deploying into more regions than required",
+      "Removing tags from resources"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Reservations trade commitment for a lower rate, and stopping idle machines stops the meter. Extra regions add cost, and tags are how you attribute it, not incur it.",
+    "teaches": "cost-management"
+  },
+  {
+    "id": "az900-mg-19",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "kind": "multi",
+    "question": "Which two are ways to deploy and manage Azure resources? Choose two.",
+    "options": [
+      "The Azure portal",
+      "Azure CLI",
+      "Microsoft Excel",
+      "Windows File Explorer"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "The portal is the graphical path and the CLI the scripted one, alongside PowerShell and ARM or Bicep templates. The other two are not management surfaces.",
+    "teaches": "deploying-and-managing-resources"
+  },
+  {
+    "id": "az900-mg-20",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "kind": "match",
+    "question": "Match each governance tool to what it does.",
+    "pairs": [
+      {
+        "term": "Azure Policy",
+        "definition": "Enforce rules on resource configuration"
+      },
+      {
+        "term": "Resource lock",
+        "definition": "Prevent accidental change or deletion"
+      },
+      {
+        "term": "Tag",
+        "definition": "Label a resource for reporting"
+      },
+      {
+        "term": "Role-based access control",
+        "definition": "Decide who may do what"
+      }
+    ],
+    "explanation": "Policy governs what resources may look like; RBAC governs who may act. Locks and tags are the narrower tools that sit alongside them.",
+    "teaches": "governance-and-compliance"
+  },
+  {
+    "id": "az900-mg-21",
+    "examCode": "az-900",
+    "domain": "management-governance",
+    "kind": "match",
+    "question": "Match each monitoring or advisory service to its purpose.",
+    "pairs": [
+      {
+        "term": "Azure Monitor",
+        "definition": "Collect metrics, logs and alerts"
+      },
+      {
+        "term": "Azure Advisor",
+        "definition": "Recommend improvements to your setup"
+      },
+      {
+        "term": "Azure Service Health",
+        "definition": "Report Azure outages affecting you"
+      },
+      {
+        "term": "Microsoft Cost Management",
+        "definition": "Analyse what you have already spent"
+      }
+    ],
+    "explanation": "Monitor watches your resources, Service Health watches Azure itself. Which side of that line a question sits on decides the answer.",
     "teaches": "monitoring-tools"
   }
 ]
