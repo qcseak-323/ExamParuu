@@ -1781,20 +1781,44 @@ button.gym-marker-hit:hover {
    animation because reduced motion kills duration and leaves delay alone,
    stranding the element mid-flight. It cannot bite here: under reduced motion
    HomeHero does not render the sky layer at all. */
-.sky-cloud-1 { width: 128px; height: 71px; top: 34px;  animation: cloud-drift 96s linear -22s infinite; }
-.sky-cloud-2 { width: 96px;  height: 52px; top: 96px;  animation: cloud-drift 132s linear -74s infinite; }
-.sky-cloud-3 { width: 64px;  height: 35px; top: 64px;  animation: cloud-drift 168s linear -118s infinite; }
-.sky-cloud-4 { width: 112px; height: 62px; top: 148px; animation: cloud-drift 114s linear -48s infinite; }
-.sky-cloud-5 { width: 80px;  height: 44px; top: 16px;  animation: cloud-drift 150s linear -96s infinite; }
+/* The durations below are authored against a ~1280px viewport, where a cloud
+   crosses 1560px and the fastest band reads at roughly 16px/s.
+
+   `--cloud-pace` scales them for narrower screens, and it is not a nicety.
+   The crossing is `100vw + 280px`, so a 390px phone travels 670px — 43% of
+   the desktop distance — while a fixed duration keeps spending the same 96s
+   on it. That is 7px/s for the near band and 4px/s for the far one: slow
+   enough that the sky reads as frozen rather than drifting, which is the one
+   thing this layer exists to avoid. Scaling duration by the same fraction as
+   the distance holds the apparent speed steady instead.
+
+   Delays scale with it. A negative delay is a starting phase expressed in
+   seconds, so scaling duration alone would slide all five clouds to different
+   positions on the first frame and undo the staggering. */
+.sky-layer { --cloud-pace: 1; }
+
+.sky-cloud-1 { width: 128px; height: 71px; top: 34px;  animation: cloud-drift calc(96s * var(--cloud-pace))  linear calc(-22s * var(--cloud-pace))  infinite; }
+.sky-cloud-2 { width: 96px;  height: 52px; top: 96px;  animation: cloud-drift calc(132s * var(--cloud-pace)) linear calc(-74s * var(--cloud-pace))  infinite; }
+.sky-cloud-3 { width: 64px;  height: 35px; top: 64px;  animation: cloud-drift calc(168s * var(--cloud-pace)) linear calc(-118s * var(--cloud-pace)) infinite; }
+.sky-cloud-4 { width: 112px; height: 62px; top: 148px; animation: cloud-drift calc(114s * var(--cloud-pace)) linear calc(-48s * var(--cloud-pace))  infinite; }
+.sky-cloud-5 { width: 80px;  height: 44px; top: 16px;  animation: cloud-drift calc(150s * var(--cloud-pace)) linear calc(-96s * var(--cloud-pace))  infinite; }
 
 @keyframes cloud-drift {
   from { transform: translateX(-140px); }
   to   { transform: translateX(calc(100vw + 140px)); }
 }
 
+/* Tablets and small laptops: ~770px mid-range crosses 1050px, 0.67 of the
+   desktop distance. */
+@media (max-width: 900px) {
+  .sky-layer { --cloud-pace: 0.67; }
+}
+
 /* Phones: the hero is short, so drop the lowest band and pull the celestial
-   body in from the edge where the headline would otherwise collide with it. */
+   body in from the edge where the headline would otherwise collide with it.
+   0.45 is the 320–640px range's mid crossing over the desktop one. */
 @media (max-width: 640px) {
+  .sky-layer { --cloud-pace: 0.45; }
   .sky-cloud-3 { display: none; }
   .sky-celestial { width: 64px; height: 64px; top: 18px; right: 5%; }
 }
