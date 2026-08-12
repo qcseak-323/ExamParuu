@@ -2,7 +2,7 @@
   {
     "code": "ab-100",
     "title": "Agentic AI Business Solutions Architect",
-    "family": "Copilot & Agents",
+    "family": "AI Business Solutions",
     "series": "ab",
     "msLevel": "Expert",
     "status": "GA",
@@ -16,7 +16,7 @@
   {
     "code": "ab-210",
     "title": "Dynamics 365 Sales AI Consultant",
-    "family": "Copilot & Agents",
+    "family": "AI Business Solutions",
     "series": "ab",
     "msLevel": "Associate",
     "status": "beta",
@@ -30,7 +30,7 @@
   {
     "code": "ab-250",
     "title": "Dynamics 365 Contact Center AI Engineer",
-    "family": "Copilot & Agents",
+    "family": "AI Business Solutions",
     "series": "ab",
     "msLevel": "Associate",
     "status": "beta",
@@ -44,7 +44,7 @@
   {
     "code": "ab-410",
     "title": "Intelligent Applications Builder",
-    "family": "Copilot & Agents",
+    "family": "AI Business Solutions",
     "series": "ab",
     "msLevel": "Associate",
     "status": "GA",
@@ -58,7 +58,7 @@
   {
     "code": "ab-610",
     "title": "Title not yet published by Microsoft",
-    "family": "Copilot & Agents",
+    "family": "AI Business Solutions",
     "series": "ab",
     "msLevel": "Associate",
     "status": "announced",
@@ -72,7 +72,7 @@
   {
     "code": "ab-620",
     "title": "AI Agent Builder",
-    "family": "Copilot & Agents",
+    "family": "AI Business Solutions",
     "series": "ab",
     "msLevel": "Associate",
     "status": "GA",
@@ -86,7 +86,7 @@
   {
     "code": "ab-730",
     "title": "AI Business Professional",
-    "family": "Copilot & Agents",
+    "family": "AI Business Solutions",
     "series": "ab",
     "msLevel": "Fundamentals",
     "status": "GA",
@@ -100,7 +100,7 @@
   {
     "code": "ab-731",
     "title": "AI Transformation Leader",
-    "family": "Copilot & Agents",
+    "family": "AI Business Solutions",
     "series": "ab",
     "msLevel": "Fundamentals",
     "status": "GA",
@@ -114,7 +114,7 @@
   {
     "code": "ab-900",
     "title": "Microsoft 365 Copilot and Agent Administration Fundamentals",
-    "family": "Copilot & Agents",
+    "family": "AI Business Solutions",
     "series": "ab",
     "msLevel": "Fundamentals",
     "status": "beta",

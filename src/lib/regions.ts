@@ -8,9 +8,10 @@ import { isGymCleared, isProvingPassed } from "./gamification";
  * (drawn from the locked art palettes, never used as UI text) and a badge
  * earned by clearing every playable gym inside it.
  *
- * The mapping mirrors Microsoft's 2026 portfolio: the AB "Copilot & Agents"
- * series absorbed the Microsoft 365 track (MS-900 retired into AB-900), so
- * the surviving MS-* exams live in Agent Atoll.
+ * The mapping mirrors Microsoft's 2026 portfolio: the AB "AI Business
+ * Solutions" series absorbed the Microsoft 365 track (MS-900 retired into
+ * AB-900). The last surviving MS-* codes were dropped from the catalogue on
+ * 2026-08-12, so Agent Atoll is now AB exams only.
  */
 
 export type Region = {
@@ -83,8 +84,14 @@ export const REGIONS: Region[] = [
   },
   {
     id: "ab",
-    name: "Copilot & Agents (AB)",
-    productName: "Microsoft 365 Copilot",
+    // "AI Business Solutions", not "Copilot & Agents": the line outgrew that
+    // label once AB-100, AB-730 and AB-731 arrived, which are business and
+    // architecture credentials rather than Copilot administration. Changed in
+    // step with `family` in catalog.json — `seriesTitle` builds the setup
+    // picker's label from `productName`, so the two drifting apart is exactly
+    // what this region record exists to prevent.
+    name: "AI Business Solutions (AB)",
+    productName: "AI Business Solutions",
     worldName: "Agent Atoll",
     tagline: "Copilot, AI agents, and the Microsoft 365 estate.",
     professorLine:
