@@ -403,5 +403,596 @@
     "correctIndex": 2,
     "explanation": "Agent usage, operational insights, and lifecycle can be monitored through both the Microsoft 365 admin center and the Power Platform admin center.",
     "teaches": "administering-agents"
+  },
+  {
+    "id": "ab900-cf-10",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "Which admin center is used to manage mailboxes and distribution groups?",
+    "options": [
+      "The Exchange admin center",
+      "The SharePoint admin center",
+      "The Teams admin center",
+      "The Microsoft 365 admin center"
+    ],
+    "correctIndex": 0,
+    "explanation": "Mail objects live in the Exchange admin center. The Microsoft 365 admin center handles tenant-wide settings and licences rather than individual mail objects.",
+    "teaches": "core-objects-across-the-admin-centers"
+  },
+  {
+    "id": "ab900-cf-11",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "Where do you assign licences to users?",
+    "options": [
+      "The Microsoft 365 admin center",
+      "The Exchange admin center",
+      "The SharePoint admin center",
+      "The Teams admin center"
+    ],
+    "correctIndex": 0,
+    "explanation": "Licence assignment is tenant-wide administration, so it belongs in the Microsoft 365 admin center. The workload admin centers manage the objects inside each service.",
+    "teaches": "core-objects-across-the-admin-centers"
+  },
+  {
+    "id": "ab900-cf-12",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "Which admin center manages sites and document libraries?",
+    "options": [
+      "The SharePoint admin center",
+      "The Exchange admin center",
+      "The Microsoft 365 admin center",
+      "The Purview portal"
+    ],
+    "correctIndex": 0,
+    "explanation": "Sites, libraries and the permissions that control who can view or edit their content are SharePoint objects.",
+    "teaches": "core-objects-across-the-admin-centers"
+  },
+  {
+    "id": "ab900-cf-13",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "What is the core idea behind Zero Trust?",
+    "options": [
+      "Never trust, always verify — validate every access request explicitly",
+      "Trust any request originating inside the corporate network",
+      "Grant every user administrator rights by default",
+      "Disable authentication for internal applications"
+    ],
+    "correctIndex": 0,
+    "explanation": "Zero Trust treats network location as no evidence of trustworthiness, so every request is verified on its own merits.",
+    "teaches": "zero-trust-and-authentication"
+  },
+  {
+    "id": "ab900-cf-14",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "Which authentication approach adds the strongest protection against a stolen password?",
+    "options": [
+      "Multifactor authentication",
+      "A longer minimum password length",
+      "More frequent password expiry",
+      "Disabling password hints"
+    ],
+    "correctIndex": 0,
+    "explanation": "A second factor means a stolen password alone is not enough. Length and expiry rules only make the password itself marginally harder to guess.",
+    "teaches": "zero-trust-and-authentication"
+  },
+  {
+    "id": "ab900-cf-15",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "question": "Which Microsoft Entra feature applies conditions such as device state or location to a sign-in?",
+    "options": [
+      "Conditional Access",
+      "Self-service password reset",
+      "Licence assignment",
+      "Distribution groups"
+    ],
+    "correctIndex": 0,
+    "explanation": "Conditional Access evaluates signals at sign-in and decides whether to allow, block or require an additional factor.",
+    "teaches": "microsoft-entra-id-security-features"
+  },
+  {
+    "id": "ab900-cf-16",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "kind": "multi",
+    "question": "Which two are managed in the Microsoft 365 admin center rather than a workload admin center? Choose two.",
+    "options": [
+      "Licence assignment",
+      "Tenant-wide organisation settings",
+      "Individual mailbox permissions",
+      "SharePoint site storage limits"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Tenant-wide concerns sit in the Microsoft 365 admin center; objects belonging to a specific service are managed in that service's own admin center.",
+    "teaches": "core-objects-across-the-admin-centers"
+  },
+  {
+    "id": "ab900-cf-17",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "kind": "multi",
+    "question": "Which two principles are part of Zero Trust? Choose two.",
+    "options": [
+      "Verify explicitly",
+      "Use least privilege access",
+      "Trust the internal network implicitly",
+      "Grant standing administrator rights"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Verify explicitly, use least privilege and assume breach are the three pillars. The two wrong answers are exactly what Zero Trust exists to replace.",
+    "teaches": "zero-trust-and-authentication"
+  },
+  {
+    "id": "ab900-cf-18",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "kind": "match",
+    "question": "Match each admin center to what it manages.",
+    "pairs": [
+      {
+        "term": "Microsoft 365 admin center",
+        "definition": "Tenant settings and licence assignment"
+      },
+      {
+        "term": "Exchange admin center",
+        "definition": "Mailboxes and mail flow"
+      },
+      {
+        "term": "SharePoint admin center",
+        "definition": "Sites and document libraries"
+      },
+      {
+        "term": "Teams admin center",
+        "definition": "Teams policies and meeting settings"
+      }
+    ],
+    "explanation": "One tenant-wide console plus one per workload. Knowing which console owns an object is most of what this domain tests.",
+    "teaches": "core-objects-across-the-admin-centers"
+  },
+  {
+    "id": "ab900-cf-19",
+    "examCode": "ab-900",
+    "domain": "core-features",
+    "kind": "match",
+    "question": "Match each Microsoft Entra capability to its purpose.",
+    "pairs": [
+      {
+        "term": "Conditional Access",
+        "definition": "Apply conditions to a sign-in attempt"
+      },
+      {
+        "term": "Multifactor authentication",
+        "definition": "Require evidence of more than one kind"
+      },
+      {
+        "term": "Self-service password reset",
+        "definition": "Let users recover access without a helpdesk"
+      },
+      {
+        "term": "Security defaults",
+        "definition": "Baseline protection with no policy authoring"
+      }
+    ],
+    "explanation": "Security defaults and Conditional Access solve the same problem at different levels of control — defaults are all or nothing, Conditional Access is per condition.",
+    "teaches": "microsoft-entra-id-security-features"
+  },
+  {
+    "id": "ab900-dp-10",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "What is Microsoft Purview used for?",
+    "options": [
+      "Governing, protecting and managing data across the estate",
+      "Provisioning virtual machines",
+      "Assigning Microsoft 365 licences",
+      "Configuring Teams meeting policies"
+    ],
+    "correctIndex": 0,
+    "explanation": "Purview is the data governance and compliance suite: classification, protection, retention, risk and audit.",
+    "teaches": "microsoft-purview-at-a-glance"
+  },
+  {
+    "id": "ab900-dp-11",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "What does a sensitivity label do to a document?",
+    "options": [
+      "Classifies it and can apply protection that travels with the file",
+      "Deletes it after a fixed period",
+      "Moves it to an archive site",
+      "Converts it to a different file format"
+    ],
+    "correctIndex": 0,
+    "explanation": "Sensitivity labels classify and can enforce encryption and marking. Timed deletion is a retention label, which is a different control.",
+    "teaches": "microsoft-purview-at-a-glance"
+  },
+  {
+    "id": "ab900-dp-12",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "What does a retention policy control?",
+    "options": [
+      "How long content is kept and when it is deleted",
+      "Who is allowed to open a document",
+      "Which admin center manages a site",
+      "How many licences a tenant holds"
+    ],
+    "correctIndex": 0,
+    "explanation": "Retention governs lifespan. Access is governed by permissions and sensitivity labels.",
+    "teaches": "microsoft-purview-at-a-glance"
+  },
+  {
+    "id": "ab900-dp-13",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "Why does over-sharing content become more visible once Copilot is deployed?",
+    "options": [
+      "Copilot can surface anything a user already had permission to open",
+      "Copilot ignores permissions when summarising",
+      "Copilot makes all content tenant-public",
+      "Copilot copies files between users"
+    ],
+    "correctIndex": 0,
+    "explanation": "Copilot does not widen access; it makes existing over-permissioned content much easier to find, which is why permission hygiene precedes rollout.",
+    "teaches": "data-protection-implications-of-copilot"
+  },
+  {
+    "id": "ab900-dp-14",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "What should an administrator review before a broad Copilot rollout?",
+    "options": [
+      "Existing sharing and permissions on key sites",
+      "The colour scheme of the Copilot interface",
+      "The number of meeting rooms in the tenant",
+      "The tenant's domain registration date"
+    ],
+    "correctIndex": 0,
+    "explanation": "Permission review is the single highest-value preparation step, because Copilot inherits whatever access already exists.",
+    "teaches": "data-protection-implications-of-copilot"
+  },
+  {
+    "id": "ab900-dp-15",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "How can a sensitivity label affect what Copilot returns?",
+    "options": [
+      "Protected content can be excluded from a response",
+      "It changes the language of the response",
+      "It increases the response length limit",
+      "It disables citations"
+    ],
+    "correctIndex": 0,
+    "explanation": "Labels and their protection settings restrict what Copilot may include, so a response can legitimately omit labelled content.",
+    "teaches": "data-protection-implications-of-copilot"
+  },
+  {
+    "id": "ab900-dp-16",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "Which capability identifies risky behaviour by people inside the organisation?",
+    "options": [
+      "Insider risk management",
+      "Conditional Access",
+      "Licence management",
+      "Mail flow rules"
+    ],
+    "correctIndex": 0,
+    "explanation": "Insider risk management looks for patterns of concerning activity by internal users, which is a different problem from authenticating them.",
+    "teaches": "identifying-and-responding-to-risk"
+  },
+  {
+    "id": "ab900-dp-17",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "What is the purpose of an audit log?",
+    "options": [
+      "Recording what happened, so activity can be investigated later",
+      "Preventing users from opening documents",
+      "Assigning licences automatically",
+      "Encrypting data at rest"
+    ],
+    "correctIndex": 0,
+    "explanation": "Auditing is detective rather than preventive: it answers who did what and when, after the fact.",
+    "teaches": "identifying-and-responding-to-risk"
+  },
+  {
+    "id": "ab900-dp-18",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "Which control stops sensitive information leaving the organisation by email?",
+    "options": [
+      "A data loss prevention policy",
+      "A retention label",
+      "A sensitivity label alone",
+      "A distribution group"
+    ],
+    "correctIndex": 0,
+    "explanation": "DLP acts on content in motion, blocking or warning when it matches a sensitive information type.",
+    "teaches": "microsoft-purview-at-a-glance"
+  },
+  {
+    "id": "ab900-dp-19",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "question": "Are Copilot interactions subject to the tenant's audit and compliance controls?",
+    "options": [
+      "Yes, they can be audited like other activity",
+      "No, they are excluded from auditing",
+      "Only for administrator accounts",
+      "Only when a sensitivity label is applied"
+    ],
+    "correctIndex": 0,
+    "explanation": "Copilot activity is part of the tenant's compliance surface, which is what allows organisations to govern its use rather than merely permit it.",
+    "teaches": "identifying-and-responding-to-risk"
+  },
+  {
+    "id": "ab900-dp-20",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "kind": "multi",
+    "question": "Which two are Microsoft Purview capabilities? Choose two.",
+    "options": [
+      "Sensitivity labels",
+      "Data loss prevention",
+      "Virtual machine provisioning",
+      "Teams meeting policies"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Purview covers classification, protection, retention, risk and audit. Compute and Teams configuration belong elsewhere.",
+    "teaches": "microsoft-purview-at-a-glance"
+  },
+  {
+    "id": "ab900-dp-21",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "kind": "multi",
+    "question": "Which two should happen before rolling Copilot out widely? Choose two.",
+    "options": [
+      "Review over-shared sites and correct permissions",
+      "Apply sensitivity labels to confidential content",
+      "Disable auditing to reduce noise",
+      "Grant every user administrator rights"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Both reduce what Copilot can surface inappropriately. The other two would make the risk considerably worse.",
+    "teaches": "data-protection-implications-of-copilot"
+  },
+  {
+    "id": "ab900-dp-22",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "kind": "match",
+    "question": "Match each Purview control to what it governs.",
+    "pairs": [
+      {
+        "term": "Sensitivity label",
+        "definition": "Classification and protection of content"
+      },
+      {
+        "term": "Retention policy",
+        "definition": "How long content is kept"
+      },
+      {
+        "term": "Data loss prevention",
+        "definition": "Sensitive content leaving the organisation"
+      },
+      {
+        "term": "Audit log",
+        "definition": "A record of what was done and by whom"
+      }
+    ],
+    "explanation": "Protection, lifespan, egress and evidence. Sensitivity against retention is the pair most often confused.",
+    "teaches": "microsoft-purview-at-a-glance"
+  },
+  {
+    "id": "ab900-dp-23",
+    "examCode": "ab-900",
+    "domain": "data-protection-governance",
+    "kind": "match",
+    "question": "Match each risk to the control that addresses it.",
+    "pairs": [
+      {
+        "term": "Over-shared content surfacing in Copilot",
+        "definition": "Review and correct site permissions"
+      },
+      {
+        "term": "Confidential file sent externally",
+        "definition": "A data loss prevention policy"
+      },
+      {
+        "term": "Concerning activity by an employee",
+        "definition": "Insider risk management"
+      },
+      {
+        "term": "Needing to reconstruct what happened",
+        "definition": "Audit logs"
+      }
+    ],
+    "explanation": "Three are preventive and one is detective. Matching the control to the risk, rather than applying all of them everywhere, is the administrative skill being tested.",
+    "teaches": "identifying-and-responding-to-risk"
+  },
+  {
+    "id": "ab900-ca-10",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "question": "What does a Microsoft 365 Copilot licence add for a user?",
+    "options": [
+      "Copilot grounded in the organisation's data through Microsoft Graph",
+      "Additional mailbox storage",
+      "Administrator rights in the tenant",
+      "An extra SharePoint site"
+    ],
+    "correctIndex": 0,
+    "explanation": "The licence buys grounding in tenant data, which is what makes answers specific to the business rather than general.",
+    "teaches": "copilot-capabilities-and-licensing"
+  },
+  {
+    "id": "ab900-ca-11",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "question": "Which statement about Copilot and existing permissions is correct?",
+    "options": [
+      "Copilot respects them and cannot widen access",
+      "Copilot overrides them for licensed users",
+      "Copilot grants read access to all tenant content",
+      "Copilot requires permissions to be removed first"
+    ],
+    "correctIndex": 0,
+    "explanation": "Inherited permissions are the foundation of Copilot's security model, and the reason permission hygiene is an administrative prerequisite.",
+    "teaches": "copilot-capabilities-and-licensing"
+  },
+  {
+    "id": "ab900-ca-12",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "question": "Where can an administrator manage which agents are available to users?",
+    "options": [
+      "In the Microsoft 365 admin center",
+      "In the Exchange admin center",
+      "In the Azure portal",
+      "In the SharePoint admin center"
+    ],
+    "correctIndex": 0,
+    "explanation": "Copilot and agent administration is tenant-wide, so it sits with the other tenant-level controls.",
+    "teaches": "administering-agents"
+  },
+  {
+    "id": "ab900-ca-13",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "question": "A department wants an agent restricted to its own team. What should an administrator consider?",
+    "options": [
+      "Who the agent is shared with and what knowledge it can reach",
+      "The colour of the agent's icon",
+      "The tenant's domain name",
+      "The number of mailboxes in the department"
+    ],
+    "correctIndex": 0,
+    "explanation": "Sharing scope and knowledge sources are the two controls that decide who can use an agent and what it can tell them.",
+    "teaches": "administering-agents"
+  },
+  {
+    "id": "ab900-ca-14",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "question": "Why would an administrator review Copilot usage reporting?",
+    "options": [
+      "To see where adoption is working and where it is not",
+      "To read the content of users' prompts",
+      "To assign licences automatically",
+      "To change users' passwords"
+    ],
+    "correctIndex": 0,
+    "explanation": "Usage reporting informs adoption decisions. It is a measure of uptake, not a window into individual conversations.",
+    "teaches": "administering-copilot"
+  },
+  {
+    "id": "ab900-ca-15",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "kind": "multi",
+    "question": "Which two are administrative responsibilities for Copilot? Choose two.",
+    "options": [
+      "Assigning and tracking licences",
+      "Reviewing which agents are available to users",
+      "Writing every user's prompts for them",
+      "Approving each individual Copilot response"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Administration is about access and availability. Prompting and reviewing output are the user's job, and neither would scale.",
+    "teaches": "administering-copilot"
+  },
+  {
+    "id": "ab900-ca-16",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "kind": "multi",
+    "question": "Which two factors determine what an agent can tell a user? Choose two.",
+    "options": [
+      "The knowledge sources configured on the agent",
+      "The permissions the user already holds",
+      "The user's display language",
+      "The number of licences in the tenant"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Knowledge sets the ceiling and the user's own permissions set the floor. An agent cannot reveal content its user could not otherwise open.",
+    "teaches": "administering-agents"
+  },
+  {
+    "id": "ab900-ca-17",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "kind": "match",
+    "question": "Match each Copilot administration task to what it achieves.",
+    "pairs": [
+      {
+        "term": "Licence assignment",
+        "definition": "Decide who gets grounded Copilot"
+      },
+      {
+        "term": "Agent availability",
+        "definition": "Decide which agents users can reach"
+      },
+      {
+        "term": "Usage reporting",
+        "definition": "See where adoption is and is not working"
+      },
+      {
+        "term": "Permission review",
+        "definition": "Limit what Copilot is able to surface"
+      }
+    ],
+    "explanation": "Two control access to the tool, one measures it and one controls what the tool can see. Permission review is the one most often forgotten.",
+    "teaches": "administering-copilot"
+  },
+  {
+    "id": "ab900-ca-18",
+    "examCode": "ab-900",
+    "domain": "copilot-agent-admin",
+    "kind": "match",
+    "question": "Match each Copilot concept to its description.",
+    "pairs": [
+      {
+        "term": "Grounding",
+        "definition": "Answering from the organisation's own data"
+      },
+      {
+        "term": "Microsoft Graph",
+        "definition": "The connected view of tenant content"
+      },
+      {
+        "term": "Agent",
+        "definition": "A scoped assistant for a particular task"
+      },
+      {
+        "term": "Knowledge source",
+        "definition": "Content an agent may answer from"
+      }
+    ],
+    "explanation": "Grounding is the behaviour, Graph is what makes it possible, and agents plus knowledge sources are how it is scoped to a purpose.",
+    "teaches": "copilot-capabilities-and-licensing"
   }
 ]

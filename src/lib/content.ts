@@ -504,6 +504,36 @@ export function validateContent(): string[] {
       }
     }
 
+    /**
+     * No two questions in a bank may ask the same thing.
+     *
+     * This matters more as banks grow. A bank of 60 for a 60-question paper is
+     * the whole paper, so a duplicate is merely wasteful; a bank of 240 exists
+     * so that repeat sittings differ, and duplicates quietly undo that — the
+     * paper stops discriminating between someone who knows the material and
+     * someone who has memorised the bank. Nothing else catches this: a
+     * duplicate type-checks, grades correctly and passes the coverage gate.
+     *
+     * Compared on normalised stem text, which catches copy-paste and
+     * re-punctuation without the false positives a fuzzy match would bring.
+     */
+    const stems = new Map<string, string>();
+    for (const question of content.questions) {
+      const key = question.question
+        .toLowerCase()
+        .replace(/[^a-z0-9 ]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+      const first = stems.get(key);
+      if (first) {
+        problems.push(
+          `${examCode}: question ${question.id} repeats the stem of ${first}`,
+        );
+      } else {
+        stems.set(key, question.id);
+      }
+    }
+
     for (const caseStudy of content.caseStudies ?? []) {
       if (!domainIds.has(caseStudy.domain)) {
         problems.push(
