@@ -26,6 +26,47 @@ import {
 const LOOKAHEAD_MS = 25;
 const SCHEDULE_AHEAD_S = 0.15;
 
+/**
+ * The Audio Session API, which is Safari-only and not in lib.dom yet.
+ * Declared structurally rather than augmenting `Navigator` so that the
+ * feature test below is the only place that has to know it might be absent.
+ */
+type AudioSessionType =
+  | "auto"
+  | "playback"
+  | "transient"
+  | "transient-solo"
+  | "ambient"
+  | "play-and-record";
+
+/**
+ * Tell iOS this is playback audio, not an ambient effect.
+ *
+ * Web Audio defaults to the `auto` session type, which on iOS resolves to
+ * ambient: the hardware ring/silent switch mutes it, and so does another app
+ * playing music. Every sound in this project is synthesized Web Audio, so
+ * without this the whole soundtrack is silent on a phone whose switch is
+ * flipped — with no setting in the app that explains why.
+ *
+ * Must run inside the unlock gesture, before the context resumes: the type is
+ * read when the session activates.
+ */
+function claimPlaybackSession(): void {
+  if (typeof navigator === "undefined") return;
+  const session = (
+    navigator as Navigator & {
+      audioSession?: { type: AudioSessionType };
+    }
+  ).audioSession;
+  if (!session) return;
+  try {
+    session.type = "playback";
+  } catch {
+    // Setting an unsupported type throws on some Safari builds. Ambient
+    // audio is a degradation, not a failure — never block unlock over it.
+  }
+}
+
 export type SfxName =
   | "cursor"
   | "confirm"
@@ -129,6 +170,8 @@ class ChiptuneEngine {
    * is actually permitted to sound.
    */
   async unlock(): Promise<boolean> {
+    claimPlaybackSession();
+
     const ctx = this.ensureContext();
     if (!ctx) return false;
 
