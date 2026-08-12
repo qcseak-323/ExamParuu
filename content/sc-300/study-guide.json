@@ -1,0 +1,182 @@
+[
+  {
+    "domainId": "manage-user-identities",
+    "sections": [
+      {
+        "id": "entra-tenant-configuration",
+        "heading": "Tenant configuration and domains",
+        "paragraphs": [
+          "A Microsoft Entra tenant is a dedicated instance of the directory, and it is the boundary for identity in the same way a subscription is the boundary for billing. Tenant properties carry the organisation name, the technical and privacy contacts, and the notification language. Custom domains are added by proving ownership through a TXT or MX record in public DNS, and until verification succeeds the domain cannot be used for user principal names. One verified domain is marked primary, which only decides the default suffix offered when a user is created — it does not restrict which verified domain a given user may use.",
+          "User settings decide how much ordinary users can do on their own: whether they may register applications, whether they can create security groups or Microsoft 365 groups, and how much of the directory they can read. The default of allowing app registration is the one most often tightened, because it lets any user create a service principal in the tenant. Device settings govern who may join devices to Entra ID, whether multifactor authentication is required to join, and how many devices a user may own. Company branding replaces the sign-in page background, banner logo, and sign-in text, and is applied per language with a default fallback."
+        ]
+      },
+      {
+        "id": "roles-and-administrative-units",
+        "heading": "Directory roles and administrative units",
+        "paragraphs": [
+          "Microsoft Entra built-in roles grant directory permissions, and the guidance is always to grant the least privileged role that does the job — User Administrator rather than Global Administrator for password resets, Authentication Administrator rather than Global Administrator for method management. Custom roles are built from the same permission catalogue when no built-in role is narrow enough, and they require Microsoft Entra ID P1. Role assignments can be permanent or made eligible through Privileged Identity Management, and they can be scoped to the whole directory, to a single application, or to an administrative unit.",
+          "An administrative unit is a container of users, groups, or devices that scopes a role assignment to a subset of the directory. It is the answer to 'the Frankfurt helpdesk should reset passwords only for Frankfurt staff' — the helpdesk user is given Helpdesk Administrator over the Frankfurt administrative unit rather than over the tenant. Administrative units can be populated manually or by a dynamic membership rule, and restricted management administrative units go further by blocking tenant-scoped role holders from modifying the members. Effective permissions are the union of every assignment a user holds, so a tenant-scoped Global Administrator is not constrained by an administrative unit assignment held at the same time."
+        ]
+      },
+      {
+        "id": "users-groups-and-licenses",
+        "heading": "Users, groups, and licensing",
+        "paragraphs": [
+          "Groups come in two types and two membership models, and the exam turns on the combination. A security group controls access to resources; a Microsoft 365 group additionally provisions a mailbox, a SharePoint site, and a Teams team. Membership is either assigned, where an administrator adds and removes members, or dynamic, where a rule over user or device attributes is evaluated by the service and membership is recalculated when attributes change. Dynamic membership requires Microsoft Entra ID P1 and cannot be applied to a group that owns role assignments unless the group is role-assignable, which is itself a property that must be set at creation and cannot be added later.",
+          "Licences are assigned directly to a user or, far more commonly at scale, through group-based licensing, where every member of a group inherits the licence and loses it on removal. Group-based licensing fails visibly when a service plan has a prerequisite the user does not have or when the tenant runs out of seats, and those errors surface per user rather than blocking the whole assignment. Custom security attributes are a separate, tightly scoped extension mechanism: they are defined in attribute sets, they are not readable by ordinary users or even by most administrators, and reading or writing them requires a dedicated Attribute Assignment or Attribute Definition role."
+        ]
+      },
+      {
+        "id": "external-identities-and-b2b",
+        "heading": "External identities, B2B, and cross-tenant access",
+        "paragraphs": [
+          "Microsoft Entra B2B invites a person from another organisation as a guest object in your directory, and that guest authenticates against their home tenant rather than holding a credential in yours. External collaboration settings decide who may issue invitations — anyone, only members, only administrators, or nobody — and how much of your directory a guest can read. Guest access can be restricted so a guest sees only their own profile and the members of groups they belong to, which is the setting to reach for when a directory listing itself is considered sensitive.",
+          "Cross-tenant access settings are the modern control plane and are configured per partner tenant. Inbound settings decide which of the partner's users and applications may access yours; outbound settings decide the reverse for your own users. Trust settings are the part that matters most in practice: accepting the partner's multifactor authentication claim, their compliant-device claim, or their hybrid-joined claim means a guest is not challenged twice for a control their home tenant already enforced. Cross-tenant synchronisation goes further than invitation by provisioning users from one tenant into another automatically, keeping them in step as attributes change, which suits a multi-tenant organisation rather than an occasional partner."
+        ]
+      },
+      {
+        "id": "hybrid-identity-and-sync",
+        "heading": "Hybrid identity and synchronisation",
+        "paragraphs": [
+          "Microsoft Entra Connect Sync is the long-standing on-premises agent that synchronises objects from Active Directory Domain Services into Entra ID. Entra Cloud Sync is the newer lightweight agent, managed from the cloud, which supports multiple disconnected forests and is the recommended choice for new deployments unless a feature only Connect Sync offers is needed — device writeback, pass-through authentication with certain topologies, or very large complex filtering. Only one sync engine may be the authority for a given object, and the sourceAnchor, usually derived from the immutable ID, is what binds an on-premises object to its cloud counterpart.",
+          "Three sign-in methods sit on top of synchronisation. Password hash synchronisation copies a hash of the password hash into the cloud, so authentication happens entirely in Entra ID and survives an outage of the on-premises directory. Pass-through authentication validates the password against a domain controller through an outbound agent, which keeps the password on-premises but makes sign-in depend on the agent being reachable. Federation delegates authentication to AD FS or another identity provider, and Microsoft's guidance has been to migrate away from it toward password hash synchronisation or pass-through authentication. Seamless single sign-on layers on top of the first two so domain-joined machines are not prompted at all. Entra Connect Health monitors all of these and is what raises the alert when a sync cycle stops."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "authentication-access",
+    "sections": [
+      {
+        "id": "authentication-methods",
+        "heading": "Authentication methods",
+        "paragraphs": [
+          "Authentication methods are managed through the authentication methods policy, which has replaced the older per-service MFA settings and the legacy SSPR method list. Each method — Microsoft Authenticator, passkeys (FIDO2), certificate-based authentication, Temporary Access Pass, SMS, voice call, hardware and software OATH tokens — is enabled or disabled and can be targeted at specific groups. The policy is where strength is actually decided, because it lets an administrator switch on phishing-resistant methods for the population that must use them without disturbing everyone else.",
+          "Not all methods are equally strong, and the exam expects the ranking. Passkeys (FIDO2) and certificate-based authentication are phishing-resistant because the credential is bound to the origin and never leaves the authenticator. Microsoft Authenticator with number matching resists push fatigue but is still a shared-secret flow. SMS and voice are the weakest and are targeted by SIM-swap and interception attacks. A Temporary Access Pass is a deliberately time-limited passcode used to bootstrap a stronger method — it is the answer to 'a new starter has no credential yet and must register a passkey' and to 'a user has lost their only method and must recover without a password'."
+        ]
+      },
+      {
+        "id": "mfa-and-sspr",
+        "heading": "Multifactor authentication and self-service password reset",
+        "paragraphs": [
+          "Tenant-wide multifactor settings still exist for trusted IPs and remembered devices, but policy is expected to be driven from Conditional Access rather than per-user MFA state. Registration itself is best driven by a registration campaign, which nudges users on weaker methods toward Microsoft Authenticator during sign-in, or by a Conditional Access policy targeting the user action 'Register security information' so registration is only permitted from a trusted location or a compliant device. Combined security information registration means a user registers once for both multifactor authentication and self-service password reset rather than twice.",
+          "Self-service password reset is configured for a selected group or for all users, with a required number of methods and a choice of which methods qualify. Two settings decide whether it is genuinely useful in a hybrid tenant: password writeback, which pushes a cloud reset back to Active Directory so the on-premises password changes too, and the option to require users to re-confirm their authentication information on a schedule. Microsoft Entra password protection extends this with a global banned password list plus a custom list of organisation-specific terms, and the on-premises agent applies the same evaluation to password changes made against a domain controller."
+        ]
+      },
+      {
+        "id": "conditional-access-design",
+        "heading": "Conditional Access policy design",
+        "paragraphs": [
+          "A Conditional Access policy is an if-then statement over a sign-in: assignments describe when it applies, access controls describe what is then required. Assignments cover users and groups, target resources such as cloud apps or user actions, network location, device platform and state, client application, and sign-in risk and user risk. Every condition within a policy is combined with AND, and every policy that matches a sign-in is evaluated, with the most restrictive outcome winning — a single block policy defeats any number of grant policies.",
+          "Design discipline matters more than any individual control. Exclude at least one break-glass account from every policy, or a misconfiguration locks the entire tenant out. Deploy in report-only mode first and read the results in the sign-in logs or the Conditional Access insights workbook before switching to on. Use the What If tool to evaluate a hypothetical sign-in against every policy without asking a user to reproduce the problem. Policy templates cover the well-known baselines — requiring multifactor authentication for administrators, blocking legacy authentication, requiring compliant devices — and are the sensible starting point rather than authoring from scratch."
+        ]
+      },
+      {
+        "id": "conditional-access-controls",
+        "heading": "Grant controls, session controls, and continuous access evaluation",
+        "paragraphs": [
+          "Grant controls decide what must be true for access to be allowed: require multifactor authentication, require a compliant device, require a hybrid Entra joined device, require an approved client app, require an app protection policy, require a password change, or require a specific authentication strength. When several controls are selected the policy chooses between requiring all of them and requiring one of them, and that radio button is a frequent source of unintended looseness. Authentication strength is the modern way to demand phishing-resistant methods specifically rather than 'any second factor'.",
+          "Session controls shape what happens after access is granted. Sign-in frequency forces reauthentication on an interval rather than relying on a long-lived token. Persistent browser session controls whether the user stays signed in after closing the browser. Conditional Access application control hands the session to Microsoft Defender for Cloud Apps for real-time monitoring or blocking of downloads, which is how an unmanaged device is given read-only access to a web app. Continuous access evaluation is the mechanism that closes the gap left by token lifetime: critical events such as an account being disabled, a password reset, or an administrator explicitly revoking sessions are pushed to supporting services, which reject the token in near real time instead of honouring it until it expires."
+        ]
+      },
+      {
+        "id": "id-protection-and-risk",
+        "heading": "Microsoft Entra ID Protection and risk",
+        "paragraphs": [
+          "ID Protection distinguishes two kinds of risk and the exam depends on keeping them apart. Sign-in risk is the probability that a particular authentication was not performed by the legitimate owner, raised by signals such as anonymous IP address, atypical travel, unfamiliar sign-in properties, or a malicious IP. User risk is the probability that the account itself is compromised, raised most commonly by leaked credentials found in a breach dump or by Microsoft's threat intelligence. The remediation differs accordingly: a risky sign-in is remediated by multifactor authentication, which proves the person is who they claim, whereas a risky user is remediated by a secure password change, which invalidates the credential that is believed to be known to someone else.",
+          "Risk-based policies are now authored as Conditional Access policies with sign-in risk or user risk as a condition, rather than in the legacy ID Protection blades. An administrator can also act manually from the risky users and risky sign-ins reports — dismissing risk when an investigation shows a false positive, confirming compromise to feed the model, or resetting the password. Workload identities have their own risk detections and their own policy type, covering service principals with leaked credentials or anomalous sign-in patterns, which matters because a service principal cannot perform multifactor authentication and therefore cannot self-remediate."
+        ]
+      },
+      {
+        "id": "global-secure-access",
+        "heading": "Global Secure Access",
+        "paragraphs": [
+          "Global Secure Access is Microsoft's Security Service Edge offering and splits into two products with different jobs. Microsoft Entra Private Access publishes internal applications to remote users without a traditional VPN, replacing full-tunnel network access with per-application access governed by Conditional Access — a Quick Access group of internal resources plus individually published applications. Microsoft Entra Internet Access is a secure web gateway for outbound traffic, applying web content filtering and threat protection, with a dedicated profile for Microsoft 365 traffic that gives tenant restrictions and compliant network checks.",
+          "The client is deployed to Windows, macOS, Android, and iOS, and its traffic forwarding profiles decide which traffic is acquired: Microsoft 365, Internet, or Private Access. The compliant network check is the feature most worth understanding, because it lets a Conditional Access policy require that a sign-in arrived through Global Secure Access, which is a far stronger statement than a named IP location that anyone on a VPN could satisfy."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "workload-identities",
+    "sections": [
+      {
+        "id": "managed-identities-and-principals",
+        "heading": "Managed identities and service principals",
+        "paragraphs": [
+          "An application object is the global definition of an application and lives in the tenant where it was registered; a service principal is the local instance of that application in a tenant, and it is what actually holds role assignments and permission grants. A multi-tenant application therefore has one application object and a service principal in every tenant that consented to it. Understanding the split explains why granting a permission in your tenant does not alter the application itself.",
+          "A managed identity is a service principal whose credential is created, rotated, and protected by Azure, so no secret ever appears in code or configuration. A system-assigned managed identity is tied to the lifecycle of one resource and is deleted with it; a user-assigned managed identity is a standalone resource that can be attached to many resources and survives them, which is what makes it the right choice for a scale set or a fleet of virtual machines that should share an identity. The decision order the exam expects is: prefer a managed identity, fall back to a service principal with a certificate, and use a client secret only when nothing else is possible — never a user account with a shared password."
+        ]
+      },
+      {
+        "id": "enterprise-applications",
+        "heading": "Enterprise applications and single sign-on",
+        "paragraphs": [
+          "Enterprise applications are the service principals a tenant has added, whether from the gallery or registered in-house. Single sign-on is configured per application, and the choice of protocol follows what the application supports: SAML for most established SaaS products, OpenID Connect for modern applications registered against the Microsoft identity platform, password-based single sign-on where the application has no federation support and credentials are vaulted and replayed by the browser extension, and linked sign-on where the tile merely points at an existing sign-on experience.",
+          "User assignment is the control that decides who sees and can use the application. Turning on 'Assignment required' means only assigned users and groups may sign in, which is the setting that turns the application list into an access boundary rather than a catalogue. App roles declared by the application appear in the assignment dialog so that a user can be assigned as, say, Reader or Approver, and that role is emitted as a claim in the token. Application Proxy publishes an on-premises web application through Entra ID using lightweight connectors that make only outbound connections, so no inbound firewall port is opened, and it supports Kerberos constrained delegation so the backend still receives a Windows identity."
+        ]
+      },
+      {
+        "id": "app-registrations-and-permissions",
+        "heading": "App registrations, API permissions, and app roles",
+        "paragraphs": [
+          "Registering an application creates the application object and defines how it authenticates: redirect URIs for the flows it uses, whether it is single or multi-tenant, and its credentials. Certificates are preferred over client secrets because a secret is a bearer credential that can be copied, and federated credentials — workload identity federation — are better still because they let an external issuer such as a GitHub Actions workflow or a Kubernetes service account exchange its own token for an Entra token with no stored secret at all.",
+          "API permissions come in two shapes that the exam repeatedly contrasts. Delegated permissions let the application act on behalf of a signed-in user, and the effective access is the intersection of the permission and what the user is allowed to do. Application permissions let the application act as itself with no user present, which is what a background daemon needs, and they always require administrator consent because there is no user whose own rights limit the result. App roles are declared by the application to describe its own authorisation model and are assigned to users, groups, or other applications, arriving in the token as the roles claim."
+        ]
+      },
+      {
+        "id": "consent-and-permission-governance",
+        "heading": "Consent, admin consent workflow, and app governance",
+        "paragraphs": [
+          "User consent settings decide whether ordinary users may approve an application's request for delegated permissions. The options are to allow user consent for any application, to allow it only for applications from verified publishers and only for permissions classified as low impact, or to disallow it entirely. Allowing unrestricted user consent is the configuration behind illicit consent grant attacks, where a convincing phishing page persuades a user to approve an application that then reads their mail with a token rather than a stolen password.",
+          "Turning consent off creates a support problem, and the admin consent workflow is the answer: the user is shown a request form instead of a dead end, designated reviewers are notified, and the decision is recorded. Alongside it, publisher verification marks applications whose publisher has a verified Microsoft Partner Network identity, and application collections group tiles in My Apps so users find what they need. Reviewing existing grants matters as much as gating new ones, because a permission granted years ago remains in force until it is revoked."
+        ]
+      },
+      {
+        "id": "defender-for-cloud-apps-controls",
+        "heading": "Defender for Cloud Apps and app access monitoring",
+        "paragraphs": [
+          "Microsoft Defender for Cloud Apps discovers which cloud applications are actually in use by analysing traffic logs from firewalls and proxies or from Defender for Endpoint, and scores each discovered application against a risk catalogue. Applications judged unacceptable can be tagged as unsanctioned, which pushes a block to the connected enforcement point. App connectors go further for supported services by using the provider's own APIs to see activity and files after the fact, which is how a file sitting in a third-party service is scanned and labelled.",
+          "Conditional Access app control is the real-time half. Conditional Access hands the session to Defender for Cloud Apps as a reverse proxy, and session policies then act inside the session — blocking download, requiring a sensitivity label before download, blocking copy and paste, or blocking upload of sensitive files. This is what delivers 'let contractors read the application from an unmanaged device but not take data out of it'. OAuth app policies watch the applications users have consented to and can revoke an application that requests unusual permissions or is judged risky."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "identity-governance",
+    "sections": [
+      {
+        "id": "entitlement-management",
+        "heading": "Entitlement management, catalogs, and access packages",
+        "paragraphs": [
+          "Entitlement management answers 'how does someone get everything a role needs, and how does it go away again'. A catalog is a container of resources — groups, applications, and SharePoint sites — and delegating catalog ownership lets a business unit manage its own access without directory-wide privilege. An access package bundles resources from a catalog with the roles to grant on each, so one request produces membership of the right groups and assignment to the right applications together.",
+          "Policies on an access package decide who may request it, whether approval is required and from whom, whether a business justification is needed, and how long the assignment lasts before it expires or must be renewed. Separation-of-duties rules can prevent a user who already holds one package from requesting an incompatible one. Because a policy can target users in connected organisations, entitlement management is also the cleanest way to manage the lifecycle of external users: the guest is created on approval and removed when the assignment lapses, and the settings for governing external users can block sign-in and delete the guest object after a set period."
+        ]
+      },
+      {
+        "id": "access-reviews",
+        "heading": "Access reviews",
+        "paragraphs": [
+          "An access review periodically asks somebody to confirm that access still belongs. Reviews can target membership of a group, assignment to an application, users holding a privileged directory or Azure role, or access package assignments, and they can be scoped to all users or to guests only. The reviewer is chosen as the resource owner, a named set of people, the users themselves in a self-review, or a manager, and multi-stage reviews can chain these so a self-attestation is checked by a manager afterwards.",
+          "The settings that decide whether a review does anything are the ones about outcome. 'Auto apply results' removes access when the review ends rather than leaving a report for someone to act on. 'If reviewers don't respond' chooses what happens to unreviewed access — no change, remove access, approve access, or take a recommendation — and choosing 'no change' is what makes a review that runs forever and never removes anything. Recommendations based on last sign-in help reviewers work through large groups, and reviews of privileged roles are the standard evidence for an auditor asking who could do what and who agreed to it."
+        ]
+      },
+      {
+        "id": "privileged-identity-management",
+        "heading": "Privileged Identity Management",
+        "paragraphs": [
+          "Privileged Identity Management turns a standing role assignment into an eligible one that must be activated. Role settings decide the maximum activation duration, whether multifactor authentication is required at activation, whether a justification or a ticket number must be supplied, whether approval is needed and from whom, and who is notified. The result is that an administrator holds no privilege at rest, which shrinks the value of a compromised account, and every elevation leaves a record of who, when, and why.",
+          "PIM covers Microsoft Entra roles, Azure resource roles scoped to a management group, subscription, resource group, or resource, and PIM for Groups, which makes membership or ownership of a group itself activatable — the way to bring PIM to anything that can be granted through a group. Access reviews of privileged roles are configured within PIM, and the audit history answers who activated what over a period. Break-glass accounts are the necessary exception: two cloud-only accounts with permanent Global Administrator, excluded from Conditional Access and from PIM, using long unique credentials stored offline, monitored so that any sign-in raises an alert."
+        ]
+      },
+      {
+        "id": "identity-monitoring-and-logs",
+        "heading": "Monitoring, logs, and Identity Secure Score",
+        "paragraphs": [
+          "Microsoft Entra produces several log streams and knowing which one holds the answer is the exam's real question. Sign-in logs record authentication attempts with the applied Conditional Access policies and their result, and they split into interactive user sign-ins, non-interactive user sign-ins, service principal sign-ins, and managed identity sign-ins. Audit logs record changes to the directory — who added a member to a group, who consented to an application. Provisioning logs record what the provisioning service did to which target object, which is where a failed user creation in a SaaS application is diagnosed.",
+          "Retention in the portal is limited, so diagnostic settings are configured to route these logs onward: to a Log Analytics workspace for KQL querying and workbooks, to a storage account for cheap long-term retention, or to an event hub for a third-party SIEM. Workbooks over Log Analytics give the standard views — sign-ins by location, Conditional Access gaps, legacy authentication use. Identity Secure Score scores the tenant against Microsoft's recommended identity controls and expresses each improvement action with its effect, which makes it a prioritised backlog rather than a compliance certificate."
+        ]
+      }
+    ]
+  }
+]

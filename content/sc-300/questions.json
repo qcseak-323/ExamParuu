@@ -1,0 +1,933 @@
+[
+  {
+    "id": "mu-01",
+    "examCode": "sc-300",
+    "domain": "manage-user-identities",
+    "question": "The Frankfurt help desk must be able to reset passwords for staff based in Frankfurt, and for nobody else. What should you configure?",
+    "options": [
+      "Assign Helpdesk Administrator scoped to an administrative unit containing the Frankfurt users",
+      "Assign Helpdesk Administrator at tenant scope and document the restriction in a policy",
+      "Create a custom role with only the password reset permission and assign it at tenant scope",
+      "Add the help desk to a dynamic group containing the Frankfurt users"
+    ],
+    "correctIndex": 0,
+    "explanation": "An administrative unit is exactly the mechanism for scoping a directory role to a subset of the directory. A tenant-scoped assignment grants the permission everywhere no matter how narrow the role is, and group membership grants nothing on its own.",
+    "teaches": "roles-and-administrative-units"
+  },
+  {
+    "id": "mu-02",
+    "examCode": "sc-300",
+    "domain": "manage-user-identities",
+    "question": "You need a security group whose membership always equals every user whose department attribute is Finance, with no ongoing administration. What should you create?",
+    "options": [
+      "A security group with dynamic membership and a rule on the department attribute",
+      "An assigned security group maintained by a scheduled PowerShell script",
+      "A Microsoft 365 group owned by the Finance manager",
+      "An administrative unit containing the Finance users"
+    ],
+    "correctIndex": 0,
+    "explanation": "Dynamic membership evaluates a rule over user attributes and recalculates as attributes change. A script is manual maintenance wearing a costume, and an administrative unit scopes administration rather than granting resource access.",
+    "teaches": "users-groups-and-licenses"
+  },
+  {
+    "id": "mu-03",
+    "examCode": "sc-300",
+    "domain": "manage-user-identities",
+    "question": "A group was created six months ago as an ordinary security group. You now need to assign a Microsoft Entra directory role to it. What must you do?",
+    "options": [
+      "Create a new group with the role-assignable property set, because it cannot be added to an existing group",
+      "Edit the group properties and enable Microsoft Entra roles can be assigned to the group",
+      "Convert the group to a Microsoft 365 group and then assign the role",
+      "Assign the role to the group owner instead, who will pass it to the members"
+    ],
+    "correctIndex": 0,
+    "explanation": "The role-assignable property can only be set when the group is created. There is no supported way to add it afterwards, so the group must be recreated — which is why it is worth deciding up front.",
+    "teaches": "users-groups-and-licenses"
+  },
+  {
+    "id": "mu-04",
+    "examCode": "sc-300",
+    "domain": "manage-user-identities",
+    "question": "Your organisation is deploying hybrid identity to a new tenant and synchronising three separate Active Directory forests that have no trust between them. Which synchronisation option does Microsoft recommend you evaluate first?",
+    "options": [
+      "Microsoft Entra Cloud Sync",
+      "Microsoft Entra Connect Sync with a single server",
+      "Microsoft Entra Connect Sync in staging mode on each forest",
+      "Active Directory Federation Services"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cloud Sync is the lightweight cloud-managed agent and explicitly supports multiple disconnected forests. Connect Sync remains the fallback when a feature only it provides is required, and AD FS is a sign-in method rather than a synchronisation engine.",
+    "teaches": "hybrid-identity-and-sync"
+  },
+  {
+    "id": "mu-05",
+    "examCode": "sc-300",
+    "domain": "manage-user-identities",
+    "question": "Sign-in must continue to work for cloud applications even if the on-premises data centre is completely unreachable. Which authentication method supports that?",
+    "options": [
+      "Password hash synchronisation",
+      "Pass-through authentication",
+      "Federation with AD FS",
+      "Seamless single sign-on"
+    ],
+    "correctIndex": 0,
+    "explanation": "With password hash synchronisation the credential is validated entirely in Microsoft Entra ID, so nothing on-premises is needed at sign-in time. Pass-through authentication depends on a reachable agent, and federation depends on the AD FS farm.",
+    "teaches": "hybrid-identity-and-sync"
+  },
+  {
+    "id": "mu-06",
+    "examCode": "sc-300",
+    "domain": "manage-user-identities",
+    "question": "Guests invited to your tenant must be able to see only their own profile and the members of groups they belong to. Where do you configure that?",
+    "options": [
+      "External collaboration settings, by choosing the most restrictive guest user access level",
+      "Cross-tenant access settings, in the inbound trust configuration",
+      "A Conditional Access policy targeting all guest and external users",
+      "The user settings blade, by disabling directory read access for all users"
+    ],
+    "correctIndex": 0,
+    "explanation": "Guest user access restrictions live in external collaboration settings and have three levels, the most restrictive of which limits a guest to their own object and their own group memberships. Cross-tenant access governs which partner users may come in at all, not what they can read once inside.",
+    "teaches": "external-identities-and-b2b"
+  },
+  {
+    "id": "mu-07",
+    "examCode": "sc-300",
+    "domain": "manage-user-identities",
+    "question": "Two Microsoft Entra tenants belong to the same parent company after a merger, and user objects must appear and stay current in both. What should you implement?",
+    "options": [
+      "Cross-tenant synchronisation",
+      "Bulk B2B invitation from a CSV file, repeated monthly",
+      "Microsoft Entra Connect Sync pointed at both tenants",
+      "An access package in entitlement management for each tenant"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cross-tenant synchronisation provisions users from a source tenant into a target tenant and keeps attributes in step automatically. Repeated bulk invitation creates the objects but does not maintain them, and a single Connect Sync server cannot be the authority for two tenants.",
+    "teaches": "external-identities-and-b2b"
+  },
+  {
+    "id": "mu-08",
+    "examCode": "sc-300",
+    "domain": "manage-user-identities",
+    "question": "You must stop ordinary users from being able to register applications in the tenant. Where is that setting?",
+    "options": [
+      "User settings on the tenant, where app registration can be switched off",
+      "The authentication methods policy",
+      "External collaboration settings",
+      "The consent and permissions blade under enterprise applications"
+    ],
+    "correctIndex": 0,
+    "explanation": "Whether users may register applications is a tenant user setting, and it is on by default. The consent and permissions blade controls whether users may approve permission requests from applications, which is a related but separate exposure.",
+    "teaches": "entra-tenant-configuration"
+  },
+  {
+    "id": "mu-09",
+    "examCode": "sc-300",
+    "domain": "manage-user-identities",
+    "question": "A custom domain has been added to the tenant but users cannot be created with it as their suffix. What is the most likely reason?",
+    "options": [
+      "The domain has not been verified with the required DNS record",
+      "The domain has not been marked as the primary domain",
+      "Company branding has not been configured for the domain",
+      "The domain has not been added to Microsoft Entra Connect Sync"
+    ],
+    "correctIndex": 0,
+    "explanation": "Until the DNS record proves ownership the domain is unverified and unusable for user principal names. Marking a domain primary only chooses the default suffix offered in the creation form; it is not a prerequisite for use.",
+    "teaches": "entra-tenant-configuration"
+  },
+  {
+    "id": "mu-10",
+    "examCode": "sc-300",
+    "domain": "manage-user-identities",
+    "question": "Licences must be granted when a user joins the Sales department and released when they leave it, with no administrator action. What should you configure?",
+    "options": [
+      "Group-based licensing on a dynamic group with a rule on the department attribute",
+      "Direct licence assignment automated by a weekly PowerShell script",
+      "An access package that includes the licence as a resource",
+      "A licence assignment applied to an administrative unit containing Sales"
+    ],
+    "correctIndex": 0,
+    "explanation": "Dynamic membership handles joining and leaving, and group-based licensing grants and releases the licence with membership. Licences cannot be assigned to an administrative unit, and access packages grant group membership and application access rather than licences directly.",
+    "teaches": "users-groups-and-licenses"
+  },
+  {
+    "id": "mu-11",
+    "examCode": "sc-300",
+    "domain": "manage-user-identities",
+    "question": "A Global Administrator reports that they can still modify users inside an administrative unit that was created specifically to keep those users away from tenant-wide administrators. What explains this?",
+    "options": [
+      "An ordinary administrative unit does not restrict tenant-scoped role holders; a restricted management administrative unit is required",
+      "The administrative unit has not finished its initial dynamic membership evaluation",
+      "Global Administrator must be removed from the tenant before administrative units take effect",
+      "Administrative units apply only to groups and devices, never to users"
+    ],
+    "correctIndex": 0,
+    "explanation": "Effective permissions are the union of everything a user holds, so a tenant-scoped assignment is unaffected by an administrative unit. Restricted management administrative units exist precisely to block tenant-scoped role holders from the members.",
+    "teaches": "roles-and-administrative-units"
+  },
+  {
+    "id": "mu-12",
+    "examCode": "sc-300",
+    "domain": "manage-user-identities",
+    "kind": "multi",
+    "question": "Which two statements about Microsoft Entra custom security attributes are true? Choose two.",
+    "options": [
+      "They are grouped into attribute sets",
+      "Reading them requires a dedicated attribute role rather than a general directory role",
+      "They are visible to all users in the tenant by default",
+      "They can only be applied to guest users"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Custom security attributes are organised into attribute sets and are deliberately invisible without an Attribute Definition or Attribute Assignment role — even a Global Administrator does not read them by default. They apply to users and service principals alike.",
+    "teaches": "users-groups-and-licenses"
+  },
+  {
+    "id": "mu-13",
+    "examCode": "sc-300",
+    "domain": "manage-user-identities",
+    "kind": "order",
+    "question": "Put the steps of adding and using a custom domain in a Microsoft Entra tenant in order.",
+    "items": [
+      "Create users with the new domain as their suffix",
+      "Add the domain name in the tenant's custom domain names blade",
+      "Publish the TXT or MX record supplied by Microsoft Entra in public DNS",
+      "Select Verify and wait for Microsoft Entra to confirm ownership"
+    ],
+    "correctOrder": [1, 2, 3, 0],
+    "explanation": "The domain is declared first so Microsoft Entra can issue a record to publish, then the record is published, then verification confirms ownership. Only after verification succeeds can the suffix be used on a user.",
+    "teaches": "entra-tenant-configuration"
+  },
+  {
+    "id": "mu-14",
+    "examCode": "sc-300",
+    "domain": "manage-user-identities",
+    "kind": "match",
+    "question": "Match each hybrid identity component to what it does.",
+    "pairs": [
+      { "term": "Password hash synchronisation", "definition": "Validates the password in the cloud using a synchronised hash" },
+      { "term": "Pass-through authentication", "definition": "Validates the password against a domain controller through an agent" },
+      { "term": "Seamless single sign-on", "definition": "Signs domain-joined machines in without a prompt" },
+      { "term": "Microsoft Entra Connect Health", "definition": "Monitors the sync agents and raises alerts when sync stops" }
+    ],
+    "explanation": "Three of these decide where the password is checked or whether the user is prompted; the fourth watches the machinery itself. Connect Health is the one that answers 'why did synchronisation stop three days ago'.",
+    "teaches": "hybrid-identity-and-sync"
+  },
+  {
+    "id": "aa-01",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "caseStudyId": "cs-halden-identity",
+    "question": "Contractors must read Voyage Reporting from unmanaged laptops but must not be able to download files from it. What should you implement?",
+    "options": [
+      "Conditional Access app control with a session policy that blocks download",
+      "A Conditional Access policy that requires a compliant device",
+      "A Conditional Access policy that blocks access from unmanaged devices",
+      "An access package that grants read-only membership of the application"
+    ],
+    "correctIndex": 0,
+    "explanation": "Only a session control can allow access while restricting what happens inside the session. Requiring a compliant device or blocking unmanaged devices both fail the stated requirement that contractors must still be able to read the data, and Halden has no right to manage contractor hardware.",
+    "teaches": "conditional-access-controls"
+  },
+  {
+    "id": "aa-02",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "caseStudyId": "cs-halden-identity",
+    "question": "New crew join at the vessel with no corporate credential and must register a passkey without a help desk. What should you issue them?",
+    "options": [
+      "A Temporary Access Pass",
+      "An initial password that must be changed at first sign-in",
+      "A self-service password reset link",
+      "A hardware OATH token"
+    ],
+    "correctIndex": 0,
+    "explanation": "A Temporary Access Pass is a time-limited passcode designed to bootstrap a stronger method when the user holds no credential. Every other option either issues the password the requirement forbids or presupposes a credential the crew member does not have.",
+    "teaches": "authentication-methods"
+  },
+  {
+    "id": "aa-03",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "caseStudyId": "cs-halden-identity",
+    "question": "Accounts found in a breach dump must have the credential replaced automatically rather than by an analyst. What should you configure?",
+    "options": [
+      "A Conditional Access policy with a user risk condition that requires a secure password change",
+      "A Conditional Access policy with a sign-in risk condition that requires multifactor authentication",
+      "A registration campaign that moves the affected users to Microsoft Authenticator",
+      "An access review targeting the affected users"
+    ],
+    "correctIndex": 0,
+    "explanation": "Leaked credentials raise user risk, and the remediation for a credential someone else knows is to replace it. Requiring multifactor authentication proves who is signing in but leaves the leaked password valid, which is the distinction the exam tests.",
+    "teaches": "id-protection-and-risk"
+  },
+  {
+    "id": "aa-04",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "caseStudyId": "cs-halden-identity",
+    "question": "When the security team disables a compromised account, tokens already issued must stop working within minutes. What delivers this?",
+    "options": [
+      "Continuous access evaluation",
+      "A sign-in frequency session control set to one hour",
+      "Reducing the refresh token lifetime in the tenant",
+      "A Conditional Access policy that blocks the user"
+    ],
+    "correctIndex": 0,
+    "explanation": "Continuous access evaluation pushes critical events such as account disable to supporting services, which then reject the existing token in near real time. Every other option shortens or re-evaluates the window rather than closing it on the event itself.",
+    "teaches": "conditional-access-controls"
+  },
+  {
+    "id": "aa-05",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "caseStudyId": "cs-halden-identity",
+    "question": "Administrators must be forced onto phishing-resistant authentication without disturbing the rest of the workforce. What should you do?",
+    "options": [
+      "Add a Conditional Access policy targeting the administrator roles that requires a phishing-resistant authentication strength",
+      "Change the existing all-users policy to require a phishing-resistant authentication strength",
+      "Disable SMS in the authentication methods policy for the whole tenant",
+      "Require a compliant device for the administrator roles"
+    ],
+    "correctIndex": 0,
+    "explanation": "Authentication strength is the grant control that names which methods count rather than merely demanding a second factor, and targeting the administrator roles leaves everyone else alone. Editing the all-users policy or disabling SMS tenant-wide would affect the whole workforce, which the requirement forbids.",
+    "teaches": "conditional-access-controls"
+  },
+  {
+    "id": "aa-06",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "question": "A new Conditional Access policy must be assessed against real sign-ins before it starts enforcing anything. What should you do?",
+    "options": [
+      "Enable the policy in report-only mode and review the results in the sign-in logs",
+      "Enable the policy for a pilot group and ask them to report problems",
+      "Use the What If tool and then enable the policy for all users",
+      "Create the policy in a disabled state and enable it out of hours"
+    ],
+    "correctIndex": 0,
+    "explanation": "Report-only evaluates the policy on every real sign-in and records what would have happened without affecting anyone. A pilot group enforces on real people, and What If evaluates one hypothetical sign-in rather than the live population.",
+    "teaches": "conditional-access-design"
+  },
+  {
+    "id": "aa-07",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "question": "A user is in scope of a policy granting access with multifactor authentication and also of a policy blocking access from a country. They sign in from that country with multifactor authentication. What happens?",
+    "options": [
+      "Access is blocked, because a block outcome takes precedence over any grant",
+      "Access is granted, because they satisfied the grant control",
+      "Access is granted, because the more recently created policy wins",
+      "Access is granted, because grant and block policies cancel out"
+    ],
+    "correctIndex": 0,
+    "explanation": "Every matching policy is evaluated and the most restrictive result wins. A single block defeats any number of grant policies no matter what controls the user satisfied, which is why an over-broad block policy is so disruptive.",
+    "teaches": "conditional-access-design"
+  },
+  {
+    "id": "aa-08",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "question": "Users must re-authenticate to a sensitive finance application every four hours regardless of how long their token would otherwise last. What should you configure?",
+    "options": [
+      "A sign-in frequency session control on a Conditional Access policy targeting that application",
+      "A shorter access token lifetime on the application registration",
+      "A persistent browser session control set to never persistent",
+      "Continuous access evaluation for the application"
+    ],
+    "correctIndex": 0,
+    "explanation": "Sign-in frequency is the session control that sets a re-authentication interval. Persistent browser session only decides whether the session survives closing the browser, and continuous access evaluation reacts to events rather than enforcing a schedule.",
+    "teaches": "conditional-access-controls"
+  },
+  {
+    "id": "aa-09",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "question": "Which authentication method is considered phishing-resistant because the credential is bound to the origin and never leaves the authenticator?",
+    "options": [
+      "Passkeys (FIDO2)",
+      "Microsoft Authenticator push with number matching",
+      "SMS one-time passcode",
+      "Software OATH token"
+    ],
+    "correctIndex": 0,
+    "explanation": "Passkeys and certificate-based authentication are the phishing-resistant methods. Number matching resists push fatigue but still relies on a shared secret exchange, and SMS and OATH codes can both be relayed to an attacker's page.",
+    "teaches": "authentication-methods"
+  },
+  {
+    "id": "aa-10",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "question": "Users must be able to reset their own passwords, and the change must also apply to the on-premises Active Directory account. What must be enabled?",
+    "options": [
+      "Password writeback",
+      "Password hash synchronisation",
+      "Seamless single sign-on",
+      "Microsoft Entra password protection"
+    ],
+    "correctIndex": 0,
+    "explanation": "Password writeback is what pushes a cloud reset back into Active Directory. Password hash synchronisation moves credentials in the opposite direction, and password protection evaluates whether a chosen password is acceptable rather than where it is written.",
+    "teaches": "mfa-and-sspr"
+  },
+  {
+    "id": "aa-11",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "question": "Security information registration must only be possible from the corporate network, so that an attacker cannot register their own authentication method on a stolen account. What should you configure?",
+    "options": [
+      "A Conditional Access policy targeting the Register security information user action, with a location condition",
+      "A Conditional Access policy targeting all cloud apps, with a location condition",
+      "A registration campaign scoped to the corporate network",
+      "Trusted IPs in the tenant-wide multifactor authentication settings"
+    ],
+    "correctIndex": 0,
+    "explanation": "Registration is reached through a user action rather than a cloud app, and that user action is selectable as the policy target. Targeting all cloud apps does not cover the registration flow, and a registration campaign nudges users rather than restricting them.",
+    "teaches": "mfa-and-sspr"
+  },
+  {
+    "id": "aa-12",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "question": "A Conditional Access policy must require that the sign-in arrived through Global Secure Access rather than merely from a known public IP address. Which condition supports this?",
+    "options": [
+      "The compliant network check",
+      "A named location containing the office IP ranges",
+      "A trusted IP range marked as trusted in multifactor authentication settings",
+      "A device platform condition set to Windows"
+    ],
+    "correctIndex": 0,
+    "explanation": "The compliant network check asserts that traffic actually traversed Global Secure Access, which cannot be spoofed by anyone who reaches the same public IP. A named location trusts whatever address the request appears to come from.",
+    "teaches": "global-secure-access"
+  },
+  {
+    "id": "aa-13",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "question": "Remote staff must reach a handful of internal line-of-business applications without a full corporate VPN tunnel, with access governed per application by Conditional Access. What should you deploy?",
+    "options": [
+      "Microsoft Entra Private Access",
+      "Microsoft Entra Internet Access",
+      "Microsoft Entra Application Proxy for each application",
+      "A point-to-site VPN gateway"
+    ],
+    "correctIndex": 0,
+    "explanation": "Private Access publishes internal resources per application under Conditional Access and is the stated VPN replacement. Internet Access secures outbound web traffic, and Application Proxy handles web applications specifically rather than arbitrary internal protocols.",
+    "teaches": "global-secure-access"
+  },
+  {
+    "id": "aa-14",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "kind": "multi",
+    "question": "Which two are valid grant controls in a Conditional Access policy? Choose two.",
+    "options": [
+      "Require device to be marked as compliant",
+      "Require approved client app",
+      "Require the user to be a member of an administrative unit",
+      "Require the sign-in to originate from a named location"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Compliance and approved client app are grant controls. Location is an assignment condition that decides when the policy applies, not something the user can be asked to satisfy, and administrative unit membership is not a Conditional Access control at all.",
+    "teaches": "conditional-access-controls"
+  },
+  {
+    "id": "aa-15",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "kind": "order",
+    "question": "Put the steps of safely rolling out a new Conditional Access policy in order.",
+    "items": [
+      "Switch the policy on for the targeted population",
+      "Exclude the break-glass accounts from the policy",
+      "Enable the policy in report-only mode",
+      "Review the report-only results in the sign-in logs"
+    ],
+    "correctOrder": [1, 2, 3, 0],
+    "explanation": "Excluding break-glass accounts comes first because a mistake made later is what locks the tenant out. Report-only then gathers real evidence, the evidence is read, and only then is the policy enforced.",
+    "teaches": "conditional-access-design"
+  },
+  {
+    "id": "aa-16",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "kind": "yesno",
+    "question": "Microsoft Entra ID Protection has raised a user risk detection of 'leaked credentials' for an account. Judge each statement.",
+    "statements": [
+      { "text": "Requiring a secure password change is an appropriate remediation.", "correct": true },
+      { "text": "The detection means the account's password was found outside the organisation.", "correct": true },
+      { "text": "Requiring multifactor authentication alone invalidates the leaked password.", "correct": false },
+      { "text": "An administrator can dismiss the risk if investigation shows a false positive.", "correct": true }
+    ],
+    "explanation": "Leaked credentials is a user risk detection, and user risk is remediated by replacing the credential. Multifactor authentication proves who is signing in but leaves the exposed password perfectly valid, which is the trap in this family of questions.",
+    "teaches": "id-protection-and-risk"
+  },
+  {
+    "id": "aa-17",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "kind": "dropdown",
+    "question": "Complete the statement about risk in Microsoft Entra ID Protection.",
+    "segments": [
+      { "text": "A detection that this particular authentication looks illegitimate raises " },
+      {
+        "blankId": "b1",
+        "options": ["sign-in risk", "user risk", "workload identity risk"],
+        "correctIndex": 0
+      },
+      { "text": ", and the natural remediation for it is " },
+      {
+        "blankId": "b2",
+        "options": ["multifactor authentication", "a secure password change", "deleting the service principal"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "Sign-in risk questions the authentication rather than the account, so proving the person is present resolves it. Pairing the wrong remediation with the wrong risk type is the most common mistake in this domain.",
+    "teaches": "id-protection-and-risk"
+  },
+  {
+    "id": "wi-01",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "question": "An Azure virtual machine must read secrets from Azure Key Vault with no credential stored anywhere in its configuration. What should you use?",
+    "options": [
+      "A system-assigned managed identity granted access to the key vault",
+      "A service principal with a client secret stored in an environment variable",
+      "A service principal with a certificate installed on the virtual machine",
+      "A user account with a strong password held in the application settings"
+    ],
+    "correctIndex": 0,
+    "explanation": "A managed identity has its credential created, rotated, and protected by Azure, so nothing is stored by the application at all. Every other option puts a credential somewhere that a person or a process has to look after.",
+    "teaches": "managed-identities-and-principals"
+  },
+  {
+    "id": "wi-02",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "question": "Twelve virtual machines in a scale set must share one identity, and that identity must survive individual machines being destroyed and recreated. What should you create?",
+    "options": [
+      "A user-assigned managed identity attached to the scale set",
+      "A system-assigned managed identity on each virtual machine",
+      "A service principal with a shared client secret distributed to each machine",
+      "An app registration with a certificate deployed by configuration management"
+    ],
+    "correctIndex": 0,
+    "explanation": "A user-assigned managed identity is a standalone resource that can be attached to many resources and outlives any one of them. A system-assigned identity is deleted with its resource and cannot be shared.",
+    "teaches": "managed-identities-and-principals"
+  },
+  {
+    "id": "wi-03",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "question": "A background service runs overnight with no user signed in and must read every mailbox in the tenant. What kind of permission does it need?",
+    "options": [
+      "An application permission, consented to by an administrator",
+      "A delegated permission, consented to by each mailbox owner",
+      "A delegated permission, consented to by an administrator on behalf of all users",
+      "An app role assigned to the service account that runs the job"
+    ],
+    "correctIndex": 0,
+    "explanation": "With no user present the application must act as itself, which is an application permission, and those always require administrator consent because no user's own rights constrain the result. Delegated permissions are bounded by a signed-in user who does not exist here.",
+    "teaches": "app-registrations-and-permissions"
+  },
+  {
+    "id": "wi-04",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "question": "A GitHub Actions workflow must deploy to Azure without any secret being stored in the repository or in Microsoft Entra ID. What should you configure?",
+    "options": [
+      "A federated credential on the app registration, trusting the GitHub token issuer",
+      "A client secret with a 90-day expiry stored as a repository secret",
+      "A certificate credential with the private key stored as a repository secret",
+      "A user-assigned managed identity referenced from the workflow"
+    ],
+    "correctIndex": 0,
+    "explanation": "Workload identity federation lets the workflow exchange its own issuer-signed token for a Microsoft Entra token, so no credential is stored on either side. The two secret-based options store exactly what the requirement forbids, and a managed identity is not available to a runner outside Azure.",
+    "teaches": "app-registrations-and-permissions"
+  },
+  {
+    "id": "wi-05",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "question": "Only members of the Payroll group should be able to sign in to a SaaS application that appears in the tenant's enterprise applications. What should you configure?",
+    "options": [
+      "Turn on assignment required for the application and assign the Payroll group",
+      "Assign the Payroll group and rely on the default behaviour",
+      "Create a Conditional Access policy blocking all other groups from the application",
+      "Remove the application from the My Apps portal for everyone else"
+    ],
+    "correctIndex": 0,
+    "explanation": "Assignment required is what turns the assignment list into an access boundary; without it, assigning a group only decides who sees the tile. Hiding the tile does not stop anyone who reaches the application by its own URL.",
+    "teaches": "enterprise-applications"
+  },
+  {
+    "id": "wi-06",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "question": "An internal web application running on an on-premises server must be published to remote users through Microsoft Entra ID without opening an inbound firewall port. What should you deploy?",
+    "options": [
+      "Microsoft Entra Application Proxy connectors",
+      "A site-to-site VPN to the corporate network",
+      "An Azure Application Gateway with a public front end",
+      "A reverse proxy in a perimeter network with a published certificate"
+    ],
+    "correctIndex": 0,
+    "explanation": "Application Proxy connectors make only outbound connections to the service, so nothing has to be opened inbound. Every other option either extends the network or terminates traffic on something that must be reachable from the internet.",
+    "teaches": "enterprise-applications"
+  },
+  {
+    "id": "wi-07",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "question": "Users are being targeted by a phishing campaign that asks them to approve an application requesting permission to read their mail. Which setting most directly reduces the exposure?",
+    "options": [
+      "Restrict user consent to verified publishers and low-impact permissions",
+      "Require multifactor authentication for all users",
+      "Disable legacy authentication protocols",
+      "Enable a registration campaign for Microsoft Authenticator"
+    ],
+    "correctIndex": 0,
+    "explanation": "This is an illicit consent grant, where the attacker collects a token rather than a password, so controls aimed at authentication do not help. Restricting what users may consent to is the control that addresses it.",
+    "teaches": "consent-and-permission-governance"
+  },
+  {
+    "id": "wi-08",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "question": "After disabling user consent, users who need a legitimate application have no way forward and are contacting the help desk. What should you enable?",
+    "options": [
+      "The admin consent workflow, with designated reviewers",
+      "User consent for verified publishers only",
+      "Self-service application access with automatic approval",
+      "An access package containing the application"
+    ],
+    "correctIndex": 0,
+    "explanation": "The admin consent workflow replaces the dead end with a request form routed to named reviewers, and records the decision. Re-enabling consent for verified publishers would reopen part of the exposure that was deliberately closed.",
+    "teaches": "consent-and-permission-governance"
+  },
+  {
+    "id": "wi-09",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "question": "You need to discover which cloud applications staff are actually using, based on traffic logs from the corporate firewall. What should you use?",
+    "options": [
+      "Cloud discovery in Microsoft Defender for Cloud Apps",
+      "The enterprise applications list in Microsoft Entra ID",
+      "Microsoft Entra sign-in logs filtered by application",
+      "Identity Secure Score improvement actions"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cloud discovery parses firewall and proxy logs to find applications nobody registered, which is the whole point — the enterprise applications list and the sign-in logs only show what already integrates with the tenant.",
+    "teaches": "defender-for-cloud-apps-controls"
+  },
+  {
+    "id": "wi-10",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "question": "What is the relationship between an application object and a service principal in Microsoft Entra ID?",
+    "options": [
+      "The application object is the global definition; a service principal is its instance in a tenant and holds the grants",
+      "The application object is the instance in a tenant; the service principal is the global definition",
+      "They are two names for the same directory object",
+      "A service principal exists only for multi-tenant applications"
+    ],
+    "correctIndex": 0,
+    "explanation": "One application object lives in the tenant where it was registered, and every tenant that consents gets its own service principal carrying that tenant's role assignments and permission grants. Single-tenant applications have a service principal too.",
+    "teaches": "managed-identities-and-principals"
+  },
+  {
+    "id": "wi-11",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "question": "An application declares Approver and Reader in its manifest so that the token tells it what the signed-in user may do. What has it declared?",
+    "options": [
+      "App roles",
+      "Delegated permissions",
+      "Application permissions",
+      "Custom security attributes"
+    ],
+    "correctIndex": 0,
+    "explanation": "App roles describe an application's own authorisation model and arrive in the token as the roles claim. Permissions describe what the application may do against another API, which is the opposite direction.",
+    "teaches": "app-registrations-and-permissions"
+  },
+  {
+    "id": "wi-12",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "kind": "multi",
+    "question": "Which two are true of delegated permissions? Choose two.",
+    "options": [
+      "The effective access is limited by what the signed-in user can already do",
+      "They require a user to be present in the flow",
+      "They always require administrator consent",
+      "They are used by daemon services that run with no user"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Delegated permissions act on behalf of a user and are bounded by that user's own rights. Always requiring administrator consent and suiting daemons are both properties of application permissions.",
+    "teaches": "app-registrations-and-permissions"
+  },
+  {
+    "id": "wi-13",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "kind": "order",
+    "question": "Put the steps of giving an Azure function access to a storage account without a stored secret in order.",
+    "items": [
+      "Assign the identity an Azure RBAC role on the storage account",
+      "Enable a system-assigned managed identity on the function app",
+      "Call the storage account using the identity's token",
+      "Remove the connection string from the application settings"
+    ],
+    "correctOrder": [1, 0, 3, 2],
+    "explanation": "The identity must exist before it can be granted anything, and the grant must exist before the connection string can be safely removed. Removing the secret before the role assignment is in place breaks the function.",
+    "teaches": "managed-identities-and-principals"
+  },
+  {
+    "id": "wi-14",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "kind": "match",
+    "question": "Match each single sign-on option to the situation it suits.",
+    "pairs": [
+      { "term": "SAML-based sign-on", "definition": "An established SaaS product that federates but predates OpenID Connect" },
+      { "term": "OpenID Connect", "definition": "A modern application registered against the Microsoft identity platform" },
+      { "term": "Password-based sign-on", "definition": "An application with no federation support, where credentials are vaulted and replayed" },
+      { "term": "Linked sign-on", "definition": "A tile that points at an existing sign-on experience elsewhere" }
+    ],
+    "explanation": "The first two are real federation and differ by protocol generation. The third is a workaround for applications that cannot federate at all, and the fourth grants nothing — it is only a shortcut in the portal.",
+    "teaches": "enterprise-applications"
+  },
+  {
+    "id": "wi-15",
+    "examCode": "sc-300",
+    "domain": "workload-identities",
+    "kind": "dropdown",
+    "question": "Complete the statement about application credentials.",
+    "segments": [
+      { "text": "For an application running inside Azure, the credential that requires no storage or rotation by you is " },
+      {
+        "blankId": "b1",
+        "options": ["a managed identity", "a client secret", "a shared user account"],
+        "correctIndex": 0
+      },
+      { "text": ", while for a workflow running outside Azure the equivalent is " },
+      {
+        "blankId": "b2",
+        "options": ["a federated credential", "a client secret with a long expiry", "a certificate stored in the pipeline"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "Both answers remove the stored secret entirely, which is the ranking the exam wants: managed identity inside Azure, workload identity federation outside it, and secrets only when nothing else is possible.",
+    "teaches": "app-registrations-and-permissions"
+  },
+  {
+    "id": "ig-01",
+    "examCode": "sc-300",
+    "domain": "identity-governance",
+    "question": "A new project needs external partners to receive membership of three groups and access to two applications through a single request, with approval and a six-month expiry. What should you create?",
+    "options": [
+      "An access package in entitlement management",
+      "A dynamic group containing the partner users",
+      "An administrative unit delegated to the project manager",
+      "A Conditional Access policy targeting guest users"
+    ],
+    "correctIndex": 0,
+    "explanation": "An access package bundles resources and roles into one requestable item with a policy for approval and lifetime. Nothing else listed grants a set of resources together or expires an assignment.",
+    "teaches": "entitlement-management"
+  },
+  {
+    "id": "ig-02",
+    "examCode": "sc-300",
+    "domain": "identity-governance",
+    "question": "A business unit must manage access to its own resources without being given directory-wide privilege. What should you delegate?",
+    "options": [
+      "Ownership of a catalog in entitlement management",
+      "The Global Reader role scoped to the tenant",
+      "Ownership of every group the business unit uses",
+      "An administrative unit containing the business unit's users"
+    ],
+    "correctIndex": 0,
+    "explanation": "Catalog ownership lets a business unit add resources and publish access packages within its own boundary. An administrative unit scopes administration of users rather than delegating access to resources.",
+    "teaches": "entitlement-management"
+  },
+  {
+    "id": "ig-03",
+    "examCode": "sc-300",
+    "domain": "identity-governance",
+    "question": "An access review of a large group completed, every reviewer responded, and yet nobody lost access. What is the most likely cause?",
+    "options": [
+      "Auto apply results was not enabled, so the outcome was recorded but never enforced",
+      "The reviewers approved everyone",
+      "The group is a dynamic group, so membership cannot be changed by a review",
+      "The review was scoped to guest users only"
+    ],
+    "correctIndex": 0,
+    "explanation": "Without auto apply, a completed review produces a report that somebody has to act on. The question states that reviewers responded, which rules out the unreviewed-response setting being the explanation.",
+    "teaches": "access-reviews"
+  },
+  {
+    "id": "ig-04",
+    "examCode": "sc-300",
+    "domain": "identity-governance",
+    "question": "Administrators must hold no standing privilege, and each elevation must record a justification and require approval. What should you implement?",
+    "options": [
+      "Eligible role assignments in Privileged Identity Management with approval and justification required",
+      "Active role assignments scoped to administrative units",
+      "A Conditional Access policy requiring multifactor authentication for administrators",
+      "Access reviews of the administrator roles every month"
+    ],
+    "correctIndex": 0,
+    "explanation": "Eligible assignments are the mechanism that removes privilege at rest, and the role settings are where approval and justification are demanded. Access reviews confirm that assignments are still appropriate but leave the privilege standing in the meantime.",
+    "teaches": "privileged-identity-management"
+  },
+  {
+    "id": "ig-05",
+    "examCode": "sc-300",
+    "domain": "identity-governance",
+    "question": "You must bring just-in-time elevation to membership of a group that grants access to a third-party application. What should you configure?",
+    "options": [
+      "PIM for Groups, making membership of the group activatable",
+      "An access package containing the group, with a short expiry",
+      "A dynamic membership rule that adds users only during business hours",
+      "An access review of the group that runs weekly"
+    ],
+    "correctIndex": 0,
+    "explanation": "PIM for Groups makes membership or ownership itself eligible, which extends just-in-time elevation to anything that can be granted through a group. Access packages and reviews both leave the membership standing once granted.",
+    "teaches": "privileged-identity-management"
+  },
+  {
+    "id": "ig-06",
+    "examCode": "sc-300",
+    "domain": "identity-governance",
+    "question": "Which accounts should be excluded from Conditional Access policies and from Privileged Identity Management?",
+    "options": [
+      "Two cloud-only break-glass accounts with permanent Global Administrator",
+      "All accounts holding the Global Administrator role",
+      "The Microsoft Entra Connect synchronisation account",
+      "All service principals used by automation"
+    ],
+    "correctIndex": 0,
+    "explanation": "Break-glass accounts exist so that a Conditional Access misconfiguration or an unavailable multifactor service cannot lock everyone out, which only works if they are excluded. Excluding all administrators would defeat the point of the policies.",
+    "teaches": "privileged-identity-management"
+  },
+  {
+    "id": "ig-07",
+    "examCode": "sc-300",
+    "domain": "identity-governance",
+    "question": "A user was added to a privileged group last week and nobody knows who did it. Which log holds the answer?",
+    "options": [
+      "The audit logs",
+      "The sign-in logs",
+      "The provisioning logs",
+      "The risky users report"
+    ],
+    "correctIndex": 0,
+    "explanation": "Audit logs record changes made to the directory, including group membership changes and who made them. Sign-in logs record authentication attempts, and provisioning logs record what the provisioning service did to target systems.",
+    "teaches": "identity-monitoring-and-logs"
+  },
+  {
+    "id": "ig-08",
+    "examCode": "sc-300",
+    "domain": "identity-governance",
+    "question": "Sign-in logs must be retained for two years and queried with KQL. What should you configure?",
+    "options": [
+      "A diagnostic setting sending sign-in logs to a Log Analytics workspace",
+      "A longer retention period in the Microsoft Entra sign-in logs blade",
+      "A scheduled export of the sign-in logs to CSV",
+      "A workbook over the sign-in logs with a two-year time range"
+    ],
+    "correctIndex": 0,
+    "explanation": "Portal retention is fixed and short, so logs must be routed onward by a diagnostic setting; Log Analytics is the destination that supports KQL. A workbook can only display data that is being retained somewhere in the first place.",
+    "teaches": "identity-monitoring-and-logs"
+  },
+  {
+    "id": "ig-09",
+    "examCode": "sc-300",
+    "domain": "identity-governance",
+    "question": "A partner organisation's staff must be able to request access packages, and their access must lapse automatically when they leave the partner. What should you configure?",
+    "options": [
+      "A connected organisation, with an access package policy targeting its users",
+      "Individual B2B invitations for each partner employee",
+      "A cross-tenant synchronisation configuration with the partner tenant",
+      "A dynamic group rule matching the partner's email domain"
+    ],
+    "correctIndex": 0,
+    "explanation": "A connected organisation lets entitlement management recognise a partner directory or domain as a source of requestors and govern the resulting guests on a lifecycle. Individual invitations create objects that nothing then manages.",
+    "teaches": "entitlement-management"
+  },
+  {
+    "id": "ig-10",
+    "examCode": "sc-300",
+    "domain": "identity-governance",
+    "question": "An access review must have users attest to their own access first, and then have a manager confirm the result. What should you configure?",
+    "options": [
+      "A multi-stage access review",
+      "Two separate access reviews scheduled a week apart",
+      "A review with both self and manager selected as reviewers",
+      "An access package policy requiring two approvers"
+    ],
+    "correctIndex": 0,
+    "explanation": "Multi-stage reviews chain reviewers so a later stage sees the earlier decision. Selecting two reviewer types on a single-stage review asks both at once rather than in sequence.",
+    "teaches": "access-reviews"
+  },
+  {
+    "id": "ig-11",
+    "examCode": "sc-300",
+    "domain": "identity-governance",
+    "kind": "multi",
+    "question": "Which two settings determine whether an access review actually removes access? Choose two.",
+    "options": [
+      "Auto apply results to resource",
+      "The action taken if reviewers don't respond",
+      "The review recurrence interval",
+      "Whether recommendations based on last sign-in are shown"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Auto apply enforces the decisions that were made, and the no-response action decides the fate of everything nobody reviewed. Recurrence and recommendations change how often the review runs and how easy it is to complete, not what it does at the end.",
+    "teaches": "access-reviews"
+  },
+  {
+    "id": "ig-12",
+    "examCode": "sc-300",
+    "domain": "identity-governance",
+    "kind": "order",
+    "question": "Put the steps of activating an eligible Microsoft Entra role in Privileged Identity Management in order.",
+    "items": [
+      "The approver receives the request and approves it",
+      "The user selects the eligible role and requests activation",
+      "The role is active for the configured duration and then expires",
+      "The user completes multifactor authentication and supplies a justification"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "Activation is requested, the conditions configured in the role settings are satisfied, an approver decides, and the resulting assignment is time-bound. The expiry at the end is what makes the privilege just-in-time rather than permanent.",
+    "teaches": "privileged-identity-management"
+  },
+  {
+    "id": "ig-13",
+    "examCode": "sc-300",
+    "domain": "identity-governance",
+    "kind": "match",
+    "question": "Match each Microsoft Entra log or report to the question it answers.",
+    "pairs": [
+      { "term": "Sign-in logs", "definition": "Which Conditional Access policies applied to an authentication and what they decided" },
+      { "term": "Audit logs", "definition": "Who changed a directory object, and when" },
+      { "term": "Provisioning logs", "definition": "Why a user failed to be created in a connected SaaS application" },
+      { "term": "Identity Secure Score", "definition": "Which identity controls are still missing, ranked by effect" }
+    ],
+    "explanation": "The first three are records of what happened and differ by what kind of event they capture. The fourth is forward-looking — a prioritised backlog rather than a history.",
+    "teaches": "identity-monitoring-and-logs"
+  },
+  {
+    "id": "ig-14",
+    "examCode": "sc-300",
+    "domain": "identity-governance",
+    "kind": "yesno",
+    "question": "An access package has been created with a policy allowing users in a connected organisation to request it. Judge each statement.",
+    "statements": [
+      { "text": "The policy can require approval before the assignment is created.", "correct": true },
+      { "text": "The assignment can be set to expire after a fixed number of days.", "correct": true },
+      { "text": "A separation of duties rule can prevent a requestor who holds an incompatible package.", "correct": true },
+      { "text": "The package can be used to assign a Microsoft 365 licence directly.", "correct": false }
+    ],
+    "explanation": "Approval, expiry, and separation of duties are all access package policy features. Licensing is not a resource type in a catalog — the standard route is to include a group and let group-based licensing do the rest.",
+    "teaches": "entitlement-management"
+  }
+]

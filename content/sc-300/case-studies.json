@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-halden-identity",
+    "examCode": "sc-300",
+    "domain": "authentication-access",
+    "title": "Halden Maritime — tightening access across a fleet",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Halden Maritime operates a fleet of forty vessels and a shore organisation of about 3,000 staff. Crew rotate on and off ships every few weeks, and a large pool of contractors — surveyors, port agents, and engine specialists — needs access to a handful of internal applications for short, unpredictable periods.",
+          "An identity programme has been running for six months. Microsoft Entra ID P2 is licensed for all staff. The security team has been asked to close a set of findings raised by an external audit, and the constraints below are the ones the auditors wrote down."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "The tenant is hybrid. Microsoft Entra Connect Sync replicates a single on-premises forest, and password hash synchronisation is enabled. Two cloud-only Global Administrator accounts exist for emergency use.",
+          "Conditional Access is in place but light: one policy requires multifactor authentication for all users, using the 'Require multifactor authentication' grant control. Administrators satisfy it with SMS, which the auditors flagged.",
+          "Contractors are invited as B2B guests. They reach a single internal web application, Voyage Reporting, published through Microsoft Entra Application Proxy. They use their own laptops, which are not enrolled in Intune and never will be — the contractors are not Halden employees and the company has no right to manage their hardware.",
+          "New crew join at the vessel rather than at an office. They arrive with no corporate credential of any kind, and the security team wants them on passkeys rather than passwords from the first day. There is no help desk on board.",
+          "Microsoft Entra ID Protection is enabled and reporting. Last month it flagged eleven accounts under 'leaked credentials' after a third-party breach dump was published. Nothing was done automatically; an analyst worked through them by hand.",
+          "One partner firm, Brannon Survey, has its own Microsoft Entra tenant and already enforces multifactor authentication on all of its staff. Brannon engineers complain that they are challenged for MFA a second time when they open Voyage Reporting."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Contractors must be able to read Voyage Reporting from their own unmanaged laptops, but must not be able to download any file from it. Blocking the application outright is not acceptable — the contractors need the data to do the work Halden is paying for.",
+          "New crew must be able to register a passkey on their first day without ever being issued a password, and without a help desk visit.",
+          "When an account is found in a breach dump, the credential must be replaced automatically rather than waiting for an analyst.",
+          "When the security team disables a compromised account, any access token already issued to it must stop working within minutes rather than lasting until it expires.",
+          "Administrators must be forced onto phishing-resistant authentication specifically. Satisfying the requirement with SMS must no longer be possible, and the change must not disturb the rest of the workforce.",
+          "Brannon Survey engineers must not be challenged for multifactor authentication a second time, but Halden must not simply drop the MFA requirement for guests."
+        ]
+      }
+    ]
+  }
+]

@@ -454,11 +454,11 @@
     "series": "sc",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Design and operate identity and access management with Microsoft Entra ID.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-12",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/identity-and-access-administrator/"
   },
   {

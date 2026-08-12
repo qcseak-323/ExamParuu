@@ -1,0 +1,110 @@
+{
+  "examCode": "sc-300",
+  "note": "Four paths matching Microsoft's own SC-300 learning paths, one per exam domain. Module titles follow Microsoft Learn; the sections and cards behind each are this site's own.",
+  "paths": [
+    {
+      "id": "manage-user-identities",
+      "title": "Implement an identity management solution",
+      "domainId": "manage-user-identities",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/implement-identity-management-solution/",
+      "modules": [
+        {
+          "id": "manage-user-identities-m1",
+          "title": "Configure and manage a Microsoft Entra tenant",
+          "sectionIds": ["entra-tenant-configuration", "roles-and-administrative-units"],
+          "cardIds": ["fc-sc300-mu-01", "fc-sc300-mu-02", "fc-sc300-mu-03", "fc-sc300-mu-08", "fc-sc300-mu-12"]
+        },
+        {
+          "id": "manage-user-identities-m2",
+          "title": "Create, configure, and manage identities",
+          "sectionIds": ["users-groups-and-licenses"],
+          "cardIds": ["fc-sc300-mu-04", "fc-sc300-mu-05", "fc-sc300-mu-06", "fc-sc300-mu-07"]
+        },
+        {
+          "id": "manage-user-identities-m3",
+          "title": "Implement identities for external users and hybrid identity",
+          "sectionIds": ["external-identities-and-b2b", "hybrid-identity-and-sync"],
+          "cardIds": ["fc-sc300-mu-09", "fc-sc300-mu-10", "fc-sc300-mu-11", "fc-sc300-mu-13"]
+        }
+      ]
+    },
+    {
+      "id": "authentication-access",
+      "title": "Implement an authentication and access management solution",
+      "domainId": "authentication-access",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/implement-authentication-access-management/",
+      "modules": [
+        {
+          "id": "authentication-access-m1",
+          "title": "Plan and implement Microsoft Entra user authentication",
+          "sectionIds": ["authentication-methods", "mfa-and-sspr"],
+          "cardIds": ["fc-sc300-aa-01", "fc-sc300-aa-02", "fc-sc300-aa-03", "fc-sc300-aa-04", "fc-sc300-aa-05"]
+        },
+        {
+          "id": "authentication-access-m2",
+          "title": "Plan and implement Conditional Access",
+          "sectionIds": ["conditional-access-design", "conditional-access-controls"],
+          "cardIds": ["fc-sc300-aa-06", "fc-sc300-aa-07", "fc-sc300-aa-08", "fc-sc300-aa-09", "fc-sc300-aa-10"]
+        },
+        {
+          "id": "authentication-access-m3",
+          "title": "Manage risk and implement Global Secure Access",
+          "sectionIds": ["id-protection-and-risk", "global-secure-access"],
+          "cardIds": ["fc-sc300-aa-11", "fc-sc300-aa-12", "fc-sc300-aa-13", "fc-sc300-aa-14"]
+        }
+      ]
+    },
+    {
+      "id": "workload-identities",
+      "title": "Implement access management for apps",
+      "domainId": "workload-identities",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/implement-access-management-apps/",
+      "modules": [
+        {
+          "id": "workload-identities-m1",
+          "title": "Plan and implement identities for applications and Azure workloads",
+          "sectionIds": ["managed-identities-and-principals"],
+          "cardIds": ["fc-sc300-wi-01", "fc-sc300-wi-02", "fc-sc300-wi-03", "fc-sc300-wi-04"]
+        },
+        {
+          "id": "workload-identities-m2",
+          "title": "Plan, implement, and monitor enterprise application integration",
+          "sectionIds": ["enterprise-applications", "app-registrations-and-permissions"],
+          "cardIds": ["fc-sc300-wi-05", "fc-sc300-wi-06", "fc-sc300-wi-07", "fc-sc300-wi-08"]
+        },
+        {
+          "id": "workload-identities-m3",
+          "title": "Manage consent and monitor app access with Defender for Cloud Apps",
+          "sectionIds": ["consent-and-permission-governance", "defender-for-cloud-apps-controls"],
+          "cardIds": ["fc-sc300-wi-09", "fc-sc300-wi-10", "fc-sc300-wi-11", "fc-sc300-wi-12"]
+        }
+      ]
+    },
+    {
+      "id": "identity-governance",
+      "title": "Plan and implement an identity governance strategy",
+      "domainId": "identity-governance",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/plan-implement-identity-governance-strategy/",
+      "modules": [
+        {
+          "id": "identity-governance-m1",
+          "title": "Plan and implement entitlement management",
+          "sectionIds": ["entitlement-management"],
+          "cardIds": ["fc-sc300-ig-01", "fc-sc300-ig-02", "fc-sc300-ig-03", "fc-sc300-ig-04"]
+        },
+        {
+          "id": "identity-governance-m2",
+          "title": "Plan, implement, and manage access reviews",
+          "sectionIds": ["access-reviews"],
+          "cardIds": ["fc-sc300-ig-05", "fc-sc300-ig-06", "fc-sc300-ig-07", "fc-sc300-ig-11"]
+        },
+        {
+          "id": "identity-governance-m3",
+          "title": "Plan and implement privileged access",
+          "sectionIds": ["privileged-identity-management", "identity-monitoring-and-logs"],
+          "cardIds": ["fc-sc300-ig-08", "fc-sc300-ig-09", "fc-sc300-ig-10"]
+        }
+      ]
+    }
+  ]
+}

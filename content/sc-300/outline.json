@@ -1,0 +1,70 @@
+{
+  "examCode": "SC-300",
+  "examName": "Microsoft Identity and Access Administrator",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for SC-300, 'Skills measured as of April 27, 2026'. Weights are taken from the study guide's 'Skills at a glance' summary; note that Microsoft's own page prints 20-25% on the detailed heading for 'Implement authentication and access management' while the summary lists 25-30%, and the summary is used here. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "manage-user-identities",
+      "name": "Implement and manage user identities",
+      "weight": "20-25%",
+      "subtopics": [
+        "Configure and manage built-in and custom Microsoft Entra roles",
+        "Recommend, configure, and manage administrative units",
+        "Evaluate effective permissions for Microsoft Entra roles",
+        "Configure domains, company branding, and tenant, user, group, and device settings",
+        "Create, configure, and manage users, groups, and custom security attributes",
+        "Automate bulk operations with the admin center and PowerShell, and report on licences",
+        "Manage external collaboration, cross-tenant access, and cross-tenant synchronisation",
+        "Implement hybrid identity with Entra Connect Sync, Cloud Sync, PHS, PTA, and seamless SSO"
+      ]
+    },
+    {
+      "id": "authentication-access",
+      "name": "Implement authentication and access management",
+      "weight": "25-30%",
+      "subtopics": [
+        "Plan for authentication and manage methods, including certificate-based auth, Temporary Access Pass, and passkeys (FIDO2)",
+        "Implement tenant-wide multifactor authentication settings and self-service password reset",
+        "Implement Windows Hello for Business and Microsoft Entra password protection",
+        "Disable accounts, revoke user sessions, and enable Entra Kerberos for hybrid identities",
+        "Plan Conditional Access policies, assignments, and controls",
+        "Implement session management, device-enforced restrictions, and continuous access evaluation",
+        "Configure authentication context and protected actions",
+        "Manage user risk and sign-in risk with Microsoft Entra ID Protection",
+        "Deploy Global Secure Access clients, Private Access, and Internet Access"
+      ]
+    },
+    {
+      "id": "workload-identities",
+      "name": "Plan and implement workload identities",
+      "weight": "20-25%",
+      "subtopics": [
+        "Select appropriate identities for applications and Azure workloads",
+        "Create managed identities and assign them to Azure resources",
+        "Plan and implement settings for enterprise applications at application and tenant level",
+        "Integrate on-premises apps with Microsoft Entra Application Proxy",
+        "Design and implement integration for SaaS applications",
+        "Assign, classify, and manage users, groups, and app roles for enterprise applications",
+        "Configure and manage user and admin consent",
+        "Plan and create app registrations, app authentication, API permissions, and app roles",
+        "Manage and monitor app access with Microsoft Defender for Cloud Apps"
+      ]
+    },
+    {
+      "id": "identity-governance",
+      "name": "Plan and automate identity governance",
+      "weight": "20-25%",
+      "subtopics": [
+        "Plan entitlements and create and configure catalogs and access packages",
+        "Manage access requests, terms of use, and the lifecycle of external users",
+        "Configure and manage connected organisations",
+        "Plan, create, and configure access reviews and respond to review activity",
+        "Plan and manage Microsoft Entra roles and Azure resources in Privileged Identity Management",
+        "Configure PIM for Groups and manage the request and approval process",
+        "Analyse PIM audit history and create and manage break-glass accounts",
+        "Review sign-in, audit, and provisioning logs and configure diagnostic settings",
+        "Monitor Microsoft Entra ID with KQL queries, workbooks, and Identity Secure Score"
+      ]
+    }
+  ]
+}
