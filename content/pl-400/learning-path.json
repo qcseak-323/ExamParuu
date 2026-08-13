@@ -1,0 +1,132 @@
+{
+  "examCode": "pl-400",
+  "note": "Six paths, one per exam domain, following Microsoft's PL-400 learning paths. Module titles follow Microsoft Learn; the sections and cards behind each are this site's own.",
+  "paths": [
+    {
+      "id": "technical-design",
+      "title": "Create a technical design for Power Platform",
+      "domainId": "technical-design",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/create-technical-designs-power-platform/",
+      "modules": [
+        {
+          "id": "technical-design-m1",
+          "title": "Design technical architecture and choose where logic runs",
+          "sectionIds": ["architecture-and-logic-placement"],
+          "cardIds": ["fc-pl400-td-01", "fc-pl400-td-02", "fc-pl400-td-07", "fc-pl400-td-08"]
+        },
+        {
+          "id": "technical-design-m2",
+          "title": "Choose data storage and assess security impact",
+          "sectionIds": ["table-and-connector-choice", "security-impact"],
+          "cardIds": ["fc-pl400-td-03", "fc-pl400-td-04", "fc-pl400-td-05", "fc-pl400-td-06"]
+        }
+      ]
+    },
+    {
+      "id": "build-solutions",
+      "title": "Build Power Platform solutions and manage ALM",
+      "domainId": "build-solutions",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/implement-application-lifecycle-management-power-platform/",
+      "modules": [
+        {
+          "id": "build-solutions-m1",
+          "title": "Configure environments and development security",
+          "sectionIds": ["environments-and-security-roles"],
+          "cardIds": ["fc-pl400-bs-05", "fc-pl400-bs-06", "fc-pl400-bs-04", "fc-pl400-bs-08"]
+        },
+        {
+          "id": "build-solutions-m2",
+          "title": "Manage solutions, layers, and deployment",
+          "sectionIds": ["alm-solutions-and-layers", "pipelines-and-cicd"],
+          "cardIds": ["fc-pl400-bs-01", "fc-pl400-bs-02", "fc-pl400-bs-03", "fc-pl400-bs-07"]
+        }
+      ]
+    },
+    {
+      "id": "powerapps-improvements",
+      "title": "Implement Power Apps improvements",
+      "domainId": "powerapps-improvements",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/create-advanced-power-apps/",
+      "modules": [
+        {
+          "id": "powerapps-improvements-m1",
+          "title": "Write complex Power Fx and build reusable components",
+          "sectionIds": ["power-fx-and-components"],
+          "cardIds": ["fc-pl400-pi-01", "fc-pl400-pi-02", "fc-pl400-pi-06", "fc-pl400-pi-08"]
+        },
+        {
+          "id": "powerapps-improvements-m2",
+          "title": "Optimise and troubleshoot app performance",
+          "sectionIds": ["canvas-performance", "model-driven-performance"],
+          "cardIds": ["fc-pl400-pi-03", "fc-pl400-pi-04", "fc-pl400-pi-05", "fc-pl400-pi-07"]
+        }
+      ]
+    },
+    {
+      "id": "extend-user-experience",
+      "title": "Extend the user experience",
+      "domainId": "extend-user-experience",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/extend-power-platform-user-experience/",
+      "modules": [
+        {
+          "id": "extend-user-experience-m1",
+          "title": "Apply business logic with client scripting",
+          "sectionIds": ["client-scripting", "commands-and-navigation"],
+          "cardIds": ["fc-pl400-ux-01", "fc-pl400-ux-02", "fc-pl400-ux-03", "fc-pl400-ux-04"]
+        },
+        {
+          "id": "extend-user-experience-m2",
+          "title": "Create a Power Apps component framework component",
+          "sectionIds": ["pcf-components"],
+          "cardIds": ["fc-pl400-ux-05", "fc-pl400-ux-06", "fc-pl400-ux-07", "fc-pl400-ux-08"]
+        }
+      ]
+    },
+    {
+      "id": "extend-platform",
+      "title": "Extend the Power Platform",
+      "domainId": "extend-platform",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/extend-power-platform-dataverse/",
+      "modules": [
+        {
+          "id": "extend-platform-m1",
+          "title": "Create Dataverse plug-ins and custom APIs",
+          "sectionIds": ["plugins-and-pipeline", "custom-apis-and-events"],
+          "cardIds": ["fc-pl400-ep-01", "fc-pl400-ep-02", "fc-pl400-ep-03", "fc-pl400-ep-04"]
+        },
+        {
+          "id": "extend-platform-m2",
+          "title": "Build custom connectors",
+          "sectionIds": ["custom-connectors"],
+          "cardIds": ["fc-pl400-ep-05", "fc-pl400-ep-06", "fc-pl400-ep-07", "fc-pl400-ep-12"]
+        },
+        {
+          "id": "extend-platform-m3",
+          "title": "Use platform APIs and Azure Functions",
+          "sectionIds": ["platform-apis", "azure-functions-and-flows"],
+          "cardIds": ["fc-pl400-ep-08", "fc-pl400-ep-09", "fc-pl400-ep-10", "fc-pl400-ep-11"]
+        }
+      ]
+    },
+    {
+      "id": "develop-integrations",
+      "title": "Develop integrations with Dataverse",
+      "domainId": "develop-integrations",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/integrate-power-platform-solutions/",
+      "modules": [
+        {
+          "id": "develop-integrations-m1",
+          "title": "Publish and consume Dataverse events",
+          "sectionIds": ["dataverse-events-publishing"],
+          "cardIds": ["fc-pl400-di-01", "fc-pl400-di-02", "fc-pl400-di-03"]
+        },
+        {
+          "id": "develop-integrations-m2",
+          "title": "Implement data synchronisation with Dataverse",
+          "sectionIds": ["data-synchronisation"],
+          "cardIds": ["fc-pl400-di-04", "fc-pl400-di-05", "fc-pl400-di-06"]
+        }
+      ]
+    }
+  ]
+}

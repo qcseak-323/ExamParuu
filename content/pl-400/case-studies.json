@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-alderway-permits",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "title": "Alderway Council — a permit system under strain",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Alderway Council issues building permits through a model-driven app on Dataverse. Officers work in the app; contractors submit applications through a portal; and a legacy finance system in the council's own data centre holds the fee ledger and remains the system of record for money.",
+          "The solution was built by a contractor who has since left. It works, mostly, and a review has produced the findings below."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "A permit reference must be generated on every new permit, in a strict sequence. It is currently produced by JavaScript in the form's OnSave handler. Permits created by the nightly bulk import from the portal have no reference at all, and nobody noticed for two months.",
+          "A validation rule prevents a permit being approved when its outstanding fee is above zero. It is implemented as client script. Officers have discovered that approving through a bulk edit view skips it entirely.",
+          "A plug-in on Update of the permit table needs to compare the previous inspection date with the new one to decide whether to notify the inspector. It currently reads the inspection date from the Target and finds it null whenever the officer changed only the status.",
+          "Fee balances live in the legacy finance system. The current design copies them into a Dataverse table on an hourly schedule. Officers regularly see stale balances, and finance has objected that a second copy of the ledger now exists.",
+          "A nightly job pushes 400,000 permit rows to a reporting database. It reads every row each night, one request at a time, and frequently receives HTTP 429 responses which the code treats as fatal errors and retries immediately in a loop.",
+          "A document-generation step takes about four minutes per permit. It currently runs as a synchronous plug-in, and officers see the form hang and sometimes time out."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "The permit reference must be assigned however the record is created — form, import, API, or flow — and must be present on the row as it is written.",
+          "The fee validation must hold for every path that approves a permit, including bulk edit and the Web API.",
+          "The plug-in must be able to see the inspection date's previous value even when the officer did not change it.",
+          "Fee balances must be current when an officer looks at a permit, and a second copy of the ledger must not exist in Dataverse.",
+          "The nightly export must stop being throttled into failure and must stop re-reading rows that have not changed.",
+          "Document generation must stop blocking the officer's save."
+        ]
+      }
+    ]
+  }
+]

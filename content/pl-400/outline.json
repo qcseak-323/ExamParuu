@@ -1,0 +1,100 @@
+{
+  "examCode": "PL-400",
+  "examName": "Microsoft Power Platform Developer",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for PL-400, 'Skills measured as of March 19, 2026'. This is the first six-domain exam in the catalogue: five domains share a 10-15% band and one carries 30-35%, so the paper is 8 questions in each of the five and 20 in 'Extend the platform'. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "technical-design",
+      "name": "Create a technical design",
+      "weight": "10-15%",
+      "subtopics": [
+        "Analyse technical architecture to identify solution components and their implementation approach",
+        "Design the authentication and authorisation strategy for solution components",
+        "Determine whether requirements can be met with out-of-the-box functionality",
+        "Determine where to implement business logic across business rules, plug-ins, client script, and Power Automate",
+        "Determine when to use standard tables, virtual tables, elastic tables, or connectors",
+        "Assess the impact of DLP policies, security roles, teams, business units, and row sharing",
+        "Design reusable components including canvas components, code components, and client scripting",
+        "Design custom connectors, Power Fx functions, plug-ins, and custom APIs",
+        "Design inbound and outbound integrations using Dataverse and Azure"
+      ]
+    },
+    {
+      "id": "build-solutions",
+      "name": "Build Power Platform solutions",
+      "weight": "10-15%",
+      "subtopics": [
+        "Troubleshoot operational security issues",
+        "Configure Dataverse security roles to support code components using least privilege",
+        "Manage Microsoft Power Platform environments for development",
+        "Manage solution dependencies",
+        "Create and use environment variables",
+        "Manage solution layers",
+        "Implement and extend Power Platform Pipelines",
+        "Create CI/CD automations using Power Platform Build Tools"
+      ]
+    },
+    {
+      "id": "powerapps-improvements",
+      "name": "Implement Power Apps improvements",
+      "weight": "10-15%",
+      "subtopics": [
+        "Implement complex Power Fx formulas and functions",
+        "Build reusable component libraries",
+        "Use Power Automate cloud flows to implement business logic from a canvas app",
+        "Troubleshoot canvas and model-driven app issues using Monitor and browser debugging tools",
+        "Optimise canvas app performance including pre-loading data and query delegation",
+        "Optimise model-driven app performance including forms and views"
+      ]
+    },
+    {
+      "id": "extend-user-experience",
+      "name": "Extend the user experience",
+      "weight": "10-15%",
+      "subtopics": [
+        "Build JavaScript code that targets the Client API object model",
+        "Determine the event handler registration approach",
+        "Create client scripting that targets the Dataverse Web API",
+        "Configure commands and buttons using Power Fx and JavaScript",
+        "Implement navigation to custom pages using the Client API",
+        "Demonstrate the use of the different PCF lifecycle events",
+        "Configure a code component manifest and implement component interfaces",
+        "Package, deploy, and consume a code component",
+        "Configure and use Device, Utility, and Web API features in component logic"
+      ]
+    },
+    {
+      "id": "extend-platform",
+      "name": "Extend the platform",
+      "weight": "30-35%",
+      "subtopics": [
+        "Demonstrate the use of the different event execution pipeline stages",
+        "Develop plug-ins that use the execution context and implement business logic",
+        "Implement Pre Images and Post Images to support plug-in logic",
+        "Perform operations in plug-ins by using the Organization service and optimise plug-in performance",
+        "Configure a Dataverse custom API message and register components with the Plug-in Registration Tool",
+        "Configure Dataverse business events",
+        "Create an Open API definition, implement authentication, and configure policy templates for custom connectors",
+        "Develop an Azure Function to be used in a custom connector and transform data",
+        "Perform operations with the Dataverse Web API and the Organization service",
+        "Implement API limit retry policies and optimise for concurrency, transactions, and bulk operations",
+        "Process long-running operations with Azure Functions and authenticate using managed identities",
+        "Configure cloud flow triggers, expressions, error handling, child flows, and Key Vault usage"
+      ]
+    },
+    {
+      "id": "develop-integrations",
+      "name": "Develop integrations",
+      "weight": "10-15%",
+      "subtopics": [
+        "Publish a Dataverse event by using the IServiceEndpointNotificationService",
+        "Publish a Dataverse event by using the Plug-in Registration Tool",
+        "Register service endpoints including webhooks, Azure Service Bus, and Azure Event Hub",
+        "Recommend options for listening to Dataverse events",
+        "Perform data synchronisation by using change tracking",
+        "Develop code that uses alternate keys",
+        "Use the UpsertRequest message to synchronise data"
+      ]
+    }
+  ]
+}

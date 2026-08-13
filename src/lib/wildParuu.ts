@@ -60,8 +60,9 @@ export const WILD_PARUU: Record<string, WildParuu> = {
   "ab-730": { sheet: "wild-snail" },
   "ab-731": { sheet: "wild-snail" },
   "pl-900": { sheet: "wild-hedgehog" },
-  // Same reuse as az-104: PL-300 shares the Mangroves with PL-900.
+  // Same reuse as az-104: PL-300 and PL-400 share the Mangroves with PL-900.
   "pl-300": { sheet: "wild-hedgehog" },
+  "pl-400": { sheet: "wild-hedgehog" },
 };
 
 /**

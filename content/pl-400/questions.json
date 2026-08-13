@@ -1,0 +1,933 @@
+[
+  {
+    "id": "ep-01",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "caseStudyId": "cs-alderway-permits",
+    "question": "The permit reference must be assigned however the record is created and must be present on the row as it is written. Where should the logic run?",
+    "options": [
+      "In a synchronous plug-in registered on Create at the PreOperation stage",
+      "In a synchronous plug-in registered on Create at the PostOperation stage",
+      "In the form's OnSave handler, as it is today",
+      "In a Power Automate cloud flow triggered on create"
+    ],
+    "correctIndex": 0,
+    "explanation": "Client script only runs when a form is open, which is why the bulk import produced no references. PreOperation runs inside the transaction before the write, so setting the value on the Target puts it on the row as it is written. PostOperation would require a second update, and a flow runs afterwards and asynchronously.",
+    "teaches": "plugins-and-pipeline"
+  },
+  {
+    "id": "ep-02",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "caseStudyId": "cs-alderway-permits",
+    "question": "The plug-in must compare the previous inspection date with the new one, but finds it null when the officer changed only the status. What should you configure?",
+    "options": [
+      "A Pre Image containing the inspection date",
+      "A Post Image containing the inspection date",
+      "A PreValidation stage registration instead of PreOperation",
+      "An additional Retrieve call inside the plug-in for every execution"
+    ],
+    "correctIndex": 0,
+    "explanation": "On an Update the Target contains only the columns that actually changed, so an unchanged column is simply absent. A Pre Image captures the values before the operation, which is exactly the previous value being asked for. A Retrieve would work but costs a round trip on every execution.",
+    "teaches": "plugins-and-pipeline"
+  },
+  {
+    "id": "ep-03",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "caseStudyId": "cs-alderway-permits",
+    "question": "Fee balances must be current when an officer opens a permit, and a second copy of the ledger must not exist in Dataverse. What should you implement?",
+    "options": [
+      "A virtual table backed by the finance system",
+      "A more frequent scheduled flow copying balances into a Dataverse table",
+      "An elastic table holding the balances",
+      "A Dataverse plug-in that writes the balance on retrieve"
+    ],
+    "correctIndex": 0,
+    "explanation": "A virtual table reads from the external system at query time, so there is no copy and no synchronisation lag — which satisfies both halves of the requirement at once. Every scheduled copy leaves a duplicate ledger and a staleness window, however short the interval.",
+    "teaches": "table-and-connector-choice"
+  },
+  {
+    "id": "ep-04",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "caseStudyId": "cs-alderway-permits",
+    "question": "The nightly export is throttled into failure and re-reads every row. Which pair of changes addresses both problems?",
+    "options": [
+      "Honour the Retry-After header with backoff, and use change tracking to read only what changed",
+      "Increase the thread count, and read rows in alphabetical order",
+      "Retry immediately on 429, and filter on the modified-on column",
+      "Split the job across two application users, and disable change tracking"
+    ],
+    "correctIndex": 0,
+    "explanation": "429 signals service protection limits and Retry-After says when to resume; retrying immediately makes it worse, which is what the current code does. Change tracking returns only what has changed since the last token and reports deletions, which a modified-on filter cannot do.",
+    "teaches": "platform-apis"
+  },
+  {
+    "id": "ep-05",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "caseStudyId": "cs-alderway-permits",
+    "question": "Document generation takes four minutes and currently blocks the officer's save. What should you do?",
+    "options": [
+      "Hand the work off to an Azure Function and return from the plug-in immediately",
+      "Register the existing plug-in at the PreValidation stage instead",
+      "Increase the plug-in timeout beyond the two-minute limit",
+      "Move the plug-in to run in the calling user's context"
+    ],
+    "correctIndex": 0,
+    "explanation": "A synchronous plug-in holds the transaction open and is bounded by a two-minute limit that cannot be raised, so four minutes of work does not belong there at all. Handing off to a Function releases the user immediately and gives the work a runtime suited to it.",
+    "teaches": "azure-functions-and-flows"
+  },
+  {
+    "id": "ep-06",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "question": "A validation must prevent approval whenever an outstanding balance exists, including from bulk edit views and the Web API. Where should it be implemented?",
+    "options": [
+      "In a synchronous plug-in that throws to cancel the operation",
+      "In client script on the form's OnSave event",
+      "In a business rule scoped to the form",
+      "In a Power Automate flow that reverses the change afterwards"
+    ],
+    "correctIndex": 0,
+    "explanation": "Only server-side logic covers every path, because client script and form-scoped business rules require a form. Reversing a change afterwards leaves a window in which the invalid state existed and was visible.",
+    "teaches": "plugins-and-pipeline"
+  },
+  {
+    "id": "ep-07",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "question": "You need one named operation, callable from client script, a cloud flow, and an external application, that encapsulates logic rather than exposing tables. What should you create?",
+    "options": [
+      "A Dataverse custom API implemented by a plug-in",
+      "A classic custom action",
+      "A custom connector wrapping the Dataverse Web API",
+      "A cloud flow with an HTTP request trigger"
+    ],
+    "correctIndex": 0,
+    "explanation": "A custom API defines a new Dataverse message with typed parameters, is a solution component, and is callable from all three. It is preferred over the older custom action for new work, and a connector or flow would sit outside the platform rather than extending it.",
+    "teaches": "custom-apis-and-events"
+  },
+  {
+    "id": "ep-08",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "question": "A daemon application authenticates to Dataverse successfully with its client credentials, but every request returns a privilege error. What is missing?",
+    "options": [
+      "An application user in Dataverse with an appropriate security role",
+      "A second app registration in Microsoft Entra",
+      "A custom API to expose the required messages",
+      "A managed identity assigned to the Azure resource"
+    ],
+    "correctIndex": 0,
+    "explanation": "Authentication proves who the caller is; authorisation in Dataverse comes from an application user holding a security role. A service principal with no application user authenticates perfectly and can do nothing, which is exactly the symptom described.",
+    "teaches": "platform-apis"
+  },
+  {
+    "id": "ep-09",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "question": "An integration must create 50,000 rows as efficiently as possible. What should you use?",
+    "options": [
+      "The CreateMultiple bulk message",
+      "Fifty thousand individual Create requests on parallel threads",
+      "A cloud flow with an apply-to-each loop",
+      "A synchronous plug-in that loops inside one transaction"
+    ],
+    "correctIndex": 0,
+    "explanation": "Throughput comes from reducing round trips, and the bulk messages are the modern high-volume route. Adding parallel threads increases the request rate against service protection limits and produces more throttling rather than more throughput.",
+    "teaches": "platform-apis"
+  },
+  {
+    "id": "ep-10",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "question": "A custom connector must send an extra header to the underlying API without the API being changed. What should you configure?",
+    "options": [
+      "A policy template on the connector",
+      "An Azure Function between the connector and the API",
+      "A new Open API definition for the API",
+      "OAuth 2.0 authentication on the connector"
+    ],
+    "correctIndex": 0,
+    "explanation": "Policy templates modify connector behaviour at runtime — setting a header, routing to a different host, converting a type — which is precisely this case. A Function is the heavier answer for transformations a policy cannot express.",
+    "teaches": "custom-connectors"
+  },
+  {
+    "id": "ep-11",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "question": "A plug-in must cancel an operation as cheaply as possible, before the database transaction begins. Which stage should it be registered at?",
+    "options": [
+      "PreValidation",
+      "PreOperation",
+      "PostOperation",
+      "The asynchronous pipeline"
+    ],
+    "correctIndex": 0,
+    "explanation": "PreValidation runs before the transaction is opened, so cancelling there avoids the cost of starting and rolling one back. PreOperation is already inside the transaction, and the asynchronous pipeline cannot cancel anything.",
+    "teaches": "plugins-and-pipeline"
+  },
+  {
+    "id": "ep-12",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "question": "A production cloud flow stopped working when an employee left the organisation. What should it have used?",
+    "options": [
+      "A connection authenticated with a service principal",
+      "A connection owned by a shared mailbox",
+      "An environment variable holding the employee's credentials",
+      "A child flow owned by the team"
+    ],
+    "correctIndex": 0,
+    "explanation": "A flow depending on one person's account breaks when the account does. A service principal connection belongs to the solution rather than to an individual. Storing credentials in an environment variable is both a secret-handling failure and still tied to a person.",
+    "teaches": "azure-functions-and-flows"
+  },
+  {
+    "id": "ep-13",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "question": "A cloud flow triggered on update of a Dataverse row also writes back to that row, and is triggering itself repeatedly. What should you configure?",
+    "options": [
+      "A trigger filter so the flow only runs on the changes it cares about",
+      "A longer retry policy on the trigger",
+      "A child flow to perform the write",
+      "Secure inputs and outputs on the write step"
+    ],
+    "correctIndex": 0,
+    "explanation": "An unfiltered Dataverse trigger fires on every change, including the flow's own write, which is what creates the loop. Filtering the trigger to specific columns or a condition breaks it. Nothing about retries, child flows, or secure inputs affects what triggers a run.",
+    "teaches": "azure-functions-and-flows"
+  },
+  {
+    "id": "ep-14",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "question": "An Azure Function must authenticate to Dataverse with no stored secret. What should it use?",
+    "options": [
+      "A managed identity, with a corresponding application user in Dataverse",
+      "A client secret held in application settings",
+      "A client secret retrieved from Key Vault at startup",
+      "The connection string of the Dataverse environment"
+    ],
+    "correctIndex": 0,
+    "explanation": "A managed identity has its credential created and rotated by Azure, so nothing is stored. It still needs an application user in Dataverse to be authorised — authentication and authorisation are separate steps here, which is the detail this pair of concepts is built around.",
+    "teaches": "azure-functions-and-flows"
+  },
+  {
+    "id": "ep-15",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "question": "A plug-in registered in the calling user's context fails for some users and succeeds for others. What is the most likely cause?",
+    "options": [
+      "Those users lack a privilege the plug-in's operations require",
+      "The plug-in is registered at the wrong pipeline stage",
+      "The plug-in needs a Post Image",
+      "The plug-in is running asynchronously"
+    ],
+    "correctIndex": 0,
+    "explanation": "Running in the calling user's context means the plug-in inherits that user's privileges, so a per-user failure points at a security role. That behaviour is deliberate — it is what keeps row-level security honest when logic runs on the server.",
+    "teaches": "plugins-and-pipeline"
+  },
+  {
+    "id": "ep-16",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "kind": "multi",
+    "question": "Which two are true of the PreOperation stage? Choose two.",
+    "options": [
+      "It runs inside the database transaction",
+      "Modifying the Target changes what is written to the database",
+      "It runs after the record has been saved",
+      "It is the only stage that can register images"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "PreOperation runs inside the transaction before the main operation, which is what makes changes to the Target take effect on the write. Running after the save is PostOperation, and images are configured on registrations at more than one stage.",
+    "teaches": "plugins-and-pipeline"
+  },
+  {
+    "id": "ep-17",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "kind": "order",
+    "question": "Put the Dataverse event execution pipeline stages in the order they run.",
+    "items": [
+      "PostOperation, inside the transaction after the operation",
+      "PreValidation, before the transaction begins",
+      "The main operation writes to the database",
+      "PreOperation, inside the transaction before the operation"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "Only PreValidation sits outside the transaction, which is why it is the cheap place to cancel. Everything from PreOperation onwards is inside it, so a throw at any of those points rolls the whole thing back.",
+    "teaches": "plugins-and-pipeline"
+  },
+  {
+    "id": "ep-18",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "kind": "match",
+    "question": "Match each extension point to what it is for.",
+    "pairs": [
+      { "term": "Plug-in", "definition": "Server-side logic on a Dataverse message that cannot be bypassed" },
+      { "term": "Custom API", "definition": "A new named Dataverse message with typed parameters" },
+      { "term": "Custom connector", "definition": "Wrapping an external REST API for use in flows and apps" },
+      { "term": "Azure Function", "definition": "Long-running or scheduled work outside the Dataverse transaction" }
+    ],
+    "explanation": "Two extend Dataverse itself and two reach outside it. Choosing between them usually comes down to whether the work must be inside the transaction and whether it must be unavoidable.",
+    "teaches": "custom-apis-and-events"
+  },
+  {
+    "id": "ep-19",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "kind": "yesno",
+    "question": "A synchronous plug-in has been registered on Update of a table. Judge each statement.",
+    "statements": [
+      { "text": "Throwing an exception rolls back the operation.", "correct": true },
+      { "text": "The Target contains only the columns that changed.", "correct": true },
+      { "text": "A two-minute execution limit applies.", "correct": true },
+      { "text": "It can run work lasting several minutes if the timeout is raised.", "correct": false }
+    ],
+    "explanation": "The two-minute limit is a platform boundary rather than a setting, which is why long work is handed to an Azure Function or the asynchronous pipeline rather than accommodated in place.",
+    "teaches": "plugins-and-pipeline"
+  },
+  {
+    "id": "ep-20",
+    "examCode": "pl-400",
+    "domain": "extend-platform",
+    "kind": "dropdown",
+    "question": "Complete the statement about calling Dataverse.",
+    "segments": [
+      { "text": "From JavaScript in a model-driven app you would use " },
+      {
+        "blankId": "b1",
+        "options": ["the Dataverse Web API", "the Organization service", "a custom connector"],
+        "correctIndex": 0
+      },
+      { "text": ", while from inside a plug-in you would use " },
+      {
+        "blankId": "b2",
+        "options": ["the Organization service", "the Dataverse Web API", "an HTTP action"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "The Web API is OData over REST for JavaScript and external callers; the Organization service is the .NET SDK interface available inside plug-ins. The caller decides, not the operation.",
+    "teaches": "platform-apis"
+  },
+  {
+    "id": "td-01",
+    "examCode": "pl-400",
+    "domain": "technical-design",
+    "question": "A requirement states that a field must be hidden until a related option is selected, with no code. What should you use?",
+    "options": [
+      "A business rule",
+      "Client script on the OnChange event",
+      "A Power Apps component framework component",
+      "A synchronous plug-in"
+    ],
+    "correctIndex": 0,
+    "explanation": "Business rules are the declarative, no-code option for field-level visibility and validation, and the platform's standing preference is configuration over code. Everything else in the list writes code for something configuration already does.",
+    "teaches": "architecture-and-logic-placement"
+  },
+  {
+    "id": "td-02",
+    "examCode": "pl-400",
+    "domain": "technical-design",
+    "question": "A solution must store several million rows of sensor readings with varying columns and unpredictable growth. Which table type fits?",
+    "options": [
+      "An elastic table",
+      "A standard Dataverse table",
+      "A virtual table",
+      "A Dataverse file column"
+    ],
+    "correctIndex": 0,
+    "explanation": "Elastic tables are backed by Cosmos DB for high volume and sparse, semi-structured data, trading relational features for horizontal scale. A standard table is the relational store and is the wrong shape for this profile.",
+    "teaches": "table-and-connector-choice"
+  },
+  {
+    "id": "td-03",
+    "examCode": "pl-400",
+    "domain": "technical-design",
+    "question": "A user can see records they should not. You have checked their primary security role and it is correct. What should you check next?",
+    "options": [
+      "Other roles they hold, including through team membership",
+      "Whether a deny rule has been applied to the table",
+      "Whether row sharing has been disabled for the environment",
+      "Whether the business unit hierarchy has been inverted"
+    ],
+    "correctIndex": 0,
+    "explanation": "Dataverse privileges are cumulative and there is no deny mechanism, so excessive access always comes from an additional grant — another role, a team role, or a share. Looking for something that revokes access is looking for a feature that does not exist.",
+    "teaches": "security-impact"
+  },
+  {
+    "id": "td-04",
+    "examCode": "pl-400",
+    "domain": "technical-design",
+    "question": "A flow that reads Dataverse and posts to a social media connector refuses to run in the production tenant but worked in development. What is the most likely cause?",
+    "options": [
+      "A data loss prevention policy separating those connectors into different groups",
+      "A missing security role on the flow owner",
+      "A solution layering conflict in production",
+      "The social media connector is not available in the production region"
+    ],
+    "correctIndex": 0,
+    "explanation": "DLP policies forbid combining connectors from the business and non-business groups in one flow, regardless of what data moves. It is enforced per environment, which is exactly why a development environment with a looser policy hides the problem.",
+    "teaches": "security-impact"
+  },
+  {
+    "id": "td-05",
+    "examCode": "pl-400",
+    "domain": "technical-design",
+    "question": "Data must remain in an external system, must not be copied into Dataverse, and must appear to users as a Dataverse table. What should you implement?",
+    "options": [
+      "A virtual table with an appropriate data provider",
+      "A standard table populated by a scheduled flow",
+      "A custom connector called from the form",
+      "An elastic table synchronised nightly"
+    ],
+    "correctIndex": 0,
+    "explanation": "A virtual table reads through a provider at query time, so no copy exists and the external system remains the system of record. Every option involving a schedule creates the duplicate the requirement forbids.",
+    "teaches": "table-and-connector-choice"
+  },
+  {
+    "id": "td-06",
+    "examCode": "pl-400",
+    "domain": "technical-design",
+    "question": "A rule must be enforced whether a record is changed through a form, an import, the Web API, or a flow. Where must it live?",
+    "options": [
+      "In server-side logic such as a plug-in",
+      "In client script registered on the form",
+      "In a canvas app's Power Fx formula",
+      "In a form-scoped business rule"
+    ],
+    "correctIndex": 0,
+    "explanation": "Only server-side logic sees every path into the data. Anything attached to a form is absent when the change arrives through an import or the API, which is the distinction that decides most design questions on this exam.",
+    "teaches": "architecture-and-logic-placement"
+  },
+  {
+    "id": "td-07",
+    "examCode": "pl-400",
+    "domain": "technical-design",
+    "kind": "multi",
+    "question": "Which two are true of Dataverse security roles? Choose two.",
+    "options": [
+      "A user's effective privileges are the union of all roles they hold",
+      "Roles can be assigned through team membership",
+      "A role can explicitly deny a privilege granted by another role",
+      "Only one role may be assigned to a user at a time"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Roles grant and accumulate, directly and through teams. There is no deny and no limit of one, which is why over-permissioned users are diagnosed by finding the extra grant rather than the missing restriction.",
+    "teaches": "security-impact"
+  },
+  {
+    "id": "td-08",
+    "examCode": "pl-400",
+    "domain": "technical-design",
+    "kind": "match",
+    "question": "Match each requirement to where the logic belongs.",
+    "pairs": [
+      { "term": "Hide a field until another is filled in", "definition": "A business rule" },
+      { "term": "React as the user types on a form", "definition": "Client script" },
+      { "term": "Enforce a rule on every write path", "definition": "A plug-in" },
+      { "term": "Call another system and await approval", "definition": "A Power Automate cloud flow" }
+    ],
+    "explanation": "Reading top to bottom this is configuration, experience, enforcement, and orchestration. Nearly every design question on this exam resolves to placing a requirement in one of those four buckets.",
+    "teaches": "architecture-and-logic-placement"
+  },
+  {
+    "id": "bs-01",
+    "examCode": "pl-400",
+    "domain": "build-solutions",
+    "question": "A component customised directly in production is now ignoring updates delivered by the managed solution. What should you do?",
+    "options": [
+      "Remove the unmanaged layer on that component",
+      "Re-import the managed solution with the upgrade option",
+      "Delete and reinstall the managed solution",
+      "Publish all customisations in the production environment"
+    ],
+    "correctIndex": 0,
+    "explanation": "An unmanaged layer sits above every managed layer and always wins, so re-importing changes the managed layer underneath and nothing visible happens. Removing the unmanaged layer lets the managed definition surface again.",
+    "teaches": "alm-solutions-and-layers"
+  },
+  {
+    "id": "bs-02",
+    "examCode": "pl-400",
+    "domain": "build-solutions",
+    "question": "A connection URL differs between test and production and must not require editing components between deployments. What should you use?",
+    "options": [
+      "An environment variable",
+      "A separate solution per environment",
+      "A hard-coded value changed after each import",
+      "A custom table holding configuration rows"
+    ],
+    "correctIndex": 0,
+    "explanation": "Environment variables carry the definition in the solution and the value per environment, which is exactly this problem. A configuration table works but is unmanaged plumbing the platform already provides, and per-environment solutions defeat ALM entirely.",
+    "teaches": "alm-solutions-and-layers"
+  },
+  {
+    "id": "bs-03",
+    "examCode": "pl-400",
+    "domain": "build-solutions",
+    "question": "Which solution type should be imported into a production environment?",
+    "options": [
+      "A managed solution",
+      "An unmanaged solution",
+      "Either, provided customisations are published afterwards",
+      "An unmanaged solution exported from the development environment"
+    ],
+    "correctIndex": 0,
+    "explanation": "Managed solutions lock their components and can be uninstalled cleanly. An unmanaged import merges into the unmanaged layer and cannot be removed by uninstalling anything, which is the one ALM mistake with no way back.",
+    "teaches": "alm-solutions-and-layers"
+  },
+  {
+    "id": "bs-04",
+    "examCode": "pl-400",
+    "domain": "build-solutions",
+    "question": "A team wants each solution change to appear in source control as reviewable component files rather than a single binary. What should the pipeline do?",
+    "options": [
+      "Export the unmanaged solution and unpack it into the repository",
+      "Commit the exported solution zip file on every change",
+      "Commit a managed solution zip file on every change",
+      "Export only the components that changed as separate solutions"
+    ],
+    "correctIndex": 0,
+    "explanation": "Unpacking produces individual files that diff meaningfully, which is what makes a pull request reviewable. Committing a zip gives a history in which every change looks identical and nothing can be inspected.",
+    "teaches": "pipelines-and-cicd"
+  },
+  {
+    "id": "bs-05",
+    "examCode": "pl-400",
+    "domain": "build-solutions",
+    "question": "Which environment type is appropriate for shared development work that may need resetting?",
+    "options": [
+      "A sandbox environment",
+      "A production environment",
+      "The default environment",
+      "A Microsoft Dataverse for Teams environment"
+    ],
+    "correctIndex": 0,
+    "explanation": "Sandbox environments can be reset and copied, which is what makes them safe to develop in. The default environment is shared by every user in the tenant and is a poor place for anything deliberate.",
+    "teaches": "environments-and-security-roles"
+  },
+  {
+    "id": "bs-06",
+    "examCode": "pl-400",
+    "domain": "build-solutions",
+    "question": "A code component works for its developer and fails for other users with a privilege error. Where should you look?",
+    "options": [
+      "The security roles of the affected users, for the privileges the component's operations require",
+      "The solution layer of the component in that environment",
+      "The component's manifest feature declarations",
+      "The environment's data loss prevention policy"
+    ],
+    "correctIndex": 0,
+    "explanation": "A privilege error for some users and not others is a security role difference — the developer typically holds a broader role. Manifest features would fail for everybody, and DLP blocks connector combinations rather than raising privilege errors.",
+    "teaches": "environments-and-security-roles"
+  },
+  {
+    "id": "bs-07",
+    "examCode": "pl-400",
+    "domain": "build-solutions",
+    "kind": "order",
+    "question": "Put the steps of a healthy build and release process in order.",
+    "items": [
+      "Import the managed solution into test and then production",
+      "Export the unmanaged solution from the development environment",
+      "Build a managed solution from the packed source",
+      "Unpack the solution into source control and commit"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "Source control sits in the middle of the pipeline rather than beside it: development exports, source control holds the reviewable truth, the build produces the managed artifact, and only that artifact is deployed onward.",
+    "teaches": "pipelines-and-cicd"
+  },
+  {
+    "id": "bs-08",
+    "examCode": "pl-400",
+    "domain": "build-solutions",
+    "kind": "dropdown",
+    "question": "Complete the statement about solution layering.",
+    "segments": [
+      { "text": "When a component exists in both a managed solution and an unmanaged customisation, the behaviour comes from " },
+      {
+        "blankId": "b1",
+        "options": ["the unmanaged layer", "the managed layer", "whichever was installed most recently"],
+        "correctIndex": 0
+      },
+      { "text": ", and the way to restore the solution's own definition is to " },
+      {
+        "blankId": "b2",
+        "options": ["remove the unmanaged layer", "re-import the managed solution", "publish all customisations"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "The unmanaged layer always sits on top, so re-importing changes something invisible underneath it. This is the single most common cause of 'the update did not take effect'.",
+    "teaches": "alm-solutions-and-layers"
+  },
+  {
+    "id": "pi-01",
+    "examCode": "pl-400",
+    "domain": "powerapps-improvements",
+    "question": "A canvas app filters a Dataverse table of 80,000 rows and users report that recent records are missing from the results. What is the most likely cause?",
+    "options": [
+      "The filter expression is not delegable, so only the first page of rows was evaluated",
+      "The app is caching results in a collection",
+      "The user lacks read privileges on some rows",
+      "The gallery's item limit is set too low"
+    ],
+    "correctIndex": 0,
+    "explanation": "A non-delegable expression pulls up to the delegation limit and filters locally, so anything beyond it is invisible — and the app returns wrong results silently rather than erroring. That silence is what makes delegation the most important performance concept in canvas apps.",
+    "teaches": "canvas-performance"
+  },
+  {
+    "id": "pi-02",
+    "examCode": "pl-400",
+    "domain": "powerapps-improvements",
+    "question": "What is the default delegation limit for a canvas app?",
+    "options": [
+      "500 rows, configurable up to 2,000",
+      "100 rows, configurable up to 1,000",
+      "2,000 rows, fixed",
+      "There is no limit for Dataverse sources"
+    ],
+    "correctIndex": 0,
+    "explanation": "The default is 500 and the maximum configurable value is 2,000. Raising it is a mitigation rather than a fix — the correct answer is to make the expression delegable so the data source does the filtering.",
+    "teaches": "canvas-performance"
+  },
+  {
+    "id": "pi-03",
+    "examCode": "pl-400",
+    "domain": "powerapps-improvements",
+    "question": "A variable must hold a value that is available on every screen of a canvas app. Which function should you use?",
+    "options": [
+      "Set",
+      "UpdateContext",
+      "With",
+      "Collect"
+    ],
+    "correctIndex": 0,
+    "explanation": "Set creates a global variable visible across screens. UpdateContext is scoped to one screen, With is scoped to a single expression, and Collect builds a collection rather than a variable.",
+    "teaches": "power-fx-and-components"
+  },
+  {
+    "id": "pi-04",
+    "examCode": "pl-400",
+    "domain": "powerapps-improvements",
+    "question": "One custom control must be reused in both a canvas app and a model-driven app. What should you build?",
+    "options": [
+      "A code component using the Power Apps component framework",
+      "A canvas component in a component library",
+      "A custom page shared between the apps",
+      "A reusable Power Fx named formula"
+    ],
+    "correctIndex": 0,
+    "explanation": "Canvas components live in a library and are canvas-only. Code components are deployed in a solution and work in both app types, which is precisely why the framework exists.",
+    "teaches": "power-fx-and-components"
+  },
+  {
+    "id": "pi-05",
+    "examCode": "pl-400",
+    "domain": "powerapps-improvements",
+    "question": "Users say an app 'feels slow'. What should you do first?",
+    "options": [
+      "Run Monitor and examine the network calls and their timings",
+      "Reduce the number of controls on every screen",
+      "Move data loading into App.OnStart",
+      "Raise the delegation limit to 2,000"
+    ],
+    "correctIndex": 0,
+    "explanation": "Monitor turns a vague complaint into a specific slow request. Every other option is a remedy applied before the cause is known, and moving loading into OnStart usually makes start-up worse rather than better.",
+    "teaches": "canvas-performance"
+  },
+  {
+    "id": "pi-06",
+    "examCode": "pl-400",
+    "domain": "powerapps-improvements",
+    "question": "A model-driven form takes a long time to open. Which change is most likely to help?",
+    "options": [
+      "Move rarely used subgrids onto tabs that load only when opened",
+      "Add more columns to the default view",
+      "Convert asynchronous OnLoad handlers to synchronous",
+      "Increase the number of quick-view forms on the main tab"
+    ],
+    "correctIndex": 0,
+    "explanation": "Form load cost is dominated by what is on the initially visible tab, so deferring content is the direct remedy. Converting handlers to synchronous blocks rendering, which is the change in the wrong direction.",
+    "teaches": "model-driven-performance"
+  },
+  {
+    "id": "pi-07",
+    "examCode": "pl-400",
+    "domain": "powerapps-improvements",
+    "question": "Which Power Fx function updates specific columns of an existing record without replacing the whole record?",
+    "options": [
+      "Patch",
+      "ClearCollect",
+      "UpdateContext",
+      "Set"
+    ],
+    "correctIndex": 0,
+    "explanation": "Patch writes named columns to a record in a data source. ClearCollect replaces a local collection, and the other two create variables rather than writing to data.",
+    "teaches": "power-fx-and-components"
+  },
+  {
+    "id": "pi-08",
+    "examCode": "pl-400",
+    "domain": "powerapps-improvements",
+    "kind": "multi",
+    "question": "Which two improve canvas app start-up time? Choose two.",
+    "options": [
+      "Loading independent data sources concurrently",
+      "Avoiding data loading in App.OnStart that no screen needs immediately",
+      "Adding more data sources so each query is smaller",
+      "Disabling delegation warnings in the studio"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Concurrency and doing less at start-up both reduce time to first screen. Adding data sources increases start-up cost, and hiding delegation warnings removes the signal without changing the behaviour.",
+    "teaches": "canvas-performance"
+  },
+  {
+    "id": "ux-01",
+    "examCode": "pl-400",
+    "domain": "extend-user-experience",
+    "question": "A client script handler throws an error immediately because formContext is undefined. What is most likely missing?",
+    "options": [
+      "The execution context is not being passed as the first parameter to the function",
+      "The web resource has not been published",
+      "The script targets the Dataverse Web API rather than the Client API",
+      "The handler is registered on the wrong table"
+    ],
+    "correctIndex": 0,
+    "explanation": "formContext is obtained from the execution context, which is only supplied when the registration is configured to pass it. Forgetting that checkbox is the standard cause of an immediately undefined context.",
+    "teaches": "client-scripting"
+  },
+  {
+    "id": "ux-02",
+    "examCode": "pl-400",
+    "domain": "extend-user-experience",
+    "question": "Which Client API call retrieves the value a user has entered in a column?",
+    "options": [
+      "formContext.getAttribute",
+      "formContext.getControl",
+      "Xrm.Navigation.openForm",
+      "Xrm.Utility.getGlobalContext"
+    ],
+    "correctIndex": 0,
+    "explanation": "getAttribute reaches the data behind a column; getControl reaches the control presenting it, which is what you use to hide, disable, or relabel. Confusing the two is the most common Client API error.",
+    "teaches": "client-scripting"
+  },
+  {
+    "id": "ux-03",
+    "examCode": "pl-400",
+    "domain": "extend-user-experience",
+    "question": "A PCF code component renders correctly and the user's changes are never saved. What is most likely missing?",
+    "options": [
+      "A call to notifyOutputChanged",
+      "An implementation of destroy",
+      "A feature declaration in the manifest",
+      "A call to init on each update"
+    ],
+    "correctIndex": 0,
+    "explanation": "notifyOutputChanged is what tells the platform to call getOutputs and collect the new values. Without it the component looks entirely functional and silently persists nothing, which is exactly the symptom described.",
+    "teaches": "pcf-components"
+  },
+  {
+    "id": "ux-04",
+    "examCode": "pl-400",
+    "domain": "extend-user-experience",
+    "question": "Which PCF lifecycle method runs whenever bound data or context changes?",
+    "options": [
+      "updateView",
+      "init",
+      "getOutputs",
+      "destroy"
+    ],
+    "correctIndex": 0,
+    "explanation": "init runs once at the start, updateView runs on every subsequent change and is where rendering belongs, getOutputs returns values to the platform, and destroy cleans up when the component is removed.",
+    "teaches": "pcf-components"
+  },
+  {
+    "id": "ux-05",
+    "examCode": "pl-400",
+    "domain": "extend-user-experience",
+    "question": "A bespoke screen with canvas-style layout must open from a button inside a model-driven app. What should you build?",
+    "options": [
+      "A custom page, opened with Xrm.Navigation.navigateTo",
+      "An HTML web resource embedded in a form",
+      "A separate canvas app opened in a new browser tab",
+      "A PCF code component bound to a column"
+    ],
+    "correctIndex": 0,
+    "explanation": "Custom pages bring canvas authoring inside a model-driven app and open as a page, dialog, or side pane. They are the supported replacement for the older HTML web resource pattern.",
+    "teaches": "commands-and-navigation"
+  },
+  {
+    "id": "ux-06",
+    "examCode": "pl-400",
+    "domain": "extend-user-experience",
+    "question": "A command bar button should appear only when a record is in a particular state. How should this be implemented?",
+    "options": [
+      "With a visibility expression on the command in the command designer",
+      "By disabling the button in client script after the form loads",
+      "By removing the button from the form for those users",
+      "By registering an OnLoad handler that deletes the command"
+    ],
+    "correctIndex": 0,
+    "explanation": "Visibility is a first-class property of a command and is expressed as a rule, so the button is never rendered when it does not apply. Hiding it after render is slower and briefly shows a control the user should not have.",
+    "teaches": "commands-and-navigation"
+  },
+  {
+    "id": "ux-07",
+    "examCode": "pl-400",
+    "domain": "extend-user-experience",
+    "kind": "order",
+    "question": "Put the PCF code component lifecycle methods in the order they are called.",
+    "items": [
+      "getOutputs, returning values to the platform",
+      "init, receiving context and the container element",
+      "destroy, releasing resources",
+      "updateView, rendering when data or context changes"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "init runs once, updateView runs repeatedly, getOutputs is called after the component signals a change, and destroy runs when the component is removed. Rendering in init rather than updateView produces a component that never reflects later changes.",
+    "teaches": "pcf-components"
+  },
+  {
+    "id": "ux-08",
+    "examCode": "pl-400",
+    "domain": "extend-user-experience",
+    "kind": "yesno",
+    "question": "Validation logic has been added to a model-driven form's OnSave handler in client script. Judge each statement.",
+    "statements": [
+      { "text": "It can cancel the save by calling preventDefault on the save event argument.", "correct": true },
+      { "text": "It runs when a user saves the record from that form.", "correct": true },
+      { "text": "It runs when the record is updated through the Dataverse Web API.", "correct": false },
+      { "text": "It requires the execution context to be passed to the handler.", "correct": true }
+    ],
+    "explanation": "Client script protects the form and nothing else, so a rule that must hold everywhere needs a plug-in as well. That single limitation drives most of the design decisions on this exam.",
+    "teaches": "client-scripting"
+  },
+  {
+    "id": "di-01",
+    "examCode": "pl-400",
+    "domain": "develop-integrations",
+    "question": "Dataverse must notify an external system that may be offline for hours, and no message may be lost. Which endpoint should you register?",
+    "options": [
+      "An Azure Service Bus queue",
+      "A webhook",
+      "An Azure Event Hub",
+      "A synchronous webhook with retries"
+    ],
+    "correctIndex": 0,
+    "explanation": "A queue holds messages until something collects them, which is what survives a receiver being offline. A webhook is a direct call that requires the receiver to be available at that moment, and Event Hub suits high-throughput streams rather than guaranteed delivery to one consumer.",
+    "teaches": "dataverse-events-publishing"
+  },
+  {
+    "id": "di-02",
+    "examCode": "pl-400",
+    "domain": "develop-integrations",
+    "question": "An external system must receive only the Dataverse rows that have changed since its last run, including rows that were deleted. What should you use?",
+    "options": [
+      "Change tracking on the table",
+      "A query filtered on the modified-on column",
+      "A scheduled flow that reads all rows and compares them",
+      "An alternate key on the table"
+    ],
+    "correctIndex": 0,
+    "explanation": "Change tracking returns creates, updates, and deletions since a token. A modified-on filter cannot report a deletion, because the row is no longer there to be returned — which is why deleted records linger downstream in systems built that way.",
+    "teaches": "data-synchronisation"
+  },
+  {
+    "id": "di-03",
+    "examCode": "pl-400",
+    "domain": "develop-integrations",
+    "question": "An integration holds its own customer numbers and must create or update Dataverse rows without first querying for a GUID. What should you use?",
+    "options": [
+      "An alternate key with UpsertRequest",
+      "A retrieve followed by a create or update",
+      "A custom API that performs a lookup",
+      "A duplicate detection rule"
+    ],
+    "correctIndex": 0,
+    "explanation": "An alternate key lets the row be addressed by the business identifier, and UpsertRequest then creates or updates in one call. The retrieve-then-decide pattern doubles the requests and leaves a race between the check and the write.",
+    "teaches": "data-synchronisation"
+  },
+  {
+    "id": "di-04",
+    "examCode": "pl-400",
+    "domain": "develop-integrations",
+    "question": "Which service allows a plug-in to post the execution context to a registered endpoint under its own control, rather than firing on every matching event?",
+    "options": [
+      "IServiceEndpointNotificationService",
+      "IOrganizationService",
+      "ITracingService",
+      "IPluginExecutionContext"
+    ],
+    "correctIndex": 0,
+    "explanation": "IServiceEndpointNotificationService publishes the context to a service endpoint from inside plug-in code, which gives programmatic control over exactly when a message goes out. The others perform data operations, write trace logs, and describe the current execution.",
+    "teaches": "dataverse-events-publishing"
+  },
+  {
+    "id": "di-05",
+    "examCode": "pl-400",
+    "domain": "develop-integrations",
+    "question": "A webhook registered synchronously fails because the receiving service is down. What happens to the Dataverse operation?",
+    "options": [
+      "It can fail, because the platform waits for the response",
+      "It completes, and the message is queued for retry",
+      "It completes, and the failure is logged only",
+      "It is rolled back and automatically retried later"
+    ],
+    "correctIndex": 0,
+    "explanation": "A synchronous webhook makes the external service part of the transaction's success, which is powerful and risky in equal measure. Registering asynchronously decouples the two, at the cost of not being able to influence the outcome.",
+    "teaches": "dataverse-events-publishing"
+  },
+  {
+    "id": "di-06",
+    "examCode": "pl-400",
+    "domain": "develop-integrations",
+    "kind": "multi",
+    "question": "Which two are true of change tracking? Choose two.",
+    "options": [
+      "It is enabled per table",
+      "It reports deleted rows as well as created and updated ones",
+      "It requires an alternate key on the table",
+      "It replaces the need for a service endpoint"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Change tracking is a per-table setting whose whole value is that deletions are included. Alternate keys serve a different purpose, and change tracking is a pull mechanism while service endpoints push.",
+    "teaches": "data-synchronisation"
+  },
+  {
+    "id": "di-07",
+    "examCode": "pl-400",
+    "domain": "develop-integrations",
+    "kind": "order",
+    "question": "Put the steps of setting up an event-driven integration from Dataverse in order.",
+    "items": [
+      "The external system reads messages from the queue and processes them",
+      "Create the Azure Service Bus queue and obtain its connection details",
+      "Register a step so the message is published on the chosen event",
+      "Register the service endpoint using the Plug-in Registration Tool"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "The destination has to exist before Dataverse can be pointed at it, the endpoint is registered, a step decides which event publishes, and only then is there anything for the consumer to read.",
+    "teaches": "dataverse-events-publishing"
+  },
+  {
+    "id": "di-08",
+    "examCode": "pl-400",
+    "domain": "develop-integrations",
+    "kind": "match",
+    "question": "Match each integration endpoint to the situation it suits.",
+    "pairs": [
+      { "term": "Azure Service Bus queue", "definition": "A receiver that may be offline, where no message may be lost" },
+      { "term": "Azure Event Hub", "definition": "High-throughput streaming of many events" },
+      { "term": "Webhook", "definition": "A direct HTTPS call to an always-available endpoint" },
+      { "term": "Change tracking", "definition": "A consumer that pulls what changed on its own schedule" }
+    ],
+    "explanation": "The first three push and differ by durability and volume; the fourth is the pull alternative. Choosing between push and pull is the first decision, and durability the second.",
+    "teaches": "data-synchronisation"
+  }
+]

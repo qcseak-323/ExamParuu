@@ -1,0 +1,184 @@
+[
+  {
+    "domainId": "technical-design",
+    "sections": [
+      {
+        "id": "architecture-and-logic-placement",
+        "heading": "Where business logic belongs",
+        "paragraphs": [
+          "Power Platform offers several places to put logic and the exam's favourite question is which one. Business rules are declarative, run on the form and optionally on the server, and require no code — they are the first choice for simple field-level validation and visibility. Client script runs in the browser and is for user-experience behaviour that must react as somebody types. Plug-ins run on the server inside the Dataverse event pipeline and are the only option that cannot be bypassed, because they fire regardless of whether the change came from a form, the API, an import, or a flow. Power Automate cloud flows run asynchronously and are for orchestration, approvals, and reaching other services.",
+          "The rule that decides most scenarios is enforcement versus experience. Anything described as 'must always happen' or 'must not be bypassed' is server-side and therefore a plug-in or a real-time workflow, because client script only runs when a form is open. Anything described as 'the user should see' is client-side. Anything involving another system, a delay, or a human decision is a flow. The other standing rule is to prefer out-of-the-box configuration to code: code is a maintenance liability and an upgrade risk, and the exam rewards the answer that writes none."
+        ]
+      },
+      {
+        "id": "table-and-connector-choice",
+        "heading": "Standard, virtual, and elastic tables",
+        "paragraphs": [
+          "A standard Dataverse table stores rows in Dataverse and supports the full platform — relationships, security roles, auditing, business rules, and the event pipeline. A virtual table surfaces data that lives in an external system as though it were a Dataverse table, with no copy and no synchronisation: the data is read at query time through a provider. It is the answer when a scenario forbids duplicating data or requires the external system to remain the system of record, and its limitations follow from that — features that depend on Dataverse holding the row, such as auditing and some pipeline stages, are constrained.",
+          "An elastic table is backed by Cosmos DB rather than the relational store and is designed for very high volume, unpredictable scale, and semi-structured data with sparse or varying columns. It trades relational features such as complex joins and certain kinds of query for horizontal scale, so IoT telemetry and high-throughput logging are its cases rather than a customer master. Connectors, by contrast, do not model data at all — they invoke another service's operations from a flow or an app, which is the right shape when the requirement is an action rather than a table."
+        ]
+      },
+      {
+        "id": "security-impact",
+        "heading": "Security roles, teams, and DLP",
+        "paragraphs": [
+          "Dataverse security is layered and cumulative. A security role grants privileges at an access level — user, business unit, parent-child business unit, or organisation — and a user's effective access is the union of every role they hold directly and through teams, so roles add and never subtract. That is why a user who can see too much is diagnosed by looking for an additional role rather than for a deny rule, which does not exist. Teams come in owner teams, access teams, and Microsoft Entra group teams, and row sharing grants access to an individual record outside the role model entirely.",
+          "Data loss prevention policies operate on a different axis and are the ones most often forgotten in a design. A DLP policy sorts connectors into business, non-business, and blocked groups, and forbids a single app or flow from combining connectors across the business and non-business groups. It does not care what the data is — only which connectors are used together — so a flow that reads Dataverse and posts to a non-business connector simply refuses to save or run. Custom connectors are classified by the same policy, which is a frequent surprise when a solution that worked in development fails in a governed tenant."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "build-solutions",
+    "sections": [
+      {
+        "id": "environments-and-security-roles",
+        "heading": "Environments and development configuration",
+        "paragraphs": [
+          "Environments separate development, test, and production, and the type matters: a sandbox environment can be reset and copied and is the correct home for development, while a production environment cannot be treated that way. A developer environment is a free, individual environment tied to one maker. Copying a production environment into a sandbox brings the data with it, so the choice between a full copy and a minimal copy is a data-protection decision as well as a practical one.",
+          "Least privilege applies to code as much as to people. A plug-in registered to run in the calling user's context inherits that user's privileges, which is what keeps row-level security honest; registering it to run as a specific service account escalates it and should be a deliberate decision rather than a convenience. Custom connectors, code components, and custom APIs each need the privileges they actually use granted through a security role, and diagnosing 'works for me, fails for them' almost always ends at a missing privilege on a role rather than at the code."
+        ]
+      },
+      {
+        "id": "alm-solutions-and-layers",
+        "heading": "Solutions, layers, and environment variables",
+        "paragraphs": [
+          "A solution is the unit of transport. Unmanaged solutions are for development, where components are editable and the solution is a working container; managed solutions are for test and production, where components are locked to what the solution defines and the whole solution can be uninstalled cleanly, taking its components with it. Importing an unmanaged solution into production is the mistake that cannot be undone, because its components merge into the unmanaged layer and cannot be removed by uninstalling anything.",
+          "Solution layering explains behaviour that otherwise looks like a bug. Managed layers stack in installation order with the base solution at the bottom, and an unmanaged customisation sits above every managed layer and always wins. That is why a change made directly in production overrides the managed solution and then silently blocks future updates to that component — the fix is to remove the unmanaged layer rather than to re-import. Environment variables hold the values that differ per environment, such as a connection URL or an API key reference, so the same solution moves between environments without editing components; the definition travels with the solution and the value is set per environment."
+        ]
+      },
+      {
+        "id": "pipelines-and-cicd",
+        "heading": "Pipelines and build automation",
+        "paragraphs": [
+          "Power Platform Pipelines provide in-product deployment: a host environment holds the pipeline definition, development environments are the source, and target environments receive managed solutions with approvals in between. They are the low-friction route for teams without a DevOps practice, and they can be extended so that a pipeline run triggers custom logic before or after deployment.",
+          "Power Platform Build Tools are the alternative for teams already using Azure Pipelines or GitHub Actions, and they expose the same operations as tasks — export a solution, unpack it into source control, pack it, import it, run checker. The healthy pattern is to export unmanaged from development, unpack to source control so that individual component files are diffable, build a managed solution from source, and import that managed artifact into test and production. Committing a solution as one zip file gives a repository history in which no change is reviewable, which is what unpacking exists to avoid."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "powerapps-improvements",
+    "sections": [
+      {
+        "id": "power-fx-and-components",
+        "heading": "Power Fx and reusable components",
+        "paragraphs": [
+          "Power Fx is a declarative expression language, and the distinctions that matter are between variable kinds and collection functions. `Set` creates a global variable available across screens; `UpdateContext` creates a context variable scoped to one screen; `With` scopes a value to a single expression. `Collect`, `ClearCollect`, and `Patch` cover local collections and writes back to a data source, with `Patch` the one that updates specific columns of a record without replacing it.",
+          "Reusable components come in two forms with different reach. Canvas components live in a component library, are versioned, and are consumed by canvas apps only; updating a library prompts consuming apps to take the new version rather than pushing it silently. Code components built with the Power Apps component framework are deployed in a solution and work in both canvas and model-driven apps, which is what makes them the answer when a scenario needs one control in both. Component libraries solve reuse within canvas; PCF solves reuse across the platform and gives control over rendering and behaviour that Power Fx cannot express."
+        ]
+      },
+      {
+        "id": "canvas-performance",
+        "heading": "Canvas app performance and delegation",
+        "paragraphs": [
+          "Delegation is the single most important performance concept in canvas apps. A delegable expression is evaluated by the data source, so filtering happens where the data lives; a non-delegable expression pulls up to the delegation limit — 500 rows by default, configurable to 2,000 — into the client and then filters locally, silently returning wrong results the moment the table is larger. Which functions and operators delegate depends on the connector, so the same formula may delegate against Dataverse and not against another source. The blue underline warning in the studio is the signal, and ignoring it is how an app that worked on test data fails on production data.",
+          "The rest of canvas performance is about doing less at start-up. Reduce the number of connectors and data sources, avoid loading data in `App.OnStart` that a screen does not need, use concurrent loading where calls are independent, cache reference data in collections rather than requerying, and limit the number of controls on a screen. Monitor is the diagnostic tool: it shows every network call an app makes with its timing, which turns 'the app feels slow' into a specific request to attack."
+        ]
+      },
+      {
+        "id": "model-driven-performance",
+        "heading": "Model-driven app performance and Monitor",
+        "paragraphs": [
+          "Model-driven performance is dominated by what a form loads. Every subgrid, every quick-view form, and every tab's contents contribute, so the standard remedies are to move rarely used content onto tabs that load only when opened, to reduce the number of columns on views and grids, and to remove synchronous client script from the load path. Synchronous OnLoad script blocks rendering, and converting handlers to asynchronous where the logic allows is a direct win.",
+          "Monitor works for model-driven apps as well as canvas, capturing form and network events during a session, and it is the correct starting point rather than guesswork. Browser developer tools complement it for client script problems specifically. On the server side, the standard causes of slow saves are plug-ins doing too much synchronously and real-time workflows chained onto the same event, which is why moving non-essential work to the asynchronous pipeline is the usual fix."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "extend-user-experience",
+    "sections": [
+      {
+        "id": "client-scripting",
+        "heading": "Client API and event handlers",
+        "paragraphs": [
+          "Client script in a model-driven app targets the Client API object model, and `formContext` is the entry point to the form — `formContext.getAttribute` reaches data, `formContext.getControl` reaches the presentation of that data, and confusing the two is the most common error. `Xrm.WebApi` performs data operations against Dataverse from client script, and `Xrm.Navigation` opens dialogs, forms, and custom pages. Passing the execution context to a handler is what gives the script `formContext` at all, and forgetting to tick that checkbox is why a handler throws immediately.",
+          "The events available are OnLoad for the form, OnSave for the form, OnChange for a column, and events on tabs and grids. OnSave is where validation that must stop a save belongs, using `preventDefault` on the save event argument — but it only protects the form, so a rule that must hold for every path needs a plug-in as well. Registering handlers is done in the form editor with the library and function named explicitly; scripts should be registered against a specific event rather than run globally, and web resources are versioned solution components like anything else."
+        ]
+      },
+      {
+        "id": "pcf-components",
+        "heading": "Power Apps component framework",
+        "paragraphs": [
+          "A code component is defined by a manifest declaring its properties, resources, and any features it needs, and implemented against a small lifecycle. `init` runs once with the context, a notification callback, state, and the container element. `updateView` runs whenever bound data or context changes and is where rendering happens. `getOutputs` returns values back to the platform, and `destroy` cleans up so the component does not leak when the form closes. Calling `notifyOutputChanged` is what tells the platform to collect outputs — a component that never calls it appears to work and never saves anything.",
+          "The manifest also declares feature usage, and this is examined: features such as device access, web API access, and utility functions must be declared before they are available at runtime. Components are packaged into a solution and deployed like any other component, and the framework is the right choice when a requirement needs rendering or interaction that configuration cannot express — a custom visualisation, a specialised input, a control reused across canvas and model-driven apps."
+        ]
+      },
+      {
+        "id": "commands-and-navigation",
+        "heading": "Commands, buttons, and custom pages",
+        "paragraphs": [
+          "The modern command bar is edited with the command designer, and commands can be authored in Power Fx or in JavaScript. Power Fx commands are the lighter option and cover most needs, including visibility rules expressed as a formula. JavaScript commands remain necessary when the logic must call a library, work with the execution context in ways Power Fx does not reach, or reuse existing code. Visibility is itself a first-class concern: showing a button only when it applies is done with a visibility expression rather than by disabling it in code after render.",
+          "Custom pages bring canvas-style authoring into a model-driven app, and `Xrm.Navigation.navigateTo` opens one as a full page, a dialog, or a side pane, passing parameters in. This is the supported route for a bespoke screen inside a model-driven app, replacing older patterns built on HTML web resources, and it matters because a scenario describing a tailored screen inside an otherwise model-driven application is pointing at a custom page rather than at a separate app."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "extend-platform",
+    "sections": [
+      {
+        "id": "plugins-and-pipeline",
+        "heading": "The event execution pipeline",
+        "paragraphs": [
+          "A plug-in registers against a message and a table at a stage in the event execution pipeline, and the stages are the heart of this domain. PreValidation (stage 10) runs before the database transaction and outside it, which is why it is the correct place to cancel an operation cheaply and the only stage that runs before security checks in some paths. PreOperation (stage 20) runs inside the transaction before the main operation, and is where values on the incoming record are modified — changing the Target here changes what is written. PostOperation (stage 40) runs inside the transaction after the main operation, and is where work depending on the saved record belongs, including reading the generated id.",
+          "Execution mode is the other axis. Synchronous plug-ins run inside the transaction and can throw to roll it back, but the user waits and a two-minute limit applies. Asynchronous plug-ins run afterwards as a system job, cannot affect the outcome, and are the right choice for anything slow or non-essential. Pre Images and Post Images capture column values before and after the operation, which is how a plug-in sees the old value of a changed column: on an Update the Target contains only the columns that changed, so anything else must come from an image. That single fact explains most plug-in questions."
+        ]
+      },
+      {
+        "id": "custom-apis-and-events",
+        "heading": "Custom APIs, custom actions, and business events",
+        "paragraphs": [
+          "A custom API defines a new Dataverse message with typed request and response parameters and a plug-in that implements it, giving a solution-aware, discoverable operation callable from client script, a flow, or external code. It is preferred over the older custom action for new work because it is defined as a solution component, supports private visibility, and can be bound to a table or unbound. It is the answer when a scenario needs one named operation that several callers invoke and that encapsulates logic rather than exposing tables.",
+          "Business events extend this by letting Dataverse publish an event that other systems subscribe to, rather than requiring them to poll. Combined with service endpoints they are the mechanism behind a loosely coupled integration: Dataverse announces that something happened, and whichever systems care react on their own schedule."
+        ]
+      },
+      {
+        "id": "custom-connectors",
+        "heading": "Custom connectors",
+        "paragraphs": [
+          "A custom connector wraps a REST API so it can be used from flows and apps, defined by an Open API definition that can be authored by hand, imported from an existing definition, generated from an Azure service, or created from a Postman collection. Authentication is configured on the connector — no authentication, basic, API key, OAuth 2.0 against Microsoft Entra or another provider — and OAuth is what allows the call to act on behalf of the signed-in user rather than a shared identity.",
+          "Policy templates modify connector behaviour at runtime without changing the underlying API: setting a header, routing to a different host, converting a data type, or changing a query parameter. They are the answer when a scenario needs the connector to behave differently from the API it wraps and changing the API is not an option. Where transformation is more than a policy can express, an Azure Function sits between the connector and the API and does the work in code — which is also the standard pattern for wrapping a service whose shape is inconvenient."
+        ]
+      },
+      {
+        "id": "platform-apis",
+        "heading": "Dataverse Web API and the Organization service",
+        "paragraphs": [
+          "Two APIs reach Dataverse and the choice follows the caller. The Web API is OData v4 over REST and is used from JavaScript, from anything non-.NET, and from external systems; the Organization service is the .NET SDK interface used from plug-ins and .NET applications. Authentication for external callers is OAuth 2.0 against Microsoft Entra, with an app registration and, for a daemon, an application user in Dataverse holding an appropriate security role — a point worth remembering, because a service principal that authenticates successfully still fails every request until an application user exists.",
+          "Service protection limits apply per user per server and are enforced with HTTP 429 responses carrying a Retry-After header. The correct behaviour is to honour that header and back off; the SDK clients do this automatically, while a hand-rolled HTTP client must implement it. Throughput comes from batching rather than from parallelism: `$batch` on the Web API groups requests into one round trip, `ExecuteMultipleRequest` does the same for the Organization service, and the bulk messages such as `CreateMultiple` and `UpdateMultiple` are the modern high-volume route. Alternate keys let a record be addressed by a business key rather than a GUID, and `UpsertRequest` then creates or updates in one call without a lookup first."
+        ]
+      },
+      {
+        "id": "azure-functions-and-flows",
+        "heading": "Azure Functions and cloud flows",
+        "paragraphs": [
+          "Azure Functions carry work that does not belong inside the Dataverse transaction: anything long-running, anything needing a library or runtime Dataverse cannot host, and anything scheduled. The pattern for a slow operation triggered by a data change is a plug-in or a webhook that hands off to a Function and returns immediately, rather than a synchronous plug-in that holds the transaction open. Functions authenticate back to Dataverse with a managed identity, which removes the stored secret entirely.",
+          "Cloud flows handle orchestration. Trigger conditions and filters keep a flow from running when it should not, which matters because an unfiltered Dataverse trigger fires on every change and can loop when the flow itself writes back. Error handling uses configure-run-after so that a step runs on failure, combined with scopes to group try and catch behaviour. Child flows extract reusable logic. Sensitive inputs and outputs can be marked secure so they do not appear in run history, and secrets belong in Azure Key Vault rather than in the flow definition. A service principal connection is what stops a production flow depending on one employee's account and breaking when they leave."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "develop-integrations",
+    "sections": [
+      {
+        "id": "dataverse-events-publishing",
+        "heading": "Publishing events and service endpoints",
+        "paragraphs": [
+          "Dataverse can push events outward through service endpoints registered with the Plug-in Registration Tool. The destinations are Azure Service Bus queues and topics, Azure Event Hub, and webhooks. Service Bus is the choice when the receiving system may be offline and messages must wait — a queue holds them until something collects them. Event Hub suits high-throughput telemetry-style streams. A webhook is a direct HTTPS call to an endpoint and is the simplest, with the trade that the receiver must be available at the moment of the call.",
+          "Webhooks may be registered synchronously or asynchronously; synchronous means the platform waits for the response and a failure can affect the operation, which is powerful and dangerous in equal measure. From code, `IServiceEndpointNotificationService` posts the execution context to a registered endpoint from inside a plug-in, giving programmatic control over exactly when a message is published rather than firing on every matching event."
+        ]
+      },
+      {
+        "id": "data-synchronisation",
+        "heading": "Change tracking, alternate keys, and upsert",
+        "paragraphs": [
+          "Change tracking is the supported way to synchronise Dataverse with an external store without re-reading everything. Enabled per table, it lets a caller request only what has changed since a token issued on the previous run, and it reports deletions as well as creates and updates — which a naive 'modified since a timestamp' query cannot do, and that gap is exactly why deleted rows linger in a downstream system.",
+          "Alternate keys define a unique combination of columns as a business key, so an external system can address a Dataverse row by an identifier it already holds instead of storing GUIDs. `UpsertRequest` builds on that: it creates the record if the key does not match and updates it if it does, in a single request. Together they remove the retrieve-then-decide pattern that doubles the request count and introduces a race between the check and the write."
+        ]
+      }
+    ]
+  }
+]
