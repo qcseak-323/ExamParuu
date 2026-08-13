@@ -1,0 +1,933 @@
+[
+  {
+    "id": "gi-01",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "caseStudyId": "cs-verrick-aiops",
+    "question": "The team must be able to see exactly what the assistant's prompt said on a given date and revert to it. What should you implement?",
+    "options": [
+      "Version control the prompt in a Git repository and deploy it from there",
+      "Enable diagnostic logging on the Foundry project",
+      "Keep a copy of each prompt in a storage account before editing",
+      "Increase the trace retention period on the project"
+    ],
+    "correctIndex": 0,
+    "explanation": "Git gives history, a reviewable diff, and a precise revert — the three things editing in the portal destroys. Logging and traces record what requests happened, not what the prompt was, and a manual copy depends on somebody remembering.",
+    "teaches": "prompt-versioning"
+  },
+  {
+    "id": "gi-02",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "caseStudyId": "cs-verrick-aiops",
+    "question": "Answers changed overnight because the underlying model was updated. How should the deployment be configured so behaviour changes only when the team decides?",
+    "options": [
+      "Pin the deployment to a specific model version rather than following the latest",
+      "Lower the temperature on the deployment",
+      "Move the deployment to provisioned throughput",
+      "Add a groundedness evaluator to the release pipeline"
+    ],
+    "correctIndex": 0,
+    "explanation": "A deployment that follows the latest version inherits behaviour changes under a system that was evaluated against the old one. Pinning makes the upgrade a decision. Evaluation would eventually detect the change but not prevent it.",
+    "teaches": "foundation-model-deployment"
+  },
+  {
+    "id": "gi-03",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "caseStudyId": "cs-verrick-aiops",
+    "question": "Requests are throttled between 08:00 and 10:00 and the service is nearly idle for the rest of the day. What is the most appropriate response?",
+    "options": [
+      "Raise the deployment's tokens-per-minute quota and implement retry with exponential backoff",
+      "Move the deployment to provisioned throughput units sized for the peak",
+      "Ask underwriters to spread their work across the day",
+      "Deploy a smaller model so each request consumes fewer tokens"
+    ],
+    "correctIndex": 0,
+    "explanation": "Provisioned throughput is the reflex answer for throttling, but it is paid for around the clock and this workload is idle for twenty-two hours a day, so it would be expensive for a two-hour peak. Raising the quota costs nothing, and backoff handles the residual bursts.",
+    "teaches": "foundation-model-deployment"
+  },
+  {
+    "id": "gi-04",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "caseStudyId": "cs-verrick-aiops",
+    "question": "The application authenticates with an API key created by an engineer who has left. How should it reach the Foundry project instead?",
+    "options": [
+      "With a managed identity and an appropriate role assignment",
+      "With a new API key stored in Azure Key Vault",
+      "With a new API key rotated on a 30-day schedule",
+      "With a service principal using a client secret in an app setting"
+    ],
+    "correctIndex": 0,
+    "explanation": "A managed identity's credential is created and rotated by Azure and never exists in a form anyone can take. Every other option keeps a bearer credential in existence that identifies nobody and could have been copied before rotation.",
+    "teaches": "genaiops-security"
+  },
+  {
+    "id": "gi-05",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "caseStudyId": "cs-verrick-aiops",
+    "question": "The deployment workflow authenticates to Azure with a repository secret that expires in five weeks. What should replace it?",
+    "options": [
+      "A federated credential, so the workflow exchanges its own token for an Azure token",
+      "A longer-lived client secret with a two-year expiry",
+      "A certificate credential with the private key stored as a repository secret",
+      "A managed identity assigned to the GitHub runner"
+    ],
+    "correctIndex": 0,
+    "explanation": "Workload identity federation removes the stored credential entirely and therefore removes the expiry problem with it. A longer secret only defers the same failure, a certificate is still a stored secret, and a managed identity is not available to a runner outside Azure.",
+    "teaches": "genaiops-security"
+  },
+  {
+    "id": "gi-06",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "question": "A workload must host an open-weight model on dedicated infrastructure with strict isolation. Which deployment option fits?",
+    "options": [
+      "Managed compute",
+      "A serverless API endpoint",
+      "Provisioned throughput units",
+      "A batch endpoint in Azure Machine Learning"
+    ],
+    "correctIndex": 0,
+    "explanation": "Managed compute places the model on infrastructure you size and control, which is what self-hosting and isolation require. Serverless and provisioned throughput are both forms of consuming a Microsoft-hosted model.",
+    "teaches": "foundation-model-deployment"
+  },
+  {
+    "id": "gi-07",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "question": "Two prompt variants have been written for the same task. How should the better one be chosen?",
+    "options": [
+      "Evaluate both against a dataset and compare scores with the current baseline",
+      "Deploy both and ask users which they prefer",
+      "Choose the one that produces shorter completions",
+      "Choose the one written by the more experienced engineer"
+    ],
+    "correctIndex": 0,
+    "explanation": "Evaluation turns prompt engineering into a measured decision with evidence behind it. Preference and brevity are proxies that can move in the opposite direction to quality.",
+    "teaches": "prompt-versioning"
+  },
+  {
+    "id": "gi-08",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "question": "A test and a production Foundry project must be configured identically, and the configuration must be reviewable. How should they be created?",
+    "options": [
+      "Declared in Bicep and deployed with the Azure CLI",
+      "Created in the portal and documented in a runbook",
+      "Created in the portal and exported to JSON afterwards",
+      "Cloned from an existing project by a support request"
+    ],
+    "correctIndex": 0,
+    "explanation": "Infrastructure as code makes the two environments identical by construction and makes a change reviewable as a diff. A runbook records intent rather than enforcing it, and drift between the two is discovered only when something breaks.",
+    "teaches": "foundry-environments"
+  },
+  {
+    "id": "gi-09",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "question": "An agent loop consumed an entire month's token budget in one afternoon. Which control most directly prevents a repeat?",
+    "options": [
+      "A tokens-per-minute quota on the deployment",
+      "A lower temperature on the model",
+      "A shorter system message",
+      "A groundedness evaluator in the pipeline"
+    ],
+    "correctIndex": 0,
+    "explanation": "A quota is a hard ceiling that stops a runaway loop regardless of why it is looping. The other options make individual requests cheaper or better without limiting how many are made.",
+    "teaches": "genaiops-security"
+  },
+  {
+    "id": "gi-10",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "question": "A Foundry project must connect to an Azure AI Search index without a key being stored anywhere. What should the connection use?",
+    "options": [
+      "A managed identity with a role assignment on the search service",
+      "An admin key for the search service, stored in the connection",
+      "A query key for the search service, stored in the connection",
+      "A shared access signature scoped to the index"
+    ],
+    "correctIndex": 0,
+    "explanation": "Connections can authenticate with a managed identity, which removes the stored key. Admin and query keys are both bearer credentials, differing only in how much they permit.",
+    "teaches": "foundry-environments"
+  },
+  {
+    "id": "gi-11",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "kind": "multi",
+    "question": "Which two are reasons to choose provisioned throughput over a serverless endpoint? Choose two.",
+    "options": [
+      "The workload has a strict latency requirement",
+      "The workload must not be throttled at peak",
+      "The workload runs occasionally and unpredictably",
+      "The workload uses an open-weight model you must host yourself"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Reserved capacity buys predictable latency and freedom from throttling. Occasional traffic is where per-token billing is cheaper, and self-hosting an open-weight model calls for managed compute instead.",
+    "teaches": "foundation-model-deployment"
+  },
+  {
+    "id": "gi-12",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "kind": "order",
+    "question": "Put the steps of promoting a prompt change through a GenAIOps pipeline in order.",
+    "items": [
+      "Deploy the promoted prompt to the production project",
+      "Commit the prompt variant to the Git repository",
+      "Compare the results against the production baseline",
+      "Run the evaluation dataset against the variant"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "The change is captured, evaluated, compared, and only then promoted. Deploying first and measuring afterwards means a regression is discovered by underwriters rather than by the pipeline.",
+    "teaches": "prompt-versioning"
+  },
+  {
+    "id": "gi-13",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "kind": "match",
+    "question": "Match each hosting option to the workload it suits.",
+    "pairs": [
+      { "term": "Serverless API endpoint", "definition": "Variable or low-volume traffic with no capacity planning" },
+      { "term": "Provisioned throughput units", "definition": "High volume with a strict latency requirement" },
+      { "term": "Managed compute", "definition": "An open-weight model you must host and isolate yourself" },
+      { "term": "Batch endpoint", "definition": "Large-volume asynchronous scoring with no latency requirement" }
+    ],
+    "explanation": "The first three are generative hosting options that differ by who owns the capacity; the fourth belongs to Azure Machine Learning and is included because confusing real-time and batch is this exam's most expensive mistake.",
+    "teaches": "foundation-model-deployment"
+  },
+  {
+    "id": "gi-14",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "kind": "dropdown",
+    "question": "Complete the statement about credentials in a GenAIOps pipeline.",
+    "segments": [
+      { "text": "An application running in Azure should reach a Foundry project using " },
+      {
+        "blankId": "b1",
+        "options": ["a managed identity", "an API key in an app setting", "a shared service account"],
+        "correctIndex": 0
+      },
+      { "text": ", while a GitHub Actions workflow should authenticate using " },
+      {
+        "blankId": "b2",
+        "options": ["a federated credential", "a client secret repository secret", "a stored certificate"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "Both answers remove the stored credential entirely, which also removes expiry and rotation as operational problems. The ranking is managed identity inside Azure, federation outside it.",
+    "teaches": "genaiops-security"
+  },
+  {
+    "id": "ml-01",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "question": "Fourteen million rows must be scored once a month, with no latency requirement. What should you use?",
+    "options": [
+      "A batch endpoint scoring against a compute cluster",
+      "A managed online endpoint called once per row",
+      "A managed online endpoint with autoscaling enabled",
+      "A compute instance running a scoring notebook"
+    ],
+    "correctIndex": 0,
+    "explanation": "Batch endpoints exist for exactly this: large volumes, asynchronous, results written to storage, compute released afterwards. An online endpoint is provisioned continuously and called per request, which is why looping over it is both slow and expensive.",
+    "teaches": "deployment-endpoints"
+  },
+  {
+    "id": "ml-02",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "question": "A new model version must be released to production with the ability to reverse the change instantly if metrics degrade. What should you use?",
+    "options": [
+      "A second deployment on the same endpoint with a traffic split",
+      "A new endpoint, with clients repointed once it is verified",
+      "An in-place update of the existing deployment",
+      "A batch endpoint run against recent production data"
+    ],
+    "correctIndex": 0,
+    "explanation": "Two deployments behind one endpoint let traffic be shifted gradually, and rollback is setting the split back to zero — immediate and with no redeployment. Repointing clients is slower to reverse, and an in-place update has nothing to roll back to.",
+    "teaches": "deployment-endpoints"
+  },
+  {
+    "id": "ml-03",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "question": "A candidate model must be exercised on real production requests without its responses reaching users. What should you configure?",
+    "options": [
+      "Mirrored traffic to the candidate deployment",
+      "A 5% traffic split to the candidate deployment",
+      "A batch endpoint over yesterday's requests",
+      "A separate endpoint used by the test team"
+    ],
+    "correctIndex": 0,
+    "explanation": "Mirroring copies live requests to the candidate and discards its responses, so it is exercised on real traffic at no risk. A 5% split does return the candidate's responses to those users, which is precisely what the requirement excludes.",
+    "teaches": "deployment-endpoints"
+  },
+  {
+    "id": "ml-04",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "question": "A model performs well in evaluation and poorly in production because features are computed differently at inference. What prevents this?",
+    "options": [
+      "Packaging a feature retrieval specification with the model artifact",
+      "Registering the model in MLflow format",
+      "Enabling data drift monitoring on the endpoint",
+      "Increasing the size of the training dataset"
+    ],
+    "correctIndex": 0,
+    "explanation": "This is training-serving skew, and the feature retrieval specification records how features were built so inference reproduces training. Drift monitoring would eventually reveal the symptom without addressing the cause.",
+    "teaches": "model-registration"
+  },
+  {
+    "id": "ml-05",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "question": "Model accuracy has fallen while the distribution of the input features is unchanged. What has most likely happened?",
+    "options": [
+      "Concept drift — the relationship between inputs and target has changed",
+      "Data drift — the input distribution has shifted",
+      "Training-serving skew in the feature pipeline",
+      "The endpoint has been under-provisioned"
+    ],
+    "correctIndex": 0,
+    "explanation": "Unchanged inputs with falling accuracy is the signature of concept drift. Data drift would show as a change in the input distribution, which the question explicitly rules out.",
+    "teaches": "drift-and-monitoring"
+  },
+  {
+    "id": "ml-06",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "question": "Hyperparameter tuning runs are expensive and the team wants to spend compute efficiently across a large search space. Which sampling method should you choose?",
+    "options": [
+      "Bayesian sampling",
+      "Grid sampling",
+      "Random sampling",
+      "Exhaustive sampling of every combination"
+    ],
+    "correctIndex": 0,
+    "explanation": "Bayesian sampling uses the results of earlier trials to choose the next, which is what makes it efficient when each run is costly. Grid is only practical for small discrete spaces, and random covers breadth without learning from what it finds.",
+    "teaches": "training-orchestration"
+  },
+  {
+    "id": "ml-07",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "question": "A sweep job should stop trials that are clearly underperforming rather than running them to completion. What should you configure?",
+    "options": [
+      "An early termination policy such as bandit or median stopping",
+      "A smaller search space",
+      "A lower maximum number of concurrent trials",
+      "A shorter maximum duration for the sweep"
+    ],
+    "correctIndex": 0,
+    "explanation": "Early termination evaluates trials in flight and kills the unpromising ones. Shrinking the space or the duration limits the search rather than making it more efficient.",
+    "teaches": "training-orchestration"
+  },
+  {
+    "id": "ml-08",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "question": "Which capability makes it possible to answer 'which run produced the model currently in production'?",
+    "options": [
+      "MLflow tracking with model registration carrying run lineage",
+      "Application Insights on the online endpoint",
+      "Data drift monitoring against the training baseline",
+      "A component-based training pipeline"
+    ],
+    "correctIndex": 0,
+    "explanation": "Registration records the artifact with a version and a lineage back to the producing run, and tracking holds that run's parameters and metrics. Telemetry and monitoring describe the deployed service, not its provenance.",
+    "teaches": "model-registration"
+  },
+  {
+    "id": "ml-09",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "question": "A model has strong overall accuracy but must be checked for uneven performance across customer segments before release. What should you use?",
+    "options": [
+      "The Responsible AI dashboard's fairness and error analysis",
+      "The MLflow experiment comparison view",
+      "Data drift monitoring on the endpoint",
+      "An automated machine learning run for comparison"
+    ],
+    "correctIndex": 0,
+    "explanation": "Aggregate accuracy conceals a model that works well overall and badly for one group, and fairness assessment across cohorts is what surfaces it. Nothing in experiment comparison or drift monitoring breaks results down by cohort.",
+    "teaches": "model-registration"
+  },
+  {
+    "id": "ml-10",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "question": "A training job needs to scale out and release its compute when finished. Which compute target should you use?",
+    "options": [
+      "A compute cluster",
+      "A compute instance",
+      "A managed online endpoint",
+      "An attached Databricks workspace"
+    ],
+    "correctIndex": 0,
+    "explanation": "Compute clusters scale out for jobs and back to zero when idle. A compute instance is a single personal development machine that neither scales nor stops, which is why using one for training is the classic waste.",
+    "teaches": "compute-and-datastores"
+  },
+  {
+    "id": "ml-11",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "question": "Why is registering a model in the MLflow format recommended?",
+    "options": [
+      "It carries the signature and environment, so deployment needs no hand-written scoring script",
+      "It compresses the model artifact to reduce storage cost",
+      "It automatically retrains the model when drift is detected",
+      "It is required before a model can be versioned"
+    ],
+    "correctIndex": 0,
+    "explanation": "The MLflow format packages what deployment needs to know about inputs, outputs, and dependencies. Versioning happens regardless of format, and nothing about registration triggers retraining.",
+    "teaches": "model-registration"
+  },
+  {
+    "id": "ml-12",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "question": "A retraining trigger must fire when the model's real accuracy degrades rather than when inputs shift. What does the design require?",
+    "options": [
+      "A source of ground-truth labels for production predictions",
+      "A shorter data drift evaluation window",
+      "A larger training dataset",
+      "Mirrored traffic to a candidate deployment"
+    ],
+    "correctIndex": 0,
+    "explanation": "Real accuracy cannot be computed without knowing what actually happened, so the monitoring design has to say where labels come from and how long they take to arrive. Everything else measures inputs or exercises candidates.",
+    "teaches": "drift-and-monitoring"
+  },
+  {
+    "id": "ml-13",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "question": "An older model version has been superseded but a past regulatory decision must remain reproducible. What should you do with it?",
+    "options": [
+      "Archive the version rather than deleting it",
+      "Delete the version and keep the training script",
+      "Delete the version and keep the evaluation report",
+      "Re-register it under a new name"
+    ],
+    "correctIndex": 0,
+    "explanation": "Archiving removes a version from active use while keeping the artifact and its lineage. A script and a report describe how a model was made and how it scored, but they are not the model that made the decision.",
+    "teaches": "model-registration"
+  },
+  {
+    "id": "ml-14",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "kind": "multi",
+    "question": "Which two are true of a managed batch endpoint? Choose two.",
+    "options": [
+      "It scores large volumes asynchronously",
+      "Its compute is released after the job completes",
+      "It is designed for sub-second interactive responses",
+      "It must be called once per row of input"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Batch endpoints process a dataset as a job and release compute afterwards. Interactive latency and per-row calling both describe the online endpoint, which is what people wrongly reach for when scoring an archive.",
+    "teaches": "deployment-endpoints"
+  },
+  {
+    "id": "ml-15",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "kind": "order",
+    "question": "Put the steps of a safe production model release in order.",
+    "items": [
+      "Increase the traffic share once metrics hold",
+      "Register the trained model with a new version",
+      "Create a second deployment on the existing endpoint",
+      "Route a small percentage of traffic to the new deployment"
+    ],
+    "correctOrder": [1, 2, 3, 0],
+    "explanation": "The model is registered, deployed alongside the current version, given a small share of traffic, and only promoted further once the evidence supports it. Going straight to full traffic removes the point of having two deployments.",
+    "teaches": "deployment-endpoints"
+  },
+  {
+    "id": "ml-16",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "kind": "match",
+    "question": "Match each MLOps concept to what it addresses.",
+    "pairs": [
+      { "term": "MLflow tracking", "definition": "Recording parameters, metrics, and artifacts per run" },
+      { "term": "Feature retrieval specification", "definition": "Making inference compute features the same way as training" },
+      { "term": "Traffic split", "definition": "Shifting load gradually between two deployments" },
+      { "term": "Data drift monitoring", "definition": "Detecting that production inputs no longer match the baseline" }
+    ],
+    "explanation": "One records the past, one guards consistency, one controls release, and one watches production. Between them they answer what happened, what will happen, and what is happening now.",
+    "teaches": "training-orchestration"
+  },
+  {
+    "id": "ml-17",
+    "examCode": "ai-300",
+    "domain": "model-lifecycle",
+    "kind": "yesno",
+    "question": "A model has been registered and deployed to a managed online endpoint with two deployments and a traffic split. Judge each statement.",
+    "statements": [
+      { "text": "Rolling back means setting the new deployment's traffic share to zero.", "correct": true },
+      { "text": "Both deployments can run different model versions simultaneously.", "correct": true },
+      { "text": "Registration records lineage back to the run that produced the model.", "correct": true },
+      { "text": "The endpoint releases its compute between requests.", "correct": false }
+    ],
+    "explanation": "An online endpoint is provisioned continuously, which is what gives it low latency and what makes it the wrong instrument for a monthly bulk job. Batch endpoints are the ones that release compute when finished.",
+    "teaches": "deployment-endpoints"
+  },
+  {
+    "id": "mi-01",
+    "examCode": "ai-300",
+    "domain": "mlops-infrastructure",
+    "question": "A datastore must give access to Azure storage in a way that is auditable and revocable per person. Which authentication should you choose?",
+    "options": [
+      "Identity-based access using Microsoft Entra",
+      "Credential-based access using an account key",
+      "Credential-based access using a shared access signature",
+      "A connection string stored in the training script"
+    ],
+    "correctIndex": 0,
+    "explanation": "Identity-based access resolves to the caller's own identity, so permissions can be audited and revoked individually. Keys and SAS tokens are bearer credentials shared by everyone who has them.",
+    "teaches": "compute-and-datastores"
+  },
+  {
+    "id": "mi-02",
+    "examCode": "ai-300",
+    "domain": "mlops-infrastructure",
+    "question": "A training run from eight months ago must be reproduced exactly. What makes that possible?",
+    "options": [
+      "A versioned environment and a versioned data asset referenced by the job",
+      "The training script retrieved from Git",
+      "The MLflow metrics logged for the run",
+      "The registered model artifact"
+    ],
+    "correctIndex": 0,
+    "explanation": "Reproducing a run needs the same code, the same data, and the same software. The script alone leaves data and dependencies floating, and metrics and artifacts are outputs rather than inputs.",
+    "teaches": "ml-workspace-and-assets"
+  },
+  {
+    "id": "mi-03",
+    "examCode": "ai-300",
+    "domain": "mlops-infrastructure",
+    "question": "A model trained in a development workspace must be deployed into test and production workspaces without retraining. What should you use?",
+    "options": [
+      "A registry, to share the registered model across workspaces",
+      "A datastore shared between the three workspaces",
+      "A compute cluster attached to all three workspaces",
+      "An environment published to each workspace"
+    ],
+    "correctIndex": 0,
+    "explanation": "Registries exist to promote assets between workspaces, which is what keeps the deployed model identical to the evaluated one. Sharing storage or compute moves data and capacity rather than the model.",
+    "teaches": "ml-workspace-and-assets"
+  },
+  {
+    "id": "mi-04",
+    "examCode": "ai-300",
+    "domain": "mlops-infrastructure",
+    "question": "Data scientists must run jobs and register models but must not be able to create compute. Which role should you assign?",
+    "options": [
+      "AzureML Data Scientist",
+      "Contributor on the workspace",
+      "Owner on the workspace",
+      "Reader on the workspace"
+    ],
+    "correctIndex": 0,
+    "explanation": "The AzureML Data Scientist role permits the work and withholds compute creation, which keeps cost control with the platform team. Contributor and Owner both allow creating compute, and Reader allows nothing.",
+    "teaches": "compute-and-datastores"
+  },
+  {
+    "id": "mi-05",
+    "examCode": "ai-300",
+    "domain": "mlops-infrastructure",
+    "question": "A workspace must reach its storage account, Key Vault, and Container Registry without traffic traversing the public internet. What should you configure?",
+    "options": [
+      "A managed virtual network with private endpoints to each dependency",
+      "IP firewall rules on each dependency permitting the workspace",
+      "Service endpoints from the workspace subnet",
+      "A network security group on the compute cluster subnet"
+    ],
+    "correctIndex": 0,
+    "explanation": "Private endpoints give each dependency a private address inside the network so the public path can be disabled. Firewall rules and service endpoints both still reach the public endpoint.",
+    "teaches": "compute-and-datastores"
+  },
+  {
+    "id": "mi-06",
+    "examCode": "ai-300",
+    "domain": "mlops-infrastructure",
+    "question": "Which of these should NOT be committed to the Git repository for a machine learning project?",
+    "options": [
+      "The training dataset and the trained model binary",
+      "The training script",
+      "The pipeline definition",
+      "The environment specification"
+    ],
+    "correctIndex": 0,
+    "explanation": "Data and model binaries are versioned as workspace assets and referenced by name and version; putting them in Git bloats the repository and gives no better lineage. Everything else is code and belongs under review.",
+    "teaches": "iac-and-github"
+  },
+  {
+    "id": "mi-07",
+    "examCode": "ai-300",
+    "domain": "mlops-infrastructure",
+    "question": "An entire machine learning environment must be rebuildable identically after an incident. What should you have in place?",
+    "options": [
+      "Bicep templates deployed with the Azure CLI from a source-controlled workflow",
+      "A documented runbook describing the portal steps",
+      "A backup of the workspace's storage account",
+      "An export of the workspace configuration to JSON"
+    ],
+    "correctIndex": 0,
+    "explanation": "Declared infrastructure is rebuilt by running it, and any drift is visible as a diff. A runbook records intent that a human then has to follow correctly under pressure, which is when mistakes happen.",
+    "teaches": "iac-and-github"
+  },
+  {
+    "id": "mi-08",
+    "examCode": "ai-300",
+    "domain": "mlops-infrastructure",
+    "question": "A reusable pipeline step with typed inputs and outputs must be shared across several training pipelines. What should you create?",
+    "options": [
+      "A component",
+      "An environment",
+      "A data asset",
+      "A compute target"
+    ],
+    "correctIndex": 0,
+    "explanation": "Components are the reusable, typed building blocks that pipelines compose. Environments describe software, data assets describe data, and compute targets describe where work runs.",
+    "teaches": "ml-workspace-and-assets"
+  },
+  {
+    "id": "mi-09",
+    "examCode": "ai-300",
+    "domain": "mlops-infrastructure",
+    "question": "Which resource is NOT created alongside a new Azure Machine Learning workspace?",
+    "options": [
+      "An Azure AI Search service",
+      "A storage account",
+      "A key vault",
+      "An Application Insights resource"
+    ],
+    "correctIndex": 0,
+    "explanation": "Storage, Key Vault, and Application Insights are provisioned with the workspace. Azure AI Search is a separate service that a generative solution may connect to, and it is not part of the workspace's own footprint.",
+    "teaches": "ml-workspace-and-assets"
+  },
+  {
+    "id": "mi-10",
+    "examCode": "ai-300",
+    "domain": "mlops-infrastructure",
+    "kind": "multi",
+    "question": "Which two belong in source control for an MLOps project? Choose two.",
+    "options": [
+      "Infrastructure templates for the workspace",
+      "Environment specifications used by training jobs",
+      "The registered model binary",
+      "The production feature dataset"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Templates and environment specifications are code and benefit from review and history. Models and datasets are versioned as assets in the workspace and referenced by name and version instead.",
+    "teaches": "iac-and-github"
+  },
+  {
+    "id": "mi-11",
+    "examCode": "ai-300",
+    "domain": "mlops-infrastructure",
+    "kind": "order",
+    "question": "Put the steps of provisioning a machine learning environment from code in order.",
+    "items": [
+      "Run the training pipeline against the new workspace",
+      "Author the Bicep template describing the workspace and compute",
+      "Authenticate the GitHub Actions workflow with a federated credential",
+      "Deploy the template with the Azure CLI from the workflow"
+    ],
+    "correctOrder": [1, 2, 3, 0],
+    "explanation": "The environment is described, the workflow is given a way to authenticate without a stored secret, the template is deployed, and only then is there somewhere for the pipeline to run.",
+    "teaches": "iac-and-github"
+  },
+  {
+    "id": "qo-01",
+    "examCode": "ai-300",
+    "domain": "genai-quality-observability",
+    "question": "An evaluation run returns plausible-looking scores that do not match the team's own reading of the outputs. What should you check first?",
+    "options": [
+      "The data mapping between dataset columns and evaluator inputs",
+      "The temperature of the deployed model",
+      "The retention period on the project's traces",
+      "The number of provisioned throughput units"
+    ],
+    "correctIndex": 0,
+    "explanation": "A mapping error produces scores that are internally consistent and meaningless, because the evaluator is reading the wrong column as the context or the ground truth. It is the first thing to check when results are surprising.",
+    "teaches": "evaluation-metrics"
+  },
+  {
+    "id": "qo-02",
+    "examCode": "ai-300",
+    "domain": "genai-quality-observability",
+    "question": "Which metric requires a ground-truth answer in the evaluation dataset?",
+    "options": [
+      "Similarity",
+      "Groundedness",
+      "Relevance",
+      "Fluency"
+    ],
+    "correctIndex": 0,
+    "explanation": "Similarity compares the response against a known correct answer. Groundedness and relevance are judged against the retrieved context and the question, and fluency judges the response alone.",
+    "teaches": "evaluation-metrics"
+  },
+  {
+    "id": "qo-03",
+    "examCode": "ai-300",
+    "domain": "genai-quality-observability",
+    "question": "A team reports that its content filter is evidence the assistant has been safety tested. Why is that wrong?",
+    "options": [
+      "A filter blocks individual responses; only a safety evaluation measures how often the system fails",
+      "Content filters do not apply to generative models",
+      "A filter can only be applied to prompts, not completions",
+      "Safety evaluation replaces the need for a filter"
+    ],
+    "correctIndex": 0,
+    "explanation": "Filters and evaluators do different jobs and a system needs both: the evaluator produces a defect rate by attempting adversarial prompts, and the filter stops a given failure reaching a user. Presenting one as the other is the error the distinction exists to prevent.",
+    "teaches": "safety-evaluations"
+  },
+  {
+    "id": "qo-04",
+    "examCode": "ai-300",
+    "domain": "genai-quality-observability",
+    "question": "An organisation requires that a specific regulatory disclaimer appears in every generated summary. How should this be checked automatically?",
+    "options": [
+      "With a custom evaluator in the automated evaluation workflow",
+      "With the built-in coherence evaluator",
+      "With the content safety filter",
+      "With a groundedness evaluator"
+    ],
+    "correctIndex": 0,
+    "explanation": "No built-in metric knows an organisation's own rules, which is exactly why custom evaluators exist. Coherence and groundedness judge quality and support, and the safety filter covers harm categories.",
+    "teaches": "safety-evaluations"
+  },
+  {
+    "id": "qo-05",
+    "examCode": "ai-300",
+    "domain": "genai-quality-observability",
+    "question": "An application passed evaluation before release but quality has decayed over three months in production. What would have detected this?",
+    "options": [
+      "Continuous monitoring sampling production traffic and running evaluators against it",
+      "A larger pre-release evaluation dataset",
+      "A stricter content filter severity threshold",
+      "Provisioned throughput for the deployment"
+    ],
+    "correctIndex": 0,
+    "explanation": "Pre-release evaluation is a snapshot; production changes underneath it as the corpus, the traffic, and the model version move. Continuous monitoring is what turns evaluation into an ongoing measurement.",
+    "teaches": "genai-observability"
+  },
+  {
+    "id": "qo-06",
+    "examCode": "ai-300",
+    "domain": "genai-quality-observability",
+    "question": "A generative feature's monthly bill has risen sharply. Prompt tokens have grown while completion tokens are flat. What is the most likely cause?",
+    "options": [
+      "Retrieved context or conversation history has grown",
+      "The model is producing longer answers",
+      "The deployment has been moved to a larger model",
+      "The number of requests has fallen"
+    ],
+    "correctIndex": 0,
+    "explanation": "Prompt tokens cover everything sent to the model, so growth there points at context or history expanding. Longer answers would show as completion token growth, which the question rules out.",
+    "teaches": "genai-observability"
+  },
+  {
+    "id": "qo-07",
+    "examCode": "ai-300",
+    "domain": "genai-quality-observability",
+    "question": "A RAG application gives a wrong answer and the team cannot tell whether retrieval or the prompt is at fault. What is missing?",
+    "options": [
+      "Tracing that records the retrieved documents alongside the prompt and completion",
+      "A longer log retention period",
+      "A higher sampling rate on continuous monitoring",
+      "A custom evaluator for the domain"
+    ],
+    "correctIndex": 0,
+    "explanation": "A retrieval miss and a prompt fault produce the same symptom from outside, so the intermediate stages must be recorded to tell them apart. Retention and sampling govern how much is kept, not what is captured.",
+    "teaches": "genai-observability"
+  },
+  {
+    "id": "qo-08",
+    "examCode": "ai-300",
+    "domain": "genai-quality-observability",
+    "kind": "yesno",
+    "question": "An evaluation dataset has been prepared for a RAG application. Judge each statement.",
+    "statements": [
+      { "text": "Groundedness can be computed without a ground-truth answer.", "correct": true },
+      { "text": "Retrieval metrics can show that the correct document was never returned.", "correct": true },
+      { "text": "Coherence judges the response without needing the retrieved context.", "correct": true },
+      { "text": "A high groundedness score guarantees the answer is correct.", "correct": false }
+    ],
+    "explanation": "Groundedness measures support by the retrieved context, so an answer faithfully grounded in a wrong document scores well and is still wrong. That is why retrieval metrics are measured alongside it rather than instead of it.",
+    "teaches": "evaluation-metrics"
+  },
+  {
+    "id": "qo-09",
+    "examCode": "ai-300",
+    "domain": "genai-quality-observability",
+    "kind": "dropdown",
+    "question": "Complete the statement about safety in a generative system.",
+    "segments": [
+      { "text": "To stop a harmful completion reaching a user you rely on " },
+      {
+        "blankId": "b1",
+        "options": ["a content filter", "a risk and safety evaluator", "tracing"],
+        "correctIndex": 0
+      },
+      { "text": ", and to report how often the system would produce one you rely on " },
+      {
+        "blankId": "b2",
+        "options": ["a risk and safety evaluator", "a content filter", "a quota limit"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "The filter acts in the request path and the evaluator measures against adversarial prompts. Reporting one as though it did the other's job is the mistake this pairing is built around.",
+    "teaches": "safety-evaluations"
+  },
+  {
+    "id": "og-01",
+    "examCode": "ai-300",
+    "domain": "optimize-genai",
+    "question": "A RAG application returns poor answers. What should you establish before changing the prompt?",
+    "options": [
+      "Whether the correct passage was retrieved at all",
+      "Whether the temperature is set appropriately",
+      "Whether the model version is pinned",
+      "Whether the completion token limit is high enough"
+    ],
+    "correctIndex": 0,
+    "explanation": "Retrieval quality caps the final answer, so tuning the prompt over a wrong passage improves nothing. Establishing whether the right document was found is what tells you which half of the system to work on.",
+    "teaches": "rag-optimisation"
+  },
+  {
+    "id": "og-02",
+    "examCode": "ai-300",
+    "domain": "optimize-genai",
+    "question": "A similarity threshold has been set very high and users report the assistant frequently says it cannot find anything. What is happening?",
+    "options": [
+      "Legitimate passages are being excluded because they fall below the threshold",
+      "The embedding model has drifted from the index",
+      "Chunk overlap is too large",
+      "The completion token limit is too low"
+    ],
+    "correctIndex": 0,
+    "explanation": "A high threshold trades recall for precision, and set too high it returns nothing for questions the corpus can answer. Set too low it pads the prompt with irrelevant passages, which is the failure in the opposite direction.",
+    "teaches": "rag-optimisation"
+  },
+  {
+    "id": "og-03",
+    "examCode": "ai-300",
+    "domain": "optimize-genai",
+    "question": "You plan to replace the embedding model with one adapted to the organisation's domain. What operational consequence must you plan for?",
+    "options": [
+      "The entire index must be re-embedded, because existing vectors are invalidated",
+      "The search index schema must be changed to add filterable fields",
+      "The chunk size must be reduced proportionally",
+      "The deployed language model must be fine-tuned to match"
+    ],
+    "correctIndex": 0,
+    "explanation": "Vectors from different embedding models are not comparable, so every document must be re-embedded. It is a real cost that has to be planned rather than discovered when search quality collapses.",
+    "teaches": "embedding-and-hybrid"
+  },
+  {
+    "id": "og-04",
+    "examCode": "ai-300",
+    "domain": "optimize-genai",
+    "question": "A retrieval change scored better offline. How should the improvement be confirmed?",
+    "options": [
+      "An A/B test against real traffic comparing relevance and downstream quality",
+      "A larger offline evaluation dataset",
+      "A manual review of twenty sample answers",
+      "A longer trace retention period"
+    ],
+    "correctIndex": 0,
+    "explanation": "Offline evaluation is cheap, safe, and comes first, but it cannot tell you how real users behave. A/B testing settles that, which is why the two are used in sequence rather than as alternatives.",
+    "teaches": "embedding-and-hybrid"
+  },
+  {
+    "id": "og-05",
+    "examCode": "ai-300",
+    "domain": "optimize-genai",
+    "question": "A model must consistently produce output in a house format that few-shot prompting has failed to enforce, and cost of training is a concern. What should you use?",
+    "options": [
+      "Parameter-efficient fine-tuning such as LoRA",
+      "Full fine-tuning of all model weights",
+      "Retrieval-augmented generation over examples of the format",
+      "A higher temperature with more few-shot examples"
+    ],
+    "correctIndex": 0,
+    "explanation": "Fine-tuning is the right rung of the ladder for consistent form, and LoRA trains a small set of additional parameters, making it far cheaper to train and to host than updating every weight.",
+    "teaches": "fine-tuning-lifecycle"
+  },
+  {
+    "id": "og-06",
+    "examCode": "ai-300",
+    "domain": "optimize-genai",
+    "question": "A team has 8,000 inconsistently formatted training examples and 400 carefully curated ones. Which should they fine-tune on?",
+    "options": [
+      "The 400 curated examples",
+      "All 8,400 examples, to maximise coverage",
+      "The 8,000 examples, since volume dominates",
+      "Neither — fine-tuning requires at least 10,000 examples"
+    ],
+    "correctIndex": 0,
+    "explanation": "Data quality dominates fine-tuning outcomes and quantity is a distant second. Inconsistent examples teach the model to be inconsistent, which is precisely the behaviour the fine-tune was meant to remove.",
+    "teaches": "fine-tuning-lifecycle"
+  },
+  {
+    "id": "og-07",
+    "examCode": "ai-300",
+    "domain": "optimize-genai",
+    "kind": "multi",
+    "question": "Which two risks apply when using synthetic data for fine-tuning? Choose two.",
+    "options": [
+      "It can propagate the generating model's biases",
+      "It can propagate the generating model's errors",
+      "It cannot be used for supervised fine-tuning",
+      "It always requires more examples than real data"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Synthetic data inherits whatever the generator got wrong, which is why it is reviewed before use rather than trusted. It is perfectly usable for supervised fine-tuning and carries no inherent volume penalty.",
+    "teaches": "fine-tuning-lifecycle"
+  },
+  {
+    "id": "og-08",
+    "examCode": "ai-300",
+    "domain": "optimize-genai",
+    "kind": "order",
+    "question": "Put the customisation options in the order they should be attempted.",
+    "items": [
+      "Add retrieval over the organisation's own content",
+      "Improve the prompt's structure and instructions",
+      "Fine-tune a model on curated examples",
+      "Add few-shot examples of the desired output"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "The ladder runs from free and immediate to expensive and slow: prompt, then examples, then retrieval when the gap is missing knowledge, then fine-tuning when the gap is consistent form. Starting at the bottom rung wastes weeks.",
+    "teaches": "fine-tuning-lifecycle"
+  },
+  {
+    "id": "og-09",
+    "examCode": "ai-300",
+    "domain": "optimize-genai",
+    "kind": "match",
+    "question": "Match each retrieval symptom to its most likely cause.",
+    "pairs": [
+      { "term": "Exact product codes are never found", "definition": "Vector-only search, which carries little signal for identifiers" },
+      { "term": "Answers miss facts split across a page break", "definition": "Chunking without overlap" },
+      { "term": "The assistant often finds nothing at all", "definition": "A similarity threshold set too high" },
+      { "term": "Prompts are full of irrelevant passages", "definition": "A similarity threshold set too low" }
+    ],
+    "explanation": "Two of these are structural choices made at index time and two are the same dial turned in opposite directions. Diagnosing which before changing anything is what separates tuning from guessing.",
+    "teaches": "rag-optimisation"
+  }
+]

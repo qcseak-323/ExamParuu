@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-verrick-aiops",
+    "examCode": "ai-300",
+    "domain": "genaiops-infrastructure",
+    "title": "Verrick Actuarial — two pipelines, one team",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Verrick Actuarial prices commercial insurance. A data science team of nine runs a classical claims-severity model in Azure Machine Learning and has recently built a generative assistant in Microsoft Foundry that answers underwriters' questions from policy wordings.",
+          "Both are now business-critical and neither was built with operations in mind. An internal review has produced the findings below, and the team has been asked to put the generative side on the same footing as the classical side."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "The assistant's system prompt is edited directly in the Foundry portal. It has been changed eleven times in three months. Nobody can say what it said in June, and a quality complaint from that month cannot be reproduced.",
+          "The assistant's deployment follows the latest model version. Two weeks ago answers changed noticeably overnight and the team spent four days investigating their own retrieval pipeline before discovering that the underlying model had been updated.",
+          "Underwriters use the assistant heavily between 08:00 and 10:00, when quotes are prepared. During that window requests are throttled and the interface shows errors. Outside it, the service is nearly idle.",
+          "The application authenticates to the Foundry project with an API key held in an app setting. The key was created by an engineer who has since left the company.",
+          "A GitHub Actions workflow deploys the classical model. It authenticates to Azure with a client secret stored as a repository secret, which expires in five weeks.",
+          "The claims-severity model has an online endpoint that is also used for a monthly bulk rescoring of the entire in-force book — 14 million rows — by looping over the endpoint one request at a time. It takes eleven hours and costs more than the rest of the platform combined."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "A past complaint must be reproducible: the team must be able to see exactly what the prompt said on a given date and revert to it.",
+          "The assistant's behaviour must not change without the team deciding it should.",
+          "The 08:00 to 10:00 peak must not produce errors for underwriters, and the solution must acknowledge that the service is idle for the rest of the day.",
+          "The application must reach the Foundry project without any credential that a departing engineer could have taken with them.",
+          "The deployment workflow must stop depending on a secret that expires.",
+          "The monthly rescoring must stop using the real-time endpoint."
+        ]
+      }
+    ]
+  }
+]

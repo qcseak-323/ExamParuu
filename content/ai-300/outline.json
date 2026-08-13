@@ -1,0 +1,88 @@
+{
+  "examCode": "AI-300",
+  "examName": "Operationalizing Machine Learning and Generative AI Solutions",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for AI-300. Like SC-500, this study guide carries no 'Skills measured as of <date>' line — Microsoft publishes a single undated skills list for it. Re-check learn.microsoft.com before the exam. The exam covers both classical MLOps in Azure Machine Learning and GenAIOps in Microsoft Foundry, and questions frequently turn on which of the two a scenario belongs to.",
+  "domains": [
+    {
+      "id": "mlops-infrastructure",
+      "name": "Design and implement an MLOps infrastructure",
+      "weight": "15-20%",
+      "subtopics": [
+        "Create and manage an Azure Machine Learning workspace",
+        "Create and manage datastores and data assets",
+        "Create and manage compute targets",
+        "Configure identity and access management for workspaces",
+        "Create and manage environments and components",
+        "Share assets across workspaces by using registries",
+        "Configure GitHub integration with Machine Learning to enable secure access",
+        "Deploy workspaces and resources by using Bicep and the Azure CLI",
+        "Automate resource provisioning by using GitHub Actions workflows",
+        "Restrict network access to Machine Learning workspaces and manage source control with Git"
+      ]
+    },
+    {
+      "id": "model-lifecycle",
+      "name": "Implement machine learning model lifecycle and operations",
+      "weight": "25-30%",
+      "subtopics": [
+        "Configure experiment tracking with MLflow",
+        "Use automated machine learning to explore optimal models",
+        "Automate hyperparameter tuning and run model training scripts",
+        "Manage distributed training for large and deep learning models",
+        "Implement training pipelines and compare model performance across jobs",
+        "Package a feature retrieval specification with the model artifact",
+        "Register an MLflow model and manage model lifecycle including archiving",
+        "Evaluate a model by using responsible AI principles",
+        "Deploy models as real-time or batch endpoints with managed inference options",
+        "Implement progressive rollout and safe rollback, detect data drift, and configure retraining triggers"
+      ]
+    },
+    {
+      "id": "genaiops-infrastructure",
+      "name": "Design and implement a GenAIOps infrastructure",
+      "weight": "20-25%",
+      "subtopics": [
+        "Create and configure Foundry resources and project environments",
+        "Configure identity and access management with managed identities and RBAC",
+        "Implement network security and private networking configurations",
+        "Deploy infrastructure using Bicep templates and the Azure CLI",
+        "Deploy foundation models by using serverless API endpoints and managed compute",
+        "Select appropriate models for specific use cases",
+        "Implement model versioning and production deployment strategies",
+        "Configure provisioned throughput units for high-volume workloads",
+        "Design and develop prompts and create prompt variants for comparison",
+        "Implement version control for prompts by using Git repositories"
+      ]
+    },
+    {
+      "id": "genai-quality-observability",
+      "name": "Implement generative AI quality assurance and observability",
+      "weight": "10-15%",
+      "subtopics": [
+        "Create test datasets and data mapping for comprehensive model evaluation",
+        "Implement AI quality metrics including groundedness, relevance, coherence, and fluency",
+        "Configure risk and safety evaluations for harmful content detection",
+        "Set up automated evaluation workflows using built-in and custom metrics",
+        "Examine continuous monitoring in Foundry",
+        "Monitor performance metrics including latency, throughput, and response times",
+        "Track and optimise cost metrics including token consumption and resource usage",
+        "Configure detailed logging, tracing, and debugging for production troubleshooting"
+      ]
+    },
+    {
+      "id": "optimize-genai",
+      "name": "Optimize generative AI systems and model performance",
+      "weight": "10-15%",
+      "subtopics": [
+        "Optimise retrieval by tuning similarity thresholds, chunk sizes, and retrieval strategies",
+        "Select and fine-tune embedding models for domain-specific accuracy",
+        "Implement and optimise hybrid search combining semantic and keyword-based retrieval",
+        "Evaluate and improve RAG performance with relevance metrics and A/B testing",
+        "Design and implement advanced fine-tuning methods",
+        "Create and manage synthetic data for fine-tuning",
+        "Monitor and optimise fine-tuned model performance",
+        "Manage a fine-tuned model from development through production deployment"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+[
+  {
+    "domainId": "mlops-infrastructure",
+    "sections": [
+      {
+        "id": "ml-workspace-and-assets",
+        "heading": "The workspace and its assets",
+        "paragraphs": [
+          "An Azure Machine Learning workspace is the top-level container: it holds jobs, models, endpoints, and the assets they depend on, and it is created alongside a storage account, a key vault, and Application Insights. Assets are the reusable pieces. A data asset is a named, versioned pointer to data — a URI file, a URI folder, or an MLTable — so a job refers to a name and version rather than a path that somebody may move. An environment is a versioned definition of the software a job runs in, expressed as a curated environment, a Conda specification, or a Docker image; pinning it is what makes a training run reproducible six months later.",
+          "A component is a reusable step with typed inputs and outputs that pipelines compose, and a registry is what lets assets be shared across workspaces. Registries matter for the promotion story: a model trained in a development workspace is registered to a registry and then deployed from there into test and production, rather than being retrained in each. Everything is versioned, and versioning is the mechanism that makes 'which model is in production and what trained it' an answerable question."
+        ]
+      },
+      {
+        "id": "compute-and-datastores",
+        "heading": "Compute targets, datastores, and access",
+        "paragraphs": [
+          "Compute comes in kinds that suit different work. A compute instance is a single managed development machine for notebooks, personal to one user. A compute cluster scales out for training jobs and scales back to zero when idle, which is the correct default for training. Inference clusters and managed endpoints serve deployed models. Attached compute brings existing resources such as a Databricks or Kubernetes cluster under the workspace. Choosing a compute instance for a training job is the classic waste, because it does not scale and does not stop.",
+          "A datastore stores the connection information for an Azure storage service so credentials are not scattered through code. The authentication choice is where the security question lives: credential-based access stores an account key or SAS in the datastore, while identity-based access uses the caller's or the workspace's Microsoft Entra identity, which is preferred because permissions become auditable and revocable per person. Roles separate the work — an AzureML Data Scientist can run jobs and register models but cannot create compute, which is what keeps cost control with the platform team. Network isolation uses a managed virtual network with private endpoints to storage, Key Vault, and Container Registry, and outbound rules for anything the workspace legitimately needs to reach."
+        ]
+      },
+      {
+        "id": "iac-and-github",
+        "heading": "Infrastructure as code and source control",
+        "paragraphs": [
+          "MLOps treats the platform the same way as the model. Workspaces, compute, and role assignments are declared in Bicep and deployed with the Azure CLI, so an environment can be rebuilt identically and a change is reviewable as a diff. GitHub Actions workflows then provision resources, run training, and promote models, which turns the pipeline into something with a history rather than a sequence of portal clicks nobody recorded.",
+          "The authentication between GitHub and Azure should be a federated credential — workload identity federation — so the workflow exchanges its own token for an Azure token and no secret is stored in the repository. Source control covers more than code: training scripts, pipeline definitions, environment specifications, and infrastructure templates all belong in Git, and so do prompts once generative work enters the picture. Data and model binaries do not; they are versioned as assets in the workspace and referenced by name and version."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "model-lifecycle",
+    "sections": [
+      {
+        "id": "training-orchestration",
+        "heading": "Training, tracking, and tuning",
+        "paragraphs": [
+          "MLflow is the tracking standard: parameters, metrics, and artifacts are logged per run, autologging captures the common frameworks without instrumentation, and runs group into experiments so results can be compared. This is what makes 'which run produced the model we deployed' answerable, and without it a comparison across jobs is a spreadsheet somebody maintains by hand.",
+          "Automated machine learning explores algorithms and preprocessing for a given task and dataset, and is the fast route to a baseline rather than a replacement for judgement. Hyperparameter tuning is configured as a sweep job with a search space, a sampling method — grid for small discrete spaces, random for breadth, Bayesian for efficiency when runs are expensive — and an early termination policy such as bandit or median stopping that kills unpromising trials to save compute. Distributed training splits work across nodes, and pipelines chain preparation, training, and evaluation into a repeatable graph whose steps can be cached and reused."
+        ]
+      },
+      {
+        "id": "model-registration",
+        "heading": "Registration, versioning, and responsible AI",
+        "paragraphs": [
+          "Registering a model records the artifact with a name, an automatically incrementing version, and a lineage back to the run that produced it. Registering in the MLflow format is worth doing because it carries the signature and environment, which lets deployment happen without a hand-written scoring script. A feature retrieval specification packaged with the model records how features were built so that inference reproduces training exactly — the defence against training-serving skew, where a model performs well in evaluation and badly in production because the features were computed differently.",
+          "The Responsible AI dashboard assembles error analysis, model interpretability with feature importance, fairness assessment across cohorts, counterfactual analysis, and causal inference into one view. It is used before promotion, because aggregate accuracy conceals a model that performs well overall and badly for a specific group. Model lifecycle continues after deployment: versions are superseded, and old ones are archived rather than deleted so that a past decision remains reproducible."
+        ]
+      },
+      {
+        "id": "deployment-endpoints",
+        "heading": "Endpoints and safe rollout",
+        "paragraphs": [
+          "Deployment splits by latency requirement. A managed online endpoint serves real-time scoring over HTTPS with autoscaling; a batch endpoint scores large volumes asynchronously against a compute cluster and writes results to storage. Asking for a real-time endpoint for an overnight scoring run is the standard mis-selection, and it is expensive because the endpoint is provisioned continuously.",
+          "An endpoint may host several deployments with traffic split between them, and that is the mechanism for safe rollout. A blue-green release puts the new version alongside the old, moves a small percentage of traffic to it, watches the metrics, and increases the share only if they hold; rollback is setting the traffic split back to zero, which is immediate and needs no redeployment. Mirrored traffic goes further by copying live requests to a candidate deployment without returning its responses to users, so the new version is exercised on real traffic with no risk to anybody."
+        ]
+      },
+      {
+        "id": "drift-and-monitoring",
+        "heading": "Drift and production monitoring",
+        "paragraphs": [
+          "Two kinds of drift matter and they are diagnosed differently. Data drift is a change in the distribution of the inputs — a new customer segment, a changed sensor, a different season — and is detected by comparing production inputs against the training baseline with statistical distance measures. Concept drift is a change in the relationship between inputs and the target, so the inputs may look unchanged while the model's accuracy falls. Data drift can be seen immediately; concept drift usually cannot be confirmed until ground-truth labels arrive, which is why a monitoring design has to say where labels come from.",
+          "Monitoring collects inference data from the endpoint, compares it against the baseline on a schedule, and raises an alert when a metric crosses a threshold. The alert should trigger a defined response — retraining, an investigation, or a rollback — rather than an email nobody owns. Retraining triggers may be scheduled, driven by a drift threshold, or driven by a performance metric once labels are available, and the choice depends on how quickly the world changes relative to how quickly the truth becomes known."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "genaiops-infrastructure",
+    "sections": [
+      {
+        "id": "foundry-environments",
+        "heading": "Foundry resources, projects, and access",
+        "paragraphs": [
+          "A Foundry project is the working container for generative solutions: model and agent deployments, connections to data and other services, evaluation runs, and traces. Connections hold the details of a dependency such as a search index or a storage account, and they can authenticate with a managed identity rather than a key, which is the preferred form for the same reason it is everywhere else — a key identifies nobody and cannot be revoked for one caller.",
+          "Access is granted with Azure RBAC. The separation that matters is between who may create and change deployments and who may merely call them, because a role that permits deployment also permits raising cost. Network security follows the Azure pattern: a private endpoint for the Foundry resource, public network access disabled, and outbound access controlled. Everything is deployable from Bicep and the Azure CLI, which is what allows a project to be recreated identically in test and production rather than configured twice by hand."
+        ]
+      },
+      {
+        "id": "foundation-model-deployment",
+        "heading": "Deploying foundation models",
+        "paragraphs": [
+          "Serverless API endpoints bill per token and require no capacity planning, which suits variable, early, or low-volume workloads. Managed compute deploys a model onto dedicated infrastructure you size and pay for whether it is busy or not, which suits an open-weight model you must host yourself or a workload with strict isolation requirements. Provisioned throughput units reserve capacity on a Microsoft-hosted model, giving predictable latency and freedom from throttling at a fixed cost — the right answer whenever a scenario states a latency requirement or 'must not be rate limited'.",
+          "Model selection weighs capability against cost and latency. A smaller model is right when the task is narrow and volume is high; a reasoning model earns its latency only on genuinely multi-step problems. Model versioning is explicit: a deployment names a model version, and a production deployment should pin it rather than following the latest, because a silent upgrade changes behaviour under a system that was evaluated against the old one. Promotion follows the same shape as classical MLOps — deploy the candidate alongside, shift traffic gradually, and keep the ability to move it back."
+        ]
+      },
+      {
+        "id": "prompt-versioning",
+        "heading": "Prompt development and version control",
+        "paragraphs": [
+          "A prompt is part of the system's behaviour, so it belongs in Git with the code, reviewed as a diff and released with a version. Editing a prompt directly in a portal produces a change nobody reviewed, that cannot be reverted precisely, and that makes a later regression untraceable — which is the single most common gap when a team moves from prototype to production.",
+          "Prompt variants are developed and compared rather than chosen by intuition. A variant is evaluated against a dataset, its scores are compared with the current baseline, and the better one is promoted. This is what turns prompt engineering into an engineering discipline: the artefact is versioned, the comparison is measured, and the promotion is a decision with evidence behind it."
+        ]
+      },
+      {
+        "id": "genaiops-security",
+        "heading": "Identity, networking, and cost control",
+        "paragraphs": [
+          "Managed identities remove stored credentials from generative workloads exactly as they do elsewhere: the application authenticates to the Foundry project as itself, and role assignments decide what it may do. Where a workload runs outside Azure, workload identity federation replaces the stored secret with a token exchange. API keys remain the fallback and should be treated as one.",
+          "Cost in a generative system is dominated by tokens, so the controls are model choice, prompt length, capped completions, caching of repeated context, and quota limits per deployment. Quotas are also a safety mechanism: a runaway agent loop that would otherwise consume a month's budget in an afternoon is stopped by a tokens-per-minute limit. Monitoring token consumption per feature is what makes it possible to attribute spend, and without that attribution a cost problem cannot be targeted."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "genai-quality-observability",
+    "sections": [
+      {
+        "id": "evaluation-metrics",
+        "heading": "Evaluation datasets and quality metrics",
+        "paragraphs": [
+          "Evaluation begins with a dataset — a set of inputs, optionally with ground-truth answers and the context that should have been retrieved — and a data mapping that tells the evaluator which column is the question, which the response, which the context, and which the ground truth. A mapping error produces scores that look plausible and mean nothing, which is why it is the first thing to check when results are surprising.",
+          "The quality metrics divide by what they need. Groundedness and relevance need the retrieved context and the question but no ground truth: groundedness asks whether the answer is supported by the context, relevance whether it addresses the question. Coherence and fluency judge the response alone. Similarity and F1 compare against a ground-truth answer and therefore require one. Retrieval metrics assess whether the right documents were found at all, and a system scoring badly there cannot be repaired by prompt changes."
+        ]
+      },
+      {
+        "id": "safety-evaluations",
+        "heading": "Risk and safety evaluation",
+        "paragraphs": [
+          "Risk and safety evaluators are adversarial rather than descriptive: they generate prompts designed to elicit hateful, sexual, violent, or self-harm content, plus jailbreak attempts and protected-material extraction, and score the responses on defect rate. This is deliberately different from a content filter, which blocks at request time. The evaluator tells you how often the system would fail; the filter stops a given failure reaching a user. A system needs both, and reporting a filter as evidence of safety testing is the error the distinction exists to prevent.",
+          "Automated evaluation workflows run these evaluators on every candidate change in the release pipeline, using built-in evaluators and custom ones written for domain-specific requirements. Custom evaluators matter because most organisations have rules no built-in metric knows about — a regulatory phrase that must appear, a claim that must never be made — and those are exactly the failures a generic quality score will not catch."
+        ]
+      },
+      {
+        "id": "genai-observability",
+        "heading": "Tracing, monitoring, and cost telemetry",
+        "paragraphs": [
+          "Tracing records the whole path of a request: the prompt, the retrieved documents, each tool call and its result, and the final completion, with timings. It is what makes a bad answer attributable, because a retrieval miss, a bad tool choice, and a prompt fault are indistinguishable from the outside. Continuous monitoring in Foundry samples production traffic and runs evaluators against it, which catches quality decay that a pre-release evaluation cannot — the corpus changed, the traffic changed, the model version changed underneath.",
+          "Performance telemetry covers latency broken down by stage, throughput, and error rates, and cost telemetry covers token consumption by prompt and completion. Separating prompt tokens from completion tokens is what identifies the cause of a rising bill: growing prompt tokens usually means retrieved context or conversation history expanding, while growing completion tokens means the model is being asked for more output than anyone intended."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "optimize-genai",
+    "sections": [
+      {
+        "id": "rag-optimisation",
+        "heading": "Tuning retrieval",
+        "paragraphs": [
+          "RAG performance is tuned at the retrieval stage before anything else, because retrieval quality caps the final answer and no prompt change rescues a wrong passage. The levers are chunk size and overlap, the number of results returned, the similarity threshold, and the retrieval strategy itself. Chunks that are too large dilute the embedding and waste context; too small and they lose the surrounding meaning. A similarity threshold set too high returns nothing for legitimate questions, and set too low it pads the prompt with irrelevant passages that the model then has to ignore.",
+          "Diagnosis has an order. First establish whether the correct passage was retrieved at all, using retrieval metrics; if it was not, the fault is in chunking, embedding, or strategy. If it was retrieved and the answer is still wrong, the fault is in the prompt or the model. Teams that skip this and tune prompts first spend a long time improving nothing, which is why the evaluation harness matters as much as the pipeline."
+        ]
+      },
+      {
+        "id": "embedding-and-hybrid",
+        "heading": "Embeddings, hybrid search, and A/B testing",
+        "paragraphs": [
+          "The embedding model determines what 'similar' means, so a domain with unusual vocabulary may be served badly by a general model and benefit from a domain-adapted one. Changing the embedding model invalidates the existing vectors and requires the whole index to be re-embedded — a real operational cost that must be planned rather than discovered. Dimensionality trades accuracy against index size and query speed.",
+          "Hybrid search combines keyword and vector scoring so that exact identifiers and paraphrases are both found, and semantic ranking re-scores the top results with a language model. Improvements are confirmed by A/B testing against real traffic rather than by inspection: two configurations serve live requests, relevance and downstream quality metrics are compared, and the winner is promoted. Offline evaluation on a fixed dataset comes first because it is cheap and safe; A/B testing settles what offline evaluation cannot, which is how real users behave."
+        ]
+      },
+      {
+        "id": "fine-tuning-lifecycle",
+        "heading": "Fine-tuning and synthetic data",
+        "paragraphs": [
+          "Fine-tuning teaches form, style, and consistent behaviour, and is the last rung of the customisation ladder after prompt engineering, few-shot examples, and retrieval. It does not keep facts current and should not be used to inject knowledge, because the model must be retrained whenever the knowledge changes while a retrieval index is simply re-indexed. Methods differ in cost: full fine-tuning updates every weight, while parameter-efficient approaches such as LoRA train a small number of additional parameters and are far cheaper to train and to host.",
+          "Training data quality dominates the outcome, and quantity is a distant second — a few hundred consistent, well-formed examples beat thousands of noisy ones. Synthetic data fills gaps where real examples are scarce, generated from a stronger model and then reviewed, with the caveat that unreviewed synthetic data propagates the generator's own biases and errors. A fine-tuned model is then managed like any other production model: evaluated against the base model to prove the improvement, versioned, deployed progressively, and monitored, because a fine-tuned model can regress on general capability while improving on the target task."
+        ]
+      }
+    ]
+  }
+]

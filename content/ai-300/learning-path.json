@@ -1,0 +1,118 @@
+{
+  "examCode": "ai-300",
+  "note": "Five paths, one per exam domain. AI-300 has no dated skills list and Microsoft has not settled a dedicated learning path set for it, so these point at the closest published Azure Machine Learning and Foundry paths; revisit the links once the exam's training content stabilises.",
+  "paths": [
+    {
+      "id": "mlops-infrastructure",
+      "title": "Design and implement an MLOps infrastructure",
+      "domainId": "mlops-infrastructure",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/introduction-machine-learning-operations/",
+      "modules": [
+        {
+          "id": "mlops-infrastructure-m1",
+          "title": "Create and manage a Machine Learning workspace",
+          "sectionIds": ["ml-workspace-and-assets", "compute-and-datastores"],
+          "cardIds": ["fc-ai300-mi-01", "fc-ai300-mi-02", "fc-ai300-mi-03", "fc-ai300-mi-04", "fc-ai300-mi-05"]
+        },
+        {
+          "id": "mlops-infrastructure-m2",
+          "title": "Automate provisioning with infrastructure as code",
+          "sectionIds": ["iac-and-github"],
+          "cardIds": ["fc-ai300-mi-06", "fc-ai300-mi-07", "fc-ai300-mi-08", "fc-ai300-mi-09"]
+        }
+      ]
+    },
+    {
+      "id": "model-lifecycle",
+      "title": "Implement the machine learning model lifecycle",
+      "domainId": "model-lifecycle",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/train-models-azure-machine-learning/",
+      "modules": [
+        {
+          "id": "model-lifecycle-m1",
+          "title": "Orchestrate model training and tuning",
+          "sectionIds": ["training-orchestration"],
+          "cardIds": ["fc-ai300-ml-01", "fc-ai300-ml-02", "fc-ai300-ml-03", "fc-ai300-ml-04", "fc-ai300-ml-05"]
+        },
+        {
+          "id": "model-lifecycle-m2",
+          "title": "Register, version, and evaluate models",
+          "sectionIds": ["model-registration"],
+          "cardIds": ["fc-ai300-ml-06", "fc-ai300-ml-07", "fc-ai300-ml-08", "fc-ai300-ml-09", "fc-ai300-ml-10"]
+        },
+        {
+          "id": "model-lifecycle-m3",
+          "title": "Deploy, roll out, and monitor models in production",
+          "sectionIds": ["deployment-endpoints", "drift-and-monitoring"],
+          "cardIds": ["fc-ai300-ml-11", "fc-ai300-ml-12", "fc-ai300-ml-13", "fc-ai300-ml-14"]
+        }
+      ]
+    },
+    {
+      "id": "genaiops-infrastructure",
+      "title": "Design and implement a GenAIOps infrastructure",
+      "domainId": "genaiops-infrastructure",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/create-custom-copilots-ai-studio/",
+      "modules": [
+        {
+          "id": "genaiops-infrastructure-m1",
+          "title": "Create and secure Foundry environments",
+          "sectionIds": ["foundry-environments", "genaiops-security"],
+          "cardIds": ["fc-ai300-gi-01", "fc-ai300-gi-02", "fc-ai300-gi-10", "fc-ai300-gi-08"]
+        },
+        {
+          "id": "genaiops-infrastructure-m2",
+          "title": "Deploy and manage foundation models",
+          "sectionIds": ["foundation-model-deployment"],
+          "cardIds": ["fc-ai300-gi-03", "fc-ai300-gi-04", "fc-ai300-gi-05", "fc-ai300-gi-12"]
+        },
+        {
+          "id": "genaiops-infrastructure-m3",
+          "title": "Manage prompts with version control",
+          "sectionIds": ["prompt-versioning"],
+          "cardIds": ["fc-ai300-gi-06", "fc-ai300-gi-07", "fc-ai300-gi-09", "fc-ai300-gi-11"]
+        }
+      ]
+    },
+    {
+      "id": "genai-quality-observability",
+      "title": "Implement generative AI quality assurance and observability",
+      "domainId": "genai-quality-observability",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/evaluate-monitor-generative-ai-solutions/",
+      "modules": [
+        {
+          "id": "genai-quality-observability-m1",
+          "title": "Evaluate generative AI applications",
+          "sectionIds": ["evaluation-metrics", "safety-evaluations"],
+          "cardIds": ["fc-ai300-qo-01", "fc-ai300-qo-02", "fc-ai300-qo-03", "fc-ai300-qo-04"]
+        },
+        {
+          "id": "genai-quality-observability-m2",
+          "title": "Monitor and trace generative systems",
+          "sectionIds": ["genai-observability"],
+          "cardIds": ["fc-ai300-qo-05", "fc-ai300-qo-06", "fc-ai300-qo-07", "fc-ai300-qo-08"]
+        }
+      ]
+    },
+    {
+      "id": "optimize-genai",
+      "title": "Optimize generative AI systems and model performance",
+      "domainId": "optimize-genai",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/fine-tune-language-model-azure-ai-foundry/",
+      "modules": [
+        {
+          "id": "optimize-genai-m1",
+          "title": "Optimise retrieval-augmented generation",
+          "sectionIds": ["rag-optimisation", "embedding-and-hybrid"],
+          "cardIds": ["fc-ai300-og-01", "fc-ai300-og-02", "fc-ai300-og-03", "fc-ai300-og-04"]
+        },
+        {
+          "id": "optimize-genai-m2",
+          "title": "Fine-tune and customise models",
+          "sectionIds": ["fine-tuning-lifecycle"],
+          "cardIds": ["fc-ai300-og-05", "fc-ai300-og-06", "fc-ai300-og-07"]
+        }
+      ]
+    }
+  ]
+}

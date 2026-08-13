@@ -160,11 +160,11 @@
     "series": "ai",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Operationalise machine learning at scale — the MLOps successor to the retired DP-100 data-scientist path.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-12",
     "sourceUrl": null
   },
   {
