@@ -1,0 +1,932 @@
+[
+  {
+    "id": "in-01",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "caseStudyId": "cs-tarnbrook-desktops",
+    "question": "Sign-in takes up to four minutes and profile load time is the largest component. Which storage change should you make?",
+    "options": [
+      "Move the profile containers to Azure Files Premium",
+      "Move the profile containers to a second general-purpose account in another region",
+      "Increase the quota on the existing standard file share",
+      "Enable Cloud Cache against the existing standard storage"
+    ],
+    "correctIndex": 0,
+    "explanation": "Premium file shares provision IOPS by share size on solid-state storage, which is what profile containers need; standard storage produces exactly the load times described. Cloud Cache adds resilience and costs performance, so it would make this worse rather than better.",
+    "teaches": "avd-storage-fslogix-backing"
+  },
+  {
+    "id": "in-02",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "caseStudyId": "cs-tarnbrook-desktops",
+    "question": "Forty session hosts built from a captured image failed to register with the host pool. What was missed when the image was created?",
+    "options": [
+      "The virtual machine was not generalised with Sysprep before capture",
+      "The image was not replicated in Azure Compute Gallery",
+      "The image was captured from the wrong operating system edition",
+      "The hosts were not assigned to an application group"
+    ],
+    "correctIndex": 0,
+    "explanation": "Capturing without generalising leaves machine-specific identity in the image, so every host built from it collides and registration fails. Assignment to an application group governs user access and has nothing to do with a host joining the pool.",
+    "teaches": "session-host-images"
+  },
+  {
+    "id": "in-03",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "caseStudyId": "cs-tarnbrook-desktops",
+    "question": "A department is correctly assigned to an application group but nothing appears in their client feed. What is most likely wrong?",
+    "options": [
+      "The application group is not registered to a workspace",
+      "The users lack the Virtual Machine User Login role",
+      "The host pool is in drain mode",
+      "The registration token for the host pool has expired"
+    ],
+    "correctIndex": 0,
+    "explanation": "The feed is built from workspaces, so an application group that belongs to no workspace is invisible however correctly users are assigned to it. An expired token stops hosts joining, and drain mode stops new sessions — neither empties the feed.",
+    "teaches": "host-pool-implementation"
+  },
+  {
+    "id": "in-04",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "caseStudyId": "cs-tarnbrook-desktops",
+    "question": "Clinicians report lag while typing and scrolling, round-trip time averages 60 ms, and host performance counters are unremarkable. What should you implement?",
+    "options": [
+      "RDP Shortpath for public networks, with QoS policies marking the UDP traffic",
+      "Larger session host virtual machines",
+      "A second host pool in a closer Azure region",
+      "Breadth-first load balancing on the existing host pool"
+    ],
+    "correctIndex": 0,
+    "explanation": "With acceptable latency and healthy hosts, the remaining variable is the transport: Shortpath replaces the relayed TCP path with a direct UDP one, which is what fixes interactive responsiveness. Resizing hosts addresses a bottleneck the counters say does not exist.",
+    "teaches": "avd-networking"
+  },
+  {
+    "id": "in-05",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "caseStudyId": "cs-tarnbrook-desktops",
+    "question": "The imaging specialists need a dedicated machine each, local administrator rights, and software that cannot run multi-session. What should you provision for them?",
+    "options": [
+      "A personal host pool using a single-session operating system",
+      "A second pooled host pool with a maximum session limit of one",
+      "The existing pooled host pool with depth-first load balancing",
+      "A pooled host pool using multi-session with application masking"
+    ],
+    "correctIndex": 0,
+    "explanation": "Personal host pools assign one host per user permanently, which is what supports local administrator rights and persistent state. A session limit of one on a pooled pool does not guarantee the same user returns to the same host, and multi-session is exactly what the software cannot tolerate.",
+    "teaches": "host-pool-planning"
+  },
+  {
+    "id": "in-06",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "Which inbound firewall rule must be opened on the session host subnet for users to connect to Azure Virtual Desktop?",
+    "options": [
+      "None — session hosts connect outbound to the service",
+      "TCP 3389 from the client address ranges",
+      "TCP 443 from the internet",
+      "UDP 3390 from the gateway address range"
+    ],
+    "correctIndex": 0,
+    "explanation": "Azure Virtual Desktop uses reverse connect: agents on the hosts make outbound connections to the control plane and the session is brokered over them. No inbound port is required, and opening RDP inbound is a security regression rather than a fix.",
+    "teaches": "avd-networking"
+  },
+  {
+    "id": "in-07",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "A pooled host pool must give the best possible performance to each user rather than the lowest cost. Which load-balancing algorithm should you choose?",
+    "options": [
+      "Breadth-first",
+      "Depth-first",
+      "Round robin by region",
+      "Persistent assignment"
+    ],
+    "correctIndex": 0,
+    "explanation": "Breadth-first spreads new sessions across available hosts so each session competes with fewer others. Depth-first fills one host before using the next, which maximises density and therefore savings at the cost of per-user performance.",
+    "teaches": "host-pool-planning"
+  },
+  {
+    "id": "in-08",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "Users must sign in to Azure Virtual Desktop and reach an Azure Files profile share, and the session hosts are Microsoft Entra joined with no Active Directory. What must be configured?",
+    "options": [
+      "Microsoft Entra Kerberos authentication on the storage account",
+      "A domain controller in the same virtual network",
+      "Storage account access keys distributed to the session hosts",
+      "Microsoft Entra Domain Services in the subscription"
+    ],
+    "correctIndex": 0,
+    "explanation": "Entra Kerberos is what lets Entra-joined hosts authenticate to an Azure Files share without any Active Directory. Deploying domain services would work but reintroduces the domain the scenario has deliberately removed, and access keys are not how SMB identity works here.",
+    "teaches": "avd-storage-fslogix-backing"
+  },
+  {
+    "id": "in-09",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "Users can connect but their profiles fail to attach and they receive a temporary profile instead. Which configuration should you check?",
+    "options": [
+      "Both the share-level RBAC role and the NTFS permissions on the profile share",
+      "The maximum session limit on the host pool",
+      "The RDP properties configured on the host pool",
+      "The load-balancing algorithm on the host pool"
+    ],
+    "correctIndex": 0,
+    "explanation": "Profile shares need permissions at two levels and both must be right — an Azure RBAC role granting SMB access and NTFS permissions inside the share. A temporary profile is the classic symptom of one of the two being missing.",
+    "teaches": "avd-storage-fslogix-backing"
+  },
+  {
+    "id": "in-10",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "An image must be deployed to build 300 session hosts across three regions quickly. What should you configure?",
+    "options": [
+      "Azure Compute Gallery with the image version replicated to each region and multiple replicas",
+      "A managed image copied manually into each region's resource group",
+      "A single image version in one region, referenced by all three deployments",
+      "Azure VM Image Builder run once per host"
+    ],
+    "correctIndex": 0,
+    "explanation": "Compute Gallery replicates versions across regions and holds multiple replicas so a large simultaneous deployment does not throttle on one copy. Referencing a single remote image is precisely what causes slow, failing large rollouts.",
+    "teaches": "session-host-images"
+  },
+  {
+    "id": "in-11",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "Which licence entitles a user to Windows 11 Enterprise multi-session on Azure Virtual Desktop?",
+    "options": [
+      "Microsoft 365 E3",
+      "An RDS Client Access Licence",
+      "Azure Virtual Desktop Standard",
+      "Windows Server Datacenter with Software Assurance"
+    ],
+    "correctIndex": 0,
+    "explanation": "Windows Enterprise multi-session is entitled through Microsoft 365 E3 and equivalents. RDS CALs are what Windows Server session hosts require instead, which is the distinction this question turns on.",
+    "teaches": "avd-licensing"
+  },
+  {
+    "id": "in-12",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "A newly deployed session host does not appear in its host pool and the deployment reported a registration failure. What should you check first?",
+    "options": [
+      "Whether the host pool registration token has expired",
+      "Whether the host has a public IP address",
+      "Whether the user is assigned to the application group",
+      "Whether drain mode is enabled on the pool"
+    ],
+    "correctIndex": 0,
+    "explanation": "Registration tokens are time-limited and an expired one is the standard cause of a host that builds successfully and never joins. Public IPs are unnecessary under reverse connect, and user assignment is unrelated to host registration.",
+    "teaches": "host-pool-implementation"
+  },
+  {
+    "id": "in-13",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "Connections to the Azure Virtual Desktop feed and gateway must not traverse the public internet. What should you implement?",
+    "options": [
+      "Azure Private Link for Azure Virtual Desktop",
+      "RDP Shortpath for managed networks",
+      "A network security group blocking internet outbound",
+      "Azure Firewall with FQDN rules"
+    ],
+    "correctIndex": 0,
+    "explanation": "Private Link gives the workspace feed and the connection gateway private endpoints, which is the only listed option that removes the public path to the control plane. Shortpath changes the session transport rather than the control-plane route.",
+    "teaches": "avd-networking"
+  },
+  {
+    "id": "in-14",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "A host pool should receive Azure Virtual Desktop service updates before production pools so changes can be tested. What should you configure?",
+    "options": [
+      "Mark the host pool as a validation environment",
+      "Enable drain mode on the host pool",
+      "Set the host pool's load balancing to depth-first",
+      "Create the host pool in a different region"
+    ],
+    "correctIndex": 0,
+    "explanation": "The validation environment flag opts a pool into service updates early, which is what gives a deployment somewhere to discover a regression before users meet it. Nothing about drain mode or load balancing affects update sequencing.",
+    "teaches": "host-pool-planning"
+  },
+  {
+    "id": "in-15",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "Which storage option suits a deployment of 6,000 concurrent users requiring sub-millisecond latency for profile containers?",
+    "options": [
+      "Azure NetApp Files",
+      "Azure Files Standard",
+      "A general-purpose v2 storage account with hot access tier",
+      "Managed disks attached to each session host"
+    ],
+    "correctIndex": 0,
+    "explanation": "NetApp Files is the option that reaches sub-millisecond latency and very high IOPS at that scale, at higher cost. Local disks defeat the purpose entirely, because a profile on a host does not follow a user to a different host.",
+    "teaches": "avd-storage-fslogix-backing"
+  },
+  {
+    "id": "in-16",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "An image build must be repeatable, reviewable, and re-runnable each month as updates are applied. What should you use?",
+    "options": [
+      "Azure VM Image Builder driven from a declarative template",
+      "A manually built virtual machine captured each month",
+      "A snapshot of a production session host",
+      "An Azure Backup restore point promoted to an image"
+    ],
+    "correctIndex": 0,
+    "explanation": "Image Builder expresses the build as a template that can be version-controlled and re-run, which is what makes it repeatable. A manual build is neither reviewable nor reliably identical, and capturing a production host carries whatever drift that host has accumulated.",
+    "teaches": "session-host-images"
+  },
+  {
+    "id": "in-17",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "In an Azure Virtual Desktop deployment, to what are users assigned?",
+    "options": [
+      "Application groups",
+      "Host pools",
+      "Session hosts",
+      "Workspaces"
+    ],
+    "correctIndex": 0,
+    "explanation": "Users are assigned to application groups, which belong to a host pool and are surfaced through a workspace. Assigning to a host pool or a session host is not something the model supports, and the workspace only groups what a user can already reach.",
+    "teaches": "host-pool-implementation"
+  },
+  {
+    "id": "in-18",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "Which factor most directly determines which Azure region a host pool should be deployed to?",
+    "options": [
+      "Round-trip latency between users and the region",
+      "The cost of storage in the region",
+      "The number of availability zones in the region",
+      "The Azure Compute Gallery replica count"
+    ],
+    "correctIndex": 0,
+    "explanation": "User experience in a remote desktop is dominated by latency, and Microsoft's guidance targets round-trip time below roughly 150 ms. Cost and resilience matter but do not decide where the desktop feels usable.",
+    "teaches": "avd-networking"
+  },
+  {
+    "id": "in-19",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "A pooled host pool serves 40 light-workload users on each host and users report contention. Which change addresses it without adding hosts?",
+    "options": [
+      "Lower the maximum session limit and switch to breadth-first load balancing",
+      "Raise the maximum session limit so sessions spread further",
+      "Switch to depth-first load balancing",
+      "Convert the pool to personal host pool assignment"
+    ],
+    "correctIndex": 0,
+    "explanation": "Contention is too many sessions per host, so lowering the limit and spreading new sessions across hosts is the direct remedy. Depth-first concentrates sessions further, and raising the limit makes the problem worse.",
+    "teaches": "host-pool-planning"
+  },
+  {
+    "id": "in-20",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "question": "Which deployment method makes a host pool reproducible across development and production subscriptions?",
+    "options": [
+      "ARM templates or Bicep files",
+      "Creating the host pool in the Azure portal and documenting the settings",
+      "Exporting the host pool to CSV and re-importing it",
+      "Cloning a session host virtual machine"
+    ],
+    "correctIndex": 0,
+    "explanation": "Declared infrastructure is deployed by running it, so two environments are identical by construction. Portal creation plus documentation records intent that somebody then has to follow correctly, which is where drift comes from.",
+    "teaches": "host-pool-implementation"
+  },
+  {
+    "id": "in-21",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "kind": "multi",
+    "question": "Which two are true of a personal host pool? Choose two.",
+    "options": [
+      "Each user is assigned their own dedicated session host",
+      "It requires a single-session operating system",
+      "It uses breadth-first load balancing across hosts",
+      "It supports multi-session Windows Enterprise"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Personal pools assign one host per user and therefore run single-session Windows. Load-balancing algorithms and multi-session both belong to pooled host pools, where hosts are shared.",
+    "teaches": "host-pool-planning"
+  },
+  {
+    "id": "in-22",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "kind": "multi",
+    "question": "Which two are required for RDP Shortpath for public networks to improve a session? Choose two.",
+    "options": [
+      "A UDP path between client and session host",
+      "Shortpath enabled on the session hosts",
+      "An inbound network security group rule permitting TCP 3389",
+      "A public IP address on each session host"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Shortpath establishes a direct UDP path and must be enabled on the hosts. It does not require inbound rules or public IPs — reverse connect still applies, which is why answers involving inbound exposure are wrong throughout this exam.",
+    "teaches": "avd-networking"
+  },
+  {
+    "id": "in-23",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "kind": "order",
+    "question": "Put the steps of building a custom session host image in order.",
+    "items": [
+      "Publish the image as a version in Azure Compute Gallery",
+      "Build a virtual machine and install applications and updates",
+      "Capture the virtual machine as an image",
+      "Generalise the virtual machine with Sysprep"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "Generalising sits between installing and capturing, and skipping it is what produces hosts that cannot register. Publishing to the gallery last is what makes the image versioned and replicable.",
+    "teaches": "session-host-images"
+  },
+  {
+    "id": "in-24",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "kind": "order",
+    "question": "Put the objects a user needs in order, from the one holding the session hosts to the one the user sees.",
+    "items": [
+      "The workspace the user's feed is built from",
+      "The host pool containing the session hosts",
+      "The application group publishing a desktop or apps"
+    ],
+    "correctOrder": [1, 2, 0],
+    "explanation": "Host pool holds the hosts, an application group belongs to a host pool and publishes what is available, and the workspace surfaces application groups in the feed. Missing the last link is why a correctly assigned user sees nothing.",
+    "teaches": "host-pool-implementation"
+  },
+  {
+    "id": "in-25",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "kind": "match",
+    "question": "Match each storage option to the deployment it suits.",
+    "pairs": [
+      { "term": "Azure Files Premium", "definition": "The standard choice for profile containers at typical scale" },
+      { "term": "Azure NetApp Files", "definition": "Very large scale needing sub-millisecond latency" },
+      { "term": "Azure Files Standard", "definition": "Cost-sensitive, low-user-count or non-profile data" },
+      { "term": "FSLogix Cloud Cache", "definition": "Profiles that must survive a storage or region outage" }
+    ],
+    "explanation": "The first three are storage tiers ordered by performance and cost; the fourth is not a tier at all but a resilience feature layered on top, which is why it appears in this comparison.",
+    "teaches": "avd-storage-fslogix-backing"
+  },
+  {
+    "id": "in-26",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "kind": "dropdown",
+    "question": "Complete the statement about host pool types.",
+    "segments": [
+      { "text": "A workforce of task workers sharing hosts is served by " },
+      {
+        "blankId": "b1",
+        "options": ["a pooled host pool", "a personal host pool", "a validation environment"],
+        "correctIndex": 0
+      },
+      { "text": ", while users needing local administrator rights and persistent state need " },
+      {
+        "blankId": "b2",
+        "options": ["a personal host pool", "a pooled host pool with depth-first balancing", "application masking"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "The pooled and personal split decides operating system edition, load balancing, backup strategy, and patching approach all at once, which is why it is the first design decision in a deployment.",
+    "teaches": "host-pool-planning"
+  },
+  {
+    "id": "is-01",
+    "examCode": "az-140",
+    "domain": "identity-and-security",
+    "question": "Users are prompted for credentials twice: once by the client and again when the session starts. What should you configure?",
+    "options": [
+      "Microsoft Entra single sign-on on the host pool",
+      "A Conditional Access policy requiring multifactor authentication",
+      "Sign-in frequency on the Azure Virtual Desktop cloud app",
+      "Smart card authentication for the session hosts"
+    ],
+    "correctIndex": 0,
+    "explanation": "Single sign-on removes the in-session credential prompt and is configured on the host pool with a Kerberos server object. Every other option adds or reshapes authentication rather than removing the duplicate prompt.",
+    "teaches": "identity-integration"
+  },
+  {
+    "id": "is-02",
+    "examCode": "az-140",
+    "domain": "identity-and-security",
+    "question": "A cloud-only user account cannot sign in to session hosts joined to Active Directory Domain Services. Why?",
+    "options": [
+      "The account must be a hybrid identity that exists in the directory the hosts trust",
+      "The account is missing the Desktop Virtualization User role",
+      "The host pool has no registration token",
+      "The session hosts need public IP addresses"
+    ],
+    "correctIndex": 0,
+    "explanation": "A session host authenticates the user against the domain it is joined to, so a purely cloud-only account has no presence there. Synchronising the identity from AD DS is what makes both halves agree.",
+    "teaches": "identity-integration"
+  },
+  {
+    "id": "is-03",
+    "examCode": "az-140",
+    "domain": "identity-and-security",
+    "question": "Which role allows an administrator to create and manage host pools without granting rights over application groups or workspaces?",
+    "options": [
+      "Host Pool Contributor",
+      "Desktop Virtualization Contributor",
+      "Application Group Contributor",
+      "Virtual Machine Administrator Login"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Desktop Virtualization roles are scoped to the object they name, and Host Pool Contributor is the narrow one for host pools. Desktop Virtualization Contributor covers everything, which is more than the requirement asks for.",
+    "teaches": "avd-rbac-and-conditional-access"
+  },
+  {
+    "id": "is-04",
+    "examCode": "az-140",
+    "domain": "identity-and-security",
+    "question": "Multifactor authentication must be required for all Azure Virtual Desktop connections. Which cloud apps should the Conditional Access policy target?",
+    "options": [
+      "Azure Virtual Desktop and Microsoft Remote Desktop",
+      "Azure Virtual Desktop only",
+      "Microsoft Remote Desktop only",
+      "Windows Azure Service Management API"
+    ],
+    "correctIndex": 0,
+    "explanation": "The two apps cover different halves of the experience — the connection to the service and the client feed — so targeting only one leaves a path unprotected. That split is examined directly.",
+    "teaches": "avd-rbac-and-conditional-access"
+  },
+  {
+    "id": "is-05",
+    "examCode": "az-140",
+    "domain": "identity-and-security",
+    "question": "Profile attachment is slow and occasionally fails on hosts running Microsoft Defender Antivirus with default settings. What should you configure?",
+    "options": [
+      "Antivirus exclusions for the FSLogix container files",
+      "Real-time protection disabled on the session hosts",
+      "Defender for Endpoint onboarding on each host",
+      "Controlled Folder Access for the profile share"
+    ],
+    "correctIndex": 0,
+    "explanation": "Scanning the VHDX containers as they attach is what causes the delay, and Microsoft publishes specific exclusions for it. Disabling real-time protection would work and is not an acceptable answer, which is why exclusions exist.",
+    "teaches": "session-host-security"
+  },
+  {
+    "id": "is-06",
+    "examCode": "az-140",
+    "domain": "identity-and-security",
+    "question": "Administrators must reach session hosts for maintenance without any host having a public IP address. What should you deploy?",
+    "options": [
+      "Azure Bastion",
+      "Just-in-time VM access with a public IP on each host",
+      "A site-to-site VPN with RDP permitted inbound",
+      "A jump box with a public IP in the same subnet"
+    ],
+    "correctIndex": 0,
+    "explanation": "Bastion provides browser-based RDP and SSH with no public IP on the target at all. Just-in-time still assumes a public endpoint exists and only narrows when it is open, and a jump box is itself an exposed machine.",
+    "teaches": "session-host-security"
+  },
+  {
+    "id": "is-07",
+    "examCode": "az-140",
+    "domain": "identity-and-security",
+    "question": "Defender for Endpoint must be present on every session host built from the standard image, with no per-host action. What should you do?",
+    "options": [
+      "Onboard Defender for Endpoint in the image before capture",
+      "Onboard each host with a script after it registers",
+      "Enable Defender for Cloud on the subscription only",
+      "Apply a Conditional Access policy requiring a compliant device"
+    ],
+    "correctIndex": 0,
+    "explanation": "Onboarding in the image means every host is protected the moment it exists. Per-host scripts introduce a gap between build and protection, and Defender for Cloud's subscription plan does not by itself onboard endpoints.",
+    "teaches": "session-host-security"
+  },
+  {
+    "id": "is-08",
+    "examCode": "az-140",
+    "domain": "identity-and-security",
+    "question": "Which session host feature attests that the boot process has not been tampered with?",
+    "options": [
+      "Trusted launch with secure boot and vTPM",
+      "A confidential virtual machine size",
+      "Azure Disk Encryption",
+      "Controlled Folder Access"
+    ],
+    "correctIndex": 0,
+    "explanation": "Secure boot and a virtual TPM produce the measurements that integrity monitoring attests. Confidential VMs protect memory from the host, and disk encryption protects data at rest — three different threats.",
+    "teaches": "session-host-security"
+  },
+  {
+    "id": "is-09",
+    "examCode": "az-140",
+    "domain": "identity-and-security",
+    "kind": "multi",
+    "question": "Which two identity options allow session hosts to be joined without an on-premises Active Directory? Choose two.",
+    "options": [
+      "Microsoft Entra join",
+      "Microsoft Entra Domain Services",
+      "AD DS domain join with Entra Connect",
+      "Microsoft Entra B2B guest accounts"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Entra join removes the domain entirely and Entra Domain Services provides a managed one. AD DS domain join is precisely the option that requires the on-premises directory, and B2B guests are not a host-join mechanism at all.",
+    "teaches": "identity-integration"
+  },
+  {
+    "id": "is-10",
+    "examCode": "az-140",
+    "domain": "identity-and-security",
+    "kind": "yesno",
+    "question": "A user has been assigned to a desktop application group in a pooled host pool. Judge each statement.",
+    "statements": [
+      { "text": "They can connect to a desktop once the group is registered to a workspace.", "correct": true },
+      { "text": "The assignment grants them rights to manage the host pool.", "correct": false },
+      { "text": "They must exist in the directory the session hosts are joined to.", "correct": true },
+      { "text": "Conditional Access policies can require multifactor authentication for the connection.", "correct": true }
+    ],
+    "explanation": "Use and administration are separate planes: assignment lets a user connect and grants nothing administrative. Managing the deployment requires a Desktop Virtualization role, which is never conferred by being assigned an application group.",
+    "teaches": "avd-rbac-and-conditional-access"
+  },
+  {
+    "id": "ue-01",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "question": "Microsoft 365 Apps installed on multi-session session hosts are prompting for activation and sometimes refusing to open. What is missing?",
+    "options": [
+      "Shared computer activation",
+      "A Microsoft 365 E3 licence for each user",
+      "The Remote Desktop WebRTC Redirector Service",
+      "OneDrive Known Folder Move"
+    ],
+    "correctIndex": 0,
+    "explanation": "Shared computer activation is required whenever Microsoft 365 Apps runs on a host used by many users, because normal activation binds the licence to a device. Without it activation fails exactly as described.",
+    "teaches": "msteams-and-m365-apps"
+  },
+  {
+    "id": "ue-02",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "question": "Microsoft Teams calls on session hosts consume high host CPU and users report poor audio and video. What should you deploy?",
+    "options": [
+      "The Remote Desktop WebRTC Redirector Service",
+      "Multimedia redirection for browser video",
+      "Larger session host virtual machines",
+      "Universal Print on the session hosts"
+    ],
+    "correctIndex": 0,
+    "explanation": "Without the redirector, media is rendered on the session host and streamed to the client, which is expensive and poor quality. The redirector hands media to the local client, which is what Teams on Azure Virtual Desktop is designed around.",
+    "teaches": "msteams-and-m365-apps"
+  },
+  {
+    "id": "ue-03",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "question": "An application is needed by 200 of 3,000 users and must be updatable without rebuilding the session host image. What should you use?",
+    "options": [
+      "App attach with an MSIX package",
+      "Installation into the session host image",
+      "A per-user installation script at sign-in",
+      "A RemoteApp published from a second host pool"
+    ],
+    "correctIndex": 0,
+    "explanation": "App attach mounts the package at sign-in so the application is delivered without being installed, and updating means publishing a new package version rather than touching an image. Baking it into the image would put it on all 3,000 users' hosts.",
+    "teaches": "app-delivery-and-appattach"
+  },
+  {
+    "id": "ue-04",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "question": "Profile containers must remain available if the primary storage account becomes unreachable. What should you configure?",
+    "options": [
+      "FSLogix Cloud Cache with more than one storage provider",
+      "A second profile container on the same storage account",
+      "Azure Files Premium with a larger quota",
+      "ODFC containers alongside the profile containers"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cloud Cache keeps container copies on multiple providers in sync and fails over between them, which is the resilience answer. It costs some performance, so it is applied where availability matters more than speed.",
+    "teaches": "fslogix-containers"
+  },
+  {
+    "id": "ue-05",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "question": "One image must serve two departments that are entitled to different applications, without building a second image. What should you use?",
+    "options": [
+      "FSLogix application masking",
+      "Two application groups in the same host pool",
+      "Separate ODFC containers per department",
+      "Depth-first load balancing"
+    ],
+    "correctIndex": 0,
+    "explanation": "Application masking hides applications, fonts, and registry entries from users who should not see them, which is exactly one image serving several entitlements. Application groups control what appears in the feed, not what is visible on the host.",
+    "teaches": "fslogix-containers"
+  },
+  {
+    "id": "ue-06",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "question": "Users must reach their desktop from a locked-down endpoint on which no software may be installed. Which client should they use?",
+    "options": [
+      "The web client in a browser",
+      "The Windows App installed per user",
+      "The Remote Desktop client for Windows",
+      "The Azure Virtual Desktop store app"
+    ],
+    "correctIndex": 0,
+    "explanation": "The web client runs in the browser and installs nothing, which is the whole reason it exists. Every other option requires an installation on a machine the scenario says cannot take one.",
+    "teaches": "client-and-user-experience"
+  },
+  {
+    "id": "ue-07",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "question": "Clipboard redirection must be disabled for every user of a host pool. Where should you configure it?",
+    "options": [
+      "The RDP properties on the host pool",
+      "A Conditional Access session control",
+      "The FSLogix profile configuration",
+      "The application group settings"
+    ],
+    "correctIndex": 0,
+    "explanation": "RDP properties on the host pool are where redirection, display, and connection behaviour are set for everyone using the pool. Application groups decide what is published, not how the session behaves.",
+    "teaches": "client-and-user-experience"
+  },
+  {
+    "id": "ue-08",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "question": "A deployment must print without any print server infrastructure. What should you implement?",
+    "options": [
+      "Universal Print",
+      "Printer redirection through RDP properties",
+      "A print server on a session host",
+      "Multimedia redirection"
+    ],
+    "correctIndex": 0,
+    "explanation": "Universal Print removes print servers entirely and is the cloud-native answer. Printer redirection depends on a printer attached to the client, which does not help a shared clinic device or a cloud-only estate.",
+    "teaches": "client-and-user-experience"
+  },
+  {
+    "id": "ue-09",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "question": "Users should see only a single line-of-business application rather than a full desktop. What should you publish?",
+    "options": [
+      "A RemoteApp application group",
+      "A desktop application group",
+      "A second workspace",
+      "A personal host pool"
+    ],
+    "correctIndex": 0,
+    "explanation": "RemoteApp groups publish individual applications into the user's feed. A desktop application group publishes the whole desktop, which is what the requirement rules out.",
+    "teaches": "app-delivery-and-appattach"
+  },
+  {
+    "id": "ue-10",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "question": "Outlook cached data should be stored separately from the rest of the user profile. What should you configure?",
+    "options": [
+      "An ODFC container",
+      "A second Profile Container",
+      "Cloud Cache for the Profile Container",
+      "Known Folder Move in OneDrive"
+    ],
+    "correctIndex": 0,
+    "explanation": "ODFC containers hold Office data — the Outlook cache, OneNote, licensing — separately from the profile container, which is precisely this requirement. A user has one profile container, not two.",
+    "teaches": "fslogix-containers"
+  },
+  {
+    "id": "ue-11",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "question": "OneDrive on multi-session session hosts should be installed how?",
+    "options": [
+      "Per machine, in the image, paired with FSLogix",
+      "Per user, at each sign-in",
+      "Per user, through the Microsoft Store",
+      "Not at all — OneDrive is unsupported on multi-session"
+    ],
+    "correctIndex": 0,
+    "explanation": "Per-machine installation is the supported pattern on multi-session hosts, with FSLogix carrying the sync state in the profile. Per-user installation on a host used by hundreds of people is what the per-machine mode exists to avoid.",
+    "teaches": "msteams-and-m365-apps"
+  },
+  {
+    "id": "ue-12",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "question": "Idle sessions are holding capacity on a pooled host pool overnight. What should you configure?",
+    "options": [
+      "Session timeout policies through Intune or Group Policy",
+      "Depth-first load balancing",
+      "A lower maximum session limit",
+      "Start VM on Connect"
+    ],
+    "correctIndex": 0,
+    "explanation": "Idle and disconnected session limits are what sign users out and release capacity. Load balancing and session limits shape how sessions are distributed, and Start VM on Connect deallocates hosts rather than ending sessions on them.",
+    "teaches": "client-and-user-experience"
+  },
+  {
+    "id": "ue-13",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "kind": "order",
+    "question": "Put the steps of delivering an application with App attach in order.",
+    "items": [
+      "Assign the package to the host pool and the users who need it",
+      "Package the application in MSIX format",
+      "The package is mounted to the session at sign-in",
+      "Stage the package on a file share the session hosts can read"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "The application is packaged, staged where hosts can reach it, assigned, and only then mounted at sign-in. Nothing is ever installed on the host, which is what makes updating it a package change rather than an image rebuild.",
+    "teaches": "app-delivery-and-appattach"
+  },
+  {
+    "id": "ue-14",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "kind": "match",
+    "question": "Match each application delivery method to when it fits.",
+    "pairs": [
+      { "term": "Install into the image", "definition": "An application everybody uses, changing on the image cycle" },
+      { "term": "Deploy with Intune", "definition": "An application that must update independently of the image" },
+      { "term": "App attach", "definition": "An application for a subset of users, delivered without installing" },
+      { "term": "Publish as a RemoteApp", "definition": "A user who should see one application rather than a desktop" }
+    ],
+    "explanation": "The first three differ by when and where the application is installed; the fourth is about what the user sees rather than how it got there, which is why it is often confused with the others.",
+    "teaches": "app-delivery-and-appattach"
+  },
+  {
+    "id": "ue-15",
+    "examCode": "az-140",
+    "domain": "user-environments-apps",
+    "kind": "dropdown",
+    "question": "Complete the statement about FSLogix.",
+    "segments": [
+      { "text": "To make a user's profile follow them between pooled session hosts you configure " },
+      {
+        "blankId": "b1",
+        "options": ["a Profile Container", "an ODFC container", "application masking"],
+        "correctIndex": 0
+      },
+      { "text": ", and to keep those profiles available during a storage outage you add " },
+      {
+        "blankId": "b2",
+        "options": ["Cloud Cache", "a second Profile Container", "a larger share quota"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "The Profile Container solves roaming and Cloud Cache solves availability. They are separate concerns, and reaching for Cloud Cache when the problem is simply slow storage makes performance worse.",
+    "teaches": "fslogix-containers"
+  },
+  {
+    "id": "mm-01",
+    "examCode": "az-140",
+    "domain": "monitor-maintain-avd",
+    "question": "Azure Virtual Desktop Insights shows no data at all. What should you check?",
+    "options": [
+      "That diagnostic settings and host data collection are configured to a Log Analytics workspace",
+      "That the host pool is marked as a validation environment",
+      "That the session hosts have public IP addresses",
+      "That users are assigned to the application group"
+    ],
+    "correctIndex": 0,
+    "explanation": "Insights is a workbook over data that must be sent to it — diagnostic settings on the host pool, workspace and application groups, plus counters and events from the hosts. An empty Insights is a configuration gap rather than a product fault.",
+    "teaches": "avd-monitoring"
+  },
+  {
+    "id": "mm-02",
+    "examCode": "az-140",
+    "domain": "monitor-maintain-avd",
+    "question": "Compute costs must fall overnight without users losing access when they do connect. What should you configure?",
+    "options": [
+      "A scaling plan with ramp-down and off-peak phases",
+      "Drain mode on half the session hosts",
+      "Depth-first load balancing during the day",
+      "A lower maximum session limit"
+    ],
+    "correctIndex": 0,
+    "explanation": "A scaling plan deallocates hosts when demand falls and starts them as it rises, which is the mechanism for exactly this trade. Drain mode stops new sessions without deallocating anything, so it saves nothing.",
+    "teaches": "autoscaling-and-capacity"
+  },
+  {
+    "id": "mm-03",
+    "examCode": "az-140",
+    "domain": "monitor-maintain-avd",
+    "question": "A session host must be taken out of service for maintenance without disconnecting the users currently on it. What should you enable?",
+    "options": [
+      "Drain mode",
+      "A scaling plan ramp-down phase",
+      "Start VM on Connect",
+      "Depth-first load balancing"
+    ],
+    "correctIndex": 0,
+    "explanation": "Drain mode stops new sessions reaching the host while existing sessions continue, so the host empties as people sign out naturally. Everything else changes how sessions are placed or hosts are powered rather than quiescing one host.",
+    "teaches": "autoscaling-and-capacity"
+  },
+  {
+    "id": "mm-04",
+    "examCode": "az-140",
+    "domain": "monitor-maintain-avd",
+    "question": "Which components of an Azure Virtual Desktop deployment should be backed up?",
+    "options": [
+      "FSLogix profile containers and personal desktops",
+      "Every pooled session host, nightly",
+      "The host pool and workspace objects only",
+      "Application groups and their assignments"
+    ],
+    "correctIndex": 0,
+    "explanation": "Backup protects what cannot be rebuilt. Profiles and personal desktops carry user state; pooled session hosts are disposable and are recreated from an image, so backing them up spends money on something already reproducible.",
+    "teaches": "updates-backup-dr"
+  },
+  {
+    "id": "mm-05",
+    "examCode": "az-140",
+    "domain": "monitor-maintain-avd",
+    "question": "How should pooled session hosts be patched?",
+    "options": [
+      "Update the image, publish a new version, and rebuild the hosts from it",
+      "Run Windows Update on each host during working hours",
+      "Restore each host from its most recent backup",
+      "Enable automatic updates and take no further action"
+    ],
+    "correctIndex": 0,
+    "explanation": "Pooled hosts are treated as disposable, so the image is the unit of maintenance and hosts are replaced from it. Personal host pools are the exception, because a personal host carries state that a rebuild would destroy.",
+    "teaches": "updates-backup-dr"
+  },
+  {
+    "id": "mm-06",
+    "examCode": "az-140",
+    "domain": "monitor-maintain-avd",
+    "kind": "multi",
+    "question": "Which two are configured in a scaling plan's ramp-down phase? Choose two.",
+    "options": [
+      "Whether users are forced to sign out",
+      "The notification message shown before a host drains",
+      "The host pool's registration token lifetime",
+      "The maximum session limit for the pool"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Ramp-down governs how users are treated while hosts drain, which is what the message, delay, and forced sign-out settings decide. Session limits and registration tokens are host pool properties rather than scaling plan phases.",
+    "teaches": "autoscaling-and-capacity"
+  },
+  {
+    "id": "mm-07",
+    "examCode": "az-140",
+    "domain": "monitor-maintain-avd",
+    "kind": "order",
+    "question": "Put the phases of a scaling plan in the order they run through a working day.",
+    "items": [
+      "Ramp-down, as demand falls and hosts drain",
+      "Ramp-up, as users begin connecting",
+      "Off-peak, with minimum capacity running",
+      "Peak, with capacity held for full demand"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "The four phases follow the working day and each carries its own load-balancing algorithm and capacity threshold. Ramp-down is the phase that carries the user-facing settings, because it is the one that takes capacity away.",
+    "teaches": "autoscaling-and-capacity"
+  },
+  {
+    "id": "mm-08",
+    "examCode": "az-140",
+    "domain": "monitor-maintain-avd",
+    "kind": "match",
+    "question": "Match each monitoring signal to the question it answers.",
+    "pairs": [
+      { "term": "Connection diagnostics", "definition": "Why a session failed to establish" },
+      { "term": "Round-trip time", "definition": "Whether the network explains a responsiveness complaint" },
+      { "term": "Profile load time", "definition": "Whether profile storage is slowing sign-in" },
+      { "term": "Processor and memory counters", "definition": "Whether the session host is undersized" }
+    ],
+    "explanation": "Four different complaints look identical to a user and are distinguished only by which signal is examined. Resizing hosts before checking the counters is the standard expensive mistake.",
+    "teaches": "avd-monitoring"
+  },
+  {
+    "id": "mm-09",
+    "examCode": "az-140",
+    "domain": "monitor-maintain-avd",
+    "kind": "yesno",
+    "question": "A scaling plan has been assigned to a pooled host pool. Judge each statement.",
+    "statements": [
+      { "text": "It can deallocate session hosts outside working hours.", "correct": true },
+      { "text": "Its ramp-down phase can notify users before signing them out.", "correct": true },
+      { "text": "Each phase has its own load-balancing algorithm and capacity threshold.", "correct": true },
+      { "text": "It backs up the session hosts before deallocating them.", "correct": false }
+    ],
+    "explanation": "Scaling plans manage power state and session placement; they have nothing to do with backup. Pooled hosts are not backed up at all, because they are rebuilt from an image.",
+    "teaches": "autoscaling-and-capacity"
+  }
+]

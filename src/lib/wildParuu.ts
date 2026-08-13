@@ -35,6 +35,8 @@ export const WILD_PARUU: Record<string, WildParuu> = {
   // creature of its own. A species roaming two routes of the same region is
   // ordinary; the Glitchling fallback would read as a missing asset.
   "az-104": { sheet: "wild-seal", flip: true },
+  // AZ-140 became playable on 2026-08-12 and shares the Archipelago too.
+  "az-140": { sheet: "wild-seal", flip: true },
   "ai-901": { sheet: "wild-pufferfish" },
   // AI-103 and AI-300 became playable on 2026-08-12 and share their region
   // with AI-901.

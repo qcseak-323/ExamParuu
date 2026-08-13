@@ -202,10 +202,10 @@
     "series": "az",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Plan, deliver and manage virtual desktop experiences and remote apps on Azure.",
-    "hasContent": false,
+    "hasContent": true,
     "catalogVerifiedAt": "2026-08-12",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-140"
   },

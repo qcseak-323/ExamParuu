@@ -1,0 +1,73 @@
+{
+  "examCode": "AZ-140",
+  "examName": "Configuring and Operating Microsoft Azure Virtual Desktop",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for AZ-140, 'Skills measured as of July 20, 2026'. This is the most lopsided blueprint in the catalogue: the infrastructure domain alone carries 40-45%, so the paper puts 26 of its 60 questions there. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "avd-infrastructure",
+      "name": "Plan and implement an Azure Virtual Desktop infrastructure",
+      "weight": "40-45%",
+      "subtopics": [
+        "Assess network capacity and speed requirements and design session host network configuration",
+        "Plan and implement RDP Shortpath, RDP Multipath, and quality of service policies",
+        "Plan and implement Azure Private Link for Azure Virtual Desktop and troubleshoot connectivity",
+        "Plan storage for user data and implement storage for FSLogix components",
+        "Implement storage accounts, file shares, and Azure NetApp Files for Azure Virtual Desktop",
+        "Recommend resource groups, subscriptions, management groups, and an operating system for session hosts",
+        "Recommend a licensing model and plan a host pool architecture for performance and capacity",
+        "Create host pools and session hosts in the portal and automate creation with PowerShell, CLI, ARM, and Bicep",
+        "Configure host pool and session host settings, including client access licensing",
+        "Create and modify session host images, use Azure VM Image Builder, and manage image lifecycle and Azure Compute Gallery"
+      ]
+    },
+    {
+      "id": "identity-and-security",
+      "name": "Plan and implement identity and security",
+      "weight": "15-20%",
+      "subtopics": [
+        "Select an identity scenario across AD DS, Microsoft Entra ID, and Microsoft Entra Domain Services",
+        "Plan and implement Azure RBAC and Conditional Access policies for Azure Virtual Desktop",
+        "Plan and implement authentication options including passwordless, smart card, and multifactor authentication",
+        "Manage roles, groups, and rights assignments on session hosts and configure Microsoft Entra single sign-on",
+        "Manage session host security with Microsoft Defender for Cloud and Defender Antivirus",
+        "Configure Defender for Endpoint onboarding and scanning options for session hosts",
+        "Implement network security with user-defined routes, network security groups, and Azure Firewall",
+        "Configure Azure Bastion or just-in-time VM access for administrative access",
+        "Implement Windows threat protection including App Control for Business and Controlled Folder Access",
+        "Implement confidential VMs and Trusted Launch security features for session hosts"
+      ]
+    },
+    {
+      "id": "user-environments-apps",
+      "name": "Plan and implement user environments and apps",
+      "weight": "20-25%",
+      "subtopics": [
+        "Recommend FSLogix configuration and configure Profile Containers and ODFC containers",
+        "Configure FSLogix Cloud Cache and implement application masking",
+        "Choose an Azure Virtual Desktop client and a deployment method, and troubleshoot clients",
+        "Configure device redirection, multimedia redirection, printing, and Universal Print",
+        "Configure user settings through Intune policies or Group Policy",
+        "Configure RDP properties on a host pool and session timeout properties",
+        "Implement Start VM on Connect and assign personal desktops",
+        "Create and configure application groups, assign users, and publish RemoteApps",
+        "Implement Microsoft 365 Apps, OneDrive, Microsoft Teams, and browsers on session hosts",
+        "Configure dynamic application delivery with App attach and create application packages"
+      ]
+    },
+    {
+      "id": "monitor-maintain-avd",
+      "name": "Monitor and maintain an Azure Virtual Desktop infrastructure",
+      "weight": "10-15%",
+      "subtopics": [
+        "Configure log collection and analysis for session hosts",
+        "Monitor Azure Virtual Desktop with Azure Monitor and customise Insights workbooks",
+        "Optimise session host capacity and performance",
+        "Implement autoscaling in host pools",
+        "Monitor and manage active sessions and application groups",
+        "Recommend an update strategy for session hosts",
+        "Plan and implement disaster recovery and multi-region deployment",
+        "Design a backup strategy and configure backup and restore for FSLogix profiles, personal desktops, and images"
+      ]
+    }
+  ]
+}

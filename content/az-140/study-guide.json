@@ -1,0 +1,150 @@
+[
+  {
+    "domainId": "avd-infrastructure",
+    "sections": [
+      {
+        "id": "avd-networking",
+        "heading": "Networking and connection paths",
+        "paragraphs": [
+          "Azure Virtual Desktop is a reverse-connect service: session hosts make outbound connections to the control plane and never accept inbound traffic, so no inbound port is opened and no public IP is required on a session host. That single fact answers a family of questions — a firewall rule permitting inbound RDP is never the fix, and the required configuration is outbound access to the service tags and URLs the agents need. Latency is the metric that governs user experience, and Microsoft's connection quality guidance is to keep round-trip time below roughly 150 ms, which is what drives the choice of region.",
+          "RDP Shortpath establishes a direct UDP path between client and session host instead of relaying through the gateway, cutting latency and improving responsiveness. It comes in two forms: for managed networks, where the client reaches the host over a private connection such as ExpressRoute or VPN, and for public networks, which uses STUN and TURN to establish a direct or relayed UDP path over the internet. Quality of service policies then mark that UDP traffic with a DSCP value so the network can prioritise it, which only works once Shortpath is carrying the session. Azure Private Link removes the public control-plane path entirely by giving the feed and gateway private endpoints, so connections never traverse the public internet."
+        ]
+      },
+      {
+        "id": "avd-storage-fslogix-backing",
+        "heading": "Storage for user profiles",
+        "paragraphs": [
+          "Profile containers are the heaviest storage workload in a deployment, and choosing where they live is examined constantly. Azure Files Premium is the usual answer — it is an SMB share on solid-state storage with predictable IOPS provisioned by share size, and it supports identity-based authentication so NTFS permissions work as expected. Azure NetApp Files is the choice at larger scale or where sub-millisecond latency and very high IOPS matter, at higher cost and with its own capacity pool model. A general-purpose storage account on standard storage is cheap and produces profile load times users complain about.",
+          "Authentication to the share is where deployments break. The storage account must be joined to the identity provider the session hosts use — AD DS, Microsoft Entra Domain Services, or Microsoft Entra Kerberos for Entra-joined hosts — and permissions must be set at two levels that are easy to confuse: a share-level Azure RBAC role granting SMB access, and NTFS permissions inside the share governing the directories. Users need the SMB Share Contributor role plus appropriate NTFS rights; missing either produces a profile that fails to attach and a user who silently gets a temporary profile instead."
+        ]
+      },
+      {
+        "id": "host-pool-planning",
+        "heading": "Host pool architecture",
+        "paragraphs": [
+          "A host pool is a collection of session hosts and comes in two types that decide almost everything downstream. A pooled host pool shares hosts between many users, uses a multi-session operating system, and is the cost-efficient default for task and knowledge workers; it needs a load-balancing algorithm — breadth-first spreads new sessions across hosts for best performance, depth-first fills one host before moving on for best density — and a maximum session limit. A personal host pool assigns one host to one user permanently, which suits developers, workloads needing local admin rights, or applications that cannot run multi-session; assignment is automatic on first connection or direct by an administrator.",
+          "Windows 11 Enterprise multi-session is the operating system for pooled pools; single-session Windows is required for personal pools and for anything that will not tolerate other users on the box. Sizing is a matter of users per host against vCPU and memory, and Microsoft publishes guidance by workload type — light, medium, heavy, power. Validation environments are a separate lever: marking a host pool as a validation environment opts it into service updates early, which is how a deployment tests changes before they reach production pools."
+        ]
+      },
+      {
+        "id": "host-pool-implementation",
+        "heading": "Creating and configuring host pools",
+        "paragraphs": [
+          "Three objects have to line up for a user to see a desktop. The host pool holds the session hosts. An application group belongs to a host pool and is either a desktop application group, publishing the full desktop, or a RemoteApp group, publishing individual applications; a pooled host pool can have both, but a user assigned to both a desktop and a RemoteApp group in the same pool gets an unsupported combination. A workspace groups application groups into what the user sees in their feed — an application group not registered to a workspace is invisible no matter who is assigned to it, which is the most common reason a correctly assigned user sees nothing.",
+          "Users are assigned to application groups, not to host pools. Registration of session hosts uses a registration token, which is time-limited and must be regenerated when it expires — an expired token is the usual cause of a newly built host that never appears in the pool. Automation is done with PowerShell, the Azure CLI, ARM templates, or Bicep, and templates are what make a host pool reproducible rather than hand-assembled."
+        ]
+      },
+      {
+        "id": "session-host-images",
+        "heading": "Session host images",
+        "paragraphs": [
+          "An image is built once and deployed many times, so image management is where operational quality lives. The manual route is to build a virtual machine, install applications and updates, generalise it with Sysprep, and capture it. Azure VM Image Builder automates the same process from a declarative template, which makes the build repeatable and reviewable and is the recommended approach for anything maintained over time. Failing to generalise before capture produces hosts that will not register or that collide on identity.",
+          "Azure Compute Gallery stores images with versioning and replication: a version can be replicated to multiple regions and given multiple replica counts so that deploying many hosts at once does not throttle on a single copy. That replication is the answer whenever a scenario mentions deploying to more than one region or building a large pool quickly. Image lifecycle is a monthly rhythm in practice — apply operating system and application updates to the image, publish a new version, and rebuild hosts from it, which is why pooled deployments treat session hosts as disposable rather than patching them individually."
+        ]
+      },
+      {
+        "id": "avd-licensing",
+        "heading": "Licensing and entitlement",
+        "paragraphs": [
+          "Azure Virtual Desktop has no per-user product charge of its own; entitlement comes from an existing licence. Windows 10 and 11 Enterprise multi-session and single-session are covered by Microsoft 365 E3, E5, A3, A5, F3, Business Premium, or Windows Enterprise E3 and E5. Windows Server session hosts are different and require RDS Client Access Licences, which must be issued by a licence server the deployment can reach — a detail that catches deployments migrating from Remote Desktop Services.",
+          "The infrastructure is billed as ordinary Azure consumption: virtual machines, storage, and networking. That is what makes autoscaling and Start VM on Connect financial controls rather than conveniences, because a pooled deployment that never deallocates its hosts pays for idle compute around the clock."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "identity-and-security",
+    "sections": [
+      {
+        "id": "identity-integration",
+        "heading": "Identity scenarios",
+        "paragraphs": [
+          "Session hosts must be joined to a domain of some kind, and the choice constrains everything else. AD DS domain join with Microsoft Entra Connect synchronising to the cloud is the traditional model and supports FSLogix against a domain-joined file share directly. Microsoft Entra Domain Services provides a managed domain when no on-premises Active Directory exists. Microsoft Entra join removes the domain entirely and is the modern option, but it changes how profile storage authenticates — Microsoft Entra Kerberos is what allows Entra-joined hosts to reach an Azure Files share, and a hybrid identity is still required for some scenarios.",
+          "The user account and the session host must share an identity story: a user signing in must exist in the directory the session host trusts. Hybrid identities synchronised from AD DS to Entra ID satisfy both sides, which is why a purely cloud-only user cannot sign in to an AD DS-joined host. Single sign-on with Microsoft Entra removes the second credential prompt at connection time and is configured on the host pool together with a Kerberos server object, and it is the answer whenever a scenario complains about users authenticating twice."
+        ]
+      },
+      {
+        "id": "avd-rbac-and-conditional-access",
+        "heading": "RBAC and Conditional Access",
+        "paragraphs": [
+          "Azure RBAC governs who may administer the deployment, and the built-in roles are scoped to what they name: Desktop Virtualization Contributor manages all objects, Host Pool Contributor manages host pools, Application Group Contributor manages application groups, and the Reader variants grant visibility. Session host management is separate — signing in to a session host is granted by the Virtual Machine User Login or Virtual Machine Administrator Login role on Entra-joined hosts. Assigning a user to an application group grants use; it grants no administrative rights at all.",
+          "Conditional Access applies to Azure Virtual Desktop through its own cloud apps, and the distinction matters: the Azure Virtual Desktop app covers the connection to the service, while Microsoft Remote Desktop covers the client feed. Policies commonly require multifactor authentication for connections, and the sign-in frequency control is what forces reauthentication rather than allowing a token to carry a session for days. Requiring a compliant device is possible but constrains which clients can be used, so it is applied deliberately rather than by default."
+        ]
+      },
+      {
+        "id": "session-host-security",
+        "heading": "Securing session hosts",
+        "paragraphs": [
+          "Session hosts are ordinary Windows virtual machines and take ordinary Windows protections. Defender for Cloud provides posture recommendations and, with Defender for Servers, endpoint detection and response; Defender Antivirus needs exclusions for FSLogix container files so that scanning does not lock or slow profile attachment, which is a specific and frequently examined configuration. Defender for Endpoint onboarding is done in the image so every host built from it is onboarded automatically rather than individually afterwards.",
+          "Administrative access should not be over RDP from the internet. Azure Bastion provides browser-based access with no public IP on the host, and just-in-time VM access opens a management port only for an approved request and window. Network security groups and user-defined routes control traffic around the hosts, and Azure Firewall with FQDN rules is the usual way to permit the required outbound service endpoints while blocking general internet access. Trusted launch with secure boot and vTPM protects boot integrity, and confidential VMs encrypt memory where the workload requires the host itself to be excluded."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "user-environments-apps",
+    "sections": [
+      {
+        "id": "fslogix-containers",
+        "heading": "FSLogix containers",
+        "paragraphs": [
+          "FSLogix solves the central problem of a pooled deployment: a user lands on a different host each session and expects their profile to follow. A Profile Container is a VHDX holding the whole user profile, attached at sign-in and detached at sign-out, so the profile appears local. An ODFC container holds Office data specifically — the Outlook cache, OneNote, licensing — and is used alongside a Profile Container when Office data should live on different storage or be excluded from the profile's lifecycle.",
+          "Two features answer specific scenarios. Cloud Cache writes the container to more than one storage provider, keeping copies in sync and failing over when one is unavailable — it is the resilience answer, at a performance cost, and the answer whenever a scenario requires profiles to survive a region or storage outage. Application masking hides applications, fonts, and registry entries from users who should not see them, so one image serves populations with different entitlements instead of requiring several images. Antivirus exclusions for the container files are configuration, not optimisation: without them, attachment is slow and occasionally fails."
+        ]
+      },
+      {
+        "id": "client-and-user-experience",
+        "heading": "Clients, redirection, and session settings",
+        "paragraphs": [
+          "The Windows App and the Remote Desktop clients cover Windows, macOS, iOS, Android, and the browser, and the web client is the answer whenever a scenario forbids installing software on the endpoint. Device redirection decides what of the local machine is available in the session — drives, printers, clipboard, cameras, USB — and is configured through RDP properties on the host pool. Those properties are the single place many user-experience questions resolve to, because they control redirection, display, and connection behaviour for everyone using the pool.",
+          "Multimedia redirection offloads video playback and calls to the local client rather than rendering them on the session host, which is what makes video usable at scale. Printing is handled by redirection or by Universal Print, which removes print servers entirely and suits a cloud-only deployment. Session timeout properties — idle limits, disconnected session limits, and whether a disconnected session is logged off — are configured through Intune or Group Policy and are what stop idle sessions holding capacity. Start VM on Connect deallocates hosts and starts one when a user connects, trading a start-up delay for compute cost."
+        ]
+      },
+      {
+        "id": "app-delivery-and-appattach",
+        "heading": "Delivering applications",
+        "paragraphs": [
+          "There are three routes to putting an application in front of a user and they differ in when the application is installed. Installing into the image means every host has it and updating it means rebuilding the image — appropriate for applications everyone uses. Deploying with Intune or another management tool installs onto running hosts and suits applications that change independently of the image. App attach mounts an application package to the session at sign-in, so the application is delivered dynamically without being installed at all, and updating it means publishing a new package version rather than touching any host.",
+          "App attach is the answer whenever a scenario describes applications used by a subset of users, or applications that must be updated without rebuilding an image, or a desire to keep one image for several populations. It requires packaging the application in MSIX or App-V format and staging it from a file share the hosts can read. Publishing is separate again: a RemoteApp application group exposes an individual application in the user's feed rather than a full desktop, which is what a user sees when a scenario says they should get 'just the application'."
+        ]
+      },
+      {
+        "id": "msteams-and-m365-apps",
+        "heading": "Microsoft 365 Apps, Teams, and OneDrive",
+        "paragraphs": [
+          "Microsoft 365 Apps on a multi-session host needs shared computer activation, without which activation fails because the licence binds to a device rather than to the many users passing through it. That is a configuration step at install time and one of the most reliably examined details in this domain.",
+          "Microsoft Teams requires the Remote Desktop WebRTC Redirector Service so that audio and video are handled by the local client rather than being rendered on the session host and streamed — without it, calls consume host CPU and users report poor quality. OneDrive on a multi-session host is deployed per machine rather than per user and pairs with FSLogix so that the sync state travels with the profile; Known Folder Move then redirects Desktop, Documents, and Pictures to OneDrive, which reduces what the profile container has to carry."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "monitor-maintain-avd",
+    "sections": [
+      {
+        "id": "avd-monitoring",
+        "heading": "Monitoring and diagnostics",
+        "paragraphs": [
+          "Azure Virtual Desktop Insights is the built-in monitoring workbook and depends on diagnostic settings being configured on the host pool, workspace, and application groups to send to a Log Analytics workspace, plus performance counters and events collected from the session hosts. A deployment where Insights shows nothing has almost always skipped one of those, and the fix is configuration rather than a product problem.",
+          "The data answers different questions in different places. Connection diagnostics show why a session failed to establish and carry error codes that name the stage. Connection quality data covers round-trip time and available bandwidth, which is where a complaint about responsiveness is confirmed or dismissed. Host performance counters — processor, memory, disk queue length, and profile load time — are what identify an undersized host, and the distinction between a slow network and an overloaded host is exactly what monitoring exists to settle before anyone resizes anything."
+        ]
+      },
+      {
+        "id": "autoscaling-and-capacity",
+        "heading": "Autoscaling and capacity",
+        "paragraphs": [
+          "A scaling plan attaches to a host pool and deallocates hosts when demand falls and starts them when it rises, on a schedule divided into ramp-up, peak, ramp-down, and off-peak phases. Each phase has a load-balancing algorithm and a capacity threshold, and ramp-down carries the settings that decide how users are treated when a host is being drained — notification message, delay, and whether to force sign-out. Autoscaling supports pooled and personal host pools, and it is the main lever on cost in a deployment that would otherwise pay for idle compute overnight.",
+          "Drain mode is the manual equivalent: it stops new sessions reaching a host while existing ones continue, which is how a host is taken out of service for maintenance without disconnecting anybody. Capacity itself is tuned with the maximum session limit and the load-balancing algorithm — breadth-first for user experience, depth-first for density and therefore cost — and those two settings, plus host size, are the whole of capacity management in a pooled pool."
+        ]
+      },
+      {
+        "id": "updates-backup-dr",
+        "heading": "Updates, backup, and disaster recovery",
+        "paragraphs": [
+          "Pooled session hosts are treated as disposable: the update strategy is to patch the image, publish a new version, and rebuild hosts from it, rather than patching hosts individually. Personal host pools are the exception, because a personal host carries the user's installed state, so they are patched in place with Azure Update Manager or Intune. Draining a host before replacing it is what makes a rebuild invisible to users.",
+          "Backup follows what is irreplaceable. Profile containers on Azure Files are protected with Azure Backup for file shares; personal desktops are protected with Azure Backup for virtual machines; pooled session hosts are generally not backed up at all, because they are rebuilt from an image. Disaster recovery is planned per component — images replicated across regions in Azure Compute Gallery, profile storage replicated or fronted by Cloud Cache, and a host pool that can be stood up in a second region — and the decision that shapes it is whether the requirement is a warm standby or the ability to rebuild within an agreed window."
+        ]
+      }
+    ]
+  }
+]

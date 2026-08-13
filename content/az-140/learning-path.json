@@ -1,0 +1,104 @@
+{
+  "examCode": "az-140",
+  "note": "Four paths, one per exam domain, following Microsoft's AZ-140 learning paths. Module titles follow Microsoft Learn; the sections and cards behind each are this site's own.",
+  "paths": [
+    {
+      "id": "avd-infrastructure",
+      "title": "Plan and implement an Azure Virtual Desktop infrastructure",
+      "domainId": "avd-infrastructure",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/implement-desktop-app-virtualization/",
+      "modules": [
+        {
+          "id": "avd-infrastructure-m1",
+          "title": "Plan and implement networking for Azure Virtual Desktop",
+          "sectionIds": ["avd-networking"],
+          "cardIds": ["fc-az140-in-01", "fc-az140-in-02", "fc-az140-in-03", "fc-az140-in-04", "fc-az140-in-05"]
+        },
+        {
+          "id": "avd-infrastructure-m2",
+          "title": "Plan and implement storage for user data",
+          "sectionIds": ["avd-storage-fslogix-backing"],
+          "cardIds": ["fc-az140-in-06", "fc-az140-in-07", "fc-az140-in-08", "fc-az140-in-17", "fc-az140-in-18"]
+        },
+        {
+          "id": "avd-infrastructure-m3",
+          "title": "Plan and implement host pools and session hosts",
+          "sectionIds": ["host-pool-planning", "host-pool-implementation", "avd-licensing"],
+          "cardIds": ["fc-az140-in-09", "fc-az140-in-10", "fc-az140-in-11", "fc-az140-in-12"]
+        },
+        {
+          "id": "avd-infrastructure-m4",
+          "title": "Create and manage session host images",
+          "sectionIds": ["session-host-images"],
+          "cardIds": ["fc-az140-in-13", "fc-az140-in-14", "fc-az140-in-15", "fc-az140-in-16"]
+        }
+      ]
+    },
+    {
+      "id": "identity-and-security",
+      "title": "Plan and implement identity and security",
+      "domainId": "identity-and-security",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/implement-manage-identity-security-azure-virtual-desktop/",
+      "modules": [
+        {
+          "id": "identity-and-security-m1",
+          "title": "Plan and implement identity integration",
+          "sectionIds": ["identity-integration", "avd-rbac-and-conditional-access"],
+          "cardIds": ["fc-az140-is-01", "fc-az140-is-02", "fc-az140-is-03", "fc-az140-is-04", "fc-az140-is-05"]
+        },
+        {
+          "id": "identity-and-security-m2",
+          "title": "Secure session hosts",
+          "sectionIds": ["session-host-security"],
+          "cardIds": ["fc-az140-is-06", "fc-az140-is-07", "fc-az140-is-08", "fc-az140-is-09", "fc-az140-is-10"]
+        }
+      ]
+    },
+    {
+      "id": "user-environments-apps",
+      "title": "Plan and implement user environments and apps",
+      "domainId": "user-environments-apps",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/implement-user-environments-apps/",
+      "modules": [
+        {
+          "id": "user-environments-apps-m1",
+          "title": "Plan and implement FSLogix",
+          "sectionIds": ["fslogix-containers"],
+          "cardIds": ["fc-az140-ue-01", "fc-az140-ue-02", "fc-az140-ue-03", "fc-az140-ue-04", "fc-az140-ue-05"]
+        },
+        {
+          "id": "user-environments-apps-m2",
+          "title": "Configure user experience and client settings",
+          "sectionIds": ["client-and-user-experience"],
+          "cardIds": ["fc-az140-ue-06", "fc-az140-ue-07", "fc-az140-ue-08", "fc-az140-ue-09"]
+        },
+        {
+          "id": "user-environments-apps-m3",
+          "title": "Install and configure apps on a session host",
+          "sectionIds": ["app-delivery-and-appattach", "msteams-and-m365-apps"],
+          "cardIds": ["fc-az140-ue-10", "fc-az140-ue-11", "fc-az140-ue-12", "fc-az140-ue-13"]
+        }
+      ]
+    },
+    {
+      "id": "monitor-maintain-avd",
+      "title": "Monitor and maintain an Azure Virtual Desktop infrastructure",
+      "domainId": "monitor-maintain-avd",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/monitor-maintain-azure-virtual-desktop/",
+      "modules": [
+        {
+          "id": "monitor-maintain-avd-m1",
+          "title": "Monitor and manage Azure Virtual Desktop services",
+          "sectionIds": ["avd-monitoring", "autoscaling-and-capacity"],
+          "cardIds": ["fc-az140-mm-01", "fc-az140-mm-02", "fc-az140-mm-03", "fc-az140-mm-04", "fc-az140-mm-05"]
+        },
+        {
+          "id": "monitor-maintain-avd-m2",
+          "title": "Plan and implement updates, backups, and disaster recovery",
+          "sectionIds": ["updates-backup-dr"],
+          "cardIds": ["fc-az140-mm-06", "fc-az140-mm-07", "fc-az140-mm-08", "fc-az140-mm-09"]
+        }
+      ]
+    }
+  ]
+}

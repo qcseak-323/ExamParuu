@@ -1,0 +1,41 @@
+[
+  {
+    "id": "cs-tarnbrook-desktops",
+    "examCode": "az-140",
+    "domain": "avd-infrastructure",
+    "title": "Tarnbrook Health — a virtual desktop rollout that limps",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Tarnbrook Health runs community clinics across two regions and moved 2,400 clinical and administrative staff onto Azure Virtual Desktop nine months ago. Clinicians work from shared consulting-room devices and from home; a smaller group of imaging specialists needs local administrator rights and software that will not run multi-session.",
+          "The deployment works but is disliked. A review has produced the findings below, and the infrastructure team has been asked to fix them before the second region goes live."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "Profile containers sit on a general-purpose storage account using standard storage. Sign-in takes between 90 seconds and four minutes, and the Insights profile load time counter is consistently the largest component. Defender Antivirus is running with default settings on every session host.",
+          "A batch of forty new session hosts was built last week from a captured image. None of them registered with the host pool. The image was captured directly from a running virtual machine after the applications were installed.",
+          "A newly onboarded department was assigned to an application group and reports that nothing appears in their client feed at all. The assignment is present and correct when checked.",
+          "Clinicians connect from home over consumer broadband and describe the session as laggy when scrolling and typing. Round-trip time measured from those homes averages 60 ms, and the host pool's processor and memory counters are unremarkable during the complaints.",
+          "The imaging specialists are currently in the same pooled host pool as everyone else. Their software fails intermittently and they cannot install their own tools.",
+          "Every session host in the pool runs continuously. Utilisation between 19:00 and 07:00 is close to zero, and the monthly compute bill has been raised at board level.",
+          "Microsoft 365 Apps were installed into the image with a standard installation. Users report activation prompts and, on some hosts, Office refusing to open."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Sign-in time must be reduced, and the storage tier must be appropriate for profile containers rather than merely cheap.",
+          "Newly built session hosts must register with the host pool reliably.",
+          "The newly onboarded department must see their desktop in the client feed.",
+          "The lag clinicians describe must be addressed at the connection layer, given that round-trip time is acceptable and the hosts are not overloaded.",
+          "The imaging specialists must have a dedicated machine each, with local administrator rights and software that cannot run multi-session.",
+          "Compute spend outside working hours must fall without staff losing access when they do connect.",
+          "Microsoft 365 Apps must activate correctly on multi-session hosts."
+        ]
+      }
+    ]
+  }
+]
