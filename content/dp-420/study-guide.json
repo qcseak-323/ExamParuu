@@ -1,0 +1,155 @@
+[
+  {
+    "domainId": "data-models",
+    "sections": [
+      {
+        "id": "nosql-data-modelling",
+        "heading": "Modelling for a document database",
+        "paragraphs": [
+          "Cosmos DB modelling inverts the relational instinct. You model for the queries the application makes rather than for normalised truth, which means embedding related data in one document when it is read together, bounded in size, and changes at the same rate. Referencing between documents is right when the related data is unbounded, changes at a different rate, or is read independently — an order with a handful of lines embeds well; an order with a hundred thousand events does not, because a document has a size limit and rewriting it on every append is wasteful.",
+          "Storing multiple entity types in one container is normal and often desirable, distinguished by a type discriminator property, because a container is the unit of throughput and partitioning rather than a table. Denormalisation duplicates data deliberately so a read needs one request, accepting that updates must maintain the copies — often through the change feed. Time to live expires documents automatically at container or item level, which is how a session or telemetry store keeps itself bounded. Schema versioning matters because documents written years apart coexist in the same container: a version property, with the application handling each version, is what stops a reader breaking on an old shape."
+        ]
+      },
+      {
+        "id": "partitioning-strategy",
+        "heading": "Partition keys",
+        "paragraphs": [
+          "The partition key is the single most consequential decision in a Cosmos DB design, and it cannot be changed on an existing container — correcting it means creating a new container and migrating. A good key has high cardinality, spreads both storage and request volume evenly, and appears in the queries the application makes most. A logical partition has a 20 GB limit, so a key whose values group too much data hits that ceiling regardless of throughput.",
+          "The failures have names. A hot partition is one receiving a disproportionate share of requests, which throttles even though the account has plenty of provisioned throughput, because throughput is divided across physical partitions. Choosing a low-cardinality key such as a country or a status is the usual cause; choosing a timestamp is worse for writes, because every write lands in the same partition. A synthetic key concatenates fields to raise cardinality, and a hierarchical partition key defines up to three levels so that queries supplying only the first level still target efficiently while storage is subdivided beneath it. Transactions are the other constraint: stored procedures and transactional batch operate within one logical partition only, so anything that must be atomic together has to share a partition key value."
+        ]
+      },
+      {
+        "id": "throughput-and-sizing",
+        "heading": "Throughput, scaling, and cost",
+        "paragraphs": [
+          "Throughput is measured in request units, an abstraction over CPU, IO, and memory for an operation. A point read of a 1 KB document costs about one RU; queries cost according to how much they scan, how many results they return, and how much indexing helps. Retrieving the RU charge of an operation from the response header is the direct way to measure a design, and it is more informative than any estimate.",
+          "Provisioning comes in three forms. Standard provisioned throughput reserves a fixed RU/s and suits steady, predictable load. Autoscale sets a maximum and scales between ten per cent of it and the maximum, billing for what is used, which suits variable or spiky workloads and costs more per RU than standard at sustained full load. Serverless bills per operation with no provisioning and suits development, intermittent traffic, and small workloads, but has lower limits and no SLA on throughput. Throughput is provisioned at database level, shared between containers, or at container level, dedicated — shared is economical for many small containers and risks one container starving the others."
+        ]
+      },
+      {
+        "id": "sdk-connectivity",
+        "heading": "SDK connectivity and client behaviour",
+        "paragraphs": [
+          "Connectivity mode matters for latency. Direct mode connects the client straight to the backend replicas over TCP and gives the lowest latency, and is the default for the .NET SDK; gateway mode routes through a gateway over HTTPS and is the option when a firewall or restricted network makes direct connections impractical. The client should be created once and reused as a singleton — creating one per request is a common defect that exhausts connections and adds latency to every call, and it is examined directly.",
+          "Preferred regions tell the client which replica to read from, which is what makes a globally distributed account fast for local users rather than merely resilient. Transient failures and HTTP 429 responses are expected in normal operation: the SDK retries automatically with the retry-after interval the service supplies, and the application should let it rather than implementing its own tight loop. The emulator supports offline development, and SDK logging with diagnostics strings is how a slow or failing request is explained rather than guessed at."
+        ]
+      },
+      {
+        "id": "queries-and-operations",
+        "heading": "Queries and item operations",
+        "paragraphs": [
+          "A point read — fetching by id and partition key — is the cheapest and fastest operation available and should be preferred wherever the application knows both. A query, even one returning a single document, costs more because it goes through the query engine. Supplying the partition key in a query confines it to one partition; omitting it produces a cross-partition query that fans out to every physical partition, which is correct in some designs and expensive by default.",
+          "The SDK provides the operations that make a design workable. Patch performs a partial update without reading and rewriting the whole document. Transactional batch groups operations on one logical partition atomically. Bulk mode maximises throughput for large ingestion by batching under the covers. Optimistic concurrency uses the document's ETag with an if-match condition so a write fails rather than silently overwriting a concurrent change. Pagination uses a continuation token to resume exactly where the previous page ended, which is what makes paging over a large result set stable."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "data-distribution",
+    "sections": [
+      {
+        "id": "replication-and-consistency",
+        "heading": "Global distribution and consistency levels",
+        "paragraphs": [
+          "Adding a region to a Cosmos DB account replicates data there, which reduces read latency for users near it and provides resilience. Automatic failover promotes another region if the write region becomes unavailable, in a priority order you define; manual failover moves the write region deliberately, which is how a planned regional migration is performed.",
+          "Five consistency levels form a spectrum, and the trade is always the same — stronger consistency costs latency and request units and constrains availability. Strong guarantees linear consistency and is not available with multi-region writes. Bounded staleness allows reads to lag by a defined number of versions or an interval. Session, the default, guarantees a client reads its own writes and is the right answer for most applications. Consistent prefix guarantees reads never see writes out of order. Eventual is the cheapest and weakest. The examinable point is that session is the default and usually correct, and that a scenario demanding a user always sees their own update is describing session rather than strong."
+        ]
+      },
+      {
+        "id": "multi-region-writes",
+        "heading": "Multi-region writes and conflict resolution",
+        "paragraphs": [
+          "Multi-region writes let every region accept writes, which removes the cross-region round trip for writers and raises write availability. The cost is conflicts, which cannot arise when only one region writes. Conflict resolution is either last-writer-wins on a defined property — a timestamp by default — or a custom stored procedure that decides, with unresolved conflicts placed in a conflicts feed the application can inspect.",
+          "The decision to enable multi-region writes should follow from a real requirement for local write latency or write availability during a regional outage, because it changes the correctness model of the application. A design whose writers are concentrated in one region gains little and inherits conflict handling it did not need, which is why the exam frames it as a choice rather than an upgrade."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "integration",
+    "sections": [
+      {
+        "id": "analytical-store-and-fabric",
+        "heading": "Analytical store, mirroring, and Fabric",
+        "paragraphs": [
+          "The analytical store is a column-oriented copy of container data, maintained automatically and isolated from the transactional workload, so analytical queries consume no transactional request units. That isolation is its whole purpose — running reporting queries against the transactional store is what starves the application. Azure Synapse Link connects Synapse to it for Spark and serverless SQL queries, and change data capture over the analytical store exposes incremental changes for downstream pipelines.",
+          "Mirroring for Microsoft Fabric is the newer route, continuously replicating a container into OneLake so Fabric workloads query it as Delta tables with no pipeline to maintain. The choice between mirroring and the Spark connector follows the destination: mirroring for a Fabric-centred analytics estate with near-real-time replication and no code, the Spark connector when the processing itself must happen in Spark against the transactional or analytical store."
+        ]
+      },
+      {
+        "id": "change-feed-integration",
+        "heading": "Change feed and cross-service integration",
+        "paragraphs": [
+          "The change feed is a persistent, ordered record of changes within each logical partition, and it is the mechanism behind most Cosmos DB integration patterns. It records creates and updates but not deletes — a fact that shapes designs, since a soft delete flag with a time to live is the standard way to make deletions visible to a consumer.",
+          "Four patterns recur. Denormalisation keeps duplicated copies in step when the source document changes. Referential enforcement reacts to a change by validating or cascading to related documents, since the database has no foreign keys. Aggregation maintains running totals in a summary document so a read does not have to compute them. Archiving moves ageing documents to cheaper storage. All four are commonly implemented with an Azure Functions Cosmos DB trigger, which manages the lease container for you, or with the change feed processor in the SDK where more control is needed. Azure AI Search indexes container content for full-text and vector search, typically kept current by an indexer or by the change feed."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "optimisation",
+    "sections": [
+      {
+        "id": "query-optimisation",
+        "heading": "Query cost and the integrated cache",
+        "paragraphs": [
+          "Optimising a Cosmos DB workload begins with measuring the request charge of individual operations, available on every response. The levers are then predictable: prefer point reads over queries where id and partition key are known, supply the partition key so a query does not fan out, project only the properties needed rather than selecting whole documents, and avoid cross-partition aggregation over large ranges. A query that scans a large fraction of a container will be expensive no matter how it is written, which is usually a modelling problem rather than a query problem.",
+          "The integrated cache is an in-memory cache in the dedicated gateway that serves point reads and queries at no request-unit cost when they hit. It requires gateway mode and a dedicated gateway, and its staleness is bounded by a configurable window — so it suits read-heavy workloads that repeat the same reads and tolerate slightly stale results. It is the specific answer to a read-heavy workload whose RU cost is dominated by repeated identical reads."
+        ]
+      },
+      {
+        "id": "indexing-strategy",
+        "heading": "Indexing policy",
+        "paragraphs": [
+          "Cosmos DB indexes every property by default, which makes queries fast and writes more expensive, since every indexed path must be maintained. That default suits read-heavy workloads and is wrong for write-heavy ones, where excluding paths that are never filtered on reduces the RU cost of every write. Tuning the indexing policy is therefore a direct cost decision, not a micro-optimisation.",
+          "Index types serve different queries. Range indexes support equality, range comparisons, and ORDER BY on a single property. Spatial indexes support geospatial queries. Composite indexes are required for ORDER BY across two or more properties and improve queries filtering on several properties at once, and their definition is order-sensitive — a composite index on (a ASC, b DESC) does not serve ORDER BY a DESC, b ASC. Indexing policy changes are applied asynchronously in the background, so a container remains queryable while the transformation runs and query performance improves only when it completes."
+        ]
+      },
+      {
+        "id": "change-feed-processing",
+        "heading": "Processing the change feed at scale",
+        "paragraphs": [
+          "The change feed processor distributes work across instances using a lease container, where each lease corresponds to a range of the source container's partitions. Instances take leases and rebalance automatically as instances are added or removed, which is what makes the pattern scale horizontally. The lease container is a real container with its own throughput, and forgetting to provision it adequately throttles the processor rather than the application.",
+          "The change feed estimator reports how far behind the processor is, which is the metric that answers whether more instances are needed — a backlog that grows steadily means consumption is slower than production. Parallelism is bounded by the number of leases, so adding more instances than there are partition ranges achieves nothing. Processing must also be idempotent, because a change can be delivered more than once when leases move between instances."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "maintenance",
+    "sections": [
+      {
+        "id": "monitoring-cosmos",
+        "heading": "Monitoring and diagnosing",
+        "paragraphs": [
+          "Status codes are the first diagnostic. HTTP 429 means the request was rate limited because it exceeded provisioned throughput, and the response carries a retry-after value the SDK honours automatically. HTTP 408 is a timeout, 409 a conflict on a unique key or id, 412 a failed precondition from an ETag check, and 449 a transient concurrency error that should be retried. Reading 429 as an outage rather than a capacity signal is the standard misdiagnosis.",
+          "Normalised RU consumption is the metric that matters most, because it reports the utilisation of the most heavily used physical partition rather than an average. An account can sit at modest average utilisation while one partition is pinned at a hundred per cent and throttling — which is precisely what a hot partition looks like in the portal. Server-side latency separates the service's contribution from the client's and the network's, and monitoring throughput and storage distribution across partitions is what confirms whether the partition key is doing its job."
+        ]
+      },
+      {
+        "id": "backup-restore-cosmos",
+        "heading": "Backup and restore",
+        "paragraphs": [
+          "Periodic backup takes full backups on an interval and retains a configurable number, and restoring from it requires a support request — which is the operational detail that matters, because it means recovery time is not entirely in your hands. Continuous backup provides point-in-time restore to any second within the retention window, either seven or thirty days, and is performed by the account owner without involving support.",
+          "Restores always create a new account rather than overwriting the existing one, so recovery includes a cutover step. Continuous backup is the answer whenever a scenario mentions recovering from an accidental delete or a bad deployment at a specific moment, and periodic is the cheaper option where that precision is not required. Switching from periodic to continuous is possible; switching back is not, which is worth knowing before the decision is made."
+        ]
+      },
+      {
+        "id": "cosmos-security",
+        "heading": "Security and access control",
+        "paragraphs": [
+          "Access divides into two planes that are examined for exactly this distinction. Control plane access — creating containers, changing throughput, altering configuration — is governed by Azure RBAC. Data plane access — reading and writing documents — is governed either by account keys, which are shared secrets granting full access, or by the Cosmos DB data plane RBAC model with Microsoft Entra identities, which is preferred because it attributes and scopes access properly. Disabling key-based access entirely is the strongest position.",
+          "Network controls follow the usual Azure pattern: a firewall permitting selected IP ranges, virtual network service endpoints, or private endpoints, with public network access disabled as the strongest configuration. Data is encrypted at rest by default with platform-managed keys, and customer-managed keys in Key Vault are available where the organisation must hold them — with the same consequence as elsewhere, that losing access to the key makes the data inaccessible. Always Encrypted is available for client-side column-level encryption, and CORS settings control which browser origins may call the account directly."
+        ]
+      },
+      {
+        "id": "data-movement-devops",
+        "heading": "Data movement and DevOps",
+        "paragraphs": [
+          "Moving data into or out of Cosmos DB has several routes and the choice follows scale and shape. The SDK's bulk support suits application-driven loads. Azure Data Factory and Synapse pipelines suit scheduled or orchestrated movement between stores. The Spark connector suits transformation-heavy work. Stream Analytics and a Kafka connector suit continuous streams, and Cosmos DB can be an IoT Hub custom endpoint for device telemetry.",
+          "For DevOps, declarative provisioning with ARM or Bicep templates is preferred for anything reproducible, including indexing policies, which are worth holding in source control precisely because a manual change in production is invisible afterwards. Imperative PowerShell and CLI cover conditional operations such as switching between standard and autoscale throughput or initiating a regional failover. The general principle is the same as everywhere in Azure: declare what should exist, script what must be decided at the time."
+        ]
+      }
+    ]
+  }
+]

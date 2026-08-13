@@ -145,6 +145,13 @@ import dp300StudyGuide from "../../content/dp-300/study-guide.json";
 import dp300Path from "../../content/dp-300/learning-path.json";
 import dp300CaseStudies from "../../content/dp-300/case-studies.json";
 
+import dp420Outline from "../../content/dp-420/outline.json";
+import dp420Questions from "../../content/dp-420/questions.json";
+import dp420Flashcards from "../../content/dp-420/flashcards.json";
+import dp420StudyGuide from "../../content/dp-420/study-guide.json";
+import dp420Path from "../../content/dp-420/learning-path.json";
+import dp420CaseStudies from "../../content/dp-420/case-studies.json";
+
 import pl900Outline from "../../content/pl-900/outline.json";
 import pl900Questions from "../../content/pl-900/questions.json";
 import pl900Flashcards from "../../content/pl-900/flashcards.json";
@@ -343,6 +350,14 @@ const examRegistry: Record<string, ExamContent> = {
     studyGuide: dp300StudyGuide as StudyGuideDomain[],
     learningPath: dp300Path as ExamLearningPath,
     caseStudies: dp300CaseStudies as CaseStudy[],
+  },
+  "dp-420": {
+    outline: dp420Outline as Outline,
+    questions: dp420Questions as Question[],
+    flashcards: dp420Flashcards as Flashcard[],
+    studyGuide: dp420StudyGuide as StudyGuideDomain[],
+    learningPath: dp420Path as ExamLearningPath,
+    caseStudies: dp420CaseStudies as CaseStudy[],
   },
   "pl-900": {
     outline: pl900Outline as Outline,

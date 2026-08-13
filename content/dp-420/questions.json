@@ -1,0 +1,932 @@
+[
+  {
+    "id": "dm-01",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "caseStudyId": "cs-verdance-telemetry",
+    "question": "The container is partitioned by country with three values, average RU utilisation is 12% and normalised RU consumption is 100%. What is happening and what should you do?",
+    "options": [
+      "A hot partition — recreate the container with a high-cardinality partition key such as inverter identifier and migrate",
+      "The account is under-provisioned — raise provisioned throughput to 120,000 RU/s",
+      "The indexing policy is too broad — exclude unused paths to reduce write cost",
+      "The SDK is in gateway mode — switch to direct mode to reduce latency"
+    ],
+    "correctIndex": 0,
+    "explanation": "Throughput is divided across physical partitions, so three partition key values concentrate all traffic into very few partitions — which is exactly a low average with a pinned normalised figure. Raising throughput spreads more RU/s across the same skew and masks the fault; the partition key must change, and it cannot be changed in place.",
+    "teaches": "partitioning-strategy"
+  },
+  {
+    "id": "dm-02",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "caseStudyId": "cs-verdance-telemetry",
+    "question": "The portal's per-site query is served from every physical partition. What should you change so it targets efficiently?",
+    "options": [
+      "Partition by site identifier, or use a hierarchical partition key beginning with site",
+      "Add a composite index on site identifier and timestamp",
+      "Increase the query's maximum item count",
+      "Switch the query to use a continuation token"
+    ],
+    "correctIndex": 0,
+    "explanation": "A query is confined to one partition only when it supplies the partition key, so the key must include the property the query filters on. An index makes a fan-out query cheaper per partition but does not stop the fan-out, and paging changes nothing about how many partitions are consulted.",
+    "teaches": "partitioning-strategy"
+  },
+  {
+    "id": "dm-03",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "caseStudyId": "cs-verdance-telemetry",
+    "question": "An adjustment document and an invoice document must be written atomically, and currently have different partition key values. What should you do?",
+    "options": [
+      "Model both documents with the same partition key value and write them with a transactional batch",
+      "Write both documents with bulk support enabled",
+      "Use a stored procedure that writes to both partitions",
+      "Use optimistic concurrency with ETags on both documents"
+    ],
+    "correctIndex": 0,
+    "explanation": "Transactional batch and stored procedures are both scoped to a single logical partition, so atomicity requires the documents to share a partition key value. Bulk maximises throughput without any transactional guarantee, and ETags detect conflicts rather than grouping writes.",
+    "teaches": "partitioning-strategy"
+  },
+  {
+    "id": "dm-04",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "caseStudyId": "cs-verdance-telemetry",
+    "question": "Traffic is 85% concentrated in a three-hour window and low overnight, on standard provisioned throughput sized for the peak. What should you configure?",
+    "options": [
+      "Autoscale throughput with the maximum set at the peak requirement",
+      "Serverless throughput on the container",
+      "Database-level shared throughput across all containers",
+      "A second account in another region to absorb the peak"
+    ],
+    "correctIndex": 0,
+    "explanation": "Autoscale scales between ten per cent of the maximum and the maximum and bills for what is used, which matches a strongly peaked pattern. Serverless has lower limits and no throughput SLA, which does not suit a 90,000-device production workload.",
+    "teaches": "throughput-and-sizing"
+  },
+  {
+    "id": "dm-05",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "caseStudyId": "cs-verdance-telemetry",
+    "question": "Forty site-summary documents are re-read on every page load and change at most hourly. Reads must cost fewer request units without changing the refresh behaviour. What should you implement?",
+    "options": [
+      "The integrated cache, using a dedicated gateway and gateway mode",
+      "A composite index covering the summary documents",
+      "A materialised view maintained by the change feed",
+      "Time to live on the summary documents"
+    ],
+    "correctIndex": 0,
+    "explanation": "The integrated cache serves repeated reads at no request-unit cost within a bounded staleness window, which is exactly a read-heavy pattern repeating identical reads on slowly changing data. Indexing reduces query cost but never to zero, and the requirement forbids changing how often the portal reads.",
+    "teaches": "query-optimisation"
+  },
+  {
+    "id": "dm-06",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "question": "Which operation is the cheapest way to retrieve a single document when the application knows both its id and its partition key?",
+    "options": [
+      "A point read",
+      "A query with a WHERE clause on id",
+      "A query with a WHERE clause on id and partition key",
+      "A stored procedure that reads the document"
+    ],
+    "correctIndex": 0,
+    "explanation": "A point read bypasses the query engine and costs about one RU for a 1 KB document. Any query, however precisely filtered, costs more because it is processed as a query.",
+    "teaches": "queries-and-operations"
+  },
+  {
+    "id": "dm-07",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "question": "An order document must have a small set of line items read with it every time and never separately. How should you model them?",
+    "options": [
+      "Embed the line items in the order document",
+      "Store each line item as a separate document referencing the order",
+      "Store line items in a separate container partitioned by order id",
+      "Store line items in the analytical store only"
+    ],
+    "correctIndex": 0,
+    "explanation": "Data that is bounded, read together, and changes at the same rate belongs embedded, so a single point read returns everything. Referencing would turn one read into several for no benefit.",
+    "teaches": "nosql-data-modelling"
+  },
+  {
+    "id": "dm-08",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "question": "A container stores device events that grow without limit for each device. What is wrong with embedding all events in one document per device?",
+    "options": [
+      "A document has a size limit and rewriting it on every append is wasteful",
+      "Documents cannot contain arrays of objects",
+      "Embedded arrays cannot be indexed",
+      "The change feed would not record the updates"
+    ],
+    "correctIndex": 0,
+    "explanation": "Unbounded growth is the standard reason to reference rather than embed: the document eventually exceeds its size limit, and every append rewrites the whole document. Arrays are perfectly supported and indexed.",
+    "teaches": "nosql-data-modelling"
+  },
+  {
+    "id": "dm-09",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "question": "No single property spreads requests evenly enough to serve as a partition key. What should you construct?",
+    "options": [
+      "A synthetic partition key concatenating two or more properties",
+      "A composite index across the candidate properties",
+      "A unique key policy across the candidate properties",
+      "A database-level throughput configuration"
+    ],
+    "correctIndex": 0,
+    "explanation": "A synthetic key raises cardinality by combining fields, which is the standard remedy when no natural property distributes well. Indexes and unique keys affect querying and constraints rather than distribution.",
+    "teaches": "partitioning-strategy"
+  },
+  {
+    "id": "dm-10",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "question": "What is the storage limit of a single logical partition in Azure Cosmos DB?",
+    "options": [
+      "20 GB",
+      "2 GB",
+      "50 GB",
+      "There is no limit"
+    ],
+    "correctIndex": 0,
+    "explanation": "A logical partition is capped at 20 GB, so a partition key whose values group too much data hits that ceiling regardless of how much throughput is provisioned. It is one of the two hard limits that constrain key choice.",
+    "teaches": "partitioning-strategy"
+  },
+  {
+    "id": "dm-11",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "question": "A .NET application creates a new CosmosClient for each incoming web request. What is the consequence?",
+    "options": [
+      "Connections are exhausted and latency is added to every call",
+      "Requests are routed to the wrong region",
+      "The change feed stops being processed",
+      "Requests bypass the indexing policy"
+    ],
+    "correctIndex": 0,
+    "explanation": "The client is designed to be a long-lived singleton that maintains connections and routing caches. Creating one per request discards all of that and is one of the most common performance defects in Cosmos DB applications.",
+    "teaches": "sdk-connectivity"
+  },
+  {
+    "id": "dm-12",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "question": "A single property of a large document must be updated without reading and rewriting the whole document. What should you use?",
+    "options": [
+      "A patch operation",
+      "An upsert with the full document",
+      "A transactional batch containing a replace",
+      "A stored procedure that replaces the document"
+    ],
+    "correctIndex": 0,
+    "explanation": "Patch performs a partial update server-side, which avoids the read and the cost of rewriting everything. Every other option sends the whole document.",
+    "teaches": "queries-and-operations"
+  },
+  {
+    "id": "dm-13",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "question": "Two clients may update the same document concurrently and neither must silently overwrite the other. What should you implement?",
+    "options": [
+      "Optimistic concurrency using the document's ETag with an if-match condition",
+      "A transactional batch containing both updates",
+      "Session consistency on the account",
+      "A unique key policy on the document's id"
+    ],
+    "correctIndex": 0,
+    "explanation": "An if-match on the ETag causes the second write to fail rather than overwrite, which the application can then handle. Consistency levels govern what readers see, not how concurrent writers interact.",
+    "teaches": "queries-and-operations"
+  },
+  {
+    "id": "dm-14",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "question": "Documents written by an older version of an application coexist with newer documents in the same container. What is the standard way to handle this?",
+    "options": [
+      "Include a schema version property and have readers handle each version",
+      "Run a one-off migration to rewrite every document before deploying",
+      "Create a separate container per schema version",
+      "Apply a unique key policy that rejects old shapes"
+    ],
+    "correctIndex": 0,
+    "explanation": "A document database has no schema to migrate, so versioning is handled in the documents and the readers. A rewrite of every document is expensive and does not prevent the situation recurring at the next change.",
+    "teaches": "nosql-data-modelling"
+  },
+  {
+    "id": "dm-15",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "question": "Session documents should disappear automatically thirty minutes after they are last written. What should you configure?",
+    "options": [
+      "Time to live on the container or the items",
+      "A change feed processor that deletes expired documents",
+      "A scheduled Azure Function that queries and deletes",
+      "A unique key policy with an expiry property"
+    ],
+    "correctIndex": 0,
+    "explanation": "TTL expires documents automatically without consuming request units for a delete operation you wrote yourself. Both alternatives implement by hand what the service does natively.",
+    "teaches": "nosql-data-modelling"
+  },
+  {
+    "id": "dm-16",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "question": "A workload is under development, has unpredictable and infrequent traffic, and needs no throughput SLA. Which option is most appropriate?",
+    "options": [
+      "Serverless throughput",
+      "Standard provisioned throughput at the minimum",
+      "Autoscale with a high maximum",
+      "Database-level shared throughput"
+    ],
+    "correctIndex": 0,
+    "explanation": "Serverless bills per operation with no provisioning, which suits development and intermittent workloads. Its lower limits and absence of a throughput SLA are exactly what makes it unsuitable for the production case and suitable here.",
+    "teaches": "throughput-and-sizing"
+  },
+  {
+    "id": "dm-17",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "kind": "multi",
+    "question": "Which two properties should a good partition key have? Choose two.",
+    "options": [
+      "High cardinality",
+      "Appearance in the application's most common queries",
+      "A small number of distinct values for easier management",
+      "Monotonically increasing values such as a timestamp"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Cardinality spreads storage and requests, and appearing in common queries is what keeps those queries single-partition. Few distinct values and monotonically increasing values are the two classic mistakes, producing hot partitions in reads and writes respectively.",
+    "teaches": "partitioning-strategy"
+  },
+  {
+    "id": "dm-18",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "kind": "multi",
+    "question": "Which two are true of a hierarchical partition key? Choose two.",
+    "options": [
+      "It supports up to three levels",
+      "A query supplying only the first level can still be targeted efficiently",
+      "It can be changed on an existing container",
+      "It removes the 20 GB logical partition limit entirely"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Hierarchical keys subdivide storage beneath a prefix while keeping prefix queries efficient. Like any partition key they are fixed at container creation, and they relieve rather than remove the per-partition storage constraint.",
+    "teaches": "partitioning-strategy"
+  },
+  {
+    "id": "dm-19",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "kind": "order",
+    "question": "Put the steps of correcting a poorly chosen partition key in order.",
+    "items": [
+      "Repoint the application at the new container",
+      "Choose a key with high cardinality that appears in common queries",
+      "Migrate the data into the new container",
+      "Create a new container with the chosen partition key"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "A partition key cannot be changed in place, so correcting one always means a new container and a migration. Choosing the replacement before creating anything is what stops the exercise being repeated.",
+    "teaches": "partitioning-strategy"
+  },
+  {
+    "id": "dm-20",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "kind": "order",
+    "question": "Put these operations in order of typical request unit cost, from cheapest to dearest.",
+    "items": [
+      "A cross-partition query scanning many documents",
+      "A point read of a 1 KB document by id and partition key",
+      "A single-partition query returning a few documents"
+    ],
+    "correctOrder": [1, 2, 0],
+    "explanation": "A point read is about one RU, a targeted query costs more because it goes through the query engine, and a fan-out query pays across every physical partition. Knowing that ordering is what makes a design decision quantitative.",
+    "teaches": "queries-and-operations"
+  },
+  {
+    "id": "dm-21",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "kind": "match",
+    "question": "Match each SDK capability to what it is for.",
+    "pairs": [
+      { "term": "Transactional batch", "definition": "Atomic operations within one logical partition" },
+      { "term": "Bulk support", "definition": "Maximising throughput for a large ingestion" },
+      { "term": "Patch", "definition": "Updating part of a document without rewriting it" },
+      { "term": "Continuation token", "definition": "Resuming a paged query where the last page ended" }
+    ],
+    "explanation": "Atomicity, throughput, efficiency, and paging. Reaching for bulk when the requirement is atomicity is the confusion this set is built around, because both operate on many items at once.",
+    "teaches": "queries-and-operations"
+  },
+  {
+    "id": "dm-22",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "kind": "dropdown",
+    "question": "Complete the statement about throughput provisioning.",
+    "segments": [
+      { "text": "A workload with a strongly peaked daily pattern is best served by " },
+      {
+        "blankId": "b1",
+        "options": ["autoscale throughput", "standard provisioned throughput", "serverless throughput"],
+        "correctIndex": 0
+      },
+      { "text": ", while a development workload with occasional traffic suits " },
+      {
+        "blankId": "b2",
+        "options": ["serverless throughput", "autoscale throughput", "database-level shared throughput"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "Autoscale follows a curve within a provisioned envelope; serverless has no envelope at all but lower limits and no throughput SLA, which is why it belongs to development rather than production peaks.",
+    "teaches": "throughput-and-sizing"
+  },
+  {
+    "id": "dd-01",
+    "examCode": "dp-420",
+    "domain": "data-distribution",
+    "question": "A user must always see their own updates immediately, while other users may see them slightly later. Which consistency level should you choose?",
+    "options": [
+      "Session",
+      "Strong",
+      "Eventual",
+      "Consistent prefix"
+    ],
+    "correctIndex": 0,
+    "explanation": "Session guarantees read-your-own-writes for a client and is the default. Strong would satisfy the requirement but at unnecessary cost in latency, request units, and availability — and it is unavailable with multi-region writes.",
+    "teaches": "replication-and-consistency"
+  },
+  {
+    "id": "dd-02",
+    "examCode": "dp-420",
+    "domain": "data-distribution",
+    "question": "Which consistency level is unavailable when multi-region writes are enabled?",
+    "options": [
+      "Strong",
+      "Bounded staleness",
+      "Session",
+      "Consistent prefix"
+    ],
+    "correctIndex": 0,
+    "explanation": "Strong consistency requires a single write region, so enabling multi-region writes rules it out. That pairing is examined directly because it constrains an architecture decision rather than a setting.",
+    "teaches": "replication-and-consistency"
+  },
+  {
+    "id": "dd-03",
+    "examCode": "dp-420",
+    "domain": "data-distribution",
+    "question": "An account has multi-region writes enabled and two regions update the same document at nearly the same moment. What resolves the outcome?",
+    "options": [
+      "The conflict resolution policy — last-writer-wins on a property, or a custom stored procedure",
+      "The consistency level configured on the account",
+      "The preferred region list configured in the client",
+      "The automatic failover priority order"
+    ],
+    "correctIndex": 0,
+    "explanation": "Conflicts are the specific cost of multi-region writes and are settled by the conflict resolution policy, with unresolved cases placed in a conflicts feed. Consistency levels govern what readers observe rather than which write survives.",
+    "teaches": "multi-region-writes"
+  },
+  {
+    "id": "dd-04",
+    "examCode": "dp-420",
+    "domain": "data-distribution",
+    "kind": "yesno",
+    "question": "A globally distributed Cosmos DB account is being designed. Judge each statement.",
+    "statements": [
+      { "text": "Session consistency is the default and guarantees read-your-own-writes.", "correct": true },
+      { "text": "Stronger consistency costs latency and request units.", "correct": true },
+      { "text": "Multi-region writes introduce the possibility of conflicts.", "correct": true },
+      { "text": "Adding a read region requires the application to be redeployed.", "correct": false }
+    ],
+    "explanation": "Adding a region is an account configuration change; the client's preferred region list decides which replica it reads from, and updating that is a configuration matter rather than a redeployment.",
+    "teaches": "replication-and-consistency"
+  },
+  {
+    "id": "ig-01",
+    "examCode": "dp-420",
+    "domain": "integration",
+    "question": "Deleted documents must become visible to a downstream store maintained by a change feed processor. What should you implement?",
+    "options": [
+      "A soft-delete flag on the document, combined with time to live",
+      "A second change feed processor configured for deletes",
+      "A trigger that writes a tombstone to the lease container",
+      "Continuous backup with point-in-time restore"
+    ],
+    "correctIndex": 0,
+    "explanation": "The change feed records creates and updates but not deletes, so a delete has to be expressed as an update the feed can see. Marking the document deleted and letting TTL remove it later is the standard pattern.",
+    "teaches": "change-feed-integration"
+  },
+  {
+    "id": "ig-02",
+    "examCode": "dp-420",
+    "domain": "integration",
+    "question": "Analytical queries must run over container data without consuming the transactional workload's request units. What should you enable?",
+    "options": [
+      "The analytical store, queried through Azure Synapse Link",
+      "A read region in the same geography",
+      "The integrated cache on a dedicated gateway",
+      "Autoscale throughput on the container"
+    ],
+    "correctIndex": 0,
+    "explanation": "The analytical store is a separate column-oriented copy isolated from transactional throughput, which is its entire purpose. A read region still consumes request units, and the cache serves repeated reads rather than analytical scans.",
+    "teaches": "analytical-store-and-fabric"
+  },
+  {
+    "id": "ig-03",
+    "examCode": "dp-420",
+    "domain": "integration",
+    "question": "A Fabric-centred analytics estate must query Cosmos DB data as Delta tables with no pipeline to maintain. What should you configure?",
+    "options": [
+      "Azure Cosmos DB mirroring for Microsoft Fabric",
+      "The Azure Cosmos DB Spark connector",
+      "An Azure Data Factory copy activity on a schedule",
+      "Change feed with an Azure Function writing to OneLake"
+    ],
+    "correctIndex": 0,
+    "explanation": "Mirroring replicates continuously into OneLake with no code, which is what 'no pipeline to maintain' points at. The Spark connector is the right answer when the processing itself must happen in Spark.",
+    "teaches": "analytical-store-and-fabric"
+  },
+  {
+    "id": "ig-04",
+    "examCode": "dp-420",
+    "domain": "integration",
+    "question": "A denormalised copy of customer data is embedded in thousands of order documents and must be kept current when the customer changes. What should you use?",
+    "options": [
+      "A change feed processor reacting to customer document changes",
+      "A stored procedure run nightly across all orders",
+      "A unique key policy linking orders to customers",
+      "A composite index on the customer property"
+    ],
+    "correctIndex": 0,
+    "explanation": "Denormalisation trades read cost for the obligation to maintain copies, and the change feed is the mechanism for that maintenance. There are no foreign keys, so nothing enforces it automatically.",
+    "teaches": "change-feed-integration"
+  },
+  {
+    "id": "ig-05",
+    "examCode": "dp-420",
+    "domain": "integration",
+    "kind": "match",
+    "question": "Match each change feed pattern to what it achieves.",
+    "pairs": [
+      { "term": "Denormalisation", "definition": "Keeping duplicated copies in step when the source changes" },
+      { "term": "Referential enforcement", "definition": "Validating or cascading to related documents on change" },
+      { "term": "Aggregation", "definition": "Maintaining running totals so reads need not compute them" },
+      { "term": "Archiving", "definition": "Moving ageing documents to cheaper storage" }
+    ],
+    "explanation": "All four exist because a document database has no joins, no foreign keys, and no server-side aggregation across partitions worth relying on. The change feed is how those gaps are filled.",
+    "teaches": "change-feed-integration"
+  },
+  {
+    "id": "op-01",
+    "examCode": "dp-420",
+    "domain": "optimisation",
+    "question": "A write-heavy container has high RU cost per insert and most properties are never filtered on. What should you change?",
+    "options": [
+      "Exclude the unused paths from the indexing policy",
+      "Add composite indexes for the common queries",
+      "Switch the account to strong consistency",
+      "Enable the integrated cache"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cosmos DB indexes every property by default, and each indexed path adds cost to every write. Excluding paths that are never queried is the direct remedy for a write-heavy workload and is a cost decision rather than a micro-optimisation.",
+    "teaches": "indexing-strategy"
+  },
+  {
+    "id": "op-02",
+    "examCode": "dp-420",
+    "domain": "optimisation",
+    "question": "A query orders results by two properties and performs poorly. What should you create?",
+    "options": [
+      "A composite index matching the properties and sort directions",
+      "A range index on each property separately",
+      "A spatial index on the container",
+      "A unique key policy across the two properties"
+    ],
+    "correctIndex": 0,
+    "explanation": "ORDER BY across two or more properties requires a composite index, and its definition is order- and direction-sensitive — an index on (a ASC, b DESC) does not serve the reverse ordering.",
+    "teaches": "indexing-strategy"
+  },
+  {
+    "id": "op-03",
+    "examCode": "dp-420",
+    "domain": "optimisation",
+    "question": "You need to know precisely what a query costs. Where should you look?",
+    "options": [
+      "The request charge returned on the response",
+      "The average RU utilisation metric in Azure Monitor",
+      "The normalised RU consumption metric",
+      "The provisioned throughput on the container"
+    ],
+    "correctIndex": 0,
+    "explanation": "Every response carries the request charge for that operation, which is a direct measurement rather than an inference. The Azure Monitor metrics describe the account's utilisation rather than one query's cost.",
+    "teaches": "query-optimisation"
+  },
+  {
+    "id": "op-04",
+    "examCode": "dp-420",
+    "domain": "optimisation",
+    "question": "A change feed processor is falling behind and the backlog grows steadily. Which tool tells you by how much?",
+    "options": [
+      "The change feed estimator",
+      "The normalised RU consumption metric",
+      "The query metrics on the lease container",
+      "Diagnostics logging in the SDK"
+    ],
+    "correctIndex": 0,
+    "explanation": "The estimator reports the lag between production and consumption, which is the number that decides whether more instances are needed. A growing backlog with no measurement is guesswork.",
+    "teaches": "change-feed-processing"
+  },
+  {
+    "id": "op-05",
+    "examCode": "dp-420",
+    "domain": "optimisation",
+    "question": "A team adds twenty change feed processor instances but throughput does not improve beyond eight. Why?",
+    "options": [
+      "Parallelism is bounded by the number of leases, which follows the source container's partition ranges",
+      "The lease container has reached its 20 GB limit",
+      "The change feed does not support more than eight consumers",
+      "The processor requires strong consistency to scale"
+    ],
+    "correctIndex": 0,
+    "explanation": "Each instance takes leases, and there are only as many leases as partition ranges. Adding instances beyond that leaves them idle, which is why scaling the processor eventually requires scaling the source container.",
+    "teaches": "change-feed-processing"
+  },
+  {
+    "id": "op-06",
+    "examCode": "dp-420",
+    "domain": "optimisation",
+    "question": "Why must change feed processing logic be idempotent?",
+    "options": [
+      "A change can be delivered more than once when leases move between instances",
+      "The change feed delivers changes out of order within a partition",
+      "The change feed includes deletes that may not exist",
+      "The lease container may lose its state on restart"
+    ],
+    "correctIndex": 0,
+    "explanation": "Delivery is at-least-once, so rebalancing can replay a change. Within a logical partition the feed is ordered, and deletes are not included at all — both distractors that describe things the feed does not do.",
+    "teaches": "change-feed-processing"
+  },
+  {
+    "id": "op-07",
+    "examCode": "dp-420",
+    "domain": "optimisation",
+    "question": "An indexing policy change has been applied and query performance has not improved. What is the most likely explanation?",
+    "options": [
+      "The index transformation is still running in the background",
+      "Indexing policy changes require the container to be recreated",
+      "The container must be switched to autoscale first",
+      "The SDK caches the old policy until the client restarts"
+    ],
+    "correctIndex": 0,
+    "explanation": "Index transformations are applied asynchronously while the container stays queryable, so the benefit appears only when the transformation completes. No recreation or client restart is involved.",
+    "teaches": "indexing-strategy"
+  },
+  {
+    "id": "op-08",
+    "examCode": "dp-420",
+    "domain": "optimisation",
+    "question": "Which requirement must be met to use the Azure Cosmos DB integrated cache?",
+    "options": [
+      "A dedicated gateway, with clients connecting in gateway mode",
+      "Direct connectivity mode from every client",
+      "Multi-region writes enabled on the account",
+      "Strong consistency configured on the account"
+    ],
+    "correctIndex": 0,
+    "explanation": "The cache lives in the dedicated gateway, so traffic must pass through it — which means gateway mode. Direct mode bypasses the gateway entirely and therefore the cache with it.",
+    "teaches": "query-optimisation"
+  },
+  {
+    "id": "op-09",
+    "examCode": "dp-420",
+    "domain": "optimisation",
+    "kind": "multi",
+    "question": "Which two reduce the request unit cost of a query? Choose two.",
+    "options": [
+      "Supplying the partition key so the query targets one partition",
+      "Projecting only the properties needed instead of whole documents",
+      "Increasing provisioned throughput on the container",
+      "Switching the account to eventual consistency"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Both reduce the work the engine does and therefore the charge. Raising throughput buys more capacity at the same unit cost, and consistency affects read cost modestly but is an account-wide correctness decision rather than a query optimisation.",
+    "teaches": "query-optimisation"
+  },
+  {
+    "id": "op-10",
+    "examCode": "dp-420",
+    "domain": "optimisation",
+    "kind": "order",
+    "question": "Put the steps of diagnosing an expensive query in order.",
+    "items": [
+      "Adjust the indexing policy or the query itself",
+      "Read the request charge from the response",
+      "Re-measure the request charge to confirm the improvement",
+      "Examine the query metrics to see how much was scanned and returned"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "Measure, understand, change, re-measure. Changing an index before reading the metrics is how teams spend a week improving something that was never the cost.",
+    "teaches": "query-optimisation"
+  },
+  {
+    "id": "op-11",
+    "examCode": "dp-420",
+    "domain": "optimisation",
+    "kind": "match",
+    "question": "Match each index type to what it serves.",
+    "pairs": [
+      { "term": "Range index", "definition": "Equality, range comparisons, and ORDER BY on one property" },
+      { "term": "Composite index", "definition": "ORDER BY across two or more properties" },
+      { "term": "Spatial index", "definition": "Geospatial queries over points and polygons" },
+      { "term": "Excluded path", "definition": "Reducing write cost for a property never filtered on" }
+    ],
+    "explanation": "Three add capability and one removes cost. Because everything is indexed by default, deciding what not to index is as much a design decision as deciding what to.",
+    "teaches": "indexing-strategy"
+  },
+  {
+    "id": "mt-01",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "question": "An application receives HTTP 429 responses during peak hours. What does this indicate?",
+    "options": [
+      "Requests exceeded provisioned throughput and should be retried after the supplied interval",
+      "The account is unavailable and a regional failover is required",
+      "The partition key is invalid for the container",
+      "The document exceeded the maximum size"
+    ],
+    "correctIndex": 0,
+    "explanation": "429 is rate limiting, carries a retry-after value the SDK honours automatically, and is an expected part of normal operation. Reading it as an outage is the standard misdiagnosis.",
+    "teaches": "monitoring-cosmos"
+  },
+  {
+    "id": "mt-02",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "question": "Which metric reveals that one physical partition is saturated while the account's average utilisation looks low?",
+    "options": [
+      "Normalised RU consumption",
+      "Total request units consumed",
+      "Server-side latency",
+      "Provisioned throughput"
+    ],
+    "correctIndex": 0,
+    "explanation": "Normalised RU consumption reports the utilisation of the busiest partition rather than an average, which is precisely how a hot partition becomes visible. An average conceals it by definition.",
+    "teaches": "monitoring-cosmos"
+  },
+  {
+    "id": "mt-03",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "question": "A container must be recoverable to any second within the last seven days, without raising a support request. What should you configure?",
+    "options": [
+      "Continuous backup",
+      "Periodic backup with a seven-day retention",
+      "A read region in a paired region",
+      "Time to live on the container"
+    ],
+    "correctIndex": 0,
+    "explanation": "Continuous backup provides self-service point-in-time restore within its retention window. Periodic backup restores require a support request, which is the operational difference the question turns on.",
+    "teaches": "backup-restore-cosmos"
+  },
+  {
+    "id": "mt-04",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "question": "A point-in-time restore is performed on a Cosmos DB account. What is created?",
+    "options": [
+      "A new account containing the restored data",
+      "A new container within the existing account",
+      "A restored copy that overwrites the existing account",
+      "A read-only snapshot attached to the existing account"
+    ],
+    "correctIndex": 0,
+    "explanation": "Restores always produce a new account, so recovery includes a cutover step for the application. Expecting an in-place restore mid-incident is how a recovery plan loses time it did not budget for.",
+    "teaches": "backup-restore-cosmos"
+  },
+  {
+    "id": "mt-05",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "question": "Which access is governed by Azure RBAC rather than by account keys or data plane RBAC?",
+    "options": [
+      "Creating a container and changing its provisioned throughput",
+      "Reading a document from a container",
+      "Writing a document to a container",
+      "Executing a stored procedure"
+    ],
+    "correctIndex": 0,
+    "explanation": "Control plane operations — creating resources and changing configuration — are Azure RBAC. Reading and writing documents are data plane operations governed by keys or by the Cosmos DB data plane RBAC model.",
+    "teaches": "cosmos-security"
+  },
+  {
+    "id": "mt-06",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "question": "An organisation wants data plane access attributed to individual identities rather than a shared secret. What should you implement?",
+    "options": [
+      "Microsoft Entra identities with the Cosmos DB data plane RBAC model, and disable key-based access",
+      "Rotate the account keys on a 30-day schedule",
+      "Store the account keys in Azure Key Vault",
+      "Enable customer-managed keys for encryption at rest"
+    ],
+    "correctIndex": 0,
+    "explanation": "Account keys are shared secrets granting full access and cannot be attributed to a person however they are stored or rotated. Data plane RBAC with Entra identities is what makes access scoped and attributable.",
+    "teaches": "cosmos-security"
+  },
+  {
+    "id": "mt-07",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "question": "Which HTTP status code indicates that an ETag precondition failed and a concurrent write was prevented?",
+    "options": [
+      "412",
+      "409",
+      "429",
+      "449"
+    ],
+    "correctIndex": 0,
+    "explanation": "412 is a failed precondition, which is what optimistic concurrency produces when the document changed since it was read. 409 is a conflict on id or a unique key, 429 is rate limiting, and 449 is a transient concurrency error to retry.",
+    "teaches": "monitoring-cosmos"
+  },
+  {
+    "id": "mt-08",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "question": "A large one-off load of documents must be written from an application as quickly as possible. What should you use?",
+    "options": [
+      "Bulk support in the SDK",
+      "A transactional batch per document",
+      "A stored procedure looping over the documents",
+      "Individual create operations in a tight loop"
+    ],
+    "correctIndex": 0,
+    "explanation": "Bulk mode batches operations under the covers and is designed for exactly this. A stored procedure is confined to one logical partition, and individual creates in a loop leave throughput unused while adding round trips.",
+    "teaches": "data-movement-devops"
+  },
+  {
+    "id": "mt-09",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "question": "An indexing policy is changed by hand in the portal to fix a production problem. What is the risk?",
+    "options": [
+      "The change is invisible afterwards and will be lost when the template is next deployed",
+      "The container must be recreated to apply it",
+      "The change cannot be reverted",
+      "The container becomes unqueryable during the change"
+    ],
+    "correctIndex": 0,
+    "explanation": "A manual change diverges from the declared configuration and is silently reverted the next time the template runs. Holding indexing policies in ARM or Bicep is what keeps production and source in step.",
+    "teaches": "data-movement-devops"
+  },
+  {
+    "id": "mt-10",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "question": "Which operation is best performed imperatively with PowerShell or the Azure CLI rather than declared in a template?",
+    "options": [
+      "Initiating a regional failover",
+      "Defining a container's indexing policy",
+      "Creating a database and its containers",
+      "Setting the account's consistency level"
+    ],
+    "correctIndex": 0,
+    "explanation": "A failover is an action taken at a moment, not a desired state, so it belongs in a script. The other three describe how the resource should be configured and belong in a template.",
+    "teaches": "data-movement-devops"
+  },
+  {
+    "id": "mt-11",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "question": "Continuous telemetry from an IoT Hub must land in Azure Cosmos DB with no intermediate application. What should you configure?",
+    "options": [
+      "Azure Cosmos DB as a custom endpoint for the IoT Hub",
+      "An Azure Data Factory pipeline on a five-minute schedule",
+      "The Azure Cosmos DB Spark connector",
+      "A change feed processor reading from IoT Hub"
+    ],
+    "correctIndex": 0,
+    "explanation": "IoT Hub supports Cosmos DB as a custom endpoint, which routes telemetry directly. A scheduled pipeline is not continuous, and the change feed reads from Cosmos DB rather than writing to it.",
+    "teaches": "data-movement-devops"
+  },
+  {
+    "id": "mt-12",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "question": "An account is configured with customer-managed keys in Azure Key Vault. What operational risk does this introduce?",
+    "options": [
+      "Losing access to the key makes the data inaccessible",
+      "Backups can no longer be taken",
+      "The change feed stops recording updates",
+      "Multi-region writes become unavailable"
+    ],
+    "correctIndex": 0,
+    "explanation": "Holding the key means owning the consequences of losing it, which is the standing trade with customer-managed keys anywhere in Azure. Backups, change feed, and replication are unaffected.",
+    "teaches": "cosmos-security"
+  },
+  {
+    "id": "mt-13",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "question": "A browser application calls Azure Cosmos DB directly and requests are blocked by the browser. What should you configure?",
+    "options": [
+      "CORS settings on the account, listing the permitted origins",
+      "A private endpoint for the account",
+      "Gateway connectivity mode in the SDK",
+      "A firewall rule permitting the users' IP ranges"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cross-origin resource sharing is a browser control, so a browser refusing the call points at CORS rather than at network access. A firewall rule addresses reachability, which is a different failure.",
+    "teaches": "cosmos-security"
+  },
+  {
+    "id": "mt-14",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "question": "An account is on periodic backup and the team wants self-service point-in-time restore. What should they know before switching?",
+    "options": [
+      "The switch from periodic to continuous cannot be reversed",
+      "Switching requires recreating the account",
+      "Continuous backup is unavailable with multi-region writes",
+      "Continuous backup disables the analytical store"
+    ],
+    "correctIndex": 0,
+    "explanation": "Moving to continuous backup is a one-way change, which is worth knowing before it is made rather than afterwards. It requires no recreation and does not conflict with the other features listed.",
+    "teaches": "backup-restore-cosmos"
+  },
+  {
+    "id": "mt-15",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "kind": "multi",
+    "question": "Which two are true of account keys for Azure Cosmos DB? Choose two.",
+    "options": [
+      "They grant full data plane access",
+      "They cannot be attributed to an individual user",
+      "They can be scoped to a single container",
+      "They are required for control plane operations"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Keys are shared secrets granting everything on the data plane and identifying nobody, which is why data plane RBAC exists. Control plane operations use Azure RBAC rather than keys.",
+    "teaches": "cosmos-security"
+  },
+  {
+    "id": "mt-16",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "kind": "order",
+    "question": "Put the steps of investigating an application reporting frequent throttling in order.",
+    "items": [
+      "Address the cause — repartition, tune queries, or raise throughput",
+      "Confirm the 429 responses and their frequency",
+      "Check whether throughput and storage are skewed across partitions",
+      "Compare normalised RU consumption against average utilisation"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "Confirm the symptom, then establish whether it is a capacity problem or a distribution problem, then look at the partitions themselves. Raising throughput first is what turns a partitioning fault into an expensive partitioning fault.",
+    "teaches": "monitoring-cosmos"
+  },
+  {
+    "id": "mt-17",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "kind": "yesno",
+    "question": "An Azure Cosmos DB account is being secured. Judge each statement.",
+    "statements": [
+      { "text": "Control plane access is governed by Azure RBAC.", "correct": true },
+      { "text": "Data plane access can use Microsoft Entra identities instead of account keys.", "correct": true },
+      { "text": "Public network access can be disabled in favour of a private endpoint.", "correct": true },
+      { "text": "Disabling key-based access also disables Azure RBAC role assignments.", "correct": false }
+    ],
+    "explanation": "The two planes are independent, which is the point of the distinction — disabling keys removes the shared-secret path on the data plane and leaves control plane RBAC entirely unaffected.",
+    "teaches": "cosmos-security"
+  },
+  {
+    "id": "mt-18",
+    "examCode": "dp-420",
+    "domain": "maintenance",
+    "kind": "dropdown",
+    "question": "Complete the statement about diagnosing throttling.",
+    "segments": [
+      { "text": "A container throttling while average utilisation looks low is revealed by " },
+      {
+        "blankId": "b1",
+        "options": ["normalised RU consumption", "total request units consumed", "server-side latency"],
+        "correctIndex": 0
+      },
+      { "text": ", and the underlying cause is usually " },
+      {
+        "blankId": "b2",
+        "options": ["a poorly chosen partition key", "an outdated SDK version", "gateway connectivity mode"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "Throughput is divided across physical partitions, so skew produces throttling long before the account as a whole is busy. That is why the normalised metric exists and why raising throughput rarely fixes it.",
+    "teaches": "monitoring-cosmos"
+  }
+]

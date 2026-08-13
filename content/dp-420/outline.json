@@ -1,0 +1,86 @@
+{
+  "examCode": "DP-420",
+  "examName": "Designing and Implementing Cloud-Native Applications Using Microsoft Azure Cosmos DB",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for DP-420, 'Skills measured as of July 21, 2026'. Two of its five domains sit at 5-10%, the smallest bands in the catalogue, so the paper carries only 4 and 5 questions in them. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "data-models",
+      "name": "Design and implement data models",
+      "weight": "35-40%",
+      "subtopics": [
+        "Store multiple entity types in one container and multiple related entities in one document",
+        "Denormalise data across documents and reference between documents",
+        "Identify partition key, id, and unique keys, and identify data and access patterns",
+        "Specify a default time to live on a container and design for document and schema versioning",
+        "Choose a partitioning strategy and a partition key, and plan for transactions when choosing one",
+        "Evaluate the cost of cross-partition queries and the distribution of data and throughput",
+        "Construct a synthetic partition key and design a hierarchical partition key",
+        "Choose between serverless and provisioned throughput and when to use database-level throughput",
+        "Choose a connectivity mode, implement a client singleton, and handle connection errors",
+        "Implement queries and point operations with the SDK, including transactional batch, bulk, ETags, and pagination"
+      ]
+    },
+    {
+      "id": "data-distribution",
+      "name": "Design and implement data distribution",
+      "weight": "5-10%",
+      "subtopics": [
+        "Choose when to distribute data across regions",
+        "Define automatic failover policies and perform manual failovers",
+        "Choose a consistency model and identify use cases for each",
+        "Evaluate the impact of consistency choices on availability, request unit cost, latency, and performance",
+        "Specify application connections to replicated data",
+        "Choose when to use multi-region writes and implement them",
+        "Implement a custom conflict resolution policy"
+      ]
+    },
+    {
+      "id": "integration",
+      "name": "Integrate an Azure Cosmos DB solution",
+      "weight": "5-10%",
+      "subtopics": [
+        "Configure Azure Cosmos DB mirroring for Microsoft Fabric",
+        "Choose between mirroring and the Azure Cosmos DB Spark connector",
+        "Enable the analytical store on a container and query it from Azure Synapse",
+        "Implement change data capture in the analytical store",
+        "Integrate events with other applications by using Azure Functions and Event Hubs",
+        "Denormalise, enforce referential integrity, aggregate, and archive by using change feed and Functions",
+        "Implement Azure AI Search over an Azure Cosmos DB solution"
+      ]
+    },
+    {
+      "id": "optimisation",
+      "name": "Optimize an Azure Cosmos DB solution",
+      "weight": "15-20%",
+      "subtopics": [
+        "Adjust indexes and calculate the cost of a query",
+        "Retrieve the request unit cost of a point operation or query",
+        "Implement the Azure Cosmos DB integrated cache",
+        "Develop an Azure Functions trigger to process a change feed",
+        "Consume a change feed from an application by using the SDK",
+        "Manage the number of change feed instances by using the change feed estimator",
+        "Implement denormalisation, referential enforcement, aggregation, and archiving with a change feed",
+        "Choose between read-heavy and write-heavy index strategies and an appropriate index type",
+        "Configure a custom indexing policy and implement a composite index",
+        "Optimise index performance"
+      ]
+    },
+    {
+      "id": "maintenance",
+      "name": "Maintain an Azure Cosmos DB solution",
+      "weight": "25-30%",
+      "subtopics": [
+        "Evaluate response status codes and failure metrics",
+        "Monitor normalised RU consumption, server-side latency, and replication with Azure Monitor",
+        "Configure alerts, query resource logs, and monitor throughput and data distribution across partitions",
+        "Choose between periodic and continuous backup and configure each",
+        "Locate a restore point and restore a database or container",
+        "Choose between platform-managed and customer-managed encryption keys",
+        "Configure network-level access control and data encryption",
+        "Manage control plane and data plane access by using Azure RBAC and Microsoft Entra ID",
+        "Configure CORS settings and manage account keys by using Azure Key Vault",
+        "Choose a data movement strategy and implement a DevOps process with ARM templates and CLI"
+      ]
+    }
+  ]
+}

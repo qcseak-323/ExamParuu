@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-verdance-telemetry",
+    "examCode": "dp-420",
+    "domain": "data-models",
+    "title": "Verdance Energy — a container that throttles at 12% utilisation",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Verdance Energy monitors 90,000 solar inverters across three countries. Each inverter reports every thirty seconds into an Azure Cosmos DB for NoSQL container, and a customer portal shows each site's readings and running totals.",
+          "The platform was built quickly and works in demonstrations. In production it throttles daily, and the team has been given the findings below to resolve before a fourth country is added."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "The telemetry container uses country as its partition key. Three values exist. The account is provisioned at 40,000 RU/s, the portal reports HTTP 429 responses throughout the working day, and Azure Monitor shows average RU utilisation around 12% while normalised RU consumption sits at 100%.",
+          "The portal's main screen queries readings for one site over the last 24 hours. Site identifier is a property on each document but is not the partition key, and query metrics show the query is served from every physical partition.",
+          "A billing routine must write an adjustment document and update the corresponding invoice document together, atomically. The two documents currently have different partition key values, and the routine occasionally leaves an adjustment with no matching invoice update.",
+          "Traffic is heavily peaked: about 85% of requests arrive between 06:00 and 09:00 as inverters come online across time zones, and volume is low overnight. The account is on standard provisioned throughput sized for the morning peak.",
+          "The portal repeatedly re-reads the same forty site-summary documents on every page load. These change at most once an hour. The team has been told to reduce RU cost without changing the refresh behaviour.",
+          "Deleted inverters remain in a downstream reporting store. The change feed processor that maintains it has never removed anything."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Throttling must stop, and the cause must be addressed rather than masked by raising provisioned throughput.",
+          "The portal's per-site query must stop fanning out across every physical partition.",
+          "The adjustment and invoice writes must be atomic.",
+          "Throughput cost must reflect the peaked traffic pattern rather than paying for the morning peak around the clock.",
+          "The repeated site-summary reads must cost fewer request units without changing how often the portal reads them.",
+          "Deletions must become visible to the downstream reporting store."
+        ]
+      }
+    ]
+  }
+]

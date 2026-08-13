@@ -1,0 +1,112 @@
+{
+  "examCode": "dp-420",
+  "note": "Five paths, one per exam domain, following Microsoft's DP-420 learning paths. Module titles follow Microsoft Learn; the sections and cards behind each are this site's own.",
+  "paths": [
+    {
+      "id": "data-models",
+      "title": "Design and implement data models for Azure Cosmos DB for NoSQL",
+      "domainId": "data-models",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/design-implement-azure-cosmosdb-data-models/",
+      "modules": [
+        {
+          "id": "data-models-m1",
+          "title": "Model a non-relational data store",
+          "sectionIds": ["nosql-data-modelling"],
+          "cardIds": ["fc-dp420-dm-01", "fc-dp420-dm-02", "fc-dp420-dm-03", "fc-dp420-dm-04", "fc-dp420-dm-18"]
+        },
+        {
+          "id": "data-models-m2",
+          "title": "Design a data partitioning strategy",
+          "sectionIds": ["partitioning-strategy"],
+          "cardIds": ["fc-dp420-dm-05", "fc-dp420-dm-06", "fc-dp420-dm-07", "fc-dp420-dm-08", "fc-dp420-dm-09"]
+        },
+        {
+          "id": "data-models-m3",
+          "title": "Plan sizing, scaling, and throughput",
+          "sectionIds": ["throughput-and-sizing"],
+          "cardIds": ["fc-dp420-dm-10", "fc-dp420-dm-11", "fc-dp420-dm-12", "fc-dp420-dm-13"]
+        },
+        {
+          "id": "data-models-m4",
+          "title": "Connect and query with the SDK",
+          "sectionIds": ["sdk-connectivity", "queries-and-operations"],
+          "cardIds": ["fc-dp420-dm-14", "fc-dp420-dm-15", "fc-dp420-dm-16", "fc-dp420-dm-17"]
+        }
+      ]
+    },
+    {
+      "id": "data-distribution",
+      "title": "Distribute data globally with Azure Cosmos DB",
+      "domainId": "data-distribution",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/distribute-data-globally-azure-cosmos-db/",
+      "modules": [
+        {
+          "id": "data-distribution-m1",
+          "title": "Implement replication, consistency, and multi-region writes",
+          "sectionIds": ["replication-and-consistency", "multi-region-writes"],
+          "cardIds": ["fc-dp420-dd-01", "fc-dp420-dd-02", "fc-dp420-dd-03", "fc-dp420-dd-04"]
+        }
+      ]
+    },
+    {
+      "id": "integration",
+      "title": "Integrate Azure Cosmos DB with other services",
+      "domainId": "integration",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/integrate-azure-cosmos-db-other-services/",
+      "modules": [
+        {
+          "id": "integration-m1",
+          "title": "Enable analytical workloads and integrate across services",
+          "sectionIds": ["analytical-store-and-fabric", "change-feed-integration"],
+          "cardIds": ["fc-dp420-ig-01", "fc-dp420-ig-02", "fc-dp420-ig-03", "fc-dp420-ig-04"]
+        }
+      ]
+    },
+    {
+      "id": "optimisation",
+      "title": "Optimize an Azure Cosmos DB solution",
+      "domainId": "optimisation",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/optimize-azure-cosmos-db/",
+      "modules": [
+        {
+          "id": "optimisation-m1",
+          "title": "Optimize query performance and indexing",
+          "sectionIds": ["query-optimisation", "indexing-strategy"],
+          "cardIds": ["fc-dp420-op-01", "fc-dp420-op-02", "fc-dp420-op-03", "fc-dp420-op-04", "fc-dp420-op-05"]
+        },
+        {
+          "id": "optimisation-m2",
+          "title": "Design and process change feeds",
+          "sectionIds": ["change-feed-processing"],
+          "cardIds": ["fc-dp420-op-06", "fc-dp420-op-07", "fc-dp420-op-08", "fc-dp420-op-09", "fc-dp420-op-10"]
+        }
+      ]
+    },
+    {
+      "id": "maintenance",
+      "title": "Maintain an Azure Cosmos DB solution",
+      "domainId": "maintenance",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/maintain-azure-cosmos-db/",
+      "modules": [
+        {
+          "id": "maintenance-m1",
+          "title": "Monitor and troubleshoot a solution",
+          "sectionIds": ["monitoring-cosmos"],
+          "cardIds": ["fc-dp420-mt-01", "fc-dp420-mt-02", "fc-dp420-mt-03", "fc-dp420-mt-04", "fc-dp420-mt-12"]
+        },
+        {
+          "id": "maintenance-m2",
+          "title": "Implement backup and restore",
+          "sectionIds": ["backup-restore-cosmos"],
+          "cardIds": ["fc-dp420-mt-05", "fc-dp420-mt-06", "fc-dp420-mt-07", "fc-dp420-mt-08", "fc-dp420-mt-13"]
+        },
+        {
+          "id": "maintenance-m3",
+          "title": "Implement security and a DevOps process",
+          "sectionIds": ["cosmos-security", "data-movement-devops"],
+          "cardIds": ["fc-dp420-mt-09", "fc-dp420-mt-10", "fc-dp420-mt-11", "fc-dp420-mt-14"]
+        }
+      ]
+    }
+  ]
+}

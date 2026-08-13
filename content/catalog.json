@@ -300,10 +300,10 @@
     "series": "dp",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Model, partition and query data in Azure Cosmos DB, and integrate it into cloud-native applications.",
-    "hasContent": false,
+    "hasContent": true,
     "catalogVerifiedAt": "2026-08-12",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/dp-420"
   },
