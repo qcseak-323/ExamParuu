@@ -1,0 +1,933 @@
+[
+  {
+    "id": "se-01",
+    "examCode": "dp-300",
+    "domain": "secure-environment",
+    "caseStudyId": "cs-lattermoor-clinical",
+    "question": "The managed service provider must continue administering the database but must not read the Salary column in plain text. Transparent data encryption is already enabled. What should you implement?",
+    "options": [
+      "Always Encrypted on the Salary column, with the column master key held outside the database",
+      "Transparent data encryption with a customer-managed key",
+      "Dynamic data masking on the Salary column",
+      "Row-level security on the staff table"
+    ],
+    "correctIndex": 0,
+    "explanation": "TDE is transparent to anyone querying the database, so it protects the files and not the values from an administrator — which is why offering it as evidence here is wrong. Only Always Encrypted keeps the keys with the client so the engine, and therefore the DBA, sees ciphertext. Masking can be bypassed by a privileged user.",
+    "teaches": "encryption-at-rest-in-transit"
+  },
+  {
+    "id": "se-02",
+    "examCode": "dp-300",
+    "domain": "secure-environment",
+    "caseStudyId": "cs-lattermoor-clinical",
+    "question": "There must be a durable record of who read patient records and when. What should you configure?",
+    "options": [
+      "Server-level auditing, writing to a Log Analytics workspace",
+      "Change data tracking on the patient tables",
+      "Extended Events sessions on the database",
+      "Ledger tables for the patient schema"
+    ],
+    "correctIndex": 0,
+    "explanation": "Auditing is the control that records who did what and when, and configuring it at server level means new databases inherit it. Change tracking records that data changed rather than who read it, and ledger proves data was not altered — a different question again.",
+    "teaches": "compliance-controls"
+  },
+  {
+    "id": "se-03",
+    "examCode": "dp-300",
+    "domain": "secure-environment",
+    "caseStudyId": "cs-lattermoor-clinical",
+    "question": "Laboratory staff share one application login and must see only their own laboratory's rows, without modifying the application. What should you implement?",
+    "options": [
+      "Row-level security with a predicate function on the results table",
+      "Dynamic data masking on the laboratory column",
+      "A separate database per laboratory",
+      "Object-level permissions granted per laboratory"
+    ],
+    "correctIndex": 0,
+    "explanation": "Row-level security is enforced by the engine on every query, so it works without touching the application — which is exactly the constraint. Masking hides values within rows the user still receives, and object permissions cannot filter rows within one table.",
+    "teaches": "compliance-controls"
+  },
+  {
+    "id": "se-04",
+    "examCode": "dp-300",
+    "domain": "secure-environment",
+    "caseStudyId": "cs-lattermoor-clinical",
+    "question": "Support staff must see patient records with national insurance numbers obscured, while the stored values remain unchanged. What should you configure?",
+    "options": [
+      "Dynamic data masking on the national insurance number column",
+      "Always Encrypted with randomised encryption on that column",
+      "Row-level security restricting support staff",
+      "Object-level DENY on the column for the support role"
+    ],
+    "correctIndex": 0,
+    "explanation": "Masking obscures values in results for unprivileged users while leaving the data intact, which matches both halves of the requirement. Always Encrypted would prevent legitimate processing, and a DENY removes the column from their results entirely rather than obscuring it.",
+    "teaches": "compliance-controls"
+  },
+  {
+    "id": "se-05",
+    "examCode": "dp-300",
+    "domain": "secure-environment",
+    "caseStudyId": "cs-lattermoor-clinical",
+    "question": "Traffic must not traverse a public endpoint and the public path must be able to be disabled. What should you implement?",
+    "options": [
+      "A private endpoint for the logical server, then disable public network access",
+      "A service endpoint from the application subnet",
+      "A narrower set of server-level firewall rules",
+      "A database-level firewall rule for each application server"
+    ],
+    "correctIndex": 0,
+    "explanation": "A service endpoint still sends traffic to the public endpoint, and firewall rules narrow who may use that endpoint without removing it. Only a private endpoint gives the server a private address so public network access can be turned off.",
+    "teaches": "network-security-sql"
+  },
+  {
+    "id": "se-06",
+    "examCode": "dp-300",
+    "domain": "secure-environment",
+    "question": "Which authentication approach should you prefer for an application connecting to Azure SQL Database?",
+    "options": [
+      "A managed identity authenticating through Microsoft Entra ID",
+      "A SQL login with a strong password in the connection string",
+      "A SQL login with the password stored in Key Vault",
+      "The server administrator login, used only by the application"
+    ],
+    "correctIndex": 0,
+    "explanation": "A managed identity removes the credential entirely, so there is nothing in a connection string to leak or rotate. Storing a password in Key Vault is better than embedding it but still leaves a credential in existence.",
+    "teaches": "authentication-authorization"
+  },
+  {
+    "id": "se-07",
+    "examCode": "dp-300",
+    "domain": "secure-environment",
+    "question": "A team needs read access to six tables in a database and nothing else. What should you grant?",
+    "options": [
+      "A custom database role with SELECT on those six tables",
+      "The db_datareader fixed database role",
+      "The db_owner fixed database role",
+      "Server-level Reader on the logical server"
+    ],
+    "correctIndex": 0,
+    "explanation": "db_datareader grants read on every table, which exceeds the requirement. Least privilege for each securable means a custom role scoped to exactly what is needed, and server-level Azure roles do not grant data access at all.",
+    "teaches": "authentication-authorization"
+  },
+  {
+    "id": "se-08",
+    "examCode": "dp-300",
+    "domain": "secure-environment",
+    "question": "Which Always Encrypted setting allows equality comparison on an encrypted column without secure enclaves?",
+    "options": [
+      "Deterministic encryption",
+      "Randomised encryption",
+      "Column-level TDE",
+      "Object-level encryption with EncryptByKey"
+    ],
+    "correctIndex": 0,
+    "explanation": "Deterministic encryption produces the same ciphertext for the same plaintext, which permits equality and grouping but reveals patterns. Randomised is stronger and permits no operations at all without an enclave.",
+    "teaches": "encryption-at-rest-in-transit"
+  },
+  {
+    "id": "se-09",
+    "examCode": "dp-300",
+    "domain": "secure-environment",
+    "question": "An auditor asks how you can prove that historical records have not been altered. What should you implement?",
+    "options": [
+      "Ledger tables in Azure SQL",
+      "Transparent data encryption",
+      "Change data tracking",
+      "Server-level auditing"
+    ],
+    "correctIndex": 0,
+    "explanation": "Ledger provides cryptographic tamper evidence, which is what turns 'we do not believe it was altered' into something demonstrable. Auditing records actions and change tracking records that data changed; neither proves the absence of alteration.",
+    "teaches": "compliance-controls"
+  },
+  {
+    "id": "se-10",
+    "examCode": "dp-300",
+    "domain": "secure-environment",
+    "kind": "multi",
+    "question": "Which two are true of the 'Allow Azure services and resources to access this server' setting? Choose two.",
+    "options": [
+      "It permits connections from Azure resources in any subscription",
+      "It is frequently left enabled from an early test deployment",
+      "It restricts access to resources in your own subscription only",
+      "It replaces the need for server-level firewall rules"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "The setting is far broader than its name suggests, permitting any Azure resource in any tenant to reach the server subject to authentication. Its persistence from testing is precisely why auditors look for it.",
+    "teaches": "network-security-sql"
+  },
+  {
+    "id": "se-11",
+    "examCode": "dp-300",
+    "domain": "secure-environment",
+    "kind": "order",
+    "question": "Put the steps of configuring Microsoft Entra authentication for an Azure SQL database in order.",
+    "items": [
+      "Grant the user the permissions they need",
+      "Set a Microsoft Entra group as the server's Entra administrator",
+      "Connect as the Entra administrator",
+      "Create a contained user from the external provider"
+    ],
+    "correctOrder": [1, 2, 3, 0],
+    "explanation": "The Entra administrator must exist before anyone can create Entra-based users, and creating the user precedes granting it anything. Using a group rather than an individual is what keeps the arrangement working when someone leaves.",
+    "teaches": "authentication-authorization"
+  },
+  {
+    "id": "se-12",
+    "examCode": "dp-300",
+    "domain": "secure-environment",
+    "kind": "yesno",
+    "question": "Transparent data encryption is enabled on an Azure SQL database. Judge each statement.",
+    "statements": [
+      { "text": "It protects the data and log files at rest.", "correct": true },
+      { "text": "It is transparent to applications querying the database.", "correct": true },
+      { "text": "It prevents a db_owner from reading column values.", "correct": false },
+      { "text": "Its key can be customer-managed in Azure Key Vault.", "correct": true }
+    ],
+    "explanation": "TDE defends against someone obtaining the files, not against someone with database access — which is the single most consequential misunderstanding in this domain and the reason Always Encrypted exists.",
+    "teaches": "encryption-at-rest-in-transit"
+  },
+  {
+    "id": "se-13",
+    "examCode": "dp-300",
+    "domain": "secure-environment",
+    "kind": "dropdown",
+    "question": "Complete the statement about protecting sensitive columns.",
+    "segments": [
+      { "text": "To stop a database administrator reading a column you use " },
+      {
+        "blankId": "b1",
+        "options": ["Always Encrypted", "transparent data encryption", "dynamic data masking"],
+        "correctIndex": 0
+      },
+      { "text": ", and to show support staff an obscured value while leaving the data intact you use " },
+      {
+        "blankId": "b2",
+        "options": ["dynamic data masking", "Always Encrypted", "row-level security"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "One is a genuine cryptographic boundary and the other is a presentation control. Treating masking as a security boundary is the mistake this pairing exists to prevent.",
+    "teaches": "compliance-controls"
+  },
+  {
+    "id": "pr-01",
+    "examCode": "dp-300",
+    "domain": "platform-resources",
+    "question": "An application uses SQL Server Agent jobs, cross-database queries, and Service Broker, and must move to a managed platform. Which offering should you choose?",
+    "options": [
+      "Azure SQL Managed Instance",
+      "Azure SQL Database, single database",
+      "Azure SQL Database, elastic pool",
+      "Azure SQL Database Hyperscale"
+    ],
+    "correctIndex": 0,
+    "explanation": "Managed Instance provides near-complete instance compatibility, including Agent, cross-database queries, and Service Broker. None of the Azure SQL Database options offers Agent, which alone rules them out.",
+    "teaches": "choose-sql-offering"
+  },
+  {
+    "id": "pr-02",
+    "examCode": "dp-300",
+    "domain": "platform-resources",
+    "question": "A database is used heavily for two hours each weekday and is idle the rest of the time. Which configuration is most cost-effective?",
+    "options": [
+      "The serverless compute tier, which auto-pauses and bills per second",
+      "A provisioned General Purpose database sized for the peak",
+      "A Business Critical database with a readable replica",
+      "An elastic pool containing only this database"
+    ],
+    "correctIndex": 0,
+    "explanation": "Serverless is designed for exactly this shape — intermittent use with long idle periods — because it pauses and stops billing compute. A provisioned tier pays for the peak around the clock.",
+    "teaches": "choose-sql-offering"
+  },
+  {
+    "id": "pr-03",
+    "examCode": "dp-300",
+    "domain": "platform-resources",
+    "question": "A 40 TB database must support backups and restores whose duration does not scale with its size. Which service tier should you choose?",
+    "options": [
+      "Hyperscale",
+      "Business Critical",
+      "General Purpose",
+      "Premium in the DTU model"
+    ],
+    "correctIndex": 0,
+    "explanation": "Hyperscale uses snapshot-based backups so backup and restore times are largely independent of database size, which is its defining characteristic and the reason it exists for very large databases.",
+    "teaches": "choose-sql-offering"
+  },
+  {
+    "id": "pr-04",
+    "examCode": "dp-300",
+    "domain": "platform-resources",
+    "question": "Two hundred customer databases each have unpredictable peaks that rarely coincide. What should you deploy?",
+    "options": [
+      "An elastic pool sized for the aggregate load",
+      "Two hundred single databases each sized for its own peak",
+      "One database with row-level security separating customers",
+      "A Managed Instance with two hundred databases"
+    ],
+    "correctIndex": 0,
+    "explanation": "Elastic pools let databases share a resource budget so each can burst without being provisioned for its own peak, which is precisely the non-overlapping pattern described. Sizing each database individually pays for two hundred peaks that never happen at once.",
+    "teaches": "scale-and-performance-config"
+  },
+  {
+    "id": "pr-05",
+    "examCode": "dp-300",
+    "domain": "platform-resources",
+    "question": "A very large table must have a year's data removed each month as a fast metadata operation. What should you implement?",
+    "options": [
+      "Table partitioning, using partition switching to move data out",
+      "Page compression on the table",
+      "A clustered columnstore index",
+      "A scheduled DELETE in batches"
+    ],
+    "correctIndex": 0,
+    "explanation": "Partition switching moves an entire partition as a metadata change rather than row by row, which is the main practical benefit of partitioning. Batched deletes work but generate log and take time proportional to the data.",
+    "teaches": "scale-and-performance-config"
+  },
+  {
+    "id": "pr-06",
+    "examCode": "dp-300",
+    "domain": "platform-resources",
+    "question": "Before migrating a SQL Server database to Azure SQL Database, what should you do first?",
+    "options": [
+      "Run an assessment to identify unsupported features and breaking changes",
+      "Take a full backup and restore it to the target",
+      "Configure a failover group on the target",
+      "Enable Query Store on the source"
+    ],
+    "correctIndex": 0,
+    "explanation": "Assessment determines whether the target is viable at all, and discovering an unsupported feature after cutover is the classic migration failure. Azure SQL Database also cannot be created by restoring a SQL Server backup.",
+    "teaches": "migration-strategy"
+  },
+  {
+    "id": "pr-07",
+    "examCode": "dp-300",
+    "domain": "platform-resources",
+    "question": "A migration must keep the source database available until the moment of cutover. Which approach should you use?",
+    "options": [
+      "An online migration that synchronises changes until cutover",
+      "An offline migration during a weekend window",
+      "A backup and restore performed overnight",
+      "An export to BACPAC followed by an import"
+    ],
+    "correctIndex": 0,
+    "explanation": "Online migration continuously synchronises so downtime is limited to the cutover itself. Every other option requires the source to be quiesced for the duration of the copy.",
+    "teaches": "migration-strategy"
+  },
+  {
+    "id": "pr-08",
+    "examCode": "dp-300",
+    "domain": "platform-resources",
+    "question": "Which purchasing model is required to use Azure Hybrid Benefit and the Hyperscale tier?",
+    "options": [
+      "The vCore model",
+      "The DTU model",
+      "Either model",
+      "The serverless model only"
+    ],
+    "correctIndex": 0,
+    "explanation": "The vCore model separates compute, memory, and storage, which is what makes licence portability and Hyperscale possible. The DTU model bundles them into one opaque figure.",
+    "teaches": "choose-sql-offering"
+  },
+  {
+    "id": "pr-09",
+    "examCode": "dp-300",
+    "domain": "platform-resources",
+    "kind": "multi",
+    "question": "Which two features are unavailable in Azure SQL Database but available in Azure SQL Managed Instance? Choose two.",
+    "options": [
+      "SQL Server Agent",
+      "Cross-database queries within the instance",
+      "Transparent data encryption",
+      "Automatic backups"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Agent and instance-scoped cross-database queries are instance features and are the usual reason a migration targets Managed Instance. TDE and automatic backups are present on both.",
+    "teaches": "choose-sql-offering"
+  },
+  {
+    "id": "pr-10",
+    "examCode": "dp-300",
+    "domain": "platform-resources",
+    "kind": "order",
+    "question": "Put the steps of a migration to Azure SQL in order.",
+    "items": [
+      "Cut over the application to the target",
+      "Run an assessment against the intended target",
+      "Perform the data migration, online or offline",
+      "Remediate the compatibility issues the assessment found"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "Assess, remediate, migrate, cut over. Remediating after the data has moved means doing the work twice, and cutting over before remediation means discovering the problem in production.",
+    "teaches": "migration-strategy"
+  },
+  {
+    "id": "pr-11",
+    "examCode": "dp-300",
+    "domain": "platform-resources",
+    "kind": "match",
+    "question": "Match each deployment option to when it fits.",
+    "pairs": [
+      { "term": "Azure SQL Database", "definition": "A single application database needing the least administration" },
+      { "term": "Azure SQL Managed Instance", "definition": "An application depending on instance-level SQL Server features" },
+      { "term": "SQL Server on Azure VMs", "definition": "A requirement for a specific version or operating system access" },
+      { "term": "Elastic pool", "definition": "Many databases with unpredictable, non-overlapping peaks" }
+    ],
+    "explanation": "The first three trade management for control in order; the fourth is a way of buying resources rather than a different platform, which is why it is often confused with the others.",
+    "teaches": "choose-sql-offering"
+  },
+  {
+    "id": "mo-01",
+    "examCode": "dp-300",
+    "domain": "monitor-optimize",
+    "question": "A query that ran quickly last month is now slow, and nothing in the code or data volume has changed. What should you investigate first?",
+    "options": [
+      "Query Store, for a plan regression",
+      "The database service objective",
+      "Index fragmentation on the largest table",
+      "Resource Governor workload groups"
+    ],
+    "correctIndex": 0,
+    "explanation": "A query whose performance changed without a change to the query is the canonical plan regression, and Query Store exists to identify and reverse exactly that by forcing the previous plan.",
+    "teaches": "query-performance"
+  },
+  {
+    "id": "mo-02",
+    "examCode": "dp-300",
+    "domain": "monitor-optimize",
+    "question": "Which dynamic management view shows currently executing requests including the session blocking them?",
+    "options": [
+      "sys.dm_exec_requests",
+      "sys.dm_exec_query_stats",
+      "sys.dm_os_wait_stats",
+      "sys.dm_db_index_physical_stats"
+    ],
+    "correctIndex": 0,
+    "explanation": "sys.dm_exec_requests is the live view and carries the blocking session id. query_stats aggregates completed executions, wait_stats is cumulative since restart, and index_physical_stats reports fragmentation.",
+    "teaches": "query-performance"
+  },
+  {
+    "id": "mo-03",
+    "examCode": "dp-300",
+    "domain": "monitor-optimize",
+    "question": "You must trace activity on a busy production instance with minimal overhead. What should you use?",
+    "options": [
+      "Extended Events",
+      "SQL Profiler",
+      "A server-side trace with SQL Trace",
+      "Continuous execution plan capture"
+    ],
+    "correctIndex": 0,
+    "explanation": "Extended Events replaced SQL Profiler precisely because it is lightweight enough for production. Profiler and SQL Trace are deprecated and impose overhead that can itself cause the problem being investigated.",
+    "teaches": "performance-monitoring"
+  },
+  {
+    "id": "mo-04",
+    "examCode": "dp-300",
+    "domain": "monitor-optimize",
+    "question": "An execution plan shows a key lookup consuming most of the query cost. What is the usual remedy?",
+    "options": [
+      "Add the missing columns as included columns on the index being seeked",
+      "Rebuild all indexes on the table",
+      "Update statistics on the table",
+      "Increase the database service objective"
+    ],
+    "correctIndex": 0,
+    "explanation": "A key lookup means the index found the rows but not all the columns needed, so the engine returns to the base table for each one. Including those columns makes the index cover the query and removes the lookup.",
+    "teaches": "query-performance"
+  },
+  {
+    "id": "mo-05",
+    "examCode": "dp-300",
+    "domain": "monitor-optimize",
+    "question": "Why should a missing index suggestion from an execution plan not be applied automatically?",
+    "options": [
+      "It is generated per query and ignores write cost and existing indexes",
+      "It is only valid for the DTU purchasing model",
+      "It cannot be created on a table with a clustered index",
+      "It requires Query Store to be disabled first"
+    ],
+    "correctIndex": 0,
+    "explanation": "The engine proposes an index for the query in front of it, with no view of the other indexes on the table or the cost imposed on inserts and updates. Acting on every suggestion produces a table with more indexes than columns.",
+    "teaches": "query-performance"
+  },
+  {
+    "id": "mo-06",
+    "examCode": "dp-300",
+    "domain": "monitor-optimize",
+    "question": "One reporting workload is starving an OLTP workload of CPU on the same instance. What should you configure?",
+    "options": [
+      "Resource Governor with separate workload groups and resource pools",
+      "MAXDOP set to 1 for the whole instance",
+      "Automatic tuning on the database",
+      "Read committed snapshot isolation"
+    ],
+    "correctIndex": 0,
+    "explanation": "Resource Governor caps CPU, memory, and IO per workload group, which is the mechanism for stopping one workload consuming everything. Instance-wide MAXDOP would penalise both workloads equally.",
+    "teaches": "database-maintenance"
+  },
+  {
+    "id": "mo-07",
+    "examCode": "dp-300",
+    "domain": "monitor-optimize",
+    "question": "Which maintenance task detects physical and logical corruption in a database?",
+    "options": [
+      "DBCC CHECKDB",
+      "An index rebuild",
+      "An update of statistics",
+      "A differential backup"
+    ],
+    "correctIndex": 0,
+    "explanation": "CHECKDB is the integrity check, and running it on a schedule is what stops corruption being silently backed up for weeks before a user finds it. Index and statistics maintenance address performance, not integrity.",
+    "teaches": "database-maintenance"
+  },
+  {
+    "id": "mo-08",
+    "examCode": "dp-300",
+    "domain": "monitor-optimize",
+    "question": "A large table's queries produce badly estimated row counts even though auto-update statistics is on. Why?",
+    "options": [
+      "The automatic update threshold is proportional, so a large table needs a manual update",
+      "Auto-update statistics does not apply to clustered indexes",
+      "Query Store overrides the statistics",
+      "The compatibility level disables statistics on large tables"
+    ],
+    "correctIndex": 0,
+    "explanation": "The automatic threshold scales with table size, so a very large table can change substantially without triggering an update. Manual updates on such tables are ordinary maintenance rather than an exception.",
+    "teaches": "database-maintenance"
+  },
+  {
+    "id": "mo-09",
+    "examCode": "dp-300",
+    "domain": "monitor-optimize",
+    "question": "Which capability automatically forces the last known good plan when a regression is detected, and reverts if that does not help?",
+    "options": [
+      "Automatic tuning",
+      "Intelligent Insights",
+      "Resource Governor",
+      "Database watcher"
+    ],
+    "correctIndex": 0,
+    "explanation": "Automatic tuning acts on Query Store data and verifies its own change. Intelligent Insights diagnoses and reports but does not act, which is the distinction between the two.",
+    "teaches": "query-performance"
+  },
+  {
+    "id": "mo-10",
+    "examCode": "dp-300",
+    "domain": "monitor-optimize",
+    "question": "Which setting lets one database use a different MAXDOP from the rest of the instance?",
+    "options": [
+      "Database-scoped configuration",
+      "The server-level max degree of parallelism setting",
+      "A Resource Governor workload group",
+      "The database compatibility level"
+    ],
+    "correctIndex": 0,
+    "explanation": "Database-scoped configuration exists so settings such as MAXDOP and legacy cardinality estimation can differ per database. The server setting applies to everything and cannot be varied.",
+    "teaches": "database-maintenance"
+  },
+  {
+    "id": "mo-11",
+    "examCode": "dp-300",
+    "domain": "monitor-optimize",
+    "question": "Raising a database's compatibility level is being proposed to gain intelligent query processing features. What is the risk?",
+    "options": [
+      "Plan behaviour changes, so it must be tested rather than assumed safe",
+      "It disables Query Store",
+      "It requires a full backup and restore",
+      "It removes existing indexes"
+    ],
+    "correctIndex": 0,
+    "explanation": "Compatibility level gates optimiser behaviour, so raising it can improve most queries and regress a few. That is why it is a change to test with Query Store watching, not a switch to flip.",
+    "teaches": "database-maintenance"
+  },
+  {
+    "id": "mo-12",
+    "examCode": "dp-300",
+    "domain": "monitor-optimize",
+    "kind": "multi",
+    "question": "Which two are true of blocking and deadlocks? Choose two.",
+    "options": [
+      "Blocking is one session waiting for a lock another holds",
+      "A deadlock is resolved by the engine terminating a victim session",
+      "Blocking is always an error condition requiring intervention",
+      "Deadlocks are recorded only if a trace flag is enabled"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Short blocking is normal concurrency and only a problem when sustained. Deadlocks are captured by the system health Extended Events session by default, with no trace flag required.",
+    "teaches": "query-performance"
+  },
+  {
+    "id": "mo-13",
+    "examCode": "dp-300",
+    "domain": "monitor-optimize",
+    "kind": "match",
+    "question": "Match each monitoring source to what it tells you.",
+    "pairs": [
+      { "term": "Query Store", "definition": "How a query's plans and runtime have changed over time" },
+      { "term": "sys.dm_os_wait_stats", "definition": "What the instance has been waiting on since restart" },
+      { "term": "Extended Events", "definition": "A lightweight trace of chosen events as they happen" },
+      { "term": "Intelligent Insights", "definition": "A diagnosed problem described in plain terms" }
+    ],
+    "explanation": "History, cumulative waits, live tracing, and interpretation. Reaching for a live trace when the question is about a change over time is the usual misstep.",
+    "teaches": "performance-monitoring"
+  },
+  {
+    "id": "au-01",
+    "examCode": "dp-300",
+    "domain": "automation",
+    "question": "A maintenance script must run nightly against forty Azure SQL databases on one server. What should you use?",
+    "options": [
+      "Elastic jobs targeting the server as a target group",
+      "SQL Server Agent jobs on each database",
+      "A SQL Server Agent job on the logical server",
+      "A DACPAC deployment scheduled nightly"
+    ],
+    "correctIndex": 0,
+    "explanation": "Azure SQL Database has no SQL Server Agent at all, so Agent is not available at either level. Elastic jobs are the replacement and run T-SQL across a target group defined as a server, a pool, or a list.",
+    "teaches": "agent-jobs-and-elastic-jobs"
+  },
+  {
+    "id": "au-02",
+    "examCode": "dp-300",
+    "domain": "automation",
+    "question": "SQL Server Agent jobs are failing silently and nobody is notified. What is most likely missing?",
+    "options": [
+      "Database Mail and an operator configured for job notifications",
+      "A maintenance plan wrapping the jobs",
+      "A proxy account for the job steps",
+      "A schedule attached to each job"
+    ],
+    "correctIndex": 0,
+    "explanation": "Notification depends on Database Mail being configured and an operator being assigned to the job's failure action. Without both, failures are recorded in job history and nowhere a person will look.",
+    "teaches": "agent-jobs-and-elastic-jobs"
+  },
+  {
+    "id": "au-03",
+    "examCode": "dp-300",
+    "domain": "automation",
+    "question": "A job reports failure but the history shows no useful detail about which step failed or why. What should you configure?",
+    "options": [
+      "Output logging on the job steps",
+      "A longer job history retention period",
+      "A second schedule for the job",
+      "A proxy account with higher privileges"
+    ],
+    "correctIndex": 0,
+    "explanation": "Step output to a file or table is what preserves the error text; without it, the history records only that a step failed. Retention keeps more of the same uninformative records.",
+    "teaches": "agent-jobs-and-elastic-jobs"
+  },
+  {
+    "id": "au-04",
+    "examCode": "dp-300",
+    "domain": "automation",
+    "question": "Development, test, and production servers must be provisioned identically and every change reviewed. What should you use?",
+    "options": [
+      "Bicep or ARM templates in source control",
+      "Azure PowerShell scripts run by each administrator",
+      "The Azure portal, with settings documented in a runbook",
+      "A DACPAC exported from production"
+    ],
+    "correctIndex": 0,
+    "explanation": "Declared infrastructure makes environments identical by construction and a change reviewable as a diff. A DACPAC deploys schema rather than the resource, which is a separate concern.",
+    "teaches": "deployment-automation"
+  },
+  {
+    "id": "au-05",
+    "examCode": "dp-300",
+    "domain": "automation",
+    "question": "A database schema change must be deployed by comparing the desired state against the target. What should you use?",
+    "options": [
+      "A DACPAC",
+      "A BACPAC",
+      "An ARM template",
+      "An elastic job running CREATE statements"
+    ],
+    "correctIndex": 0,
+    "explanation": "A DACPAC describes schema and generates the difference against the target. A BACPAC contains schema and data and is used for export and import rather than incremental deployment.",
+    "teaches": "deployment-automation"
+  },
+  {
+    "id": "au-06",
+    "examCode": "dp-300",
+    "domain": "automation",
+    "question": "A template deployment of a logical server fails immediately with a naming error. What is the most likely cause?",
+    "options": [
+      "The server name is not globally unique",
+      "The subscription lacks a Log Analytics workspace",
+      "The template omits a firewall rule",
+      "The chosen service objective requires the DTU model"
+    ],
+    "correctIndex": 0,
+    "explanation": "Logical server names form part of a public DNS name and must be globally unique, so a collision fails the deployment at once. It is one of the three standard causes alongside an unavailable service objective and a firewall rule that excludes the deployment agent.",
+    "teaches": "deployment-automation"
+  },
+  {
+    "id": "au-07",
+    "examCode": "dp-300",
+    "domain": "automation",
+    "question": "An automated task must call a REST API and then write to a database on a schedule, with no SQL Server Agent available. What should you use?",
+    "options": [
+      "An Azure Automation runbook or a timer-triggered Azure Function",
+      "An elastic job",
+      "A maintenance plan",
+      "A DACPAC deployment pipeline"
+    ],
+    "correctIndex": 0,
+    "explanation": "Elastic jobs run T-SQL and cannot call an API, so anything beyond T-SQL needs Automation, Logic Apps, or Functions. Choosing the right automation surface for the work is the point of the question.",
+    "teaches": "agent-jobs-and-elastic-jobs"
+  },
+  {
+    "id": "au-08",
+    "examCode": "dp-300",
+    "domain": "automation",
+    "question": "How should an elastic job authenticate to its target databases?",
+    "options": [
+      "With a managed identity granted access on the targets",
+      "With the server administrator password stored in the job",
+      "With a shared SQL login created on each target",
+      "With the connection string of the job database"
+    ],
+    "correctIndex": 0,
+    "explanation": "A managed identity removes the stored credential, which is the same principle applied everywhere else in Azure. A shared login on every target is the arrangement managed identities exist to replace.",
+    "teaches": "agent-jobs-and-elastic-jobs"
+  },
+  {
+    "id": "au-09",
+    "examCode": "dp-300",
+    "domain": "automation",
+    "kind": "order",
+    "question": "Put the steps of automating a nightly maintenance task across many Azure SQL databases in order.",
+    "items": [
+      "Create a job with the T-SQL step and attach a schedule",
+      "Deploy the elastic job agent and its job database",
+      "Monitor job execution and configure failure alerts",
+      "Define a target group covering the databases"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "The agent must exist before anything can be defined against it, the target group says where the work runs, the job says what runs, and monitoring closes the loop. A job with no alerting is a job whose failures nobody sees.",
+    "teaches": "agent-jobs-and-elastic-jobs"
+  },
+  {
+    "id": "au-10",
+    "examCode": "dp-300",
+    "domain": "automation",
+    "kind": "dropdown",
+    "question": "Complete the statement about scheduling database work.",
+    "segments": [
+      { "text": "On Azure SQL Managed Instance you can schedule maintenance with " },
+      {
+        "blankId": "b1",
+        "options": ["SQL Server Agent", "elastic jobs", "a maintenance plan wizard only"],
+        "correctIndex": 0
+      },
+      { "text": ", while on Azure SQL Database the equivalent is " },
+      {
+        "blankId": "b2",
+        "options": ["elastic jobs", "SQL Server Agent", "Resource Governor"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "The absence of Agent on Azure SQL Database is one of the most consequential differences between the offerings, and rehoming jobs is a standard part of migrating to it.",
+    "teaches": "agent-jobs-and-elastic-jobs"
+  },
+  {
+    "id": "hd-01",
+    "examCode": "dp-300",
+    "domain": "ha-dr",
+    "question": "An application must continue working after a regional failover without its connection string being changed. What should you configure?",
+    "options": [
+      "A failover group with its read-write listener endpoint",
+      "Active geo-replication with manual failover",
+      "Zone-redundant configuration in the primary region",
+      "Long-term backup retention in a second region"
+    ],
+    "correctIndex": 0,
+    "explanation": "The listener is the practical difference between a failover group and plain geo-replication: the application connects to a name that follows the primary. Geo-replication alone requires the application to be repointed.",
+    "teaches": "geo-replication-and-ag"
+  },
+  {
+    "id": "hd-02",
+    "examCode": "dp-300",
+    "domain": "ha-dr",
+    "question": "A database must be recoverable to any point within the last three years for a regulator. What should you configure?",
+    "options": [
+      "Long-term backup retention with yearly retention policies",
+      "Point-in-time restore with a 35-day window",
+      "Active geo-replication to a second region",
+      "A weekly full backup to Azure Blob Storage"
+    ],
+    "correctIndex": 0,
+    "explanation": "Point-in-time restore covers at most 35 days, so anything beyond that needs long-term retention, which keeps weekly, monthly, and yearly backups for up to ten years. Geo-replication protects against regional loss, not against needing an old copy.",
+    "teaches": "backup-restore"
+  },
+  {
+    "id": "hd-03",
+    "examCode": "dp-300",
+    "domain": "ha-dr",
+    "question": "A point-in-time restore is performed on a production database. What happens to the original?",
+    "options": [
+      "It is unaffected — the restore creates a new database",
+      "It is overwritten by the restored copy",
+      "It is taken offline until the restore completes",
+      "It is renamed and the restored copy takes its name"
+    ],
+    "correctIndex": 0,
+    "explanation": "Azure SQL restores always create a new database, which means a cutover step is needed if the restored copy is to take over. Discovering that mid-incident costs time that a rehearsal would have saved.",
+    "teaches": "backup-restore"
+  },
+  {
+    "id": "hd-04",
+    "examCode": "dp-300",
+    "domain": "ha-dr",
+    "question": "A SQL Server database's transaction log keeps growing until the disk fills. What is the most likely cause?",
+    "options": [
+      "The database is in full recovery model and log backups are not being taken",
+      "The database is in simple recovery model",
+      "Auto-shrink is disabled on the database",
+      "Index maintenance has not run recently"
+    ],
+    "correctIndex": 0,
+    "explanation": "Full recovery keeps log records until a log backup frees them, so a full-recovery database with no log backups grows without limit. It is the single most common cause of an unexplained log file.",
+    "teaches": "backup-restore"
+  },
+  {
+    "id": "hd-05",
+    "examCode": "dp-300",
+    "domain": "ha-dr",
+    "question": "A restore sequence must apply a full backup, a differential, and several logs. What must be true of all but the final restore?",
+    "options": [
+      "They must use NORECOVERY",
+      "They must use RECOVERY",
+      "They must be applied with REPLACE",
+      "They must be restored to a new database name"
+    ],
+    "correctIndex": 0,
+    "explanation": "NORECOVERY leaves the database able to accept further backups in the sequence, and RECOVERY on the last one brings it online. Recovering too early ends the sequence and forces the whole restore to start again.",
+    "teaches": "backup-restore"
+  },
+  {
+    "id": "hd-06",
+    "examCode": "dp-300",
+    "domain": "ha-dr",
+    "question": "A requirement states zero data loss between two SQL Server instances in the same region. What should you configure?",
+    "options": [
+      "An Always On availability group with synchronous commit",
+      "An Always On availability group with asynchronous commit",
+      "Log shipping with a one-minute interval",
+      "Active geo-replication between the instances"
+    ],
+    "correctIndex": 0,
+    "explanation": "Only synchronous commit guarantees the secondary has the transaction before it is acknowledged. Asynchronous and log shipping both accept some loss, and geo-replication is an Azure SQL Database feature rather than a SQL Server one.",
+    "teaches": "geo-replication-and-ag"
+  },
+  {
+    "id": "hd-07",
+    "examCode": "dp-300",
+    "domain": "ha-dr",
+    "question": "An Always On availability group has been built on Azure virtual machines, and clients cannot reach the listener. What is most likely missing?",
+    "options": [
+      "An Azure load balancer or distributed network name for the listener",
+      "Synchronous commit on the secondary replica",
+      "A read-only routing list",
+      "A witness file share for the cluster"
+    ],
+    "correctIndex": 0,
+    "explanation": "In Azure a listener needs a load balancer or a distributed network name to answer on the virtual IP, and it is the step most often missed. The group replicates correctly while nothing can connect to it by name.",
+    "teaches": "geo-replication-and-ag"
+  },
+  {
+    "id": "hd-08",
+    "examCode": "dp-300",
+    "domain": "ha-dr",
+    "question": "Why does a failover group use a grace period before failing over automatically?",
+    "options": [
+      "So a transient outage does not trigger a failover that is worse than the outage",
+      "To allow long-term retention backups to complete",
+      "To let read-only replicas finish outstanding queries",
+      "To allow the DNS record to propagate first"
+    ],
+    "correctIndex": 0,
+    "explanation": "Failing over costs a switch of primary and, with asynchronous replication, some data loss. The grace period ensures the outage is real before paying that price.",
+    "teaches": "hadr-strategy"
+  },
+  {
+    "id": "hd-09",
+    "examCode": "dp-300",
+    "domain": "ha-dr",
+    "question": "Which two figures should you extract from a scenario before recommending an HA/DR design?",
+    "options": [
+      "The recovery point objective and the recovery time objective",
+      "The service tier and the purchasing model",
+      "The database size and the index count",
+      "The backup storage redundancy and the region pair"
+    ],
+    "correctIndex": 0,
+    "explanation": "RPO decides whether replication must be synchronous and RTO decides whether a standby must already be running. Everything else follows from those two numbers.",
+    "teaches": "hadr-strategy"
+  },
+  {
+    "id": "hd-10",
+    "examCode": "dp-300",
+    "domain": "ha-dr",
+    "kind": "multi",
+    "question": "Which two are true of active geo-replication? Choose two.",
+    "options": [
+      "Secondaries are readable",
+      "Replication is asynchronous",
+      "Failover happens automatically after a grace period",
+      "It provides a single listener endpoint for applications"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Readable secondaries and asynchronous replication describe geo-replication. Automatic failover and a listener endpoint are what a failover group adds on top of it.",
+    "teaches": "geo-replication-and-ag"
+  },
+  {
+    "id": "hd-11",
+    "examCode": "dp-300",
+    "domain": "ha-dr",
+    "kind": "order",
+    "question": "Put the steps of restoring a SQL Server database to a point in time in order.",
+    "items": [
+      "Restore the transaction log backups in order with NORECOVERY",
+      "Restore the most recent full backup with NORECOVERY",
+      "Restore the final log with STOPAT and RECOVERY",
+      "Restore the most recent differential backup with NORECOVERY"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "Full, then differential, then logs in order, with recovery only on the last step. STOPAT on the final restore is what selects the moment, and recovering earlier ends the chain.",
+    "teaches": "backup-restore"
+  },
+  {
+    "id": "hd-12",
+    "examCode": "dp-300",
+    "domain": "ha-dr",
+    "kind": "match",
+    "question": "Match each HA/DR technology to what it provides.",
+    "pairs": [
+      { "term": "Failover group", "definition": "Automatic failover with a listener the application keeps using" },
+      { "term": "Active geo-replication", "definition": "Readable asynchronous secondaries with manual failover" },
+      { "term": "Always On availability group", "definition": "Database-level replication between SQL Server instances" },
+      { "term": "Failover cluster instance", "definition": "A whole instance moving between nodes over shared storage" }
+    ],
+    "explanation": "Two are Azure SQL Database features and two are SQL Server ones, and within each pair the difference is how much the application has to know about the failover.",
+    "teaches": "hadr-strategy"
+  },
+  {
+    "id": "hd-13",
+    "examCode": "dp-300",
+    "domain": "ha-dr",
+    "kind": "yesno",
+    "question": "An HA/DR design has been documented for a production database. Judge each statement.",
+    "statements": [
+      { "text": "The recovery point objective decides whether replication must be synchronous.", "correct": true },
+      { "text": "A scheduled failover test turns an assumed recovery time into a measured one.", "correct": true },
+      { "text": "Long-term retention extends the point-in-time restore window beyond 35 days.", "correct": false },
+      { "text": "Backup storage redundancy decides whether backups survive a regional failure.", "correct": true }
+    ],
+    "explanation": "Long-term retention keeps separate weekly, monthly, and yearly backups; it does not lengthen the point-in-time window, which remains at most 35 days. Confusing the two produces a recovery plan that cannot deliver what it promises.",
+    "teaches": "backup-restore"
+  }
+]

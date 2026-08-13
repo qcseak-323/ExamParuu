@@ -286,11 +286,11 @@
     "series": "dp",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Plan, deploy, secure, and optimise SQL Server and Azure SQL database solutions.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-12",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/azure-database-administrator-associate/"
   },
   {

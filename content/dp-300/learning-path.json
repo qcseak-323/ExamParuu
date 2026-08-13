@@ -1,0 +1,124 @@
+{
+  "examCode": "dp-300",
+  "note": "Five paths, one per exam domain, following Microsoft's DP-300 learning paths. Module titles follow Microsoft Learn; the sections and cards behind each are this site's own.",
+  "paths": [
+    {
+      "id": "platform-resources",
+      "title": "Plan and implement data platform resources",
+      "domainId": "platform-resources",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/plan-implement-data-platform-resources/",
+      "modules": [
+        {
+          "id": "platform-resources-m1",
+          "title": "Plan and deploy Azure SQL solutions",
+          "sectionIds": ["choose-sql-offering", "scale-and-performance-config"],
+          "cardIds": ["fc-dp300-pr-01", "fc-dp300-pr-02", "fc-dp300-pr-03", "fc-dp300-pr-04", "fc-dp300-pr-05"]
+        },
+        {
+          "id": "platform-resources-m2",
+          "title": "Plan and implement a migration strategy",
+          "sectionIds": ["migration-strategy"],
+          "cardIds": ["fc-dp300-pr-06", "fc-dp300-pr-07", "fc-dp300-pr-08", "fc-dp300-pr-09"]
+        }
+      ]
+    },
+    {
+      "id": "secure-environment",
+      "title": "Implement a secure environment for a database service",
+      "domainId": "secure-environment",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/implement-secure-environment-database-service/",
+      "modules": [
+        {
+          "id": "secure-environment-m1",
+          "title": "Configure database authentication and authorization",
+          "sectionIds": ["authentication-authorization"],
+          "cardIds": ["fc-dp300-se-01", "fc-dp300-se-02", "fc-dp300-se-11", "fc-dp300-se-07"]
+        },
+        {
+          "id": "secure-environment-m2",
+          "title": "Implement security for data at rest and in transit",
+          "sectionIds": ["encryption-at-rest-in-transit", "network-security-sql"],
+          "cardIds": ["fc-dp300-se-03", "fc-dp300-se-04", "fc-dp300-se-05", "fc-dp300-se-06"]
+        },
+        {
+          "id": "secure-environment-m3",
+          "title": "Implement compliance controls for sensitive data",
+          "sectionIds": ["compliance-controls"],
+          "cardIds": ["fc-dp300-se-08", "fc-dp300-se-09", "fc-dp300-se-10"]
+        }
+      ]
+    },
+    {
+      "id": "monitor-optimize",
+      "title": "Monitor and optimize operational resources",
+      "domainId": "monitor-optimize",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/monitor-optimize-operational-resources-sql-server/",
+      "modules": [
+        {
+          "id": "monitor-optimize-m1",
+          "title": "Monitor resource activity and performance",
+          "sectionIds": ["performance-monitoring"],
+          "cardIds": ["fc-dp300-mo-01", "fc-dp300-mo-02", "fc-dp300-mo-03", "fc-dp300-mo-11"]
+        },
+        {
+          "id": "monitor-optimize-m2",
+          "title": "Monitor and optimize query performance",
+          "sectionIds": ["query-performance"],
+          "cardIds": ["fc-dp300-mo-04", "fc-dp300-mo-05", "fc-dp300-mo-06", "fc-dp300-mo-07"]
+        },
+        {
+          "id": "monitor-optimize-m3",
+          "title": "Configure databases for optimal performance",
+          "sectionIds": ["database-maintenance"],
+          "cardIds": ["fc-dp300-mo-08", "fc-dp300-mo-09", "fc-dp300-mo-10"]
+        }
+      ]
+    },
+    {
+      "id": "automation",
+      "title": "Automate database tasks",
+      "domainId": "automation",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/automate-database-tasks-for-azure-sql/",
+      "modules": [
+        {
+          "id": "automation-m1",
+          "title": "Create and manage jobs",
+          "sectionIds": ["agent-jobs-and-elastic-jobs"],
+          "cardIds": ["fc-dp300-au-01", "fc-dp300-au-02", "fc-dp300-au-03", "fc-dp300-au-04"]
+        },
+        {
+          "id": "automation-m2",
+          "title": "Automate deployment of database resources",
+          "sectionIds": ["deployment-automation"],
+          "cardIds": ["fc-dp300-au-05", "fc-dp300-au-06", "fc-dp300-au-07", "fc-dp300-au-08"]
+        }
+      ]
+    },
+    {
+      "id": "ha-dr",
+      "title": "Plan and implement a high availability and disaster recovery environment",
+      "domainId": "ha-dr",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/plan-implement-hadr-azure-sql/",
+      "modules": [
+        {
+          "id": "ha-dr-m1",
+          "title": "Plan an HA/DR strategy",
+          "sectionIds": ["hadr-strategy"],
+          "cardIds": ["fc-dp300-hd-01", "fc-dp300-hd-02", "fc-dp300-hd-03", "fc-dp300-hd-11"]
+        },
+        {
+          "id": "ha-dr-m2",
+          "title": "Back up and restore databases",
+          "sectionIds": ["backup-restore"],
+          "cardIds": ["fc-dp300-hd-04", "fc-dp300-hd-05", "fc-dp300-hd-06", "fc-dp300-hd-07"]
+        },
+        {
+          "id": "ha-dr-m3",
+          "title": "Configure HA/DR for database solutions",
+          "sectionIds": ["geo-replication-and-ag"],
+          "cardIds": ["fc-dp300-hd-08", "fc-dp300-hd-09", "fc-dp300-hd-10"]
+        }
+      ]
+    }
+  ]
+}

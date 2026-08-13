@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-lattermoor-clinical",
+    "examCode": "dp-300",
+    "domain": "secure-environment",
+    "title": "Lattermoor Diagnostics — a database under audit",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Lattermoor Diagnostics runs a pathology results platform on Azure SQL Database for around forty laboratories. Its database holds patient identifiers, results, and staff payroll data in one schema, inherited from an older application.",
+          "A regulatory audit has just reported. The database team has one quarter to close its findings, and the constraints below are what the auditors wrote down."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "Database administration is outsourced to a managed service provider. Its engineers hold db_owner on the database and can read every column, including a Salary column in the staff table. Transparent data encryption is enabled and the provider has offered it as evidence that the data is protected.",
+          "There is no record of who has read patient records. Auditing has never been configured at either server or database level, and the audit report treats this as the most serious finding.",
+          "Laboratory staff use one shared application login. Every user can query results from all forty laboratories, although each should see only their own laboratory's rows. The application has no capacity to filter by site and cannot be changed this year.",
+          "Support staff need to view patient records to diagnose data problems, but must not see full national insurance numbers. They currently see them in plain text.",
+          "The database server has a public endpoint. Firewall rules include one entry of 0.0.0.0 to 255.255.255.255 added during a migration eighteen months ago, and 'Allow Azure services and resources to access this server' is turned on.",
+          "Backups are the Azure defaults. The retention policy has never been reviewed and the auditors have asked how far back a record can be produced."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "The managed service provider's engineers must continue to administer the database but must not be able to read the Salary column in plain text.",
+          "There must be a durable record of who read patient records and when.",
+          "Laboratory staff must see only their own laboratory's rows, enforced without modifying the application.",
+          "Support staff must see patient records with national insurance numbers obscured, while the stored values remain unchanged for legitimate processing.",
+          "Traffic to the database must not traverse a public endpoint, and the public path must be able to be disabled.",
+          "The team must be able to state how far back the database can be restored, and extend it if the regulator requires longer."
+        ]
+      }
+    ]
+  }
+]

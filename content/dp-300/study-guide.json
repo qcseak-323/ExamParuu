@@ -1,0 +1,147 @@
+[
+  {
+    "domainId": "platform-resources",
+    "sections": [
+      {
+        "id": "choose-sql-offering",
+        "heading": "Choosing an Azure SQL offering",
+        "paragraphs": [
+          "Three deployment options differ by how much of the platform Microsoft manages. Azure SQL Database is a fully managed single database or elastic pool, with the least administrative burden and the fewest instance-level features — no SQL Server Agent, no cross-database queries in the ordinary sense, no CLR. Azure SQL Managed Instance provides near-complete SQL Server instance compatibility inside a virtual network, including Agent, cross-database queries, Service Broker and linked servers, and is the migration target when an application depends on instance features. SQL Server on Azure Virtual Machines gives full control including the operating system, and is the answer when the application needs a specific SQL Server version, a feature neither PaaS option carries, or filesystem access.",
+          "Within Azure SQL Database the purchasing model matters. The DTU model bundles compute, memory, and IO into one figure and is simple but opaque. The vCore model separates them and is required for Hyperscale and for Azure Hybrid Benefit. The service tiers are General Purpose for most workloads, Business Critical for low latency and a built-in readable replica, and Hyperscale for very large databases with fast backups and restores independent of size. Serverless auto-pauses and bills per second, which suits intermittent workloads and is the answer whenever a scenario describes a database idle for long periods."
+        ]
+      },
+      {
+        "id": "scale-and-performance-config",
+        "heading": "Scale, partitioning, and compression",
+        "paragraphs": [
+          "Scaling in Azure SQL Database is vertical by changing service objective, which is an online operation with a brief failover at the end, or horizontal through elastic pools where several databases share a budget of resources. Elastic pools are the answer when many databases have unpredictable, non-overlapping peaks, because each can burst without provisioning for its own peak. Sharding splits one logical database across many physical ones by a shard key and is an application-level pattern supported by the elastic database client library.",
+          "Table partitioning divides one table across filegroups by a partition function and scheme. It rarely improves query performance on its own — the benefits are manageability, particularly partition switching, which moves a whole partition in or out as a metadata operation and is what makes loading and archiving large tables fast. Data compression comes in row and page forms, trading CPU for reduced IO and memory footprint; page compression includes row compression plus prefix and dictionary compression, and columnstore indexes take this further for analytical workloads."
+        ]
+      },
+      {
+        "id": "migration-strategy",
+        "heading": "Migration",
+        "paragraphs": [
+          "Migration begins with assessment: the Data Migration Assistant or the Azure SQL migration extension reports breaking changes and unsupported features against a chosen target, which is what determines whether Azure SQL Database is viable or a Managed Instance is required. Skipping assessment and discovering an unsupported feature after cutover is the classic failure.",
+          "Offline migration takes the source out of service and is simpler and faster to reason about; online migration keeps the source available and synchronises changes until cutover, at the cost of complexity. Azure Database Migration Service performs both. For Managed Instance specifically, the log replay service and native backup and restore from a URL are common routes, and Managed Instance link enables near-real-time replication from SQL Server for both migration and hybrid disaster recovery. Choosing between them is decided by the acceptable downtime window, which is why the exam frames these as recovery-objective questions rather than tooling questions."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "secure-environment",
+    "sections": [
+      {
+        "id": "authentication-authorization",
+        "heading": "Authentication and authorisation",
+        "paragraphs": [
+          "Microsoft Entra authentication is preferred over SQL authentication because it brings central identity, group membership, multifactor authentication, and Conditional Access, and because a SQL login is a credential stored in the database. An Azure SQL Database server has a Microsoft Entra administrator — a user or, better, a group so that responsibility survives an individual leaving — and contained database users are then created from Entra identities with `CREATE USER ... FROM EXTERNAL PROVIDER`. A contained user authenticates directly against the database rather than through a server-level login, which is what makes a database portable across servers and what failover groups depend on.",
+          "Permissions follow the usual layering: fixed server and database roles for coarse grants, custom database roles for anything the fixed roles over-serve, and object-level `GRANT` for the remainder. The principle to apply is least privilege for every securable, which in practice means `db_datareader` and `db_datawriter` rather than `db_owner`, and a custom role rather than `db_datareader` where only some tables are needed. Managed identities let an application connect with no credential at all, which removes the connection-string secret that is otherwise the weakest part of the chain."
+        ]
+      },
+      {
+        "id": "encryption-at-rest-in-transit",
+        "heading": "Encryption at rest and in use",
+        "paragraphs": [
+          "Transparent data encryption encrypts the data and log files at rest and is enabled by default on Azure SQL. It is transparent to anyone querying the database, which is exactly its limit: it protects against someone taking the files, not against someone with database access. The key is service-managed by default, or customer-managed in Azure Key Vault where the organisation must hold it — bring your own key, whose operational consequence is that losing access to the key makes the database inaccessible.",
+          "Always Encrypted moves encryption to the client: the column encryption key is protected by a column master key held outside the database, and the client driver encrypts and decrypts, so the database engine — and therefore any administrator — only ever sees ciphertext. Deterministic encryption allows equality comparison and grouping at the cost of revealing patterns; randomised is stronger and permits no operations at all. Always Encrypted with secure enclaves lifts that restriction by allowing comparison and pattern matching inside a protected region of memory, and with VBS enclaves that protection is virtualisation-based. The examinable line is simple: if a scenario says an administrator must not see the values, only Always Encrypted qualifies, and TDE does not."
+        ]
+      },
+      {
+        "id": "network-security-sql",
+        "heading": "Network access control",
+        "paragraphs": [
+          "An Azure SQL Database server carries server-level firewall rules and, optionally, database-level rules that are evaluated first and can grant access more narrowly. The 'Allow Azure services and resources to access this server' setting is worth recognising as a risk: it permits traffic from any Azure resource in any subscription, not merely your own, and it is frequently left on from an early test.",
+          "Beyond the firewall, a service endpoint lets the server's firewall recognise a virtual network subnet while traffic still reaches the public endpoint, and a private endpoint gives the server a private IP inside the virtual network so that public network access can be disabled entirely. Private endpoint is the recommended pattern and the answer whenever a scenario forbids a public path or requires on-premises access over ExpressRoute or VPN. Connections are encrypted in transit, and enforcing a minimum TLS version stops an old client negotiating something weaker."
+        ]
+      },
+      {
+        "id": "compliance-controls",
+        "heading": "Auditing, masking, and row-level security",
+        "paragraphs": [
+          "Auditing records database events to a storage account, Log Analytics workspace, or event hub, and is the control that answers who did what and when. It is enabled at server level so new databases inherit it, and database-level auditing on top of server-level auditing produces duplicate records — a detail worth knowing before someone enables both. Data classification labels columns as sensitive so that audit records and reports can be filtered by sensitivity.",
+          "Three controls limit what a user sees rather than whether they connect, and they are routinely confused. Dynamic data masking obscures values in query results for unprivileged users and is a presentation control only — the underlying data is unchanged and a determined user can often infer it, so it is not a security boundary. Row-level security uses a predicate function bound to a table so a user sees only rows the predicate permits, and it is enforced by the engine on every query. Ledger provides tamper evidence: updates are recorded cryptographically so that alteration can be detected and proven, which answers an integrity requirement rather than a confidentiality one."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "monitor-optimize",
+    "sections": [
+      {
+        "id": "performance-monitoring",
+        "heading": "Baselines, metrics, and monitoring tools",
+        "paragraphs": [
+          "A baseline is what makes a metric meaningful — without one, a CPU figure is a number rather than evidence. In Azure SQL the headline metric is DTU or vCPU percentage, and for a resource-limited database the wait types tell you which resource. Dynamic management views are the in-engine source: `sys.dm_exec_requests` for what is running now, `sys.dm_os_wait_stats` for cumulative waits, `sys.dm_db_resource_stats` for recent resource use in Azure SQL, and `sys.dm_exec_query_stats` for aggregate query cost.",
+          "The tools layer on top of those. Extended Events is the lightweight tracing framework that replaced SQL Profiler and should be used instead of it for anything on a production system. Database watcher is the newer managed monitoring service that collects across many Azure SQL resources into one store. Azure Monitor holds platform metrics and can alert on them. Intelligent Insights analyses telemetry and reports diagnosable problems in plain terms — a regressed plan, excessive waits, blocking — which is a different question from what the raw metrics show."
+        ]
+      },
+      {
+        "id": "query-performance",
+        "heading": "Query Store, blocking, and execution plans",
+        "paragraphs": [
+          "Query Store records query text, plans, and runtime statistics over time, which is what makes 'this was fast last week' an answerable question. Its defining use is plan regression: when a query's plan changes and performance drops, the previous plan can be forced. Automatic tuning builds on it, optionally forcing the last good plan without human intervention and reverting if that does not help. Query Store is on by default in Azure SQL and must be enabled deliberately on SQL Server.",
+          "Blocking is one session holding a lock another session needs, and is normal in short bursts and a problem when sustained; `sys.dm_exec_requests` shows the blocking session id and `sys.dm_tran_locks` the detail. A deadlock is different — two sessions each holding what the other needs, resolved by the engine killing one as a victim, and captured with the system health Extended Events session. Reading an execution plan means looking for the operators that dominate cost: scans where a seek was expected, key lookups suggesting a missing included column, spills to tempdb from bad estimates, and warnings on operators. Missing index suggestions in a plan are a hint rather than an instruction, because the engine proposes them per query without regard to write cost or the indexes that already exist."
+        ]
+      },
+      {
+        "id": "database-maintenance",
+        "heading": "Maintenance and engine configuration",
+        "paragraphs": [
+          "Index maintenance follows fragmentation: reorganise at moderate fragmentation and rebuild at high, with online rebuilds available so the table stays available. Statistics drive the optimiser's estimates and go stale as data changes; auto-update handles most cases but large tables can need manual updates because the automatic threshold is proportional. `DBCC CHECKDB` verifies physical and logical integrity and should run on a schedule — corruption found by a user is corruption that has been silently backed up for weeks.",
+          "Configuration divides between server-level settings, database-scoped configuration such as `MAXDOP` and legacy cardinality estimation, which lets one database differ from the instance, and Resource Governor, which caps CPU, memory, and IO per workload group so one reporting query cannot starve everything else. Intelligent query processing improves plans without code changes — adaptive joins, memory grant feedback, parameter-sensitive plan optimisation — and is enabled by the database compatibility level, which is why raising compatibility level is itself a performance decision to be tested rather than assumed safe."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "automation",
+    "sections": [
+      {
+        "id": "agent-jobs-and-elastic-jobs",
+        "heading": "SQL Server Agent and elastic jobs",
+        "paragraphs": [
+          "SQL Server Agent schedules jobs of one or more steps and exists on SQL Server and on Azure SQL Managed Instance — but not on Azure SQL Database, which is one of the most consequential differences between the offerings and the reason a migration to Database rather than Managed Instance forces jobs to be rehomed. Jobs raise alerts on failure and notify operators by email through Database Mail, and troubleshooting starts with job history and the step output, since a job that reports failure without detail usually has no output file or logging step configured.",
+          "For Azure SQL Database the replacement is elastic jobs, which run T-SQL across a target group of databases — a whole server, a pool, or a named list — and are the answer whenever a scenario needs the same script run against many databases on a schedule. Azure Automation runbooks and Logic Apps cover automation that is not T-SQL, and Azure Functions with a timer trigger is the lightweight alternative for small tasks."
+        ]
+      },
+      {
+        "id": "deployment-automation",
+        "heading": "Automating deployment",
+        "paragraphs": [
+          "Deployment of the resource and deployment of the schema are separate concerns. ARM templates and Bicep declare the server, database, firewall rules, and settings, so an environment can be rebuilt identically and a change is reviewable as a diff; Azure PowerShell and the Azure CLI do the same imperatively and suit scripted, conditional work. The declarative route is preferred for anything that must be reproducible, which is the same reasoning applied everywhere else in Azure.",
+          "Schema deployment uses a DACPAC, which compares the desired schema against the target and generates the difference, or migration scripts run in order. Deployment failures are diagnosed from the deployment operations in the portal or `Get-AzResourceGroupDeploymentOperation`, and the common causes are worth recognising: a name that is not globally unique, a region that does not offer the requested service objective, and a firewall rule that locks out the deployment agent itself."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "ha-dr",
+    "sections": [
+      {
+        "id": "hadr-strategy",
+        "heading": "Choosing an HA/DR strategy",
+        "paragraphs": [
+          "Every choice here is decided by two numbers. The recovery point objective is how much data may be lost, and it decides whether replication must be synchronous. The recovery time objective is how long recovery may take, and it decides whether a standby must already be running. Reading a scenario for those two figures answers most questions before any product is considered.",
+          "Azure SQL Database provides high availability within a region automatically, with zone-redundant configuration spreading replicas across availability zones. Across regions, active geo-replication creates readable secondaries — up to four — with asynchronous replication and manual failover, while a failover group wraps geo-replication with a listener endpoint and automatic failover policy so the application's connection string does not change on failover. That listener is the practical difference and the reason failover groups are preferred for anything an application connects to. Managed Instance uses failover groups at instance level; SQL Server on virtual machines uses Always On availability groups or failover cluster instances, which the administrator builds and maintains."
+        ]
+      },
+      {
+        "id": "backup-restore",
+        "heading": "Backup and restore",
+        "paragraphs": [
+          "Azure SQL takes backups automatically — full, differential, and transaction log — and retains them for a configurable point-in-time restore window of up to 35 days, with long-term retention keeping weekly, monthly, and yearly backups for up to ten years. A point-in-time restore always creates a new database rather than overwriting the original, which is a detail that surprises people mid-incident and is worth knowing before one. Backup storage redundancy is chosen at creation and decides whether a backup survives a regional failure.",
+          "On SQL Server the recovery model decides what is possible: full allows point-in-time recovery and requires log backups, whose absence is why a log file grows until a disk fills; simple truncates the log automatically and forfeits point-in-time recovery; bulk-logged is a temporary state for bulk operations. Backup to URL writes to Azure Blob Storage, and the restore sequence is the last full, then the last differential, then the log backups in order, with `NORECOVERY` on every step but the last — recovering too early is the classic mistake, because it ends the sequence and forces a restart."
+        ]
+      },
+      {
+        "id": "geo-replication-and-ag",
+        "heading": "Geo-replication, availability groups, and testing",
+        "paragraphs": [
+          "Active geo-replication secondaries are readable, which makes them useful for reporting as well as recovery, and failover is manual — a deliberate act. Failover groups add automatic failover after a grace period and a read-write listener plus a read-only listener, so applications connect to a name that follows the primary. The grace period exists because an automatic failover during a transient outage can be worse than the outage.",
+          "On virtual machines, an Always On availability group replicates databases between instances with synchronous commit for zero data loss within a region and asynchronous across regions; a failover cluster instance instead moves a whole instance between nodes over shared storage. Both need a cluster, a quorum configuration, and in Azure a load balancer or distributed network name for the listener, which is the step most often missed and produces a listener that cannot be reached. Whatever is chosen, the plan is only real once it has been tested: a scheduled failover test is what turns an assumed recovery time into a measured one, and it is the part of an HA/DR design most often written down and never exercised."
+        ]
+      }
+    ]
+  }
+]

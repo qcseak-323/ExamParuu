@@ -1,0 +1,90 @@
+{
+  "examCode": "DP-300",
+  "examName": "Administering Microsoft Azure SQL Solutions",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for DP-300, 'Skills measured as of April 24, 2026'. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "platform-resources",
+      "name": "Plan and implement data platform resources",
+      "weight": "15-20%",
+      "subtopics": [
+        "Recommend a database offering based on specific requirements",
+        "Choose an automated deployment method and deploy database offerings on selected platforms",
+        "Identify use cases for Azure Arc-enabled SQL services and Azure SQL Database in Microsoft Fabric",
+        "Plan and configure table partitioning and recommend a database sharding solution",
+        "Deploy hybrid SQL Server solutions and apply patches and updates for hybrid and IaaS deployments",
+        "Configure Azure SQL Database, SQL Managed Instance, and SQL Server on Azure VMs for scale and performance",
+        "Configure data compression",
+        "Evaluate requirements for a migration and choose between offline and online strategies",
+        "Implement a migration to Azure and between Azure SQL services, and troubleshoot a migration",
+        "Implement Azure SQL Managed Instance database copy and move"
+      ]
+    },
+    {
+      "id": "secure-environment",
+      "name": "Implement a secure environment",
+      "weight": "20-25%",
+      "subtopics": [
+        "Configure Microsoft Entra ID authentication for Azure SQL Database, SQL Managed Instance, and SQL Server",
+        "Configure security principals and create users from Microsoft Entra identities",
+        "Configure database and object-level permissions and apply least privilege for all securables",
+        "Manage authentication and authorisation by using T-SQL and troubleshoot related issues",
+        "Implement transparent data encryption and object-level encryption",
+        "Implement Always Encrypted, including with VBS enclaves",
+        "Configure server- and database-level firewall rules, private links, and service endpoints",
+        "Apply a data classification strategy and configure server and database audits",
+        "Implement change data tracking and dynamic data masking",
+        "Implement ledger in Azure SQL and row-level security"
+      ]
+    },
+    {
+      "id": "monitor-optimize",
+      "name": "Monitor, configure, and optimize database resources",
+      "weight": "20-25%",
+      "subtopics": [
+        "Prepare an operational performance baseline and determine sources for performance metrics",
+        "Interpret performance metrics and configure and monitor activity and performance",
+        "Monitor by using database watcher and Extended Events",
+        "Configure and monitor by using Query Store",
+        "Identify and resolve session blocking and identify performance issues using dynamic management views",
+        "Identify and implement index changes for queries and review execution plans",
+        "Recommend query construct modifications based on resource usage and monitor with Intelligent Insights",
+        "Implement index, statistics, and integrity maintenance tasks",
+        "Configure database automatic tuning, server settings, and Resource Governor",
+        "Implement database-scoped configuration and identify use cases for intelligent query processing"
+      ]
+    },
+    {
+      "id": "automation",
+      "name": "Configure and manage automation of tasks",
+      "weight": "15-20%",
+      "subtopics": [
+        "Manage schedules for regular maintenance jobs with SQL Server Agent",
+        "Configure job alerts and notifications and troubleshoot SQL Server Agent jobs",
+        "Automate deployment by using ARM and Bicep templates",
+        "Automate deployment by using Azure PowerShell and the Azure CLI",
+        "Monitor and troubleshoot deployments",
+        "Create and configure elastic jobs",
+        "Create and configure database tasks by using automation",
+        "Configure alerts and notifications on database tasks and troubleshoot automated tasks"
+      ]
+    },
+    {
+      "id": "ha-dr",
+      "name": "Plan and configure a high availability and disaster recovery environment",
+      "weight": "20-25%",
+      "subtopics": [
+        "Recommend an HA/DR strategy based on recovery point and recovery time objectives",
+        "Evaluate HA/DR for hybrid deployments and Azure-specific solutions",
+        "Plan a testing procedure for an HA/DR solution",
+        "Recommend a database backup and restore strategy",
+        "Perform database backup and restore by using native tools and T-SQL",
+        "Perform a database restore to a point in time and configure long-term backup retention",
+        "Back up to and restore from cloud storage",
+        "Configure active geo-replication and failover groups",
+        "Configure Always On availability groups on SQL Managed Instance and Azure virtual machines",
+        "Configure Always On Failover Cluster Instances and log shipping, and monitor and troubleshoot an HA/DR solution"
+      ]
+    }
+  ]
+}
