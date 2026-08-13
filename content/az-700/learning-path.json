@@ -1,0 +1,118 @@
+{
+  "examCode": "az-700",
+  "note": "Five paths, one per exam domain, following Microsoft's AZ-700 learning paths. Module titles follow Microsoft Learn; the sections and cards behind each are this site's own.",
+  "paths": [
+    {
+      "id": "core-networking",
+      "title": "Design and implement core networking infrastructure",
+      "domainId": "core-networking",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/design-implement-microsoft-azure-networking-solutions-core/",
+      "modules": [
+        {
+          "id": "core-networking-m1",
+          "title": "Design and implement virtual networks and IP addressing",
+          "sectionIds": ["ip-addressing-and-subnets"],
+          "cardIds": ["fc-az700-cn-01", "fc-az700-cn-02", "fc-az700-cn-03", "fc-az700-cn-04", "fc-az700-cn-05"]
+        },
+        {
+          "id": "core-networking-m2",
+          "title": "Design and implement name resolution",
+          "sectionIds": ["name-resolution"],
+          "cardIds": ["fc-az700-cn-06", "fc-az700-cn-07", "fc-az700-cn-08", "fc-az700-cn-14"]
+        },
+        {
+          "id": "core-networking-m3",
+          "title": "Design and implement connectivity, routing, and monitoring",
+          "sectionIds": ["vnet-connectivity-routing", "nat-and-route-server", "network-monitoring"],
+          "cardIds": ["fc-az700-cn-09", "fc-az700-cn-10", "fc-az700-cn-11", "fc-az700-cn-12", "fc-az700-cn-13"]
+        }
+      ]
+    },
+    {
+      "id": "connectivity-services",
+      "title": "Design and implement hybrid connectivity",
+      "domainId": "connectivity-services",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/design-implement-microsoft-azure-hybrid-connectivity/",
+      "modules": [
+        {
+          "id": "connectivity-services-m1",
+          "title": "Design and implement site-to-site VPN",
+          "sectionIds": ["site-to-site-vpn"],
+          "cardIds": ["fc-az700-cs-01", "fc-az700-cs-02", "fc-az700-cs-03", "fc-az700-cs-11"]
+        },
+        {
+          "id": "connectivity-services-m2",
+          "title": "Design and implement point-to-site VPN",
+          "sectionIds": ["point-to-site-vpn"],
+          "cardIds": ["fc-az700-cs-04", "fc-az700-cs-05", "fc-az700-cs-06", "fc-az700-cs-12"]
+        },
+        {
+          "id": "connectivity-services-m3",
+          "title": "Design and implement ExpressRoute and Virtual WAN",
+          "sectionIds": ["expressroute", "virtual-wan"],
+          "cardIds": ["fc-az700-cs-07", "fc-az700-cs-08", "fc-az700-cs-09", "fc-az700-cs-10"]
+        }
+      ]
+    },
+    {
+      "id": "application-delivery",
+      "title": "Design and implement application delivery services",
+      "domainId": "application-delivery",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/design-implement-microsoft-azure-load-balancing-non-http-s-traffic/",
+      "modules": [
+        {
+          "id": "application-delivery-m1",
+          "title": "Load balance non-HTTP traffic",
+          "sectionIds": ["load-balancer-traffic-manager"],
+          "cardIds": ["fc-az700-ad-01", "fc-az700-ad-02", "fc-az700-ad-03", "fc-az700-ad-04", "fc-az700-ad-08"]
+        },
+        {
+          "id": "application-delivery-m2",
+          "title": "Load balance HTTP traffic with Application Gateway and Front Door",
+          "sectionIds": ["application-gateway", "front-door"],
+          "cardIds": ["fc-az700-ad-05", "fc-az700-ad-06", "fc-az700-ad-07", "fc-az700-ad-09"]
+        }
+      ]
+    },
+    {
+      "id": "private-access",
+      "title": "Design and implement private access to Azure services",
+      "domainId": "private-access",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/design-implement-private-access-to-azure-services/",
+      "modules": [
+        {
+          "id": "private-access-m1",
+          "title": "Implement private endpoints and Private Link",
+          "sectionIds": ["private-endpoints-and-link"],
+          "cardIds": ["fc-az700-pa-01", "fc-az700-pa-02", "fc-az700-pa-03", "fc-az700-pa-04"]
+        },
+        {
+          "id": "private-access-m2",
+          "title": "Implement service endpoints and endpoint policies",
+          "sectionIds": ["service-endpoints"],
+          "cardIds": ["fc-az700-pa-05", "fc-az700-pa-06", "fc-az700-pa-07"]
+        }
+      ]
+    },
+    {
+      "id": "network-security",
+      "title": "Design and implement network security",
+      "domainId": "network-security",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/design-implement-network-security-monitoring/",
+      "modules": [
+        {
+          "id": "network-security-m1",
+          "title": "Implement network security groups and Virtual Network Manager",
+          "sectionIds": ["nsg-and-asg"],
+          "cardIds": ["fc-az700-ns-01", "fc-az700-ns-02", "fc-az700-ns-03", "fc-az700-ns-04"]
+        },
+        {
+          "id": "network-security-m2",
+          "title": "Implement Azure Firewall and Web Application Firewall",
+          "sectionIds": ["azure-firewall", "waf"],
+          "cardIds": ["fc-az700-ns-05", "fc-az700-ns-06", "fc-az700-ns-07", "fc-az700-ns-08"]
+        }
+      ]
+    }
+  ]
+}

@@ -244,10 +244,10 @@
     "series": "az",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Design and operate hybrid connectivity, routing, private access, load balancing and network security.",
-    "hasContent": false,
+    "hasContent": true,
     "catalogVerifiedAt": "2026-08-12",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-700"
   },

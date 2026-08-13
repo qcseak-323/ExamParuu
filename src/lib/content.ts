@@ -124,6 +124,13 @@ import az140StudyGuide from "../../content/az-140/study-guide.json";
 import az140Path from "../../content/az-140/learning-path.json";
 import az140CaseStudies from "../../content/az-140/case-studies.json";
 
+import az700Outline from "../../content/az-700/outline.json";
+import az700Questions from "../../content/az-700/questions.json";
+import az700Flashcards from "../../content/az-700/flashcards.json";
+import az700StudyGuide from "../../content/az-700/study-guide.json";
+import az700Path from "../../content/az-700/learning-path.json";
+import az700CaseStudies from "../../content/az-700/case-studies.json";
+
 import pl900Outline from "../../content/pl-900/outline.json";
 import pl900Questions from "../../content/pl-900/questions.json";
 import pl900Flashcards from "../../content/pl-900/flashcards.json";
@@ -298,6 +305,14 @@ const examRegistry: Record<string, ExamContent> = {
     studyGuide: az140StudyGuide as StudyGuideDomain[],
     learningPath: az140Path as ExamLearningPath,
     caseStudies: az140CaseStudies as CaseStudy[],
+  },
+  "az-700": {
+    outline: az700Outline as Outline,
+    questions: az700Questions as Question[],
+    flashcards: az700Flashcards as Flashcard[],
+    studyGuide: az700StudyGuide as StudyGuideDomain[],
+    learningPath: az700Path as ExamLearningPath,
+    caseStudies: az700CaseStudies as CaseStudy[],
   },
   "pl-900": {
     outline: pl900Outline as Outline,

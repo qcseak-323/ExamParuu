@@ -1,0 +1,163 @@
+[
+  {
+    "domainId": "core-networking",
+    "sections": [
+      {
+        "id": "ip-addressing-and-subnets",
+        "heading": "Address spaces, subnets, and public IPs",
+        "paragraphs": [
+          "A virtual network is defined by one or more address spaces in CIDR notation, and the planning rule that matters is that peered networks must not overlap — overlapping ranges cannot be peered and the remedy is renumbering, which is why address planning happens before anything is deployed. Azure reserves five addresses in every subnet: the network address, the broadcast address, and three for the platform's gateway and DNS, so a /29 yields three usable addresses rather than eight and a /29 is the smallest subnet Azure allows.",
+          "Several services demand a dedicated subnet with a fixed name: GatewaySubnet for virtual network gateways, AzureFirewallSubnet for Azure Firewall, AzureBastionSubnet for Bastion, and RouteServerSubnet for Route Server. Each has a minimum size — GatewaySubnet /27 or larger for most designs, AzureFirewallSubnet /26, AzureBastionSubnet /26 — and putting anything else in them is unsupported. Subnet delegation hands a subnet to a platform service so it can inject its own resources, which is what integrated services such as App Service or SQL Managed Instance require. Public IP addresses come in Basic and Standard SKUs, and Standard is zone-redundant, secure by default with no inbound unless a network security group permits it, and required by the Standard Load Balancer; a public IP prefix reserves a contiguous block so that addresses are predictable for allow-listing."
+        ]
+      },
+      {
+        "id": "name-resolution",
+        "heading": "DNS and name resolution",
+        "paragraphs": [
+          "By default a virtual network uses Azure-provided DNS, which resolves public names and the automatically registered names of virtual machines within the same network. Custom DNS servers can be set at the virtual network level, and once set, every machine in it uses them — a change that takes effect only after the network interface is refreshed, which is why a DNS change appears not to work until a restart. The Azure-provided resolver is always reachable at 168.63.129.16, and forwarding to that address is how a custom DNS server resolves Azure names it does not host.",
+          "A private DNS zone holds records for a private namespace and must be linked to a virtual network to be used there; the link can enable auto-registration so machines register themselves. This is the mechanism behind private endpoints, where the public host name of a service must resolve to the endpoint's private address. Azure DNS Private Resolver replaces the pattern of running DNS virtual machines to bridge on-premises and Azure: inbound endpoints let on-premises resolvers query Azure private zones, outbound endpoints and forwarding rulesets let Azure workloads resolve on-premises names, and it is the recommended design for hybrid resolution."
+        ]
+      },
+      {
+        "id": "vnet-connectivity-routing",
+        "heading": "Peering, routing, and forced tunnelling",
+        "paragraphs": [
+          "Virtual network peering connects two networks over Microsoft's backbone with no gateway, no public internet, and low latency. It is non-transitive, which is the single most examined property: peering A to B and B to C does not let A reach C. The remedies are a full mesh, a hub-and-spoke design where the hub carries a network virtual appliance and user-defined routes send spoke traffic through it, or Virtual WAN. Gateway transit lets spokes use the hub's VPN or ExpressRoute gateway instead of each having their own, and it requires the matching allow-forwarded-traffic and use-remote-gateways settings on the two sides of the peering.",
+          "Azure routes traffic by longest prefix match, and the precedence when prefixes tie is user-defined route first, then BGP route, then system route. That order is what lets a UDR override a route learned from ExpressRoute, and it is the mechanism behind service chaining: a route with next hop Virtual Appliance sends traffic to a firewall before it leaves a subnet. Forced tunnelling is the specific case of a default route, 0.0.0.0/0, pointing at a gateway or appliance so that internet-bound traffic is inspected on-premises or in the hub rather than leaving directly."
+        ]
+      },
+      {
+        "id": "nat-and-route-server",
+        "heading": "NAT Gateway and Route Server",
+        "paragraphs": [
+          "Outbound connectivity has several forms and they differ in reliability. Default outbound access is being retired and should not be designed on. Load balancer outbound rules give SNAT with configurable port allocation. Azure NAT Gateway is the recommended option for outbound: it attaches to a subnet, scales SNAT ports far beyond what a load balancer provides, and is the answer whenever a scenario describes SNAT port exhaustion from many concurrent outbound connections. It always takes precedence over other outbound methods on the subnet it serves.",
+          "Azure Route Server solves a different problem: it exchanges routes with a network virtual appliance over BGP so that routes learned by the appliance are programmed into the virtual network automatically, instead of being maintained as user-defined routes by hand. It is not a router and does not carry data traffic — it is a control-plane component only, which is the distinction questions turn on. Branch-to-branch enables route exchange between an appliance and the gateways, which is what allows an ExpressRoute circuit and a VPN to learn each other's routes through the appliance."
+        ]
+      },
+      {
+        "id": "network-monitoring",
+        "heading": "Network Watcher and monitoring",
+        "paragraphs": [
+          "Network Watcher is the diagnostic toolbox and each tool answers a specific question. IP flow verify tests a five-tuple against the effective security rules and names the rule that allowed or denied it. Effective security rules shows the combined result of every network security group and security admin rule on an interface. Next hop reports where a packet to a given destination would be sent, which is how a user-defined route problem is confirmed. Connection troubleshoot tests reachability end to end, and connection monitor does the same continuously with alerting.",
+          "Virtual network flow logs record allowed and denied traffic and are the successor to NSG flow logs; sent to a storage account and analysed with Traffic Analytics, they answer what actually traversed the network rather than what policy says should have. Azure Monitor for Networks provides topology and health across the estate. The distinction to keep is between configuration diagnostics — IP flow verify, next hop, effective rules — which reason about what the configuration would do, and flow logs, which record what happened."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "connectivity-services",
+    "sections": [
+      {
+        "id": "site-to-site-vpn",
+        "heading": "Site-to-site VPN",
+        "paragraphs": [
+          "A site-to-site VPN joins an on-premises network to Azure over IPsec through a virtual network gateway in the GatewaySubnet, a local network gateway representing the on-premises endpoint and its address space, and a connection between them. Route-based gateways are the modern default and are required for anything involving multiple tunnels, coexistence with ExpressRoute, point-to-site on the same gateway, or IKEv2; policy-based gateways support a single tunnel with IKEv1 and exist for legacy devices only. That distinction decides a whole family of questions.",
+          "Availability is a design choice with named tiers. Active-standby is the default, where one instance carries traffic and the other takes over on failure with a brief interruption. Active-active runs both instances with two public IPs and two tunnels, removing that interruption. Dual-redundancy pairs an active-active Azure gateway with two on-premises devices for four tunnels. Zone-redundant gateway SKUs spread instances across availability zones. Throughput and feature support are set by the gateway SKU, so a stated bandwidth requirement is usually a SKU question, and the SKU cannot be changed between generations without recreating the gateway."
+        ]
+      },
+      {
+        "id": "point-to-site-vpn",
+        "heading": "Point-to-site VPN",
+        "paragraphs": [
+          "Point-to-site connects individual clients rather than networks, and the tunnel type constrains the platform: OpenVPN over TLS works across the widest range of clients and supports Microsoft Entra authentication, SSTP is Windows-only and TLS-based so it traverses firewalls that block UDP, and IKEv2 is an IPsec tunnel supported by Windows and macOS. Authentication is by certificate, by RADIUS, or by Microsoft Entra ID — and Entra authentication requires the OpenVPN tunnel type, which is the pairing most often examined.",
+          "Certificate authentication uses a root certificate uploaded to the gateway and client certificates issued from it, with revocation handled by uploading a thumbprint. RADIUS delegates to an existing server and is how an organisation reuses its on-premises authentication. The client configuration package generated by the gateway carries the profile and must be regenerated whenever the configuration changes — a stale package is a common cause of clients that cannot connect after a change. The address pool assigned to clients must not overlap the virtual network or any on-premises range."
+        ]
+      },
+      {
+        "id": "expressroute",
+        "heading": "ExpressRoute",
+        "paragraphs": [
+          "ExpressRoute provides a private circuit to Microsoft that never touches the public internet, delivered through one of several models: cloud exchange co-location, point-to-point Ethernet, any-to-any where the circuit joins an existing WAN, or ExpressRoute Direct, which connects at 10 or 100 Gbps directly into Microsoft's network for organisations needing that scale or physical isolation. Peering types decide what the circuit reaches: private peering carries traffic to virtual networks, and Microsoft peering carries traffic to Microsoft public services such as Microsoft 365 and Azure PaaS public endpoints. Public peering is retired.",
+          "The premium add-on raises route limits, extends connectivity to virtual networks in any geopolitical region, and increases the number of virtual network links. Global Reach connects two ExpressRoute circuits so that on-premises sites reach each other across Microsoft's backbone rather than the customer's own WAN. FastPath bypasses the ExpressRoute gateway for data traffic, sending it directly to virtual machines and reducing latency — the gateway is still required for routing exchange. Encryption over ExpressRoute is achieved with IPsec, either a site-to-site VPN over private peering or MACsec on ExpressRoute Direct, because the circuit itself is private but not encrypted. Bidirectional Forwarding Detection speeds up failure detection on the link."
+        ]
+      },
+      {
+        "id": "virtual-wan",
+        "heading": "Virtual WAN",
+        "paragraphs": [
+          "Virtual WAN is a managed hub-and-spoke backbone: hubs are created per region, and virtual networks, VPN sites, ExpressRoute circuits, and point-to-site users connect into them. It comes in Basic, which supports site-to-site VPN only, and Standard, which adds ExpressRoute, point-to-site, hub-to-hub transit, and inter-hub connectivity. The practical value is transitivity — spokes attached to a hub reach each other, and hubs reach each other, without the mesh of peerings and user-defined routes a hand-built topology needs.",
+          "Routing inside a hub is expressed with route tables associated to connections and propagated from them, which is how traffic is segmented — for example, keeping two business units' spokes from reaching each other while both reach shared services. A secured virtual hub is a hub with Azure Firewall or a partner appliance deployed into it, and routing intent then directs internet-bound and private traffic through that inspection point without user-defined routes on every spoke. Gateway scale units size each gateway's throughput."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "application-delivery",
+    "sections": [
+      {
+        "id": "load-balancer-traffic-manager",
+        "heading": "Load Balancer and Traffic Manager",
+        "paragraphs": [
+          "Azure Load Balancer is a layer 4 distributor for TCP and UDP within a region. Standard SKU is the one to design on: it is zone-redundant or zonal, supports backend pools up to a thousand instances, requires explicit outbound rules rather than granting implicit outbound access, and is secure by default so traffic must be permitted by a network security group. A public load balancer fronts internet-facing workloads; an internal one balances traffic inside a virtual network. Cross-region load balancer sits above regional ones and provides a single global anycast IP with automatic regional failover.",
+          "Health probes decide which backends receive traffic, and a probe that is too aggressive removes healthy instances while one that is too lenient keeps sending traffic to broken ones. Session persistence is set by distribution mode — the default five-tuple hash spreads connections, while source IP affinity pins a client to a backend. Gateway Load Balancer is a different animal: it inserts third-party network virtual appliances transparently into the path of another load balancer's traffic. Traffic Manager operates at DNS level rather than in the data path, returning a different answer per routing method — priority, weighted, performance, geographic, multivalue, or subnet — which means failover depends on DNS TTL and clients that cache aggressively fail over slowly."
+        ]
+      },
+      {
+        "id": "application-gateway",
+        "heading": "Application Gateway",
+        "paragraphs": [
+          "Application Gateway is a regional layer 7 load balancer for HTTP and HTTPS, and its value is everything that requires understanding the request. Listeners accept traffic on a port and protocol and are either basic or multi-site, the latter routing by host name so that one gateway serves several sites. Routing rules bind a listener to a backend pool and HTTP settings; path-based rules send different URL paths to different pools, which is how an images path reaches a different backend from an API path.",
+          "TLS is handled two ways and the difference matters: TLS termination decrypts at the gateway so it can inspect and route, while end-to-end TLS re-encrypts to the backend for scenarios where traffic must remain encrypted the whole way. Certificates are held on the gateway or referenced from Key Vault, which is the recommended pattern. Health probes can be custom, with a path and expected status codes, and a backend showing unhealthy is far more often a probe configuration or NSG problem than a broken application. Rewrite rule sets modify headers and URLs in flight, autoscaling replaces fixed instance counts on the v2 SKU, and the Web Application Firewall attaches here as a policy."
+        ]
+      },
+      {
+        "id": "front-door",
+        "heading": "Azure Front Door",
+        "paragraphs": [
+          "Front Door is the global counterpart to Application Gateway: a layer 7 entry point delivered from Microsoft's edge network, combining global load balancing, caching, TLS offload, and web application firewalling. Traffic enters at the nearest point of presence and travels to the origin over Microsoft's backbone, which is what accelerates it. Choosing between the two is a matter of scope — Front Door for global, multi-region, or edge-cached workloads, Application Gateway for a single region, and the two are frequently used together with Front Door in front.",
+          "Origins are grouped, with priority and weight controlling distribution and health probes driving failover. Caching stores content at the edge with rules for query strings and compression, and purging is explicit. Rules engines rewrite, redirect, and set headers at the edge. Securing the origin matters as much as the front: an origin that also accepts direct traffic bypasses the WAF entirely, so it is locked down either by restricting to the AzureFrontDoor.Backend service tag and validating the X-Azure-FDID header, or, on the Premium tier, with Private Link to the origin so it has no public exposure at all."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "private-access",
+    "sections": [
+      {
+        "id": "private-endpoints-and-link",
+        "heading": "Private endpoints and Private Link service",
+        "paragraphs": [
+          "A private endpoint is a network interface in a subnet holding a private IP that maps to one specific instance of a PaaS resource and one sub-resource — a storage account's blob service, say, rather than the account as a whole, so an account serving blobs and files needs two. Traffic to it never leaves the private address space, and the resource's public endpoint can then be disabled entirely. Private endpoints are reachable from peered networks and from on-premises over VPN or ExpressRoute, which is what makes them the answer whenever a scenario requires an on-premises client to reach a PaaS service privately.",
+          "DNS is the part that goes wrong. The service's public host name must resolve to the endpoint's private address, which is done with the matching private DNS zone linked to the virtual network; for on-premises clients the same resolution must be delivered by a conditional forwarder to Azure, usually through DNS Private Resolver. Reachable by IP but not by name is a DNS problem every time. Private Link service is the mirror image: it publishes a service of your own, sitting behind a Standard internal load balancer, so that consumers in other tenants create private endpoints to it, with an approval workflow controlling who may connect."
+        ]
+      },
+      {
+        "id": "service-endpoints",
+        "heading": "Service endpoints and endpoint policies",
+        "paragraphs": [
+          "A service endpoint extends a virtual network's identity to an Azure service so the service's firewall can permit a specific subnet. Traffic still travels to the service's public endpoint and the resource retains a public IP, which is the fundamental difference from a private endpoint and the reason private endpoints are recommended. Service endpoints are free, take effect immediately, and require no DNS change; they are also virtual-network-scoped rather than resource-scoped, so a subnet permitted to reach storage can reach any storage account that allows it.",
+          "Service endpoint policies narrow that: they restrict which specific resources a subnet may reach over a service endpoint, so a subnet can be limited to the organisation's own storage accounts rather than every storage account in Azure — which is what stops data being exfiltrated to an attacker's account over a permitted path. Service endpoints also do not extend to on-premises: a client outside the virtual network cannot use them, so hybrid access to a PaaS service requires a private endpoint instead. Choosing between them is one of the most reliable questions in this domain."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "network-security",
+    "sections": [
+      {
+        "id": "nsg-and-asg",
+        "heading": "Network security groups and flow logs",
+        "paragraphs": [
+          "A network security group is a stateful filter of inbound and outbound rules evaluated by priority, lowest number first, until the first match. Default rules at the highest priority numbers allow traffic within the virtual network, allow outbound to the internet, and deny inbound from the internet, so any explicit rule beats them. Because the filter is stateful, permitting a flow implicitly permits its return traffic, and a matching reverse rule is unnecessary. A group can be associated with a subnet and with a network interface at once, in which case inbound traffic is evaluated at the subnet first and then the interface, and outbound in the opposite order — a packet must be allowed by both.",
+          "Application security groups let rules reference a logical group of network interfaces instead of an address range, so a rule reads 'web tier to data tier on 1433' and remains correct as machines are added and removed. Virtual network flow logs record what actually traversed the network, allowed and denied, and are the successor to NSG flow logs; they answer questions that configuration diagnostics cannot, because a rule that looks correct and traffic that never arrived are different problems. Azure Virtual Network Manager adds security admin rules, which are evaluated before network security groups and cannot be overridden by a subscription owner's own NSG — the mechanism for a platform team to impose a baseline."
+        ]
+      },
+      {
+        "id": "azure-firewall",
+        "heading": "Azure Firewall and Firewall Manager",
+        "paragraphs": [
+          "Azure Firewall is a managed stateful firewall deployed into AzureFirewallSubnet, and its rule collections are processed in a fixed order that is examined directly: DNAT rules first, then network rules, then application rules. Application rules are the ones that filter outbound HTTP, HTTPS, and MSSQL by fully qualified domain name, and because network rules are evaluated first, a broad network rule can match traffic you intended an application rule to handle. FQDN tags and service tags reduce the maintenance of rules for well-known Microsoft services.",
+          "The SKUs differ in capability rather than only in size. Basic suits small environments with limited throughput. Standard provides the core filtering and threat intelligence-based filtering. Premium adds TLS inspection, an intrusion detection and prevention system, URL filtering, and web categories — so any requirement to inspect inside encrypted sessions is a Premium answer. Firewall Policy is the modern container for rules and supports inheritance, so a central base policy is written once and extended by regional child policies. Firewall Manager administers policies and secured virtual hubs across an estate, and a secured hub is how Virtual WAN gets inspection without user-defined routes on every spoke."
+        ]
+      },
+      {
+        "id": "waf",
+        "heading": "Web Application Firewall",
+        "paragraphs": [
+          "The Web Application Firewall protects HTTP workloads and attaches either to Application Gateway for a regional deployment or to Front Door for a global one; the two share concepts but are configured separately, and a policy written for one does not apply to the other. Managed rule sets are based on the OWASP core rule set, covering injection, cross-site scripting, and the other common classes, with a bot protection rule set alongside.",
+          "Deployment order is the examinable practice: run in detection mode first so that false positives can be found in the logs and excluded, then switch to prevention. Going straight to prevention is what breaks a legitimate application on its first day, and it is the answer the exam expects to be rejected. Exclusions remove specific attributes — a header, a cookie, a form field — from evaluation, which is how a false positive is handled without disabling a whole rule. Custom rules cover rate limiting, geo-filtering, and IP allow and deny lists, and are evaluated before managed rules."
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-kesterly-network",
+    "examCode": "az-700",
+    "domain": "core-networking",
+    "title": "Kesterly Freight — a network assembled in a hurry",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Kesterly Freight runs logistics software for European road haulage. Its Azure estate grew from a single proof of concept into eleven virtual networks across two regions, connected as needs arose rather than to a design.",
+          "A network review has been commissioned ahead of an expansion into a third region. Its findings are below, and the platform team has been asked to resolve them before anything new is built."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "A hub virtual network is peered to nine spokes. Two spokes, Warehousing and Billing, need to exchange traffic directly and cannot. Both are peered to the hub and neither is peered to the other; adding a peering between every pair has been proposed and would produce forty-five peerings.",
+          "One spoke, Telemetry, was created by a contractor using 10.20.0.0/16. The hub also uses 10.20.0.0/16. Telemetry has never been peered to anything and nobody has been able to explain why the peering fails.",
+          "Spokes reach the internet directly. The security team requires all outbound traffic to be inspected by an appliance in the hub before it leaves, and no spoke currently sends traffic there.",
+          "A batch service in the Billing spoke opens a very large number of short-lived outbound connections to a partner API. It intermittently fails with connection errors during peak hours, and the load balancer fronting it reports no backend problems.",
+          "The estate uses two DNS servers running on virtual machines in the hub. They forward public queries upstream and hold conditional forwarders for the on-premises domain. The team wants to retire both machines but still needs on-premises clients to resolve Azure private zone records and Azure workloads to resolve on-premises names.",
+          "A storage account holding consignment documents is reachable over a service endpoint from the Billing subnet. An auditor has objected that the same subnet can reach any storage account in Azure over that endpoint, including accounts outside the organisation."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Warehousing and Billing must exchange traffic without creating a peering between every pair of spokes.",
+          "The Telemetry spoke must be brought into the topology, and the reason its peering fails must be understood rather than worked around.",
+          "All outbound traffic from every spoke must reach the hub appliance before leaving for the internet.",
+          "The Billing batch service must stop failing during peak hours, given that its backends are healthy.",
+          "The two DNS virtual machines must be retired while preserving resolution in both directions between on-premises and Azure.",
+          "The Billing subnet must be able to reach only the organisation's own storage accounts over its existing service endpoint."
+        ]
+      }
+    ]
+  }
+]

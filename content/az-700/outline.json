@@ -1,0 +1,89 @@
+{
+  "examCode": "AZ-700",
+  "examName": "Designing and Implementing Microsoft Azure Networking Solutions",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for AZ-700, 'Skills measured as of July 27, 2026'. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "core-networking",
+      "name": "Design and implement core networking infrastructure",
+      "weight": "25-30%",
+      "subtopics": [
+        "Plan and implement network segmentation, address spaces, and virtual networks",
+        "Plan and configure subnetting, subnet delegation, and shared or dedicated subnets",
+        "Create public IP addresses, public IP prefixes, and custom IP address prefixes",
+        "Design name resolution inside a virtual network and configure DNS settings",
+        "Design and configure public and private DNS zones and link a private zone to a virtual network",
+        "Design and implement Azure DNS Private Resolver",
+        "Design service chaining and gateway transit, and implement virtual network peering",
+        "Design and implement user-defined routes, route tables, and forced tunnelling",
+        "Design and implement Azure Route Server and Azure NAT Gateway",
+        "Configure monitoring, diagnostics, and logs with Network Watcher and Azure Monitor for Networks"
+      ]
+    },
+    {
+      "id": "connectivity-services",
+      "name": "Design, implement, and manage connectivity services",
+      "weight": "20-25%",
+      "subtopics": [
+        "Design a site-to-site VPN including high availability and select a gateway SKU",
+        "Identify when to use a policy-based versus a route-based VPN connection",
+        "Create and configure local network gateways, virtual network gateways, and IPsec/IKE policies",
+        "Select a gateway SKU, tunnel type, and authentication method for point-to-site VPN",
+        "Configure RADIUS and Microsoft Entra ID authentication and implement a VPN client configuration",
+        "Select an ExpressRoute connectivity model, SKU, and tier",
+        "Implement ExpressRoute Global Reach, FastPath, and ExpressRoute Direct",
+        "Configure Azure private peering and Microsoft peering and connect a virtual network to a circuit",
+        "Configure encryption over ExpressRoute and implement Bidirectional Forwarding Detection",
+        "Design a Virtual WAN architecture, create virtual hubs, and configure hub routing"
+      ]
+    },
+    {
+      "id": "application-delivery",
+      "name": "Design and implement application delivery services",
+      "weight": "15-20%",
+      "subtopics": [
+        "Map requirements to Azure Load Balancer capabilities and choose a SKU and tier",
+        "Choose between public and internal, and between regional and cross-region load balancers",
+        "Create load balancing rules, inbound NAT rules, and explicit outbound rules including SNAT",
+        "Implement Azure Traffic Manager and Gateway Load Balancer",
+        "Identify appropriate use cases for Azure Application Gateway and choose manual or autoscale",
+        "Create backend pools, health probes, listeners, routing rules, and HTTP settings",
+        "Configure Transport Layer Security and rewrite rule sets on Application Gateway",
+        "Identify appropriate use cases for Azure Front Door and choose a tier",
+        "Configure Front Door routing, origins, endpoints, caching, and traffic acceleration",
+        "Configure TLS termination and end-to-end TLS, rules, URL rewrite and redirect, and secure an origin with Private Link"
+      ]
+    },
+    {
+      "id": "private-access",
+      "name": "Design and implement private access to Azure services",
+      "weight": "10-15%",
+      "subtopics": [
+        "Plan and create private endpoints and configure access to them",
+        "Create a Private Link service",
+        "Integrate Private Link and private endpoints with DNS",
+        "Integrate a Private Link service with on-premises clients",
+        "Choose when to use a service endpoint",
+        "Create service endpoints and configure access to them",
+        "Configure service endpoint policies"
+      ]
+    },
+    {
+      "id": "network-security",
+      "name": "Design and implement Azure network security services",
+      "weight": "15-20%",
+      "subtopics": [
+        "Create network security groups and associate them to subnets or network interfaces",
+        "Create application security groups and associate them to network interfaces",
+        "Create and configure inbound and outbound security rules",
+        "Implement and interpret virtual network flow logs and verify IP flow",
+        "Configure a network security group for remote server administration including Azure Bastion",
+        "Implement virtual network security using Azure Virtual Network Manager",
+        "Map requirements to Azure Firewall capabilities and select an appropriate SKU",
+        "Design and implement an Azure Firewall deployment and configure firewall rules",
+        "Create and implement Azure Firewall Manager policies and a secured virtual hub",
+        "Design a Web Application Firewall deployment, configure detection or prevention mode, and associate a WAF policy"
+      ]
+    }
+  ]
+}
