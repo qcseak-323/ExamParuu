@@ -1,0 +1,933 @@
+[
+  {
+    "id": "ga-01",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "caseStudyId": "cs-quillon-support-agent",
+    "question": "Torque and parts tables must survive ingestion with their structure intact, and scanned pages must be readable. What should you put in front of the index?",
+    "options": [
+      "Content Understanding analyzers producing markdown, so layout and tables are preserved",
+      "A plain text extractor with a larger chunk size",
+      "A generative prompt that reformats each page into prose before indexing",
+      "A vector index with integrated vectorisation over the raw PDFs"
+    ],
+    "correctIndex": 0,
+    "explanation": "Markdown output keeps headings and tables so chunking respects structure instead of cutting across it, and the analyzer handles the scanned pages through OCR. A larger chunk does not stop a table dissolving into a line of words, and asking a model to rewrite each page introduces fabrication into ingestion.",
+    "teaches": "content-understanding-analyzers"
+  },
+  {
+    "id": "ga-02",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "caseStudyId": "cs-quillon-support-agent",
+    "question": "A search for the exact part number QX-4417-B must reliably find the document naming it, without losing the ability to find passages describing the same procedure in different words. What should you configure?",
+    "options": [
+      "Hybrid search with semantic ranking",
+      "Vector search with a larger embedding model",
+      "Keyword search only, with the part number as a filter",
+      "Vector search with a lower similarity threshold"
+    ],
+    "correctIndex": 0,
+    "explanation": "Vector search alone is why exact identifiers are being missed — embeddings match meaning, and a part number carries little. Keyword search alone would find the identifier but lose the paraphrases. Hybrid runs both and semantic ranking re-scores the top results.",
+    "teaches": "generative-apps-and-rag"
+  },
+  {
+    "id": "ga-03",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "caseStudyId": "cs-quillon-support-agent",
+    "question": "The agent must not answer from its own knowledge when the archive holds nothing relevant, and the team must be able to measure how often it does. What should you implement?",
+    "options": [
+      "A groundedness evaluator run against a test dataset, plus instructions to answer only from retrieved context",
+      "A lower temperature on the model deployment",
+      "A content safety filter tuned to a stricter severity threshold",
+      "A larger model with more parameters"
+    ],
+    "correctIndex": 0,
+    "explanation": "Groundedness is precisely the measure of whether an answer is supported by the retrieved context, and it is the only listed option that produces a number the team can track. Temperature changes sampling rather than sourcing, and safety filters address harm categories, not fabrication.",
+    "teaches": "observability-for-genai"
+  },
+  {
+    "id": "ga-04",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "caseStudyId": "cs-quillon-support-agent",
+    "question": "Placing a parts order must require a human decision, and that requirement must not depend on the model correctly interpreting intent. What should you implement?",
+    "options": [
+      "An approval flow control that gates the ordering tool before it executes",
+      "A system message instructing the agent to ask before ordering",
+      "A lower temperature so the agent behaves more predictably",
+      "A separate agent dedicated to ordering, called only when needed"
+    ],
+    "correctIndex": 0,
+    "explanation": "The four unintended orders happened because intent was inferred, so any answer that relies on better inference repeats the fault. An approval gate sits outside the model's judgement, which is what the requirement demands.",
+    "teaches": "agent-orchestration"
+  },
+  {
+    "id": "ga-05",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "caseStudyId": "cs-quillon-support-agent",
+    "question": "When an answer is wrong, the team must be able to see which stage produced the fault. What should you implement?",
+    "options": [
+      "Tracing that records the prompt, retrieved documents, tool calls, and completion for each request",
+      "Verbose application logging of the question and the final answer",
+      "A higher log retention period on the Foundry project",
+      "An A/B test between two prompt variants"
+    ],
+    "correctIndex": 0,
+    "explanation": "The team already sees the question and the answer and cannot attribute the fault, because a retrieval miss, a tool problem, and a prompt fault all look identical from the outside. Tracing captures the intermediate stages, which is the only way to tell them apart.",
+    "teaches": "observability-for-genai"
+  },
+  {
+    "id": "ga-06",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "question": "An application must answer questions from an organisation's internal policy documents, which change monthly. What approach should you use?",
+    "options": [
+      "Retrieval-augmented generation over an index of the documents",
+      "Fine-tuning a model on the policy documents each month",
+      "Placing all policy documents in the system message",
+      "Training a small language model from scratch on the corpus"
+    ],
+    "correctIndex": 0,
+    "explanation": "Retrieval supplies facts and keeps them current, which is exactly what monthly change demands. Fine-tuning teaches form and behaviour rather than knowledge and would need repeating; a full corpus will not fit a system message.",
+    "teaches": "generative-apps-and-rag"
+  },
+  {
+    "id": "ga-07",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "question": "In a function-calling flow, what actually executes the function the model has selected?",
+    "options": [
+      "The application, which then returns the result to the model",
+      "The model, which calls the function directly",
+      "The Foundry runtime, transparently to the application",
+      "The tool schema, which contains the implementation"
+    ],
+    "correctIndex": 0,
+    "explanation": "The model only emits a structured request naming a function and its arguments. The application executes it and passes the result back, which is why tool access is controlled in the application rather than in the prompt.",
+    "teaches": "building-agents"
+  },
+  {
+    "id": "ga-08",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "question": "An agent frequently chooses the wrong tool from the four it has been given. What should you improve first?",
+    "options": [
+      "The tool schema descriptions, which are what the model uses to choose",
+      "The model temperature, lowering it to reduce randomness",
+      "The number of tools, by combining them into one",
+      "The conversation memory, by keeping more turns"
+    ],
+    "correctIndex": 0,
+    "explanation": "Tool selection is driven by the name, description, and parameter documentation in the schema, so vague descriptions produce vague choices. Schema text is engineering rather than documentation, which is the point of the question.",
+    "teaches": "building-agents"
+  },
+  {
+    "id": "ga-09",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "question": "A long-running agent conversation begins failing once the exchange grows past a few hundred turns. What is the cause?",
+    "options": [
+      "The thread history has exceeded the model's context window",
+      "The agent's tool schemas have expired",
+      "The embedding model has drifted from the index",
+      "The temperature setting compounds over turns"
+    ],
+    "correctIndex": 0,
+    "explanation": "Thread history grows without limit while the context window does not, so it must be summarised or truncated. Nothing about tools, embeddings, or sampling accumulates across turns in the way described.",
+    "teaches": "building-agents"
+  },
+  {
+    "id": "ga-10",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "question": "Chunks in a RAG index are 2,000 tokens with no overlap, and answers frequently miss information that spans a chunk boundary. What should you change?",
+    "options": [
+      "Reduce the chunk size and introduce overlap between chunks",
+      "Increase the chunk size so fewer boundaries exist",
+      "Switch from vector search to keyword search",
+      "Raise the number of documents returned per query"
+    ],
+    "correctIndex": 0,
+    "explanation": "Overlap preserves sentences that would otherwise be cut in half, and smaller chunks give a more focused embedding. Larger chunks dilute the embedding and waste context, and returning more of the wrong chunks does not help.",
+    "teaches": "generative-apps-and-rag"
+  },
+  {
+    "id": "ga-11",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "question": "An extraction task must return the same JSON structure every time so a downstream system can parse it. Which combination is most appropriate?",
+    "options": [
+      "A low temperature, a named output schema, and validation before use",
+      "A high temperature with few-shot examples",
+      "A reasoning model with chain-of-thought prompting",
+      "A self-critique loop with two passes"
+    ],
+    "correctIndex": 0,
+    "explanation": "Low temperature reduces variation, a schema constrains the shape, and validation catches the residual failures. Chain-of-thought and self-critique improve reasoning quality at the cost of tokens and do nothing for output determinism.",
+    "teaches": "prompt-and-parameter-tuning"
+  },
+  {
+    "id": "ga-12",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "question": "A model returns factually wrong answers about a product. Which change is least likely to help?",
+    "options": [
+      "Lowering the temperature",
+      "Adding retrieval over the product documentation",
+      "Including the relevant specification in the prompt",
+      "Adding a groundedness evaluation to the release pipeline"
+    ],
+    "correctIndex": 0,
+    "explanation": "Temperature controls sampling randomness, not what the model knows, so a confidently wrong answer simply becomes a consistently wrong one. Every other option changes what information is available or measures whether the answer is supported.",
+    "teaches": "prompt-and-parameter-tuning"
+  },
+  {
+    "id": "ga-13",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "question": "When does splitting a solution into multiple specialised agents justify its complexity?",
+    "options": [
+      "When subtasks genuinely need different tools, instructions, or models",
+      "Whenever a workflow has more than three steps",
+      "Whenever the conversation exceeds the context window",
+      "Whenever more than one data source is involved"
+    ],
+    "correctIndex": 0,
+    "explanation": "Multi-agent orchestration adds handoff, context passing, and failure modes, so it pays only where the specialisation is real. Step count, context length, and source count are all handled by one agent with the right tools.",
+    "teaches": "agent-orchestration"
+  },
+  {
+    "id": "ga-14",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "question": "An agent must answer from a 200,000-document corpus. How should that knowledge be made available?",
+    "options": [
+      "Give the agent a search tool that retrieves relevant passages on demand",
+      "Place the corpus in the system message",
+      "Fine-tune the model on the corpus",
+      "Load the corpus into the conversation thread at the start of each session"
+    ],
+    "correctIndex": 0,
+    "explanation": "Knowledge is retrieved rather than remembered. Neither the system message nor the thread can hold a corpus of that size, and fine-tuning teaches behaviour rather than supplying current facts.",
+    "teaches": "building-agents"
+  },
+  {
+    "id": "ga-15",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "question": "You must compare two prompt variants objectively before promoting one to production. What should you do?",
+    "options": [
+      "Run both against an evaluation dataset and compare groundedness, relevance, and coherence scores",
+      "Try each variant on a handful of representative questions and pick the better output",
+      "Deploy both and let engineers report which feels better",
+      "Choose the variant that produces shorter completions to reduce cost"
+    ],
+    "correctIndex": 0,
+    "explanation": "Evaluation against a dataset turns a prompt change into a measurable decision. Trying a few examples by hand is exactly the practice that automated evaluation exists to replace, because it cannot detect a regression on the cases nobody tried.",
+    "teaches": "observability-for-genai"
+  },
+  {
+    "id": "ga-16",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "question": "An agent should work through intermediate steps before giving a final answer on multi-step diagnostic problems. What technique applies?",
+    "options": [
+      "Chain-of-thought prompting",
+      "Reducing max tokens to force conciseness",
+      "Increasing the frequency penalty",
+      "Switching to an embedding model"
+    ],
+    "correctIndex": 0,
+    "explanation": "Chain-of-thought asks the model to reason in steps before answering, improving multi-step accuracy at the cost of tokens and latency. Capping tokens would truncate exactly the reasoning being asked for.",
+    "teaches": "prompt-and-parameter-tuning"
+  },
+  {
+    "id": "ga-17",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "kind": "multi",
+    "question": "Which two are true of retrieval-augmented generation? Choose two.",
+    "options": [
+      "Retrieval quality limits the quality of the final answer",
+      "It keeps answers current as source documents change",
+      "It permanently changes the model's weights",
+      "It removes the need for any evaluation of the output"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "No amount of prompt engineering rescues a system that retrieved the wrong passage, and re-indexing is what keeps answers current. Changing weights is fine-tuning, and grounding makes evaluation more important rather than less.",
+    "teaches": "generative-apps-and-rag"
+  },
+  {
+    "id": "ga-18",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "kind": "order",
+    "question": "Put the stages of a retrieval-augmented generation pipeline in order.",
+    "items": [
+      "Retrieve the passages most relevant to the question",
+      "Chunk the ingested content with overlap",
+      "Generate an answer grounded in the retrieved passages",
+      "Embed the chunks and write them to the index"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "Content is chunked, embedded and indexed ahead of time, then retrieval and generation happen per query. The first two stages are build-time and the last two are query-time, which is the split worth remembering.",
+    "teaches": "generative-apps-and-rag"
+  },
+  {
+    "id": "ga-19",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "kind": "yesno",
+    "question": "An agent has been given a set of tools and an approval flow before consequential actions. Judge each statement.",
+    "statements": [
+      { "text": "The application executes each tool call and returns the result to the model.", "correct": true },
+      { "text": "Tool-access controls limit what the agent can reach regardless of what it decides.", "correct": true },
+      { "text": "The approval gate depends on the model correctly recognising a consequential action.", "correct": false },
+      { "text": "Tool schema descriptions influence which tool the model selects.", "correct": true }
+    ],
+    "explanation": "An approval gate configured around a tool fires whenever that tool is called, which is what makes it a safeguard rather than a suggestion. If it relied on the model's judgement it would fail in exactly the cases it exists for.",
+    "teaches": "agent-orchestration"
+  },
+  {
+    "id": "ga-20",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "kind": "dropdown",
+    "question": "Complete the statement about grounding versus customisation.",
+    "segments": [
+      { "text": "To make a model answer from documents that change every week you would use " },
+      {
+        "blankId": "b1",
+        "options": ["retrieval-augmented generation", "fine-tuning", "a higher temperature"],
+        "correctIndex": 0
+      },
+      { "text": ", and to make it consistently produce a required house style you would use " },
+      {
+        "blankId": "b2",
+        "options": ["fine-tuning", "retrieval-augmented generation", "a larger context window"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "Retrieval supplies facts and keeps them current; fine-tuning teaches form and behaviour. Swapping the two is the single most common error in this domain.",
+    "teaches": "generative-apps-and-rag"
+  },
+  {
+    "id": "pm-01",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "question": "A production workload has a strict latency requirement and must never be rate limited at peak. Which deployment option should you choose?",
+    "options": [
+      "Provisioned throughput units",
+      "A standard serverless deployment",
+      "A serverless deployment with a retry policy",
+      "Several serverless deployments behind a load balancer"
+    ],
+    "correctIndex": 0,
+    "explanation": "Provisioned throughput reserves capacity, which is what buys predictable latency and freedom from throttling. Serverless bills per token and scales opportunistically, so it cannot guarantee either.",
+    "teaches": "foundry-setup-and-deployment"
+  },
+  {
+    "id": "pm-02",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "question": "An application receives HTTP 429 responses from a model deployment during busy periods. What should the client do?",
+    "options": [
+      "Retry with exponential backoff, honouring the Retry-After header",
+      "Retry immediately in a tight loop until the request succeeds",
+      "Fail the request and surface the error to the user",
+      "Switch to a different model family for that request"
+    ],
+    "correctIndex": 0,
+    "explanation": "429 means the tokens-per-minute quota is exhausted, and Retry-After states when capacity returns. Retrying immediately makes the congestion worse, and failing outright discards a request that would have succeeded a moment later.",
+    "teaches": "managing-monitoring-securing"
+  },
+  {
+    "id": "pm-03",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "question": "An application must authenticate to a Foundry project with no credential stored in its configuration. What should you use?",
+    "options": [
+      "A managed identity with an appropriate role assignment",
+      "An API key stored in an environment variable",
+      "An API key retrieved from Key Vault at startup",
+      "A shared service account with a strong password"
+    ],
+    "correctIndex": 0,
+    "explanation": "A managed identity has its credential created and rotated by Azure, so nothing is stored at all. Retrieving a key from Key Vault is better than an environment variable but still leaves a key in existence that identifies nobody.",
+    "teaches": "managing-monitoring-securing"
+  },
+  {
+    "id": "pm-04",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "question": "A task classifies short support messages into eight categories, at very high volume, with tight cost constraints. Which model should you choose?",
+    "options": [
+      "A small language model",
+      "A large reasoning model",
+      "A multimodal model",
+      "An embedding model"
+    ],
+    "correctIndex": 0,
+    "explanation": "Classification of short text is exactly where a small model's lower cost and latency win, and a reasoning model's deliberation is wasted. An embedding model produces vectors and cannot classify into named categories by itself.",
+    "teaches": "foundry-model-selection"
+  },
+  {
+    "id": "pm-05",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "question": "You must extract named fields with confidence scores from supplier invoices for an automated payment workflow. What should you use?",
+    "options": [
+      "Content Understanding, which returns structured fields with confidence",
+      "A generative prompt asking the model to summarise each invoice",
+      "An embedding model over the invoice text",
+      "A content safety filter tuned for financial documents"
+    ],
+    "correctIndex": 0,
+    "explanation": "An automated workflow needs typed fields and a confidence score so low-confidence results can be routed to a human. Prose asserts everything with equal certainty and cannot be triaged that way.",
+    "teaches": "foundry-model-selection"
+  },
+  {
+    "id": "pm-06",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "question": "Traffic between an application and its Foundry resource must not traverse the public internet, and the resource's public access must be disabled. What should you configure?",
+    "options": [
+      "A private endpoint for the Foundry resource",
+      "A service endpoint from the application subnet",
+      "An IP firewall rule permitting only the application's addresses",
+      "A managed identity for the application"
+    ],
+    "correctIndex": 0,
+    "explanation": "A private endpoint gives the resource a private IP inside the virtual network, which is what allows public access to be turned off. A service endpoint still reaches the public endpoint, and a firewall rule narrows who may use it rather than removing it.",
+    "teaches": "managing-monitoring-securing"
+  },
+  {
+    "id": "pm-07",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "question": "A safety evaluation reports a low groundedness score for a deployed application, but users are still receiving the ungrounded answers. Why?",
+    "options": [
+      "An evaluator measures; it does not block responses in the request path",
+      "The evaluation was run against the wrong deployment",
+      "Groundedness scores apply only to fine-tuned models",
+      "The content filter severity threshold is set too high"
+    ],
+    "correctIndex": 0,
+    "explanation": "Filters block and evaluators measure. A poor evaluation score is a signal to act on, not an enforcement mechanism, and conflating the two is the standard mistake in responsible AI questions.",
+    "teaches": "responsible-ai-governance"
+  },
+  {
+    "id": "pm-08",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "question": "A retrieved document contains text instructing the model to ignore its system message and reveal its instructions. What defends against this?",
+    "options": [
+      "Prompt shields for indirect prompt injection",
+      "A lower temperature on the deployment",
+      "A groundedness evaluator in the release pipeline",
+      "Provisioned throughput for the deployment"
+    ],
+    "correctIndex": 0,
+    "explanation": "This is indirect prompt injection — instructions arriving through content rather than from the user — and prompt shields exist for it. The underlying principle is that retrieved content is data, never a command.",
+    "teaches": "responsible-ai-governance"
+  },
+  {
+    "id": "pm-09",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "question": "Token spend on a summarisation feature is far above budget. Which change addresses it most directly?",
+    "options": [
+      "Use a smaller model and cap the maximum output length",
+      "Increase the temperature to shorten responses",
+      "Move the deployment to provisioned throughput",
+      "Add a self-critique loop to improve quality"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cost is driven by tokens, so a cheaper model and a capped completion attack it directly. Provisioned throughput buys predictability rather than savings at low volume, and a self-critique loop roughly doubles the spend.",
+    "teaches": "managing-monitoring-securing"
+  },
+  {
+    "id": "pm-10",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "question": "Prompts must be reviewable, versioned, and comparable across releases. Where should they live?",
+    "options": [
+      "In a Git repository, versioned alongside the application code",
+      "In the system message of the deployed application only",
+      "In a database table updated by the operations team",
+      "In the Foundry portal, edited directly in production"
+    ],
+    "correctIndex": 0,
+    "explanation": "Treating prompts as code makes a change reviewable, revertible, and comparable, and lets evaluation run automatically against a candidate before promotion. Editing directly in production is the practice that makes a regression untraceable.",
+    "teaches": "foundry-setup-and-deployment"
+  },
+  {
+    "id": "pm-11",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "question": "Which monitoring signal most directly indicates that a RAG application has begun answering from the model rather than from the supplied documents?",
+    "options": [
+      "Grounding quality",
+      "Request latency",
+      "Token throughput",
+      "Endpoint availability"
+    ],
+    "correctIndex": 0,
+    "explanation": "Grounding quality measures whether responses are supported by retrieved context, so a decline is exactly this failure. Latency, throughput, and availability describe the service rather than the answer.",
+    "teaches": "managing-monitoring-securing"
+  },
+  {
+    "id": "pm-12",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "question": "An agent may take an action that cannot be undone. Which governance control is appropriate?",
+    "options": [
+      "Require human approval before the action executes",
+      "Increase the model's context window",
+      "Lower the temperature so the agent is more deterministic",
+      "Add more few-shot examples of correct behaviour"
+    ],
+    "correctIndex": 0,
+    "explanation": "An irreversible action is governed by a gate outside the model, not by making the model's behaviour more likely to be right. Determinism and examples reduce the frequency of a mistake without removing its possibility.",
+    "teaches": "responsible-ai-governance"
+  },
+  {
+    "id": "pm-13",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "question": "Which retrieval method should you choose when queries and documents describe the same concept in entirely different words?",
+    "options": [
+      "Vector search",
+      "Keyword search",
+      "Filtered search on metadata",
+      "Exact phrase matching"
+    ],
+    "correctIndex": 0,
+    "explanation": "Vector search matches meaning through embeddings and therefore finds paraphrases that share no vocabulary. Every other option depends on the terms themselves appearing.",
+    "teaches": "foundry-model-selection"
+  },
+  {
+    "id": "pm-14",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "kind": "multi",
+    "question": "Which two are appropriate uses of provisioned throughput? Choose two.",
+    "options": [
+      "A high-volume workload with a strict latency requirement",
+      "A workload that must not be throttled at peak",
+      "An experimental prototype with unpredictable, occasional traffic",
+      "A one-off batch job that runs overnight once a month"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Reserved capacity is worth paying for when predictability matters. Occasional and experimental workloads are exactly where serverless per-token billing is cheaper, since reserved capacity is paid for whether used or not.",
+    "teaches": "foundry-setup-and-deployment"
+  },
+  {
+    "id": "pm-15",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "kind": "order",
+    "question": "Put the steps of promoting a prompt change to production in order.",
+    "items": [
+      "Deploy the change to the production project",
+      "Commit the new prompt variant to the Git repository",
+      "Compare the scores against the current production baseline",
+      "Run the evaluation dataset against the candidate"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "The change is captured in source control, evaluated against a dataset, compared with the baseline, and only then promoted. Deploying first and measuring afterwards is what makes a regression discoverable only by users.",
+    "teaches": "foundry-setup-and-deployment"
+  },
+  {
+    "id": "pm-16",
+    "examCode": "ai-103",
+    "domain": "plan-manage-ai-solution",
+    "kind": "match",
+    "question": "Match each responsible AI mechanism to what it does.",
+    "pairs": [
+      { "term": "Content filter", "definition": "Blocks harmful prompts or completions in the request path" },
+      { "term": "Groundedness detection", "definition": "Flags a response not supported by the supplied source" },
+      { "term": "Prompt shields", "definition": "Defends against instructions hidden in user or retrieved content" },
+      { "term": "Evaluator", "definition": "Scores a system against a dataset without blocking anything" }
+    ],
+    "explanation": "Three of these act in the request path and one only measures. Knowing which is which is what separates 'the system is safe' from 'we can prove how safe it is'.",
+    "teaches": "responsible-ai-governance"
+  },
+  {
+    "id": "cv-01",
+    "examCode": "ai-103",
+    "domain": "computer-vision",
+    "question": "A marketing image must have one object replaced while the rest of the picture is left untouched. What should you use?",
+    "options": [
+      "Inpainting with a mask over the region to replace",
+      "Outpainting to extend the image and crop the result",
+      "Regenerating the whole image from a revised prompt",
+      "A multimodal model producing a detailed caption"
+    ],
+    "correctIndex": 0,
+    "explanation": "A mask is what makes an edit targeted, so inpainting changes only the selected region. Regenerating from a new prompt produces a different image entirely, which is what the requirement rules out.",
+    "teaches": "image-and-video-generation"
+  },
+  {
+    "id": "cv-02",
+    "examCode": "ai-103",
+    "domain": "computer-vision",
+    "question": "Product photographs must carry short descriptions for screen reader users, conveying each image's purpose in context. What should you generate?",
+    "options": [
+      "Alt text",
+      "An extended image description",
+      "A detailed multi-paragraph caption",
+      "A structured field extraction of the visual characteristics"
+    ],
+    "correctIndex": 0,
+    "explanation": "Alt text is deliberately short and purpose-focused. Producing a long description where alt text was required is a failure even when every word is accurate, because a screen reader user must sit through all of it.",
+    "teaches": "multimodal-understanding"
+  },
+  {
+    "id": "cv-03",
+    "examCode": "ai-103",
+    "domain": "computer-vision",
+    "question": "A workflow must return named visual characteristics that a downstream system can act on, rather than descriptive prose. What should you use?",
+    "options": [
+      "Azure Content Understanding in Foundry Tools",
+      "An image captioning request to a multimodal model",
+      "An image generation request with a reference image",
+      "A content safety filter for visual categories"
+    ],
+    "correctIndex": 0,
+    "explanation": "Content Understanding returns structured characteristics and fields; captioning returns prose intended for a human. The difference is what makes one usable by a downstream process without parsing.",
+    "teaches": "multimodal-understanding"
+  },
+  {
+    "id": "cv-04",
+    "examCode": "ai-103",
+    "domain": "computer-vision",
+    "question": "Users are uploading images containing embedded text that instructs the model to ignore its instructions. What is this attack, and what defends against it?",
+    "options": [
+      "Indirect prompt injection, defended by prompt shields",
+      "Data poisoning, defended by retraining the model",
+      "A jailbreak, defended by lowering the temperature",
+      "Model drift, defended by continuous evaluation"
+    ],
+    "correctIndex": 0,
+    "explanation": "Instructions arriving inside supplied content rather than from the user is indirect prompt injection, and it works through images exactly as it does through documents. Prompt shields are the mitigation.",
+    "teaches": "responsible-ai-multimodal"
+  },
+  {
+    "id": "cv-05",
+    "examCode": "ai-103",
+    "domain": "computer-vision",
+    "question": "Generated marketing media must carry a visible mark identifying it as synthetic, and must be checked for prohibited brand symbols. What kind of control is this?",
+    "options": [
+      "Visual policy rules configured for the organisation",
+      "The built-in content safety filter for visual harm categories",
+      "Prompt shields for embedded text",
+      "Groundedness detection for multimodal output"
+    ],
+    "correctIndex": 0,
+    "explanation": "Watermarking and prohibited-symbol detection are organisation-specific policy rather than harm categories, so they are configured rather than assumed. The built-in filter covers hate, sexual, violence, and self-harm.",
+    "teaches": "responsible-ai-multimodal"
+  },
+  {
+    "id": "cv-06",
+    "examCode": "ai-103",
+    "domain": "computer-vision",
+    "question": "An application must answer questions about the contents of a photograph and refuse when the photograph does not show the answer. What is this?",
+    "options": [
+      "Visual question answering grounded in the supplied image",
+      "Image captioning in detailed mode",
+      "Object detection with bounding boxes",
+      "Optical character recognition over the image"
+    ],
+    "correctIndex": 0,
+    "explanation": "Grounded visual question answering answers from the image and refuses when the evidence is absent. Captioning describes the whole image regardless of any question, and OCR reads text rather than reasoning about content.",
+    "teaches": "multimodal-understanding"
+  },
+  {
+    "id": "cv-07",
+    "examCode": "ai-103",
+    "domain": "computer-vision",
+    "kind": "multi",
+    "question": "Which two increase the cost of an image generation request? Choose two.",
+    "options": [
+      "A larger output resolution",
+      "A higher number of variations requested",
+      "A lower temperature setting",
+      "Supplying a mask for inpainting"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Resolution and the number of images generated both scale the work done. Temperature is a text sampling parameter, and a mask narrows the region altered rather than adding cost.",
+    "teaches": "image-and-video-generation"
+  },
+  {
+    "id": "cv-08",
+    "examCode": "ai-103",
+    "domain": "computer-vision",
+    "kind": "order",
+    "question": "Put the steps of a governed image generation workflow in order.",
+    "items": [
+      "Apply the organisation's watermark to the accepted image",
+      "Submit the prompt, which is screened before generation",
+      "Screen the generated image against visual content filters",
+      "Review the image against brand usage rules"
+    ],
+    "correctOrder": [1, 2, 3, 0],
+    "explanation": "The prompt is screened first, so disallowed requests are refused at generation rather than caught afterwards, then the output is filtered, checked against brand policy, and finally marked. Watermarking something that has not passed the checks defeats the purpose.",
+    "teaches": "responsible-ai-multimodal"
+  },
+  {
+    "id": "ta-01",
+    "examCode": "ai-103",
+    "domain": "text-analysis",
+    "question": "A review says 'the battery life is poor but the screen is excellent'. Which capability attributes sentiment to each feature separately?",
+    "options": [
+      "Opinion mining within sentiment analysis",
+      "Document-level sentiment analysis",
+      "Key phrase extraction",
+      "Named entity recognition"
+    ],
+    "correctIndex": 0,
+    "explanation": "Opinion mining attaches sentiment to specific aspects, which is what a mixed review needs. The document score would report something neutral and hide both opinions, and phrase and entity extraction find terms without judging them.",
+    "teaches": "language-text-analysis"
+  },
+  {
+    "id": "ta-02",
+    "examCode": "ai-103",
+    "domain": "text-analysis",
+    "question": "Fifty thousand product descriptions must be translated nightly, consistently and at the lowest cost. What should you use?",
+    "options": [
+      "Azure Translator in Foundry Tools",
+      "An LLM-powered translation flow with a detailed system message",
+      "A fine-tuned language model per target language",
+      "Speech translation applied to synthesised audio"
+    ],
+    "correctIndex": 0,
+    "explanation": "Translator is cheaper and more consistent at volume, which is what a nightly bulk job needs. An LLM flow wins where tone or an instruction such as keeping product names untranslated matters more than throughput.",
+    "teaches": "translation-and-customisation"
+  },
+  {
+    "id": "ta-03",
+    "examCode": "ai-103",
+    "domain": "text-analysis",
+    "question": "Transcription accuracy is poor because recordings are full of product names and technical jargon. What should you do?",
+    "options": [
+      "Train a custom speech model on the domain vocabulary",
+      "Switch from batch transcription to real-time transcription",
+      "Increase the audio sample rate",
+      "Apply text translation after transcription"
+    ],
+    "correctIndex": 0,
+    "explanation": "Custom speech exists for exactly this — domain vocabulary, accents, and acoustic conditions that defeat the base model. Changing the transcription mode or the sample rate does not teach the model any new words.",
+    "teaches": "speech-solutions"
+  },
+  {
+    "id": "ta-04",
+    "examCode": "ai-103",
+    "domain": "text-analysis",
+    "question": "Ten years of recorded calls must be transcribed as a one-off exercise. Which approach fits?",
+    "options": [
+      "Batch transcription over the stored files",
+      "Real-time transcription from a stream",
+      "A custom neural voice",
+      "Speech translation in a single pass"
+    ],
+    "correctIndex": 0,
+    "explanation": "Batch is designed for large volumes of stored audio and is the efficient route for an archive. Real-time exists for live streams, and the other two options synthesise or translate rather than transcribe.",
+    "teaches": "speech-solutions"
+  },
+  {
+    "id": "ta-05",
+    "examCode": "ai-103",
+    "domain": "text-analysis",
+    "question": "A model must consistently produce output in a required regulatory format that few-shot examples have failed to enforce reliably. What is the appropriate next step?",
+    "options": [
+      "Fine-tune a model on examples of the required format",
+      "Add retrieval over the regulations",
+      "Increase the temperature to encourage variation",
+      "Switch to an embedding model"
+    ],
+    "correctIndex": 0,
+    "explanation": "Fine-tuning is the last rung of the customisation ladder and exists for consistent form, style, and behaviour that prompting cannot enforce. Retrieval would supply facts, which is not the problem described.",
+    "teaches": "translation-and-customisation"
+  },
+  {
+    "id": "ta-06",
+    "examCode": "ai-103",
+    "domain": "text-analysis",
+    "question": "A generative model asked to extract fields sometimes returns a paragraph of prose instead of the expected JSON. What is the most effective fix?",
+    "options": [
+      "Request output against a named schema and validate before use",
+      "Raise the temperature so the model explores more options",
+      "Increase the max tokens setting",
+      "Switch to a multimodal model"
+    ],
+    "correctIndex": 0,
+    "explanation": "A model asked for structure without constraint eventually returns prose, so the shape must be enforced and the result checked. Raising temperature makes the drift more likely, not less.",
+    "teaches": "language-text-analysis"
+  },
+  {
+    "id": "ta-07",
+    "examCode": "ai-103",
+    "domain": "text-analysis",
+    "kind": "multi",
+    "question": "Which two favour a purpose-built Foundry Tool over a generative prompt for text analysis? Choose two.",
+    "options": [
+      "The task needs typed results with confidence scores",
+      "The same input must produce the same output every time",
+      "The required field set is unique to the organisation",
+      "The output must combine summarisation and judgement"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Tools return typed, deterministic results cheaply. Bespoke field sets and tasks combining several operations at once are where a generative prompt earns its unpredictability.",
+    "teaches": "language-text-analysis"
+  },
+  {
+    "id": "ta-08",
+    "examCode": "ai-103",
+    "domain": "text-analysis",
+    "kind": "match",
+    "question": "Match each speech capability to its purpose.",
+    "pairs": [
+      { "term": "Speech to text", "definition": "Transcribes spoken audio into written text" },
+      { "term": "Text to speech", "definition": "Synthesises audio from written text" },
+      { "term": "Custom speech", "definition": "Improves recognition of domain vocabulary and accents" },
+      { "term": "Custom neural voice", "definition": "Produces a distinctive brand voice for synthesis" }
+    ],
+    "explanation": "Two are the base directions and two are the customisations of each. Pairing 'custom speech' with the synthesis side is the mistake this question is built to catch.",
+    "teaches": "speech-solutions"
+  },
+  {
+    "id": "ie-01",
+    "examCode": "ai-103",
+    "domain": "information-extraction",
+    "question": "An index was created with a field that is searchable but not filterable, and queries must now filter on it. What must you do?",
+    "options": [
+      "Rebuild the index with the field marked filterable",
+      "Rewrite the query to use a search term instead of a filter",
+      "Add a scoring profile that weights the field",
+      "Enable semantic ranking on the index"
+    ],
+    "correctIndex": 0,
+    "explanation": "Field attributes are fixed at index creation, so this is not a query problem and no rewrite fixes it. The schema is a commitment, which is why it is worth getting right before ingesting a large corpus.",
+    "teaches": "retrieval-and-grounding"
+  },
+  {
+    "id": "ie-02",
+    "examCode": "ai-103",
+    "domain": "information-extraction",
+    "question": "Users must never see search results from documents they are not permitted to open. What should you implement?",
+    "options": [
+      "Security trimming, filtering on a field holding permitted group identifiers",
+      "A scoring profile that lowers the rank of restricted documents",
+      "Semantic ranking, which re-scores the top results",
+      "A separate index for each user"
+    ],
+    "correctIndex": 0,
+    "explanation": "A filter restricts the candidate set before scoring, so restricted documents never reach the results at all. Lowering a rank still returns the document, and an index per user does not scale.",
+    "teaches": "retrieval-and-grounding"
+  },
+  {
+    "id": "ie-03",
+    "examCode": "ai-103",
+    "domain": "information-extraction",
+    "question": "Invoices must be processed automatically, with uncertain results routed to a human reviewer. Which approach makes that possible?",
+    "options": [
+      "An extraction model returning typed fields with confidence scores",
+      "A generative prompt summarising each invoice in prose",
+      "A vector index over the invoice text",
+      "A trainable classifier over invoice categories"
+    ],
+    "correctIndex": 0,
+    "explanation": "Confidence scores are what allow a low-certainty field to be routed for review. Prose asserts everything with equal certainty, which makes selective human review impossible.",
+    "teaches": "document-extraction"
+  },
+  {
+    "id": "ie-04",
+    "examCode": "ai-103",
+    "domain": "information-extraction",
+    "question": "Scanned documents contain tables whose values are being attached to the wrong labels after ingestion. What is missing?",
+    "options": [
+      "Layout analysis, which preserves tables, reading order, and structure",
+      "A larger embedding model",
+      "Semantic ranking on the index",
+      "A higher similarity threshold on retrieval"
+    ],
+    "correctIndex": 0,
+    "explanation": "Plain text extraction dissolves a table into a line of words, which is exactly how values become detached from their labels. Layout analysis keeps the structure, and nothing downstream can reconstruct what ingestion discarded.",
+    "teaches": "document-extraction"
+  },
+  {
+    "id": "ie-05",
+    "examCode": "ai-103",
+    "domain": "information-extraction",
+    "kind": "order",
+    "question": "Put the stages of building an enriched search index in order.",
+    "items": [
+      "Run the indexer to populate the index",
+      "Define the index schema with field attributes",
+      "Connect a data source to the content",
+      "Attach a skillset that performs OCR and entity extraction"
+    ],
+    "correctOrder": [2, 1, 3, 0],
+    "explanation": "The data source is connected, the schema defined so the indexer knows where to write, the skillset attached to enrich on the way in, and the indexer then run. Defining the schema after running the indexer would mean rebuilding.",
+    "teaches": "retrieval-and-grounding"
+  },
+  {
+    "id": "ie-06",
+    "examCode": "ai-103",
+    "domain": "information-extraction",
+    "kind": "match",
+    "question": "Match each extraction instrument to what it is for.",
+    "pairs": [
+      { "term": "Optical character recognition", "definition": "Reading text from images and scanned pages" },
+      { "term": "Layout analysis", "definition": "Recovering tables, reading order, and selection marks" },
+      { "term": "Prebuilt model", "definition": "Named fields from a common document type such as an invoice" },
+      { "term": "Custom model", "definition": "Named fields from an organisation's own forms" }
+    ],
+    "explanation": "The first two recover content and structure; the last two recover meaning as named fields, and differ only by whether Microsoft has already trained for that document type.",
+    "teaches": "document-extraction"
+  },
+  {
+    "id": "ie-07",
+    "examCode": "ai-103",
+    "domain": "information-extraction",
+    "kind": "yesno",
+    "question": "A Content Understanding analyzer is being configured to feed a RAG pipeline. Judge each statement.",
+    "statements": [
+      { "text": "Markdown output preserves headings and tables for structure-aware chunking.", "correct": true },
+      { "text": "It normalises documents, images, audio, and video into one representation.", "correct": true },
+      { "text": "A field schema can be defined to produce structured output instead.", "correct": true },
+      { "text": "It replaces the need for a search index in a RAG solution.", "correct": false }
+    ],
+    "explanation": "Content Understanding prepares content; the index still stores and retrieves it. Treating preparation as a substitute for retrieval is the misconception the last statement targets.",
+    "teaches": "content-understanding-analyzers"
+  },
+  {
+    "id": "ie-08",
+    "examCode": "ai-103",
+    "domain": "information-extraction",
+    "kind": "dropdown",
+    "question": "Complete the statement about search in a grounding pipeline.",
+    "segments": [
+      { "text": "Finding a document by an exact serial number is best served by " },
+      {
+        "blankId": "b1",
+        "options": ["keyword search", "vector search", "a scoring profile"],
+        "correctIndex": 0
+      },
+      { "text": ", while finding a passage that describes the same idea in other words needs " },
+      {
+        "blankId": "b2",
+        "options": ["vector search", "keyword search", "a filter"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "Each method fails where the other succeeds, which is the whole argument for hybrid search. An identifier carries almost no semantic signal, and a paraphrase shares almost no terms.",
+    "teaches": "retrieval-and-grounding"
+  }
+]

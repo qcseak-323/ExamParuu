@@ -36,6 +36,8 @@ export const WILD_PARUU: Record<string, WildParuu> = {
   // ordinary; the Glitchling fallback would read as a missing asset.
   "az-104": { sheet: "wild-seal", flip: true },
   "ai-901": { sheet: "wild-pufferfish" },
+  // AI-103 became playable on 2026-08-12 and shares its region with AI-901.
+  "ai-103": { sheet: "wild-pufferfish" },
   "dp-900": { sheet: "wild-otter" },
   // DP-700 shares the Datastream Delta with DP-900.
   "dp-700": { sheet: "wild-otter" },

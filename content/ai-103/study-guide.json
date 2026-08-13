@@ -1,0 +1,171 @@
+[
+  {
+    "domainId": "plan-manage-ai-solution",
+    "sections": [
+      {
+        "id": "foundry-model-selection",
+        "heading": "Choosing models and services",
+        "paragraphs": [
+          "Model choice is a cost and latency decision as much as a capability one. A large language model is the default for open-ended reasoning; a small language model is chosen when latency, cost, or on-device deployment matters more than breadth; a multimodal model is chosen when the input is not only text. Reasoning models trade latency for accuracy on multi-step problems and are wasteful on simple extraction. Embedding models are a separate family entirely — they produce vectors for retrieval and never generate text, which is a distinction questions rely on.",
+          "The service choice follows the shape of the problem. Generation and agent orchestration live in Microsoft Foundry. Grounding over an organisation's own content is Azure AI Search, which supplies keyword, vector, semantic, and hybrid retrieval. Structured extraction from documents belongs to Content Understanding rather than to a raw prompt, because it returns fields with confidence rather than prose you then have to parse. Speech, translation, and language capabilities arrive as Foundry Tools rather than as separate products to be integrated by hand."
+        ]
+      },
+      {
+        "id": "foundry-setup-and-deployment",
+        "heading": "Foundry projects, deployments, and CI/CD",
+        "paragraphs": [
+          "A Foundry project is the unit of work: it holds model and agent deployments, connections to data and other services, and the evaluation and tracing history. Deployment options differ in how capacity is bought. A standard or serverless deployment bills per token and scales without provisioning, which suits variable or early workloads. Provisioned throughput reserves capacity as units, giving predictable latency and throughput at a fixed cost, which is what a high-volume production workload with a latency requirement needs. Choosing serverless for a workload that must not be rate limited is the classic error.",
+          "Connecting an application to a project means pointing the SDK at the project endpoint and authenticating, ideally with a managed identity so no key exists. Integrating with CI/CD means treating prompts, evaluation datasets, and infrastructure as code: prompts versioned in Git so a change is reviewable, evaluations run automatically against a candidate before promotion, and the project itself deployed with Bicep or the Azure CLI from a GitHub Actions workflow."
+        ]
+      },
+      {
+        "id": "managing-monitoring-securing",
+        "heading": "Quotas, cost, monitoring, and security",
+        "paragraphs": [
+          "Capacity is managed in tokens per minute, and a deployment that exhausts its allocation returns HTTP 429. The correct client behaviour is to retry with exponential backoff and honour the Retry-After header; the correct platform behaviour is to raise the quota, spread load across deployments, or move to provisioned throughput. Cost is driven by token consumption, so the levers are a smaller model for simple tasks, shorter prompts, capped output length, and caching of repeated context.",
+          "Security follows the same ranking as everywhere else in Azure: a managed identity with keyless authentication first, and API keys only when nothing else is supported, because a key is a bearer credential that identifies nobody. Private endpoints keep traffic off the public internet and let the resource's public access be disabled, and role assignments rather than key distribution decide who may deploy a model, who may call one, and who may read evaluation results. Monitoring covers model latency and throughput, safety events, drift in inputs, and grounding quality — the last being the measure that tells you a RAG application has started answering from the model rather than from your documents."
+        ]
+      },
+      {
+        "id": "responsible-ai-governance",
+        "heading": "Responsible AI, guardrails, and oversight",
+        "paragraphs": [
+          "Content filtering runs on both the prompt and the completion, across categories such as hate, sexual, violence, and self-harm, each with a configurable severity threshold. Additional protections cover prompt shields for direct and indirect injection attacks, protected material detection, and groundedness detection, which flags a response not supported by the supplied source. A filter blocks; an evaluator measures. Confusing the two is the most common mistake in this area — a low groundedness score does not stop a response reaching the user unless something is configured to act on it.",
+          "Evaluators score a system against a dataset: groundedness, relevance, coherence, and fluency for quality, plus risk and safety evaluators that attempt harmful prompts and score the responses. Auditing means trace logging of each request with its inputs, retrieved context, tool calls, and outputs, plus provenance metadata that records which sources grounded an answer. For agents, governance is about constraining what the agent may do — restricting tool access, requiring human approval before consequential actions, and choosing an oversight mode rather than letting an autonomous loop act unattended."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "generative-and-agentic",
+    "sections": [
+      {
+        "id": "generative-apps-and-rag",
+        "heading": "Retrieval-augmented generation",
+        "paragraphs": [
+          "RAG grounds a model in content it was never trained on by retrieving relevant passages at query time and placing them in the prompt. The pipeline is ingest, chunk, embed, index, retrieve, and generate. Chunking is the decision that most affects quality: chunks too large dilute the embedding and waste context, chunks too small lose the surrounding meaning, and overlap between chunks preserves sentences that would otherwise be cut in half. Retrieval quality caps everything downstream — no prompt engineering rescues a system that retrieved the wrong passage.",
+          "Retrieval strategies differ in what they match. Keyword search matches terms and is strong on exact identifiers and rare words. Vector search matches meaning and finds paraphrases that share no vocabulary. Hybrid search runs both and fuses the results, and semantic ranking then re-scores the top results with a language model. Hybrid plus semantic ranking is Microsoft's recommended default, and the reason is that each method fails where the other succeeds. Fine-tuning is not an alternative to RAG: fine-tuning teaches form and behaviour, retrieval supplies facts, and a question about answering from current internal documents is always retrieval."
+        ]
+      },
+      {
+        "id": "building-agents",
+        "heading": "Agents, tools, and memory",
+        "paragraphs": [
+          "An agent is a model given a role, a set of instructions, tools it may call, and a way of remembering the conversation. Function calling is the mechanism: the model is given tool schemas describing each function's name, purpose, and parameters, and instead of answering it emits a structured request to call one. The application executes the function — the model never does — and returns the result, which the model then uses to answer. Schema quality is what determines whether the right tool is chosen, so descriptions are part of the engineering rather than documentation.",
+          "Memory divides into the conversation thread, which holds the running exchange, and knowledge the agent can retrieve on demand. Thread history grows without limit and eventually exceeds the context window, so it is summarised or truncated. Knowledge is better retrieved than remembered, which is why an agent that must answer from a large corpus is given a search tool rather than a longer prompt. Tools may be APIs, knowledge stores, search indexes, Content Understanding, or custom functions."
+        ]
+      },
+      {
+        "id": "agent-orchestration",
+        "heading": "Multi-agent orchestration and approvals",
+        "paragraphs": [
+          "Multi-agent solutions split a problem across specialised agents with a coordinator routing work between them. The pattern earns its complexity when subtasks need genuinely different tools, instructions, or models — a retrieval specialist and a code generator, say — and costs more than it returns when one agent with a few tools would do. Handoff between agents carries context explicitly, because each agent has its own thread.",
+          "Autonomy is a spectrum and the safeguards are the examinable part. A semi-autonomous workflow requires human approval before a consequential action such as sending a message, making a payment, or writing to a production system, and the approval step is configured rather than left to the model's judgement. Tool-access controls limit what any given agent may reach at all, so a compromised or confused agent cannot act outside its remit. Error analysis over recorded runs is how failures are found, since an agent's mistake usually lies in a tool selection or a retrieved document rather than in the final wording."
+        ]
+      },
+      {
+        "id": "prompt-and-parameter-tuning",
+        "heading": "Prompt engineering and model parameters",
+        "paragraphs": [
+          "Prompt structure carries most of the quality. A system message sets role, tone, and hard constraints; few-shot examples demonstrate the required output shape far more reliably than describing it; and asking for a specific structure — JSON against a named schema — makes the output parseable. Chain-of-thought prompting, asking the model to work through steps before answering, improves multi-step reasoning at the cost of tokens and latency. Self-critique loops ask the model to review and revise its own answer, which catches a class of error but doubles the cost.",
+          "Parameters change sampling rather than knowledge. Temperature and top-p both control randomness and Microsoft's guidance is to adjust one, not both; a low temperature is right for extraction and classification, a higher one for creative drafting. Max tokens caps the completion length and is a cost control as much as a formatting one. Frequency and presence penalties reduce repetition. Seeding a request improves reproducibility but does not guarantee it. None of these fixes a factual error — that is a grounding problem, not a sampling one."
+        ]
+      },
+      {
+        "id": "observability-for-genai",
+        "heading": "Tracing, evaluation, and observability",
+        "paragraphs": [
+          "Tracing records each step of a request — the prompt, the retrieved documents, every tool call and its result, and the final completion — so a bad answer can be attributed to the stage that caused it. Without it, debugging a RAG or agent system is guesswork, because the same symptom follows from a retrieval miss, a bad tool choice, and a prompt problem.",
+          "Evaluation is run against a dataset rather than by trying examples by hand. Groundedness asks whether the answer is supported by the retrieved context, relevance whether it addresses the question, coherence and fluency whether it reads properly, and retrieval metrics whether the right documents were found at all. Running evaluation automatically on every candidate change is what makes a prompt or model upgrade a measurable decision instead of an opinion. Token analytics and latency breakdowns complete the picture on the cost and performance side."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "computer-vision",
+    "sections": [
+      {
+        "id": "image-and-video-generation",
+        "heading": "Image and video generation and editing",
+        "paragraphs": [
+          "Image generation turns a text prompt, optionally with reference media, into an image. The controls that matter are the prompt itself, the size and aspect ratio, the number of variations, and the quality or style setting, each of which affects cost. Editing workflows extend this: inpainting replaces a masked region while keeping the rest of the image intact, outpainting extends beyond the original frame, and prompt-driven modification alters the whole image in place. A mask is what distinguishes a targeted edit from a regeneration.",
+          "Video generation follows the same pattern with duration and resolution as additional cost drivers, and editing generated video means operating on segments rather than frames. Generated media carries provenance metadata so that its origin can be established later, and platform policy filters apply to generation as much as to analysis — a prompt requesting disallowed content is refused at generation time rather than caught afterwards."
+        ]
+      },
+      {
+        "id": "multimodal-understanding",
+        "heading": "Multimodal understanding and accessibility",
+        "paragraphs": [
+          "A multimodal model analyses an image alongside a text instruction, which makes one model capable of captioning, question answering grounded in the picture, and open-ended description. Captions can be requested concise or detailed, and for a set of images rather than one. Visual question answering is grounded in the supplied image, which means the honest failure mode is refusing to answer rather than inventing detail — and a system that invents detail is usually being asked to answer without the image actually attached.",
+          "Accessibility is an explicit objective. Alt text should be short and convey the image's purpose in context, while an extended description carries the detail a longer figure requires; producing a lengthy paragraph where alt text was needed is a failure even though the words are accurate. Content Understanding in Foundry Tools is the counterpart for structured visual extraction — it returns named characteristics and fields rather than prose, which is what a downstream system can act on. Pro mode handles more complex multi-step analysis than single-task mode."
+        ]
+      },
+      {
+        "id": "responsible-ai-multimodal",
+        "heading": "Responsible AI for visual content",
+        "paragraphs": [
+          "Visual content filters classify images against the same harm categories as text and can block both input and output. The threat specific to images is indirect prompt injection through embedded text: instructions written into a picture that the model reads and follows as though the user had typed them. Prompt shields are the mitigation, and the underlying principle is that content retrieved or supplied is data, never instructions.",
+          "Policy enforcement beyond harm categories covers brand and legal requirements — applying watermarks to generated media, flagging prohibited symbols, upholding brand usage rules, and detecting content inappropriate for a given audience. These are organisation-specific and are configured rather than assumed, which is why a question describing a brand rule points at policy configuration rather than at the built-in safety system."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "text-analysis",
+    "sections": [
+      {
+        "id": "language-text-analysis",
+        "heading": "Extraction, sentiment, and structured output",
+        "paragraphs": [
+          "Text analysis splits between purpose-built capabilities and generative prompting, and choosing between them is the recurring question. Named entity recognition, key phrase extraction, language detection, personally identifiable information detection, and sentiment analysis with opinion mining are available as Foundry Tools that return typed results with confidence scores, deterministically and cheaply. A generative prompt is the right choice when the task is bespoke — a domain-specific field set, a compliance summary in a required form — or when the output must combine several operations at once.",
+          "Where a generative model is used for extraction, the output must be constrained: request JSON against a named schema, keep temperature low, and validate the result before acting on it, because a model asked for structure without constraint eventually returns prose. Sentiment analysis returns document and sentence-level scores, and opinion mining attaches sentiment to specific aspects — 'the battery is poor but the screen is excellent' being the standard example of why the document score alone is not enough."
+        ]
+      },
+      {
+        "id": "translation-and-customisation",
+        "heading": "Translation and domain customisation",
+        "paragraphs": [
+          "Azure Translator handles text translation across many languages, with document translation preserving formatting and custom translation training a model on the organisation's own parallel corpus for domain vocabulary. An LLM-powered translation flow is the alternative when tone, context, or an instruction such as 'keep product names untranslated' matters more than throughput. Translator is cheaper and more consistent at volume; the model is better when the task is not purely mechanical.",
+          "Customisation for domain tasks runs along a ladder that is worth keeping in order. Prompt engineering first, because it is free and immediate. Few-shot examples next. Retrieval when the gap is missing knowledge. Fine-tuning last, when the requirement is a consistent form, style, or behaviour that examples cannot reliably enforce — and never as a way to inject facts, which retrieval does better and keeps current."
+        ]
+      },
+      {
+        "id": "speech-solutions",
+        "heading": "Speech and audio modalities",
+        "paragraphs": [
+          "Speech to text transcribes audio in real time from a stream or in batch from stored files, with the batch route the right answer for large archives. Custom speech models are trained when domain vocabulary, accents, or acoustic conditions defeat the base model — product names and technical jargon being the usual reason. Text to speech synthesises audio from text, with neural voices and SSML for control over pronunciation, pauses, and emphasis, and custom neural voice for a brand voice.",
+          "As an agent modality, speech is added at the boundary: audio in is transcribed before reasoning and the answer is synthesised on the way out, which keeps the agent logic unchanged. Multimodal models that reason over audio directly are the alternative and can pick up tone and non-speech cues that a transcript discards. Speech translation combines recognition and translation in one pass, which is lower latency than transcribing and then translating separately."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "information-extraction",
+    "sections": [
+      {
+        "id": "retrieval-and-grounding",
+        "heading": "Indexing, search, and grounding pipelines",
+        "paragraphs": [
+          "An Azure AI Search index is built from a data source through an indexer, optionally passing content through a skillset that enriches it — extracting text from images with OCR, detecting entities, translating, or splitting text into chunks. The index schema decides what is possible later: a field must be marked searchable to be queried as text, filterable to appear in a filter, facetable to drive a facet, and sortable to order results. Getting this wrong is not a query problem and cannot be fixed by rewriting the query; the index must be rebuilt.",
+          "Vector fields hold embeddings, and integrated vectorisation lets the index generate them during indexing and at query time rather than requiring the application to do it. Hybrid search combines keyword and vector scoring, and semantic ranking re-ranks the top results and can return captions and extractive answers. Filters restrict the candidate set before scoring, which is how document-level security is enforced — a security trimming filter on a field carrying permitted group identifiers, so a user never sees results they may not open."
+        ]
+      },
+      {
+        "id": "document-extraction",
+        "heading": "Extracting content from documents",
+        "paragraphs": [
+          "Document extraction spans a range of instruments. OCR reads text from images and scans. Layout analysis adds structure — paragraphs, tables, selection marks, and reading order — which is what makes a table survive as a table rather than dissolving into a line of words. Prebuilt models handle common document types such as invoices, receipts, and identity documents, returning named fields with confidence. Custom models are trained on an organisation's own forms when no prebuilt model fits.",
+          "The recurring decision is between a prebuilt or custom extraction model and a generative prompt over the raw text. Extraction models return typed fields with confidence scores and behave the same way every time, which is what a downstream process needs. A generative model is more flexible and better when the requirement is a summary or a judgement rather than a field. Confidence scores are the reason extraction models suit automated workflows: a low-confidence field can be routed to a human, which is impossible when the output is prose asserted with equal certainty throughout."
+        ]
+      },
+      {
+        "id": "content-understanding-analyzers",
+        "heading": "Content Understanding analyzers",
+        "paragraphs": [
+          "Content Understanding takes documents, images, audio, and video and produces clean, grounded representations for downstream reasoning. An analyzer defines what to extract and in what shape — a field schema for structured output, or markdown for content that will be chunked and indexed for RAG. Markdown matters more than it sounds: it preserves headings and tables so that chunking can respect document structure instead of cutting across it.",
+          "The reason to put Content Understanding in front of a RAG pipeline rather than feeding raw files to an indexer is that it normalises heterogeneous sources into one representation, keeps layout and reading order, and handles the multimodal cases — text inside an image, a table spanning pages, a spoken passage in a video — that a text-only ingestion silently drops. What reaches the index then reflects what the document actually said, which is the precondition for everything downstream."
+        ]
+      }
+    ]
+  }
+]

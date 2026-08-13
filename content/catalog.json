@@ -132,11 +132,11 @@
     "series": "ai",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Build AI applications and agents on Azure AI Foundry — the successor path to the retired AI-102.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-12",
     "sourceUrl": null
   },
   {

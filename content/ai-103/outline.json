@@ -1,0 +1,87 @@
+{
+  "examCode": "AI-103",
+  "examName": "Developing AI Apps and Agents on Azure",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for AI-103, 'Skills measured as of April 16, 2026'. This is the first five-domain exam in the catalogue; three of its domains share a 10-15% band, so the paper carries 8 questions in each of them. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "plan-manage-ai-solution",
+      "name": "Plan and manage an Azure AI solution",
+      "weight": "25-30%",
+      "subtopics": [
+        "Choose an appropriate model for each task, including large, small, and multimodal models and Foundry Tools",
+        "Choose the appropriate Foundry services for generation, grounding, vector search, agent workflows, and multimodal processing",
+        "Choose an appropriate method for retrieval and indexing",
+        "Choose memory, tool, and knowledge integration services for agent solutions",
+        "Design Azure infrastructure for AI apps and configure model and agent deployments",
+        "Integrate Foundry projects with CI/CD pipelines",
+        "Manage quotas, scaling, rate limits, and cost footprints for model and agent workloads",
+        "Monitor model performance, drift, safety events, grounding quality, and search index health",
+        "Configure security including managed identity, private networking, keyless credentials, and role policies",
+        "Configure safety filters, guardrails, evaluators, trace logging, provenance, and agent oversight modes"
+      ]
+    },
+    {
+      "id": "generative-and-agentic",
+      "name": "Implement generative AI and agentic solutions",
+      "weight": "30-35%",
+      "subtopics": [
+        "Deploy and consume large, small, code, and multimodal models",
+        "Implement retrieval-augmented generation in an application",
+        "Design workflows, tool-augmented flows, and multistep reasoning pipelines",
+        "Evaluate models and apps for fabrications, relevance, quality, and safety",
+        "Integrate generative workflows using Foundry SDKs and connect an application to a Foundry project",
+        "Define agent roles, goals, conversation tracking, and tool schemas",
+        "Build agents that integrate retrieval, function calling, and conversation memory",
+        "Integrate agent tools including APIs, knowledge stores, search, and custom functions",
+        "Implement orchestrated multi-agent solutions and approval flow controls",
+        "Tune generation behaviour, implement self-critique loops, and set up tracing and token analytics"
+      ]
+    },
+    {
+      "id": "computer-vision",
+      "name": "Implement computer vision solutions",
+      "weight": "10-15%",
+      "subtopics": [
+        "Generate images and videos from text prompts and reference media",
+        "Configure image-editing workflows including inpainting and mask-based edits",
+        "Analyse visual context by using multimodal models and produce captions",
+        "Implement question answering grounded in visual evidence",
+        "Generate alt text and extended descriptions aligned to accessibility guidelines",
+        "Configure single-task and pro-mode Content Understanding pipelines",
+        "Implement video analysis workflows and identify objects and regions",
+        "Filter unsafe visual content and mitigate indirect prompt injection embedded in images",
+        "Enforce visual policy rules such as watermarking and prohibited symbol detection"
+      ]
+    },
+    {
+      "id": "text-analysis",
+      "name": "Implement text analysis solutions",
+      "weight": "10-15%",
+      "subtopics": [
+        "Extract entities, topics, summaries, and structured JSON by using generative prompting and Foundry Tools",
+        "Configure detection of sentiment, tone, safety issues, and sensitive content",
+        "Translate text by using Azure Translator in Foundry Tools or LLM-powered translation flows",
+        "Customise language model outputs for domain tasks such as compliance summarisation",
+        "Convert speech to text and text to speech for agentic interactions",
+        "Integrate speech as an agent modality, including custom speech models",
+        "Enable multimodal reasoning from audio inputs",
+        "Translate speech into other languages by using language models and Foundry Tools"
+      ]
+    },
+    {
+      "id": "information-extraction",
+      "name": "Implement information extraction solutions",
+      "weight": "10-15%",
+      "subtopics": [
+        "Ingest and index documents, images, audio, and video",
+        "Configure semantic search, hybrid search, and vector search for grounding",
+        "Implement enrichment by using custom or built-in skills for text, images, and layout",
+        "Configure RAG ingestion flow, including documents and optical character recognition",
+        "Connect retrieval pipelines directly to workflows and agent tools",
+        "Extract information by using multimodal pipelines combining OCR, layout analysis, and field extraction",
+        "Produce clean, grounded representations for agents and RAG by using Content Understanding",
+        "Implement analyzers generating structured or markdown outputs for downstream reasoning"
+      ]
+    }
+  ]
+}

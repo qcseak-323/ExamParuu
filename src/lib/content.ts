@@ -96,6 +96,13 @@ import sc500StudyGuide from "../../content/sc-500/study-guide.json";
 import sc500Path from "../../content/sc-500/learning-path.json";
 import sc500CaseStudies from "../../content/sc-500/case-studies.json";
 
+import ai103Outline from "../../content/ai-103/outline.json";
+import ai103Questions from "../../content/ai-103/questions.json";
+import ai103Flashcards from "../../content/ai-103/flashcards.json";
+import ai103StudyGuide from "../../content/ai-103/study-guide.json";
+import ai103Path from "../../content/ai-103/learning-path.json";
+import ai103CaseStudies from "../../content/ai-103/case-studies.json";
+
 import pl900Outline from "../../content/pl-900/outline.json";
 import pl900Questions from "../../content/pl-900/questions.json";
 import pl900Flashcards from "../../content/pl-900/flashcards.json";
@@ -238,6 +245,14 @@ const examRegistry: Record<string, ExamContent> = {
     studyGuide: sc500StudyGuide as StudyGuideDomain[],
     learningPath: sc500Path as ExamLearningPath,
     caseStudies: sc500CaseStudies as CaseStudy[],
+  },
+  "ai-103": {
+    outline: ai103Outline as Outline,
+    questions: ai103Questions as Question[],
+    flashcards: ai103Flashcards as Flashcard[],
+    studyGuide: ai103StudyGuide as StudyGuideDomain[],
+    learningPath: ai103Path as ExamLearningPath,
+    caseStudies: ai103CaseStudies as CaseStudy[],
   },
   "pl-900": {
     outline: pl900Outline as Outline,

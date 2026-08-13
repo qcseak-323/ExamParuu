@@ -1,0 +1,124 @@
+{
+  "examCode": "ai-103",
+  "note": "Five paths, one per exam domain, following Microsoft's AI-103 learning paths. Module titles follow Microsoft Learn; the sections and cards behind each are this site's own.",
+  "paths": [
+    {
+      "id": "plan-manage-ai-solution",
+      "title": "Plan and manage an Azure AI solution",
+      "domainId": "plan-manage-ai-solution",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/prepare-for-ai-engineering/",
+      "modules": [
+        {
+          "id": "plan-manage-ai-solution-m1",
+          "title": "Choose models and services for a generative AI solution",
+          "sectionIds": ["foundry-model-selection"],
+          "cardIds": ["fc-ai103-pm-01", "fc-ai103-pm-02", "fc-ai103-pm-03", "fc-ai103-pm-13", "fc-ai103-pm-04"]
+        },
+        {
+          "id": "plan-manage-ai-solution-m2",
+          "title": "Set up and secure a Foundry project",
+          "sectionIds": ["foundry-setup-and-deployment", "managing-monitoring-securing"],
+          "cardIds": ["fc-ai103-pm-05", "fc-ai103-pm-06", "fc-ai103-pm-07", "fc-ai103-pm-11"]
+        },
+        {
+          "id": "plan-manage-ai-solution-m3",
+          "title": "Implement responsible AI and governance",
+          "sectionIds": ["responsible-ai-governance"],
+          "cardIds": ["fc-ai103-pm-08", "fc-ai103-pm-09", "fc-ai103-pm-10", "fc-ai103-pm-12"]
+        }
+      ]
+    },
+    {
+      "id": "generative-and-agentic",
+      "title": "Develop generative AI apps and agents",
+      "domainId": "generative-and-agentic",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/develop-ai-agents-on-azure/",
+      "modules": [
+        {
+          "id": "generative-and-agentic-m1",
+          "title": "Implement retrieval-augmented generation",
+          "sectionIds": ["generative-apps-and-rag"],
+          "cardIds": ["fc-ai103-ga-01", "fc-ai103-ga-02", "fc-ai103-ga-03", "fc-ai103-ga-04"]
+        },
+        {
+          "id": "generative-and-agentic-m2",
+          "title": "Build an agent with tools and memory",
+          "sectionIds": ["building-agents"],
+          "cardIds": ["fc-ai103-ga-05", "fc-ai103-ga-06", "fc-ai103-ga-07", "fc-ai103-ga-08"]
+        },
+        {
+          "id": "generative-and-agentic-m3",
+          "title": "Orchestrate multi-agent solutions",
+          "sectionIds": ["agent-orchestration"],
+          "cardIds": ["fc-ai103-ga-09", "fc-ai103-ga-10", "fc-ai103-ga-11", "fc-ai103-ga-16"]
+        },
+        {
+          "id": "generative-and-agentic-m4",
+          "title": "Optimise and observe generative systems",
+          "sectionIds": ["prompt-and-parameter-tuning", "observability-for-genai"],
+          "cardIds": ["fc-ai103-ga-12", "fc-ai103-ga-13", "fc-ai103-ga-14", "fc-ai103-ga-15"]
+        }
+      ]
+    },
+    {
+      "id": "computer-vision",
+      "title": "Develop computer vision solutions",
+      "domainId": "computer-vision",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/create-computer-vision-solutions-azure-ai/",
+      "modules": [
+        {
+          "id": "computer-vision-m1",
+          "title": "Generate and edit images and video",
+          "sectionIds": ["image-and-video-generation"],
+          "cardIds": ["fc-ai103-cv-01", "fc-ai103-cv-02", "fc-ai103-cv-07", "fc-ai103-cv-06"]
+        },
+        {
+          "id": "computer-vision-m2",
+          "title": "Analyse images with multimodal models",
+          "sectionIds": ["multimodal-understanding", "responsible-ai-multimodal"],
+          "cardIds": ["fc-ai103-cv-03", "fc-ai103-cv-04", "fc-ai103-cv-05"]
+        }
+      ]
+    },
+    {
+      "id": "text-analysis",
+      "title": "Develop natural language and speech solutions",
+      "domainId": "text-analysis",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/develop-language-solutions-azure-ai/",
+      "modules": [
+        {
+          "id": "text-analysis-m1",
+          "title": "Analyse and extract from text",
+          "sectionIds": ["language-text-analysis", "translation-and-customisation"],
+          "cardIds": ["fc-ai103-ta-01", "fc-ai103-ta-02", "fc-ai103-ta-03", "fc-ai103-ta-04"]
+        },
+        {
+          "id": "text-analysis-m2",
+          "title": "Implement speech solutions",
+          "sectionIds": ["speech-solutions"],
+          "cardIds": ["fc-ai103-ta-05", "fc-ai103-ta-06", "fc-ai103-ta-07"]
+        }
+      ]
+    },
+    {
+      "id": "information-extraction",
+      "title": "Implement knowledge mining and information extraction",
+      "domainId": "information-extraction",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/implement-knowledge-mining-azure-ai-search/",
+      "modules": [
+        {
+          "id": "information-extraction-m1",
+          "title": "Build a retrieval and grounding pipeline",
+          "sectionIds": ["retrieval-and-grounding"],
+          "cardIds": ["fc-ai103-ie-01", "fc-ai103-ie-02", "fc-ai103-ie-03", "fc-ai103-ie-04"]
+        },
+        {
+          "id": "information-extraction-m2",
+          "title": "Extract content from documents",
+          "sectionIds": ["document-extraction", "content-understanding-analyzers"],
+          "cardIds": ["fc-ai103-ie-05", "fc-ai103-ie-06", "fc-ai103-ie-07"]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-quillon-support-agent",
+    "examCode": "ai-103",
+    "domain": "generative-and-agentic",
+    "title": "Quillon Instruments — an agent over the service manuals",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Quillon Instruments manufactures laboratory analysers and supports about 9,000 installed units. Field engineers currently search a 40-year archive of service manuals by hand, and the company wants an agent that answers procedural questions and can raise a parts order when a replacement is needed.",
+          "A first prototype exists in Microsoft Foundry. It works in demonstrations and fails in the field, and the engineering team has been given the six problems below to solve before it goes further."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "The manual archive is 62,000 PDFs. Many are scanned rather than digital, and the most important content is in torque tables and parts tables that span page breaks. The current ingestion reads the PDFs as plain text; engineers report that table values come back scrambled or attached to the wrong part number.",
+          "Retrieval uses vector search only. Engineers search by part number — strings like QX-4417-B — and complain that the agent returns passages about similar-sounding but different parts, and often misses the exact document that names the part.",
+          "The prototype answers confidently even when the archive contains nothing on the topic. In one instance it described a calibration procedure for a model that has never existed.",
+          "The agent can call an internal ordering API. During testing it placed four parts orders that nobody intended, because a question about what a replacement would cost was interpreted as an instruction to buy one.",
+          "The prototype is deployed on a serverless endpoint. During the morning shift handover, when roughly 300 engineers use it at once, requests begin returning HTTP 429 and the application surfaces them as errors.",
+          "Nobody can explain any individual bad answer. The team sees the question and the final response and nothing in between, so a wrong answer could equally be a retrieval failure, a tool problem, or the prompt."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Torque and parts tables must survive ingestion with their structure intact, and scanned pages must be readable.",
+          "A search for an exact part number must reliably find the document that names it, without losing the ability to find passages that describe the same procedure in different words.",
+          "The agent must not answer from its own knowledge when the archive contains nothing relevant, and the team must be able to measure how often it does.",
+          "Placing a parts order must require a human decision, and that requirement must not depend on the model correctly interpreting intent.",
+          "The morning handover peak must not produce errors for engineers.",
+          "When an answer is wrong, the team must be able to see which stage produced the fault."
+        ]
+      }
+    ]
+  }
+]
