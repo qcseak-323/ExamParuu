@@ -1,0 +1,116 @@
+{
+  "examCode": "AZ-802",
+  "examName": "Administering Windows Server",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for AZ-802. Like SC-500 and AI-300, this study guide carries no 'Skills measured as of <date>' line — Microsoft publishes a single undated skills list for it, and the exam is in beta. Re-check learn.microsoft.com before the exam. With seven domains this is the widest blueprint in the catalogue, so the paper is 13 / 7 / 7 / 7 / 10 / 7 / 9.",
+  "domains": [
+    {
+      "id": "ad-ds",
+      "name": "Deploy and manage AD DS",
+      "weight": "20-25%",
+      "subtopics": [
+        "Deploy and manage domain controllers locally and in Azure",
+        "Deploy read-only domain controllers and manage account security on them",
+        "Manage and troubleshoot Flexible Single-Master Operations roles",
+        "Configure domain and forest trust relationships",
+        "Configure and manage AD DS sites and replication",
+        "Create and manage AD DS users and groups",
+        "Manage users and groups in multi-domain and multi-forest environments",
+        "Select and manage service accounts",
+        "Implement Group Policy and Group Policy preferences"
+      ]
+    },
+    {
+      "id": "hybrid-management",
+      "name": "Manage Windows Server instances and workloads in a hybrid environment",
+      "weight": "10-15%",
+      "subtopics": [
+        "Deploy and manage Windows Admin Center on-premises and in the Azure portal",
+        "Configure remote management with PowerShell, including double-hop and Just Enough Administration",
+        "Configure and manage remote Secure Shell and remote desktop access",
+        "Implement Azure Arc-enabled Windows Server instances",
+        "Implement device configuration by using Azure Arc",
+        "Deploy Azure services with virtual machine extensions on non-Azure machines",
+        "Manage updates by using Azure Update Manager",
+        "Create and run Azure Automation runbooks"
+      ]
+    },
+    {
+      "id": "manage-vms",
+      "name": "Manage virtual machines",
+      "weight": "10-15%",
+      "subtopics": [
+        "Enable Enhanced Session Mode and manage VMs remotely with PowerShell Direct and SSH Direct",
+        "Enable nested virtualisation and configure VM memory settings and integration services",
+        "Configure device assignment and GPU partitioning",
+        "Manage VM checkpoints and Hyper-V virtual hard disks",
+        "Implement high availability for Hyper-V VMs and configure Hyper-V Replica",
+        "Configure Hyper-V network adapters, NIC teaming, and the Hyper-V Virtual Switch",
+        "Manage storage, capacity, and availability for Windows Server VMs in Azure",
+        "Manage just-in-time VM access, Azure Bastion, and Azure Virtual Machines network configuration"
+      ]
+    },
+    {
+      "id": "hybrid-networking",
+      "name": "Implement and manage an on-premises and hybrid networking infrastructure",
+      "weight": "10-15%",
+      "subtopics": [
+        "Integrate DNS with AD DS and create and manage DNS zones and records",
+        "Configure DNS forwarding and conditional forwarding",
+        "Configure DNS name resolution in a hybrid environment",
+        "Implement DNS policies and DNS security extensions",
+        "Implement and configure the DHCP server role and create and manage scopes",
+        "Create IP reservations and implement high availability for DHCP",
+        "Troubleshoot IP addressing in hybrid environments"
+      ]
+    },
+    {
+      "id": "storage-file-services",
+      "name": "Manage storage and file services",
+      "weight": "15-20%",
+      "subtopics": [
+        "Create and manage Azure file shares and manage their permissions",
+        "Configure, manage, and monitor Azure File Sync",
+        "Migrate DFS to Azure File Sync and migrate from file shares to Azure Files",
+        "Configure access to Windows Server file shares and configure File Server Resource Manager",
+        "Implement and configure DFS and configure SMB over QUIC and SMB settings",
+        "Configure disks and volumes, Storage Spaces, and Storage Spaces Direct",
+        "Configure and manage Storage Replica, Data Deduplication, SMB Direct, and Storage QoS",
+        "Select and configure file systems including NTFS and ReFS, and configure iSCSI",
+        "Manage BitLocker Drive Encryption and recover encrypted volumes"
+      ]
+    },
+    {
+      "id": "secure-windows-server",
+      "name": "Secure Windows Server infrastructure",
+      "weight": "10-15%",
+      "subtopics": [
+        "Configure and manage exploit protection, Application Control for Windows, and Credential Guard",
+        "Configure Microsoft Defender SmartScreen and implement OS security with Group Policy",
+        "Manage the Windows Server security baseline by using OSConfig",
+        "Implement Windows Local Administrator Password Solution",
+        "Configure and manage Defender for Servers and Windows Firewall with connection security rules",
+        "Configure password policies and implement Microsoft Entra Password Protection for AD DS",
+        "Manage protected users, harden domain controllers, and restrict access to them",
+        "Configure security options for user accounts and built-in administrative groups",
+        "Manage AD delegation and authentication protocols and methods for AD DS"
+      ]
+    },
+    {
+      "id": "monitor-troubleshoot",
+      "name": "Monitor and troubleshoot Windows Server environments",
+      "weight": "15-20%",
+      "subtopics": [
+        "Monitor by using Performance Monitor and create and configure data collector sets",
+        "Monitor servers and configure alerts by using Windows Admin Center",
+        "Analyse by using the System Insights feature and manage event logs",
+        "Configure data collection rules for Azure Monitor and create alerts",
+        "Monitor Azure Virtual Machines performance by using VM Insights",
+        "Troubleshoot connectivity, name resolution, Windows Update, and Time service issues",
+        "Troubleshoot performance, VM and Azure Arc extension, disk encryption, and storage issues",
+        "Restore objects from AD Recycle Bin and recover the AD database with Directory Services Restore Mode",
+        "Recover SYSVOL and troubleshoot AD replication and on-premises AD",
+        "Troubleshoot Kerberos, authentication, secure channel, and computer account trust issues"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,933 @@
+[
+  {
+    "id": "ad-01",
+    "examCode": "az-802",
+    "domain": "ad-ds",
+    "caseStudyId": "cs-drummond-forest",
+    "question": "DC-HO-02 held two operations master roles and has been scrapped. What should you do, and what must you avoid?",
+    "options": [
+      "Seize the roles onto a healthy controller, and never reconnect the old machine to the network",
+      "Transfer the roles from the old controller once it is powered on again",
+      "Seize the roles, then rebuild the old controller with the same name and transfer them back",
+      "Wait for replication to reassign the roles automatically"
+    ],
+    "correctIndex": 0,
+    "explanation": "Transfer requires the holder to be online and cooperating, which a scrapped machine cannot be. Seizing is the forcible move and its rule is absolute: two machines believing they hold the same role corrupts the directory, so the old one must never return.",
+    "teaches": "domain-controllers-and-fsmo"
+  },
+  {
+    "id": "ad-02",
+    "examCode": "az-802",
+    "domain": "ad-ds",
+    "caseStudyId": "cs-drummond-forest",
+    "question": "Depot staff must sign in during a WAN outage, while limiting exposure of a domain controller in a physically insecure portacabin. What should you deploy and configure?",
+    "options": [
+      "A read-only domain controller, with the depot accounts added to its password replication policy",
+      "A writable domain controller with BitLocker enabled",
+      "A read-only domain controller with the default password replication policy",
+      "A global catalogue server with universal group membership caching"
+    ],
+    "correctIndex": 0,
+    "explanation": "An RODC limits what an attacker gains from stealing the machine, but caches no credentials by default — so a default policy leaves staff unable to authenticate during exactly the outage described. The accounts must be added deliberately.",
+    "teaches": "domain-controllers-and-fsmo"
+  },
+  {
+    "id": "ad-03",
+    "examCode": "az-802",
+    "domain": "ad-ds",
+    "caseStudyId": "cs-drummond-forest",
+    "question": "Drummond staff must reach only two named servers in the Halbeath forest. What should you configure instead of the proposed default two-way forest trust?",
+    "options": [
+      "A forest trust with selective authentication, granting allowed-to-authenticate on the two servers",
+      "An external trust to each of the two servers",
+      "A one-way forest trust with forest-wide authentication",
+      "A shortcut trust between the two forests"
+    ],
+    "correctIndex": 0,
+    "explanation": "Forest-wide authentication lets every trusted user authenticate to every resource, which is what the requirement excludes. Selective authentication requires an explicit permission per resource, so only the two named servers are reachable.",
+    "teaches": "sites-trusts-replication"
+  },
+  {
+    "id": "ad-04",
+    "examCode": "az-802",
+    "domain": "ad-ds",
+    "caseStudyId": "cs-drummond-forest",
+    "question": "Nine service accounts must have their passwords managed by the operating system, including where an application runs on several servers. What should you implement?",
+    "options": [
+      "Group managed service accounts, after creating the KDS root key in the forest",
+      "Standalone managed service accounts on each server",
+      "Ordinary user accounts with a scripted password rotation",
+      "Local system accounts on each server"
+    ],
+    "correctIndex": 0,
+    "explanation": "Standalone managed service accounts work on one machine only, which fails the multi-server requirement. Group managed service accounts span machines and manage their own passwords, and the KDS root key must exist in the forest before any can be created.",
+    "teaches": "users-groups-service-accounts"
+  },
+  {
+    "id": "ad-05",
+    "examCode": "az-802",
+    "domain": "ad-ds",
+    "caseStudyId": "cs-drummond-forest",
+    "question": "Three branches added last year have slow sign-ins, and their site objects already exist in Active Directory. What is most likely missing?",
+    "options": [
+      "The branch subnets have not been associated with those sites",
+      "The branches need their own read-only domain controllers",
+      "Universal group membership caching is disabled",
+      "The site links have no schedule configured"
+    ],
+    "correctIndex": 0,
+    "explanation": "A client discovers its site from its subnet, so a subnet belonging to no site leaves users authenticating across the WAN to whichever controller answers. Creating site objects without mapping subnets to them achieves nothing, which is precisely the state described.",
+    "teaches": "sites-trusts-replication"
+  },
+  {
+    "id": "ad-06",
+    "examCode": "az-802",
+    "domain": "ad-ds",
+    "question": "A domain-level Group Policy setting must reach an organisational unit that has Block Inheritance enabled. What should you configure?",
+    "options": [
+      "Set the domain-level GPO link to Enforced",
+      "Remove Block Inheritance from the organisational unit",
+      "Link the GPO directly to the organisational unit as well",
+      "Add a WMI filter to the GPO"
+    ],
+    "correctIndex": 0,
+    "explanation": "Enforced beats Block Inheritance, which is the whole point of the setting. Removing Block Inheritance would work but discards whatever the OU owner was protecting, and linking again does not survive the block.",
+    "teaches": "group-policy"
+  },
+  {
+    "id": "ad-07",
+    "examCode": "az-802",
+    "domain": "ad-ds",
+    "question": "Password changes are slow to take effect and account lockouts behave inconsistently across the domain. Which operations master role should you investigate?",
+    "options": [
+      "The PDC Emulator",
+      "The RID Master",
+      "The Infrastructure Master",
+      "The Schema Master"
+    ],
+    "correctIndex": 0,
+    "explanation": "The PDC Emulator handles urgent password replication, lockout processing, and time authority, so its absence shows up as authentication oddities. Its symptoms are felt long before anyone suspects a FSMO problem.",
+    "teaches": "domain-controllers-and-fsmo"
+  },
+  {
+    "id": "ad-08",
+    "examCode": "az-802",
+    "domain": "ad-ds",
+    "question": "Which two operations master roles exist once per forest rather than once per domain?",
+    "options": [
+      "Schema Master and Domain Naming Master",
+      "PDC Emulator and RID Master",
+      "RID Master and Infrastructure Master",
+      "Infrastructure Master and Domain Naming Master"
+    ],
+    "correctIndex": 0,
+    "explanation": "Schema Master and Domain Naming Master are forest-wide; the other three are per domain. Knowing which is which decides where a role can be seized to.",
+    "teaches": "domain-controllers-and-fsmo"
+  },
+  {
+    "id": "ad-09",
+    "examCode": "az-802",
+    "domain": "ad-ds",
+    "question": "A mapped drive must be delivered to users but should remain if the setting is later removed from scope. What should you use?",
+    "options": [
+      "A Group Policy preference",
+      "A Group Policy setting",
+      "A logon script assigned in the user object",
+      "A WMI filter on the GPO"
+    ],
+    "correctIndex": 0,
+    "explanation": "Preferences are written once and persist when they stop applying, while policy settings revert. That difference — set versus enforced — is what decides between them, and mapped drives are a preference in any case.",
+    "teaches": "group-policy"
+  },
+  {
+    "id": "ad-10",
+    "examCode": "az-802",
+    "domain": "ad-ds",
+    "kind": "multi",
+    "question": "Which two are true of group managed service accounts? Choose two.",
+    "options": [
+      "The KDS root key must exist in the forest before one can be created",
+      "They can be used by several servers running the same service",
+      "Their passwords must be rotated manually every 30 days",
+      "They can be added to the Protected Users group safely"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "The root key is the prerequisite and multi-server use is the point of them. Passwords are managed automatically, and adding service accounts to Protected Users typically breaks them, which is why that group is for people.",
+    "teaches": "users-groups-service-accounts"
+  },
+  {
+    "id": "ad-11",
+    "examCode": "az-802",
+    "domain": "ad-ds",
+    "kind": "order",
+    "question": "Put the levels of Group Policy processing in the order they apply.",
+    "items": [
+      "Domain-linked policies",
+      "The local computer policy",
+      "Organisational unit policies, from the top of the hierarchy down",
+      "Site-linked policies"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "Local, site, domain, then OU top down — and the last writer wins, which is why an OU setting normally overrides a domain one. Enforced links and Block Inheritance are the two exceptions to that ordering.",
+    "teaches": "group-policy"
+  },
+  {
+    "id": "ad-12",
+    "examCode": "az-802",
+    "domain": "ad-ds",
+    "kind": "match",
+    "question": "Match each group scope to what it is for.",
+    "pairs": [
+      { "term": "Domain local", "definition": "Assigning permissions on resources in its own domain" },
+      { "term": "Global", "definition": "Collecting users from its own domain for use across the forest" },
+      { "term": "Universal", "definition": "Members from any domain, replicated to the global catalogue" },
+      { "term": "Local", "definition": "Existing only on one machine, outside the directory" }
+    ],
+    "explanation": "The conventional layering runs accounts into global, global into universal, universal into domain local, and permissions on domain local — a pattern that exists to keep global catalogue replication small.",
+    "teaches": "users-groups-service-accounts"
+  },
+  {
+    "id": "ad-13",
+    "examCode": "az-802",
+    "domain": "ad-ds",
+    "kind": "dropdown",
+    "question": "Complete the statement about operations master roles.",
+    "segments": [
+      { "text": "Moving a role while its current holder is online and healthy is called " },
+      {
+        "blankId": "b1",
+        "options": ["a transfer", "a seizure", "a promotion"],
+        "correctIndex": 0
+      },
+      { "text": ", and after the forcible alternative the old holder " },
+      {
+        "blankId": "b2",
+        "options": ["must never rejoin the network", "should be rebooted and rejoined", "keeps the role until replication completes"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "Transfer is cooperative and seizure is not. The prohibition after a seizure is absolute, because two holders of one role produce directory corruption that is far harder to fix than the original outage.",
+    "teaches": "domain-controllers-and-fsmo"
+  },
+  {
+    "id": "hm-01",
+    "examCode": "az-802",
+    "domain": "hybrid-management",
+    "question": "An on-premises server must receive Azure Policy, Defender for Servers, and Azure Update Manager. What must be done first?",
+    "options": [
+      "Onboard it to Azure Arc",
+      "Install the Azure Monitor Agent",
+      "Create a site-to-site VPN to Azure",
+      "Register it in Windows Admin Center"
+    ],
+    "correctIndex": 0,
+    "explanation": "Arc projects the server into Azure as a resource, which is the prerequisite for every Azure service reaching a non-Azure machine. Agents and network paths follow; none of them substitutes for the resource existing.",
+    "teaches": "azure-arc-and-hybrid-services"
+  },
+  {
+    "id": "hm-02",
+    "examCode": "az-802",
+    "domain": "hybrid-management",
+    "question": "A PowerShell remote session connects successfully but fails with access denied when it reaches a file share on a third machine. What is happening?",
+    "options": [
+      "The double-hop problem — credentials cannot be delegated to the second machine",
+      "The session configuration is missing a role capability file",
+      "WinRM is not listening on the third machine",
+      "The account lacks share permissions on the file server"
+    ],
+    "correctIndex": 0,
+    "explanation": "Connecting works and the onward hop fails, which is the signature of credential delegation being refused. Resource-based constrained delegation is the recommended remedy; CredSSP works but hands over the full credential.",
+    "teaches": "remote-management"
+  },
+  {
+    "id": "hm-03",
+    "examCode": "az-802",
+    "domain": "hybrid-management",
+    "question": "An operator must be able to restart one service on a server without holding administrative rights. What should you implement?",
+    "options": [
+      "Just Enough Administration with a role capability limiting the permitted cmdlets",
+      "Membership of the local Administrators group with auditing enabled",
+      "A scheduled task run under a privileged account",
+      "Remote Desktop access with a restricted user profile"
+    ],
+    "correctIndex": 0,
+    "explanation": "JEA runs the session under a temporary virtual account with elevated rights that the operator never holds, constrained to named cmdlets. Every other option grants standing privilege and relies on the operator not misusing it.",
+    "teaches": "remote-management"
+  },
+  {
+    "id": "hm-04",
+    "examCode": "az-802",
+    "domain": "hybrid-management",
+    "question": "Which service assesses and deploys updates across both Azure virtual machines and Arc-enabled on-premises servers?",
+    "options": [
+      "Azure Update Manager",
+      "Azure Automation Update Management",
+      "Windows Server Update Services",
+      "Azure Monitor"
+    ],
+    "correctIndex": 0,
+    "explanation": "Azure Update Manager is the current service and covers Azure and Arc machines with maintenance configurations. Automation Update Management is its retired predecessor, and WSUS does not reach Azure resources as resources.",
+    "teaches": "azure-arc-and-hybrid-services"
+  },
+  {
+    "id": "hm-05",
+    "examCode": "az-802",
+    "domain": "hybrid-management",
+    "question": "A security baseline must be applied to servers and must not drift afterwards. What should you use?",
+    "options": [
+      "Azure machine configuration, which audits and enforces settings inside the operating system",
+      "A one-time security template applied with a script",
+      "A Group Policy preference with apply-once behaviour",
+      "A documented build checklist for the server team"
+    ],
+    "correctIndex": 0,
+    "explanation": "Machine configuration continuously audits and can remediate, which is what prevents drift. A template or a script applies a state once and says nothing about what happens to it afterwards.",
+    "teaches": "azure-arc-and-hybrid-services"
+  },
+  {
+    "id": "hm-06",
+    "examCode": "az-802",
+    "domain": "hybrid-management",
+    "question": "How should an Azure Automation runbook authenticate to Azure resources?",
+    "options": [
+      "With a managed identity",
+      "With a stored credential asset containing a service account password",
+      "With a certificate exported to the runbook",
+      "With the credentials of whoever started it"
+    ],
+    "correctIndex": 0,
+    "explanation": "A managed identity removes the stored credential entirely and is the current recommendation. Credential assets and exported certificates both create a secret somebody must rotate.",
+    "teaches": "azure-arc-and-hybrid-services"
+  },
+  {
+    "id": "hm-07",
+    "examCode": "az-802",
+    "domain": "hybrid-management",
+    "kind": "multi",
+    "question": "Which two does Azure Arc enable for an on-premises Windows Server? Choose two.",
+    "options": [
+      "Applying Azure Policy and machine configuration",
+      "Onboarding to Microsoft Defender for Servers",
+      "Live migrating the server into an Azure region",
+      "Converting the server into an Azure virtual machine"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Arc extends Azure management to a machine wherever it runs. It does not move or convert anything — the server stays exactly where it is, which is the point.",
+    "teaches": "azure-arc-and-hybrid-services"
+  },
+  {
+    "id": "vm-01",
+    "examCode": "az-802",
+    "domain": "manage-vms",
+    "question": "A checkpoint must be taken of a domain controller without risk of an inconsistent restore. Which type should you use?",
+    "options": [
+      "A production checkpoint",
+      "A standard checkpoint",
+      "A differencing disk snapshot",
+      "An export of the virtual machine while running"
+    ],
+    "correctIndex": 0,
+    "explanation": "Production checkpoints use the guest's backup infrastructure to produce an application-consistent point that restores as though the machine shut down cleanly. Standard checkpoints capture memory and restore a directory mid-flight, which is exactly what corrupts one.",
+    "teaches": "hyper-v-configuration"
+  },
+  {
+    "id": "vm-02",
+    "examCode": "az-802",
+    "domain": "manage-vms",
+    "question": "A guest virtual machine's network configuration is broken and it cannot be reached over the network. How can you manage it?",
+    "options": [
+      "PowerShell Direct, which reaches the guest through the hypervisor",
+      "PowerShell remoting over WinRM from the host",
+      "Remote Desktop from the host",
+      "An SSH session to the guest's management address"
+    ],
+    "correctIndex": 0,
+    "explanation": "PowerShell Direct needs no network path at all, which is precisely why it exists. Every other option depends on the networking that is broken.",
+    "teaches": "hyper-v-configuration"
+  },
+  {
+    "id": "vm-03",
+    "examCode": "az-802",
+    "domain": "manage-vms",
+    "question": "A SQL Server workload is running poorly on a Hyper-V guest configured with dynamic memory. What should you change?",
+    "options": [
+      "Assign a fixed amount of memory to the virtual machine",
+      "Increase the dynamic memory maximum",
+      "Enable nested virtualisation",
+      "Convert the machine to generation 2"
+    ],
+    "correctIndex": 0,
+    "explanation": "SQL Server manages its own memory and reacts badly to it being taken away, so dynamic memory is unsuitable. Raising the maximum does not stop the reclaim behaviour that causes the problem.",
+    "teaches": "hyper-v-configuration"
+  },
+  {
+    "id": "vm-04",
+    "examCode": "az-802",
+    "domain": "manage-vms",
+    "question": "A workload must survive the loss of an entire datacentre within an Azure region. What should you use?",
+    "options": [
+      "Availability zones",
+      "An availability set",
+      "A virtual machine scale set in one zone",
+      "Hyper-V Replica to a second host"
+    ],
+    "correctIndex": 0,
+    "explanation": "Availability sets protect against rack and maintenance events inside one datacentre; zones span physically separate datacentres and are the only listed option meeting the requirement.",
+    "teaches": "azure-vms"
+  },
+  {
+    "id": "vm-05",
+    "examCode": "az-802",
+    "domain": "manage-vms",
+    "question": "A virtual machine must run Hyper-V itself for a nested test environment. What must you enable?",
+    "options": [
+      "Nested virtualisation on the virtual machine, while it is powered off",
+      "Enhanced Session Mode on the host",
+      "Device assignment for the physical CPU",
+      "A private virtual switch on the host"
+    ],
+    "correctIndex": 0,
+    "explanation": "Nested virtualisation exposes virtualisation extensions to the guest and is configured per machine while it is off. None of the other settings makes a guest capable of hosting its own virtual machines.",
+    "teaches": "hyper-v-configuration"
+  },
+  {
+    "id": "vm-06",
+    "examCode": "az-802",
+    "domain": "manage-vms",
+    "question": "An Azure virtual machine has a Premium SSD attached but disk throughput is far below the disk's rating. What is the most likely cause?",
+    "options": [
+      "The virtual machine size caps disk throughput below the disk's limit",
+      "The disk is in a different region from the virtual machine",
+      "The disk needs to be converted to Ultra Disk",
+      "Host caching is enabled on the disk"
+    ],
+    "correctIndex": 0,
+    "explanation": "Disk performance is capped by both the disk and the virtual machine size, so a fast disk on a small machine performs to the machine's limit. It is one of the most common sources of puzzled performance investigations.",
+    "teaches": "azure-vms"
+  },
+  {
+    "id": "vm-07",
+    "examCode": "az-802",
+    "domain": "manage-vms",
+    "kind": "order",
+    "question": "Put the steps of protecting a virtual machine with Hyper-V Replica in order.",
+    "items": [
+      "Run a test failover to validate the plan without disturbing production",
+      "Enable the replication server role settings on the destination host",
+      "Monitor replication health and the recovery point",
+      "Enable replication on the virtual machine and choose the recovery points to keep"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "The destination must accept replication before a source can be pointed at it, and a test failover is what turns an assumption into evidence. Replica bounds data loss by the replication interval rather than eliminating it, which is why it is disaster recovery and not high availability.",
+    "teaches": "hyper-v-storage-network"
+  },
+  {
+    "id": "hn-01",
+    "examCode": "az-802",
+    "domain": "hybrid-networking",
+    "question": "A newly built DHCP server in an Active Directory domain is serving no leases at all. What should you check first?",
+    "options": [
+      "Whether the server has been authorised in Active Directory",
+      "Whether the scope has been activated",
+      "Whether a relay agent is configured on the router",
+      "Whether the lease duration is too short"
+    ],
+    "correctIndex": 0,
+    "explanation": "An unauthorised DHCP server in a domain refuses to serve at all, which matches serving nothing rather than serving some subnets. Relay agents and scope activation would produce partial rather than total failure.",
+    "teaches": "dhcp-and-ip"
+  },
+  {
+    "id": "hn-02",
+    "examCode": "az-802",
+    "domain": "hybrid-networking",
+    "question": "On-premises servers must resolve names in an Azure private DNS zone without hosting the zone locally. What should you configure?",
+    "options": [
+      "A conditional forwarder for that namespace",
+      "Root hints pointing at Azure",
+      "A stub zone for the Azure namespace",
+      "A secondary zone transferred from Azure"
+    ],
+    "correctIndex": 0,
+    "explanation": "A conditional forwarder sends only queries for the named domain onward, which is the standard hybrid pattern. Azure private zones do not support zone transfers, so secondary and stub zones are not options.",
+    "teaches": "dns-on-premises"
+  },
+  {
+    "id": "hn-03",
+    "examCode": "az-802",
+    "domain": "hybrid-networking",
+    "question": "What does DNSSEC provide?",
+    "options": [
+      "Authenticity and integrity of DNS responses",
+      "Encryption of DNS queries in transit",
+      "Confidentiality of zone contents",
+      "Authentication of the client making the query"
+    ],
+    "correctIndex": 0,
+    "explanation": "DNSSEC signs records so a resolver can verify the answer was not tampered with. It does not encrypt anything, and assuming it provides confidentiality is the misconception it is examined for.",
+    "teaches": "dns-on-premises"
+  },
+  {
+    "id": "hn-04",
+    "examCode": "az-802",
+    "domain": "hybrid-networking",
+    "question": "Two DHCP servers in the same site must both serve a scope, sharing the load. Which failover mode should you configure?",
+    "options": [
+      "Load balance",
+      "Hot standby",
+      "Split scope with a 50/50 division",
+      "Server-level failover clustering"
+    ],
+    "correctIndex": 0,
+    "explanation": "Load balance shares the scope by percentage between two servers and is the default for two servers in one site. Hot standby designates one active and one reserve, which suits a branch backed up from head office.",
+    "teaches": "dhcp-and-ip"
+  },
+  {
+    "id": "hn-05",
+    "examCode": "az-802",
+    "domain": "hybrid-networking",
+    "question": "Only the machine that owns a DNS record should be able to change it. What should you configure?",
+    "options": [
+      "An Active Directory-integrated zone with secure dynamic updates only",
+      "A standard primary zone with dynamic updates enabled",
+      "A stub zone for the domain",
+      "A DNS policy filtering by client subnet"
+    ],
+    "correctIndex": 0,
+    "explanation": "Secure dynamic updates tie a record to the security principal that created it, and they require the zone to be Active Directory-integrated. A standard primary zone with dynamic updates accepts changes from anyone.",
+    "teaches": "dns-on-premises"
+  },
+  {
+    "id": "hn-06",
+    "examCode": "az-802",
+    "domain": "hybrid-networking",
+    "question": "One subnet is receiving a different DNS server address from every other subnet served by the same DHCP server. What explains it?",
+    "options": [
+      "A scope-level option is overriding the server-level option",
+      "The server has not been authorised for that subnet",
+      "The relay agent is rewriting the option",
+      "The scope has no reservations configured"
+    ],
+    "correctIndex": 0,
+    "explanation": "DHCP options apply at server, scope, reservation, and policy level, and the more specific level wins. A single subnet behaving differently is almost always a scope option somebody set and forgot.",
+    "teaches": "dhcp-and-ip"
+  },
+  {
+    "id": "hn-07",
+    "examCode": "az-802",
+    "domain": "hybrid-networking",
+    "kind": "match",
+    "question": "Match each DNS configuration to what it does.",
+    "pairs": [
+      { "term": "Conditional forwarder", "definition": "Sends queries for one named domain to a specific server" },
+      { "term": "Stub zone", "definition": "Holds only the name server records of another zone" },
+      { "term": "Root hints", "definition": "The fallback path when no forwarder is configured" },
+      { "term": "DNS policy", "definition": "Returns different answers by client subnet or time of day" }
+    ],
+    "explanation": "The first three decide where an unresolved query goes and differ in how much they know in advance. The fourth changes the answer itself, which is a different kind of control entirely.",
+    "teaches": "dns-on-premises"
+  },
+  {
+    "id": "sf-01",
+    "examCode": "az-802",
+    "domain": "storage-file-services",
+    "question": "A file server must keep frequently used files locally while older files live only in Azure, with the namespace unchanged. What should you configure?",
+    "options": [
+      "Azure File Sync with cloud tiering",
+      "Azure File Sync without cloud tiering",
+      "DFS Replication to an Azure virtual machine",
+      "Storage Replica to an Azure file share"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cloud tiering replaces cold files with pointers while leaving the namespace intact, governed by free-space and date policies. Without tiering, File Sync keeps a full local copy and reclaims nothing.",
+    "teaches": "azure-files-and-sync"
+  },
+  {
+    "id": "sf-02",
+    "examCode": "az-802",
+    "domain": "storage-file-services",
+    "question": "A folder currently replicated with DFS Replication is to be brought under Azure File Sync. What must you do?",
+    "options": [
+      "Disable DFS Replication for that folder before enabling File Sync on it",
+      "Run both together so that no data is lost during the transition",
+      "Convert the DFS namespace to standalone first",
+      "Enable cloud tiering before adding the server endpoint"
+    ],
+    "correctIndex": 0,
+    "explanation": "Two replication engines operating on one directory conflict, so DFS Replication must be disabled for that folder first. Running both is exactly the mistake this migration guidance exists to prevent.",
+    "teaches": "azure-files-and-sync"
+  },
+  {
+    "id": "sf-03",
+    "examCode": "az-802",
+    "domain": "storage-file-services",
+    "question": "Users are denied access to an Azure file share although their NTFS permissions inside it are correct. What is most likely missing?",
+    "options": [
+      "A share-level Azure RBAC role granting SMB access",
+      "A private endpoint for the storage account",
+      "Cloud tiering on the server endpoint",
+      "Access-based enumeration on the share"
+    ],
+    "correctIndex": 0,
+    "explanation": "Azure Files enforces permissions at two levels and both must be right — an Azure RBAC role for SMB access and NTFS permissions inside. Correct NTFS with no share-level role produces exactly this denial.",
+    "teaches": "azure-files-and-sync"
+  },
+  {
+    "id": "sf-04",
+    "examCode": "az-802",
+    "domain": "storage-file-services",
+    "question": "Users should not see folders they have no permission to read. What should you enable?",
+    "options": [
+      "Access-based enumeration on the share",
+      "A file screen in File Server Resource Manager",
+      "A hard quota on the parent folder",
+      "NTFS deny permissions on each folder"
+    ],
+    "correctIndex": 0,
+    "explanation": "Access-based enumeration hides what a user cannot read without changing what is permitted. Deny permissions would also hide content but are a blunt instrument that complicates every later permission decision.",
+    "teaches": "windows-file-shares"
+  },
+  {
+    "id": "sf-05",
+    "examCode": "az-802",
+    "domain": "storage-file-services",
+    "question": "A file server must be reachable by remote users over the internet without a VPN. What should you configure?",
+    "options": [
+      "SMB over QUIC",
+      "SMB signing and encryption on the share",
+      "DFS Namespaces with a domain-based root",
+      "An iSCSI target published through the firewall"
+    ],
+    "correctIndex": 0,
+    "explanation": "SMB over QUIC tunnels SMB inside QUIC on UDP 443, which is what makes a file server safely reachable without a VPN. Signing and encryption protect traffic but do nothing about reachability.",
+    "teaches": "windows-file-shares"
+  },
+  {
+    "id": "sf-06",
+    "examCode": "az-802",
+    "domain": "storage-file-services",
+    "question": "Why is Storage Replica unsuitable as a substitute for backup?",
+    "options": [
+      "It replicates deletions and corruption faithfully to the destination",
+      "It only supports asynchronous replication",
+      "It cannot replicate between clusters",
+      "It retains only the most recent hour of changes"
+    ],
+    "correctIndex": 0,
+    "explanation": "Replication is not versioning: whatever happens to the source happens to the destination, including a mistaken deletion. That is the distinction between disaster recovery and backup.",
+    "teaches": "windows-storage"
+  },
+  {
+    "id": "sf-07",
+    "examCode": "az-802",
+    "domain": "storage-file-services",
+    "question": "A Storage Spaces virtual disk must survive the loss of two physical disks. Which resiliency type should you choose?",
+    "options": [
+      "Three-way mirror",
+      "Two-way mirror",
+      "Simple",
+      "Single parity"
+    ],
+    "correctIndex": 0,
+    "explanation": "A three-way mirror tolerates two disk failures. A two-way mirror and single parity each tolerate one, and simple tolerates none, trading resiliency for capacity and speed.",
+    "teaches": "windows-storage"
+  },
+  {
+    "id": "sf-08",
+    "examCode": "az-802",
+    "domain": "storage-file-services",
+    "question": "A BitLocker-protected volume will not unlock after a firmware update. What determines whether the data is recoverable?",
+    "options": [
+      "Whether the recovery key was escrowed to Active Directory or Microsoft Entra",
+      "Whether the volume used NTFS or ReFS",
+      "Whether Data Deduplication was enabled on the volume",
+      "Whether the TPM was version 1.2 or 2.0"
+    ],
+    "correctIndex": 0,
+    "explanation": "A firmware change invalidates the sealed key, and the recovery key is then the only way in. Escrow is what turns an unrecoverable volume into an inconvenience, which is why it matters more than diagnosing the cause.",
+    "teaches": "windows-storage"
+  },
+  {
+    "id": "sf-09",
+    "examCode": "az-802",
+    "domain": "storage-file-services",
+    "kind": "multi",
+    "question": "Which two are true of effective access on a Windows file share? Choose two.",
+    "options": [
+      "It is the most restrictive combination of share and NTFS permissions",
+      "Granting Everyone Full Control at the share is a common design so NTFS governs access",
+      "Share permissions always override NTFS permissions",
+      "NTFS permissions apply only to local access"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Both permission sets apply and the tighter one wins, which is why the conventional design neutralises the share layer and controls everything with NTFS. NTFS applies to remote access too.",
+    "teaches": "windows-file-shares"
+  },
+  {
+    "id": "sf-10",
+    "examCode": "az-802",
+    "domain": "storage-file-services",
+    "kind": "order",
+    "question": "Put the steps of configuring Azure File Sync in order.",
+    "items": [
+      "Register the Windows file server with the Storage Sync Service",
+      "Create a Storage Sync Service in Azure",
+      "Add a server endpoint for the local path and enable cloud tiering",
+      "Create a sync group with the Azure file share as the cloud endpoint"
+    ],
+    "correctOrder": [1, 0, 3, 2],
+    "explanation": "The service exists first, the server registers with it, the sync group defines the cloud endpoint, and the server endpoint binds the local path to it. Tiering is a property of the server endpoint and so comes last.",
+    "teaches": "azure-files-and-sync"
+  },
+  {
+    "id": "sw-01",
+    "examCode": "az-802",
+    "domain": "secure-windows-server",
+    "question": "Every workstation shares the same local administrator password, and an attacker who compromises one machine can reach the others. What should you deploy?",
+    "options": [
+      "Windows Local Administrator Password Solution",
+      "Credential Guard on every machine",
+      "A fine-grained password policy for administrators",
+      "Windows Defender Application Control in enforcement mode"
+    ],
+    "correctIndex": 0,
+    "explanation": "LAPS gives each machine a unique rotating local administrator password stored in the directory, which removes the shared secret that makes lateral movement trivial. Credential Guard protects domain credentials in memory, a different attack.",
+    "teaches": "os-hardening"
+  },
+  {
+    "id": "sw-02",
+    "examCode": "az-802",
+    "domain": "secure-windows-server",
+    "question": "Which feature isolates credential secrets using virtualisation-based security to defeat pass-the-hash attacks?",
+    "options": [
+      "Credential Guard",
+      "Exploit protection",
+      "Microsoft Defender SmartScreen",
+      "Protected Users"
+    ],
+    "correctIndex": 0,
+    "explanation": "Credential Guard places secrets in a virtualisation-isolated process that credential-theft tools cannot read. Protected Users addresses the same threat from the directory side by disabling weak authentication, which is a complementary control rather than the same one.",
+    "teaches": "os-hardening"
+  },
+  {
+    "id": "sw-03",
+    "examCode": "az-802",
+    "domain": "secure-windows-server",
+    "question": "Administrators must be subject to a longer minimum password length than other users, within one domain. What should you configure?",
+    "options": [
+      "A fine-grained password policy applied to the administrators group",
+      "A second domain for administrative accounts",
+      "A Group Policy object linked to the administrators' organisational unit",
+      "Microsoft Entra Password Protection in audit mode"
+    ],
+    "correctIndex": 0,
+    "explanation": "Password settings objects apply different password and lockout rules to specific groups by precedence. Password policy from Group Policy applies at domain level and cannot be varied by OU, which is the misconception this question targets.",
+    "teaches": "secure-ad-ds"
+  },
+  {
+    "id": "sw-04",
+    "examCode": "az-802",
+    "domain": "secure-windows-server",
+    "question": "A management port must be reachable only from machines that can authenticate, rather than from a list of addresses. What should you configure?",
+    "options": [
+      "A connection security rule requiring authentication, combined with a firewall rule",
+      "A firewall rule scoped to the domain profile only",
+      "A network security group on the server's subnet",
+      "IPsec tunnel mode between the two sites"
+    ],
+    "correctIndex": 0,
+    "explanation": "Connection security rules establish authenticated IPsec between machines, and a firewall rule can then require that authentication. Addresses can be spoofed or reassigned; an authenticated computer identity cannot in the same way.",
+    "teaches": "defender-and-firewall"
+  },
+  {
+    "id": "sw-05",
+    "examCode": "az-802",
+    "domain": "secure-windows-server",
+    "question": "Several service accounts were added to the Protected Users group and the services stopped working. Why?",
+    "options": [
+      "Protected Users disables weak authentication and delegation, which many services depend on",
+      "Protected Users requires a fine-grained password policy to be linked first",
+      "Protected Users applies only to accounts in the root domain",
+      "Protected Users forces accounts to change their password at next logon"
+    ],
+    "correctIndex": 0,
+    "explanation": "The group disables NTLM, delegation, and long-lived tickets for its members, which is protective for people and destructive for services. It is explicitly not intended for service accounts.",
+    "teaches": "secure-ad-ds"
+  },
+  {
+    "id": "sw-06",
+    "examCode": "az-802",
+    "domain": "secure-windows-server",
+    "kind": "yesno",
+    "question": "Windows Defender Application Control is being introduced across a server estate. Judge each statement.",
+    "statements": [
+      { "text": "It should be run in audit mode before enforcement.", "correct": true },
+      { "text": "Policies can allow code by publisher, path, or hash.", "correct": true },
+      { "text": "It is the successor to AppLocker for new deployments.", "correct": true },
+      { "text": "It protects credentials in memory from theft tools.", "correct": false }
+    ],
+    "explanation": "Application Control decides what may run; Credential Guard protects secrets in memory. Attributing one's job to the other is the confusion this pairing tests.",
+    "teaches": "os-hardening"
+  },
+  {
+    "id": "sw-07",
+    "examCode": "az-802",
+    "domain": "secure-windows-server",
+    "kind": "dropdown",
+    "question": "Complete the statement about protecting administrative access.",
+    "segments": [
+      { "text": "To stop one compromised machine yielding the local administrator password of every other machine you deploy " },
+      {
+        "blankId": "b1",
+        "options": ["LAPS", "Credential Guard", "a fine-grained password policy"],
+        "correctIndex": 0
+      },
+      { "text": ", and to stop domain credentials being read out of memory you enable " },
+      {
+        "blankId": "b2",
+        "options": ["Credential Guard", "LAPS", "SmartScreen"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "The two defend against consecutive stages of the same attack — obtaining a reusable local password, and harvesting domain credentials from a machine already compromised.",
+    "teaches": "os-hardening"
+  },
+  {
+    "id": "mt-01",
+    "examCode": "az-802",
+    "domain": "monitor-troubleshoot",
+    "question": "Users report Kerberos authentication failures on one server while other servers are unaffected. What should you check first?",
+    "options": [
+      "The server's clock, against the permitted skew of five minutes",
+      "The server's DNS suffix search order",
+      "The server's Windows Update history",
+      "The account lockout policy in the domain"
+    ],
+    "correctIndex": 0,
+    "explanation": "Kerberos fails when clocks drift beyond the permitted skew, and the resulting messages mention authentication rather than time — which is exactly why it is missed. One server affected and others not points at that machine's clock.",
+    "teaches": "troubleshoot-windows"
+  },
+  {
+    "id": "mt-02",
+    "examCode": "az-802",
+    "domain": "monitor-troubleshoot",
+    "question": "A user object was deleted in error and must be restored with its group memberships intact. What should you use?",
+    "options": [
+      "The Active Directory Recycle Bin, if it was enabled beforehand",
+      "Directory Services Restore Mode with a non-authoritative restore",
+      "A system state backup restored to a new domain controller",
+      "Recreating the account with the same name and SID"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Recycle Bin restores the object with attributes and memberships intact, which nothing else on the list does cleanly. It must have been enabled before the deletion — enabling it afterwards does not recover anything already gone.",
+    "teaches": "troubleshoot-ad"
+  },
+  {
+    "id": "mt-03",
+    "examCode": "az-802",
+    "domain": "monitor-troubleshoot",
+    "question": "A domain controller that was offline for several months is reconnected and old objects reappear across the domain. What has happened?",
+    "options": [
+      "Lingering objects, because it was offline longer than the tombstone lifetime",
+      "The Active Directory Recycle Bin restored them automatically",
+      "SYSVOL replication reverted the domain to an earlier state",
+      "The controller seized the operations master roles on reconnection"
+    ],
+    "correctIndex": 0,
+    "explanation": "A controller offline beyond the tombstone lifetime never learned about deletions, so reconnecting reintroduces objects the rest of the domain removed. That is why such a controller must be cleaned or rebuilt rather than simply reconnected.",
+    "teaches": "troubleshoot-ad"
+  },
+  {
+    "id": "mt-04",
+    "examCode": "az-802",
+    "domain": "monitor-troubleshoot",
+    "question": "A member server can no longer authenticate to the domain and reports a trust relationship failure. What is the least disruptive fix?",
+    "options": [
+      "Repair the secure channel with Test-ComputerSecureChannel -Repair",
+      "Remove the computer from the domain and rejoin it",
+      "Reset the computer account and reinstall the operating system",
+      "Seize the PDC Emulator role onto another controller"
+    ],
+    "correctIndex": 0,
+    "explanation": "The secure channel can be repaired in place, which preserves the computer account, its group memberships, and anything tied to its SID. Rejoining is the heavier habit and is rarely necessary.",
+    "teaches": "troubleshoot-ad"
+  },
+  {
+    "id": "mt-05",
+    "examCode": "az-802",
+    "domain": "monitor-troubleshoot",
+    "question": "You must predict when a server's disk capacity will be exhausted based on its own historical trend. Which feature should you use?",
+    "options": [
+      "System Insights",
+      "Performance Monitor live counters",
+      "Resource Monitor",
+      "Event Viewer custom views"
+    ],
+    "correctIndex": 0,
+    "explanation": "System Insights performs local predictive analysis of capacity trends from historical data. The other tools describe what is happening now or what has already been logged, which is a different question.",
+    "teaches": "monitoring-tools"
+  },
+  {
+    "id": "mt-06",
+    "examCode": "az-802",
+    "domain": "monitor-troubleshoot",
+    "kind": "multi",
+    "question": "Which two commands help diagnose Active Directory replication? Choose two.",
+    "options": [
+      "repadmin /replsummary",
+      "dcdiag",
+      "gpresult /r",
+      "Test-NetConnection"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "repadmin reports replication state and dcdiag tests domain controller health. gpresult reports policy application on a client, and Test-NetConnection tests a port — useful, but neither speaks to replication.",
+    "teaches": "troubleshoot-ad"
+  },
+  {
+    "id": "mt-07",
+    "examCode": "az-802",
+    "domain": "monitor-troubleshoot",
+    "kind": "order",
+    "question": "Put the steps of diagnosing a name resolution failure in order.",
+    "items": [
+      "Query the DNS server directly to see whether the record exists",
+      "Confirm which DNS servers the client is configured to use",
+      "Clear the client resolver cache and retry",
+      "Check whether the client cached a stale answer"
+    ],
+    "correctOrder": [1, 0, 3, 2],
+    "explanation": "Establish who is being asked, then whether the answer exists at the source, then whether the client is holding an old one. Clearing the cache first destroys the evidence that would have explained the fault.",
+    "teaches": "troubleshoot-windows"
+  },
+  {
+    "id": "mt-08",
+    "examCode": "az-802",
+    "domain": "monitor-troubleshoot",
+    "kind": "match",
+    "question": "Match each monitoring tool to what it is for.",
+    "pairs": [
+      { "term": "Data collector set", "definition": "Recording counters on a schedule to build a baseline" },
+      { "term": "Resource Monitor", "definition": "A live per-process view of current resource use" },
+      { "term": "System Insights", "definition": "Predicting future capacity from local historical data" },
+      { "term": "VM Insights", "definition": "Performance and dependency views for Azure and Arc machines" }
+    ],
+    "explanation": "Past, present, future, and hybrid estate. Reaching for a live view when the question is about a trend, or the reverse, is the usual error in this domain.",
+    "teaches": "monitoring-tools"
+  },
+  {
+    "id": "mt-09",
+    "examCode": "az-802",
+    "domain": "monitor-troubleshoot",
+    "kind": "yesno",
+    "question": "The Active Directory Recycle Bin is being considered for a forest. Judge each statement.",
+    "statements": [
+      { "text": "Once enabled it cannot be disabled.", "correct": true },
+      { "text": "It restores a deleted object's attributes and group memberships.", "correct": true },
+      { "text": "It recovers objects deleted before it was enabled.", "correct": false },
+      { "text": "It requires the forest functional level to meet a minimum.", "correct": true }
+    ],
+    "explanation": "Enabling it is a one-way decision and it only protects deletions that happen afterwards. Discovering that it was never enabled during an incident is the situation Directory Services Restore Mode exists for.",
+    "teaches": "troubleshoot-ad"
+  }
+]

@@ -1,0 +1,197 @@
+[
+  {
+    "domainId": "ad-ds",
+    "sections": [
+      {
+        "id": "domain-controllers-and-fsmo",
+        "heading": "Domain controllers, RODCs, and FSMO roles",
+        "paragraphs": [
+          "Active Directory replicates multi-master, but five operations must happen in one place, and those are the Flexible Single-Master Operations roles. Two are per forest — Schema Master and Domain Naming Master — and three are per domain — RID Master, PDC Emulator, and Infrastructure Master. Transferring a role is the graceful move, done while the current holder is online and both agree. Seizing is the forcible move, used when the holder is permanently gone, and its rule is absolute: a seized holder must never be brought back onto the network, because two machines believing they own the same role corrupts the directory.",
+          "The PDC Emulator is the one whose absence is felt first — it is the authority for time in the domain, handles password changes urgently, and is the target for account lockout processing, so a failed PDC Emulator produces authentication oddities long before anyone thinks of FSMO. A read-only domain controller holds a non-writable copy of the directory for a branch or an insecure location, and its password replication policy decides which accounts' credentials may be cached there. Nothing is cached by default, so a branch that must authenticate during a WAN outage needs those accounts added to the allowed list deliberately."
+        ]
+      },
+      {
+        "id": "sites-trusts-replication",
+        "heading": "Sites, trusts, and replication",
+        "paragraphs": [
+          "A site is a set of well-connected subnets, and its purpose is to keep traffic local: clients prefer a domain controller in their own site, and replication between sites is scheduled and compressed rather than continuous. Subnets must be associated with sites for any of that to work — a subnet that belongs to no site leaves clients authenticating across the WAN to whatever controller answers, which is a classic cause of slow logons at a branch. Site links carry a cost and a schedule, and the Knowledge Consistency Checker builds the replication topology from them.",
+          "Trusts join separate domains or forests. Within a forest, trusts between domains are two-way and transitive automatically. Between forests, a forest trust must be created explicitly and can be one-way or two-way; an external trust joins a single domain in another forest and is non-transitive. Selective authentication is the control that matters: rather than allowing every trusted user to authenticate to every resource, it requires an explicit allowed-to-authenticate permission per resource, which is what a scenario describing a partner forest with limited access is pointing at."
+        ]
+      },
+      {
+        "id": "users-groups-service-accounts",
+        "heading": "Users, groups, and service accounts",
+        "paragraphs": [
+          "Group scope decides where a group can be used and what it can contain. Domain local groups are used to assign permissions on resources in their own domain and can contain members from anywhere in the forest. Global groups collect users from their own domain and are used across the forest. Universal groups can contain members from any domain and are replicated to the global catalogue, which is why they carry a replication cost and are used for cross-domain roles. The classic layering — accounts into global groups, global groups into universal groups, universal into domain local, and permissions on domain local — exists precisely to keep that cost down.",
+          "Service accounts are where a lot of real-world risk sits. A standalone managed service account has its password managed by the operating system but works on one machine only. A group managed service account extends that to multiple machines, which is what a farm or a clustered service needs, and requires the Key Distribution Services root key to exist in the forest before any can be created — a step that is easy to forget and produces a confusing failure. A delegated managed service account is the newest form, designed to replace an ordinary user account used as a service account without the migration pain. The reason all of these exist is that a plain user account with a static password used by a service is the credential most likely to be old, shared, and over-privileged."
+        ]
+      },
+      {
+        "id": "group-policy",
+        "heading": "Group Policy",
+        "paragraphs": [
+          "Group Policy objects are linked to sites, domains, and organisational units, and applied in that order with the local policy first — local, site, domain, then OU, with nested OUs applying from the top down. The last writer wins, so a setting configured at a lower level normally overrides a higher one. Two things change that: Enforced on a link makes it win regardless of what applies later, and Block Inheritance on an OU stops higher policies applying, except that Enforced beats Block Inheritance. Security filtering restricts a policy to specified users or groups, and WMI filters restrict it to machines matching a query.",
+          "Group Policy preferences differ from policy settings in one crucial respect: a policy setting is enforced and reapplied, and it reverts when the policy no longer applies, while a preference is written once and remains if the preference is removed unless item-level targeting or the 'apply once' behaviour is configured otherwise. That distinction — enforced versus set — is what decides which to use, and preferences also cover things policies never did, such as mapped drives, shortcuts, scheduled tasks, and registry values, with item-level targeting to decide who receives them."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "hybrid-management",
+    "sections": [
+      {
+        "id": "remote-management",
+        "heading": "Remote management",
+        "paragraphs": [
+          "Windows Admin Center is the browser-based console for managing servers, deployable on-premises as a gateway or reached through the Azure portal for Arc-enabled machines. PowerShell remoting over WinRM is the scripting counterpart, and its well-known limitation is the double-hop problem: credentials used to reach the first machine cannot be passed on to a second, so a remote session that then reaches a file share fails with access denied. The supported remedies are CredSSP, which is discouraged because it delegates the credential in full, resource-based constrained delegation, which is the recommended approach, or simply performing the second hop differently.",
+          "Just Enough Administration constrains what a remote session may do. A role capability file lists the permitted cmdlets and parameters, a session configuration file binds roles to groups, and the session runs under a temporary virtual account with elevated rights that the connecting user never holds. The result is an operator who can restart one service without being an administrator of anything, which is the specific scenario JEA answers. OpenSSH is available as a Windows feature and is the cross-platform alternative for shell access."
+        ]
+      },
+      {
+        "id": "azure-arc-and-hybrid-services",
+        "heading": "Azure Arc and hybrid services",
+        "paragraphs": [
+          "Azure Arc projects a server running on-premises or in another cloud into Azure as a resource, which is the prerequisite for almost everything else hybrid. Once a machine is Arc-enabled it can receive Azure Policy and machine configuration, be onboarded to Defender for Servers, send data to Azure Monitor, run VM extensions, and be patched by Azure Update Manager — none of which reach a machine that is not projected. That single dependency explains most hybrid questions: if a scenario wants an Azure service applied to a non-Azure server, the first step is Arc.",
+          "Azure Update Manager assesses and deploys updates across Azure and Arc-enabled machines with maintenance configurations defining the window, and it has replaced the older Automation Update Management. Azure Automation runbooks carry scheduled or event-driven operational tasks and authenticate with a managed identity rather than a stored credential. Machine configuration — the successor to guest configuration — audits and enforces settings inside the operating system, which is how a security baseline is held in place rather than merely applied once."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "manage-vms",
+    "sections": [
+      {
+        "id": "hyper-v-configuration",
+        "heading": "Hyper-V virtual machines",
+        "paragraphs": [
+          "Generation 2 virtual machines boot from UEFI, support secure boot and a virtual TPM, and are required for shielded virtual machines; generation 1 exists for older guests and cannot be converted. Dynamic memory assigns memory between a minimum and a maximum according to demand and is unsuitable for workloads that manage their own memory, such as SQL Server, where a fixed assignment is correct. Nested virtualisation exposes virtualisation extensions to a guest so it can itself run Hyper-V or a container host requiring isolation, and it must be enabled per virtual machine while it is off.",
+          "Checkpoints come in two kinds and the difference is examined. Standard checkpoints capture memory state as well as disk, which restores a machine mid-flight and is unsafe for anything with a database or a directory role. Production checkpoints use the guest's own backup infrastructure to produce an application-consistent point that restores as though the machine were shut down cleanly, which is why they are the default and the correct answer for a domain controller. Enhanced Session Mode gives clipboard, drive, and device redirection into a virtual machine connection, and PowerShell Direct manages a guest through the hypervisor without any network path at all — the answer when a guest's networking is broken."
+        ]
+      },
+      {
+        "id": "hyper-v-storage-network",
+        "heading": "Virtual disks, networking, and replication",
+        "paragraphs": [
+          "VHDX supersedes VHD with larger capacity and resilience to power failure. Disks are fixed, dynamically expanding, or differencing, the last of which chains a child disk to a parent and is a common cause of unexplained storage growth. Virtual switches are external, connecting to a physical adapter; internal, connecting virtual machines and the host; or private, connecting only virtual machines. NIC teaming is configured in the guest for a virtual machine only when the adapters have teaming enabled on their settings, and on the host it belongs to the physical adapters underneath the switch.",
+          "Hyper-V Replica asynchronously replicates a virtual machine to another host, with an optional extended replica to a third, and supports test failover so a plan can be exercised without disturbing production. It is a disaster recovery mechanism, not high availability — the distinction being that a failover is a deliberate act with data loss bounded by the replication interval, whereas a failover cluster moves a running workload with shared storage and no loss. A scenario naming a recovery point objective in minutes is describing replication; one demanding continuous availability is describing clustering."
+        ]
+      },
+      {
+        "id": "azure-vms",
+        "heading": "Windows Server virtual machines in Azure",
+        "paragraphs": [
+          "Availability in Azure has a hierarchy. An availability set spreads machines across fault and update domains within a datacentre, protecting against rack and maintenance events. Availability zones spread them across physically separate datacentres in a region, which is the stronger guarantee and the modern default where zones exist. Virtual machine scale sets add elasticity, managing an identical set that grows and shrinks. Resizing is an offline operation for a change of series and often requires deallocation.",
+          "Storage choice follows the workload: Premium SSD for most production, Ultra Disk where very high IOPS and configurable throughput are required, Standard SSD for light workloads. Disk performance is capped by both the disk and the virtual machine size, so a fast disk on a small machine still performs badly — a fact that explains a great many puzzled performance investigations. Management access follows the same rules as elsewhere in Azure: Azure Bastion rather than a public IP, and just-in-time access where a public endpoint is unavoidable."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "hybrid-networking",
+    "sections": [
+      {
+        "id": "dns-on-premises",
+        "heading": "DNS zones, forwarding, and DNSSEC",
+        "paragraphs": [
+          "Active Directory-integrated zones store records in the directory rather than in a file, which gives multi-master updates, replication with the directory, and the option of secure dynamic updates — the last restricting record changes to the machine that owns the record and being the reason AD-integrated zones are preferred wherever the directory exists. Zone types are primary, secondary, and stub, with stub zones holding only the name server records of another zone so the local server knows where to ask.",
+          "Forwarding sends unresolved queries to a nominated server; conditional forwarding does the same only for a named domain, which is how a hybrid environment resolves an Azure private zone or a partner's namespace without hosting it. Root hints are the fallback when no forwarder is configured. DNS policies filter or steer responses by client subnet, time of day, or transport, which supports split-brain answers from one server. DNSSEC signs a zone so a resolver can verify that an answer was not tampered with; it provides authenticity and integrity, not confidentiality, and that distinction is examined directly."
+        ]
+      },
+      {
+        "id": "dhcp-and-ip",
+        "heading": "DHCP and address management",
+        "paragraphs": [
+          "A DHCP server in an Active Directory domain must be authorised in the directory before it will serve leases, which is the first thing to check when a newly built server hands out nothing. Scopes define the range for a subnet with exclusions for statically assigned addresses; reservations bind an address to a MAC address so a device always receives the same one. Options are set at server, scope, reservation, or policy level, and the more specific level wins — a scope option overriding a server option is the usual explanation for one subnet behaving differently.",
+          "High availability uses DHCP failover between two servers in one of two modes. Load balance shares the scope between both servers by a percentage and is the default for two servers in the same site. Hot standby designates one active and one reserve with a reserved address percentage, and suits a branch server backed up by one at head office. The older split-scope approach divides a range manually and is inferior because neither server knows the other's leases. A relay agent or IP helper is what carries broadcasts across a router so one server can serve several subnets."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "storage-file-services",
+    "sections": [
+      {
+        "id": "azure-files-and-sync",
+        "heading": "Azure Files and Azure File Sync",
+        "paragraphs": [
+          "Azure Files provides SMB and NFS shares in Azure, and identity-based authentication over SMB works against AD DS, Microsoft Entra Domain Services, or Microsoft Entra Kerberos so that NTFS permissions behave as expected. Permissions operate at two levels that must both be right: a share-level Azure RBAC role granting SMB access and NTFS permissions inside the share governing directories and files. Getting one and not the other produces access denied for users whose configuration looks correct.",
+          "Azure File Sync turns a Windows file server into a cache of an Azure file share. Cloud tiering keeps frequently used files local and replaces cold files with pointers, reclaiming space while leaving the namespace intact, governed by a free-space policy and a date policy. The server endpoint is the local path, the cloud endpoint is the Azure file share, and a sync group binds them; multiple server endpoints in one sync group is how branch offices share a namespace. Migration from DFS Replication is a supported path, and the rule is to disable DFS Replication for a folder before enabling File Sync on it, because two replication engines on one directory conflict."
+        ]
+      },
+      {
+        "id": "windows-file-shares",
+        "heading": "Windows file shares, DFS, and FSRM",
+        "paragraphs": [
+          "Effective access on a Windows share is the most restrictive combination of share permissions and NTFS permissions, which is why the conventional design grants Everyone Full Control at the share and controls access entirely with NTFS. Access-based enumeration hides items a user cannot read, which changes what is visible without changing what is permitted. DFS Namespaces present shares from several servers under one logical path, and DFS Replication keeps their contents in step using remote differential compression; a namespace can be domain-based, which gives fault tolerance and is the usual choice, or standalone.",
+          "File Server Resource Manager adds quotas, which limit folder size either hard or soft, file screens, which block file types by extension, and classification with file management tasks for acting on files by property. SMB has moved on in two ways worth knowing: SMB over QUIC tunnels SMB inside QUIC over UDP 443 so a file server is reachable from the internet without a VPN, and SMB encryption and signing protect data in transit and can be required per share or per server."
+        ]
+      },
+      {
+        "id": "windows-storage",
+        "heading": "Storage Spaces, replica, and encryption",
+        "paragraphs": [
+          "Storage Spaces pools physical disks and creates virtual disks over them with a resiliency type: simple for no resiliency, mirror for one or two disk failures, and parity for capacity efficiency at a write-performance cost. Storage Spaces Direct extends this across cluster nodes to build hyper-converged storage from local disks, needing at least two nodes and behaving differently in resiliency as nodes are added. Data Deduplication reclaims space by storing repeated chunks once and is enabled per volume with a usage type that tunes it for general files, virtual desktop infrastructure, or backup.",
+          "Storage Replica performs block-level replication between servers or clusters, synchronous for zero data loss over low-latency links and asynchronous over longer distances, and is a disaster recovery tool rather than a backup — it faithfully replicates deletion and corruption too. File systems divide by purpose: NTFS for general use and boot volumes, ReFS for resilience and very large volumes, with integrity streams and block cloning but without some NTFS features. BitLocker encrypts volumes with the key protected by a TPM, optionally with a PIN, and a recovery key that must be escrowed — in Active Directory or Entra ID — because an unescrowed recovery key means an unrecoverable volume."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "secure-windows-server",
+    "sections": [
+      {
+        "id": "os-hardening",
+        "heading": "Operating system hardening",
+        "paragraphs": [
+          "Windows Defender Application Control restricts which code may run using policies based on publisher, path, or hash, and is the successor to AppLocker for new work; running it in audit mode first is the standard practice, because a policy deployed straight to enforcement blocks legitimate software. Credential Guard uses virtualisation-based security to isolate secrets so that credential-theft tools cannot read them from memory, which is the specific defence against pass-the-hash. Exploit protection applies mitigations such as data execution prevention and address space layout randomisation per application.",
+          "Local Administrator Password Solution solves the problem of every machine sharing one local administrator password, which is what lets an attacker move laterally after compromising a single machine: it sets a unique random password per machine, rotates it, and stores it in Active Directory or Microsoft Entra with read access controlled. OSConfig applies and maintains a security baseline as configuration rather than a one-time template, which matters because a baseline applied once drifts. Windows Firewall with Advanced Security carries per-profile rules and connection security rules, the latter implementing IPsec authentication between machines — the mechanism behind restricting a management port to authenticated peers rather than to an address range."
+        ]
+      },
+      {
+        "id": "secure-ad-ds",
+        "heading": "Securing AD DS",
+        "paragraphs": [
+          "Tiering administrative access is the central idea: domain controllers and domain administrator credentials belong to their own tier and should never be used on ordinary workstations, because a credential used on a compromised machine is a credential the attacker has. The Protected Users group enforces that in the directory by disabling weak authentication for its members — no NTLM, no delegation, no long-lived Kerberos tickets — and it is deliberately not for service accounts, which usually break when added to it.",
+          "Fine-grained password policies allow different password and lockout settings for different groups through password settings objects, applied by precedence, which is how administrators can be held to a stricter standard than everyone else without a separate domain. Microsoft Entra Password Protection extends the cloud's banned password evaluation to on-premises domain controllers through a proxy and DC agent, so a password rejected in the cloud is also rejected at a domain controller. Delegation in Active Directory grants specific rights over an organisational unit — resetting passwords for one department, say — and is the alternative to adding somebody to a privileged group for one task."
+        ]
+      },
+      {
+        "id": "defender-and-firewall",
+        "heading": "Defender for Servers and monitoring security",
+        "paragraphs": [
+          "Defender for Servers brings endpoint detection and response, vulnerability assessment, and posture recommendations to Windows Server whether it runs in Azure, on-premises, or in another cloud — the last two through Azure Arc. Plan 1 provides endpoint detection and response through Defender for Endpoint; Plan 2 adds vulnerability assessment, file integrity monitoring, just-in-time VM access, and agentless scanning, so naming any of those in a requirement points at Plan 2.",
+          "Windows Firewall rules are scoped to domain, private, and public profiles, and a rule applied to the wrong profile is a common cause of a rule that appears configured and does nothing. Connection security rules are separate from firewall rules and establish authenticated, optionally encrypted, connections between machines using IPsec; combining the two — a firewall rule that permits traffic only from authenticated computers — is how server isolation is implemented without relying on addresses."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "monitor-troubleshoot",
+    "sections": [
+      {
+        "id": "monitoring-tools",
+        "heading": "Monitoring Windows Server",
+        "paragraphs": [
+          "Performance Monitor reads counters live, and data collector sets record them on a schedule so that a baseline exists before a problem appears — which is the point, since a counter value means little without something to compare it against. The counters that answer the common questions are processor queue length rather than processor time alone for CPU saturation, available megabytes and pages per second for memory pressure, and average disk queue length with seconds per transfer for disk. Resource Monitor gives a live per-process view and Event Viewer holds the record, with custom views and subscriptions forwarding events from many machines to one collector.",
+          "In Azure, data collection rules decide what a machine sends to a Log Analytics workspace through the Azure Monitor Agent, and they are the main cost control as well as the configuration point. VM Insights adds a performance and dependency view for Azure and Arc-enabled machines. System Insights is the Windows Server feature that predicts capacity trends locally — disk consumption, compute, networking — from historical data, which is a different question from what is happening now."
+        ]
+      },
+      {
+        "id": "troubleshoot-windows",
+        "heading": "Troubleshooting Windows Server",
+        "paragraphs": [
+          "Name resolution problems are diagnosed in order: check the client's configured DNS servers, then whether the record exists on the server, then whether the client has cached a stale answer, since a client cache and a server cache are separate and both can lie. Connectivity is walked from the interface outward with `Test-NetConnection`, which tests a port rather than merely pinging, since ICMP is frequently blocked and proves little.",
+          "Time is worth its own attention because Kerberos fails when clocks drift beyond the permitted skew, which by default is five minutes, and the resulting errors mention authentication rather than time. The domain hierarchy is the fix: domain members synchronise from a domain controller, controllers from the PDC Emulator, and the PDC Emulator from an external source. Windows Update failures are diagnosed from the update logs and, on hybrid machines, from Azure Update Manager's assessment. Disk encryption problems usually reduce to a TPM change or a firmware update that invalidated the sealed key, which is why the escrowed recovery key matters more than the diagnosis."
+        ]
+      },
+      {
+        "id": "troubleshoot-ad",
+        "heading": "Recovering and troubleshooting Active Directory",
+        "paragraphs": [
+          "Deleting an object is recoverable in two quite different ways. The Active Directory Recycle Bin, once enabled — and it cannot be disabled afterwards — restores a deleted object with its attributes and group memberships intact, which is the modern answer for an accidental deletion. Directory Services Restore Mode with an authoritative restore is the older, heavier route, used when the Recycle Bin was not enabled or when a whole directory database must be recovered; marking objects authoritative is what stops replication simply deleting them again.",
+          "SYSVOL holds Group Policy templates and scripts and is replicated by DFS Replication; recovering it uses an authoritative synchronisation, historically the D2 and D4 flags. Replication itself is diagnosed with `repadmin` — `/replsummary` for an overview, `/showrepl` for a partner's detail — and `dcdiag` for domain controller health. The failures worth recognising by name are lingering objects, which appear when a controller is reconnected after being offline longer than the tombstone lifetime, and a broken secure channel between a computer and the domain, repaired with `Test-ComputerSecureChannel -Repair` rather than by rejoining the domain, which is the heavier and more disruptive habit."
+        ]
+      }
+    ]
+  }
+]

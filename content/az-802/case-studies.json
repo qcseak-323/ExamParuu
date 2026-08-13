@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-drummond-forest",
+    "examCode": "az-802",
+    "domain": "ad-ds",
+    "title": "Drummond Aggregates — a directory nobody has tidied",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Drummond Aggregates operates quarries and depots across a wide area, with a head office data centre and fourteen sites connected by links that vary from good to intermittent. Its Active Directory forest has grown for eighteen years and has never been reviewed.",
+          "An acquisition has forced the issue: a second company with its own forest must be given limited access, and an audit has produced the findings below."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "A domain controller named DC-HO-02 held two operations master roles. Its hardware failed permanently three weeks ago and the machine has been scrapped. Password changes have since been slow to take effect and account lockouts behave inconsistently.",
+          "Two depots have intermittent WAN links. Each has a domain controller in a physically insecure portacabin. Staff at both depots report they cannot sign in when the link is down.",
+          "The acquired company, Halbeath Stone, has its own forest. Drummond staff must reach two specific application servers in the Halbeath forest and nothing else. The proposal on the table is a two-way forest trust with default settings.",
+          "Nine applications run under ordinary user accounts configured as service accounts. Their passwords were set between four and eleven years ago, are documented in a shared spreadsheet, and several are used on more than one server.",
+          "Branch users at three sites complain that signing in takes several minutes. Those sites were added to the network last year. The site objects exist in Active Directory but nobody has confirmed anything else about them.",
+          "A Group Policy object at the domain level sets a screen lock timeout. One department's OU has Block Inheritance enabled and its users are not receiving the timeout, which the security team requires without exception."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "The two operations master roles held by the scrapped controller must be recovered, and whatever is done must not risk directory corruption if the old machine is ever powered on again.",
+          "Depot staff must be able to sign in during a WAN outage, while the exposure of a domain controller in an insecure location is minimised.",
+          "Drummond staff must reach only the two named Halbeath servers, not everything in the acquired forest.",
+          "The nine service accounts must have passwords managed automatically by the operating system, including where an application runs on more than one server.",
+          "Slow branch sign-ins must be fixed, given that the site objects already exist.",
+          "The screen lock timeout must reach the department whose OU blocks inheritance."
+        ]
+      }
+    ]
+  }
+]

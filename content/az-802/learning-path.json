@@ -1,0 +1,152 @@
+{
+  "examCode": "az-802",
+  "note": "Seven paths, one per exam domain. AZ-802 is in beta and Microsoft has not settled a dedicated learning path set for it, so these point at the closest published Windows Server and hybrid paths; revisit the links once the exam reaches general availability.",
+  "paths": [
+    {
+      "id": "ad-ds",
+      "title": "Deploy and manage AD DS",
+      "domainId": "ad-ds",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/deploy-manage-active-directory-domain-services-hybrid/",
+      "modules": [
+        {
+          "id": "ad-ds-m1",
+          "title": "Deploy and manage domain controllers",
+          "sectionIds": ["domain-controllers-and-fsmo"],
+          "cardIds": ["fc-az802-ad-01", "fc-az802-ad-02", "fc-az802-ad-03", "fc-az802-ad-04"]
+        },
+        {
+          "id": "ad-ds-m2",
+          "title": "Configure sites, trusts, and replication",
+          "sectionIds": ["sites-trusts-replication"],
+          "cardIds": ["fc-az802-ad-05", "fc-az802-ad-06", "fc-az802-ad-07", "fc-az802-ad-08"]
+        },
+        {
+          "id": "ad-ds-m3",
+          "title": "Manage security principals and Group Policy",
+          "sectionIds": ["users-groups-service-accounts", "group-policy"],
+          "cardIds": ["fc-az802-ad-09", "fc-az802-ad-10", "fc-az802-ad-11"]
+        }
+      ]
+    },
+    {
+      "id": "hybrid-management",
+      "title": "Manage Windows Server in a hybrid environment",
+      "domainId": "hybrid-management",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/manage-hybrid-windows-server/",
+      "modules": [
+        {
+          "id": "hybrid-management-m1",
+          "title": "Configure remote management",
+          "sectionIds": ["remote-management"],
+          "cardIds": ["fc-az802-hm-01", "fc-az802-hm-02", "fc-az802-hm-06"]
+        },
+        {
+          "id": "hybrid-management-m2",
+          "title": "Manage servers with Azure Arc and Azure services",
+          "sectionIds": ["azure-arc-and-hybrid-services"],
+          "cardIds": ["fc-az802-hm-03", "fc-az802-hm-04", "fc-az802-hm-05"]
+        }
+      ]
+    },
+    {
+      "id": "manage-vms",
+      "title": "Manage virtual machines",
+      "domainId": "manage-vms",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/manage-virtual-machines-containers-hybrid/",
+      "modules": [
+        {
+          "id": "manage-vms-m1",
+          "title": "Manage Hyper-V and guest virtual machines",
+          "sectionIds": ["hyper-v-configuration", "hyper-v-storage-network"],
+          "cardIds": ["fc-az802-vm-01", "fc-az802-vm-02", "fc-az802-vm-03", "fc-az802-vm-04"]
+        },
+        {
+          "id": "manage-vms-m2",
+          "title": "Manage Windows Server virtual machines in Azure",
+          "sectionIds": ["azure-vms"],
+          "cardIds": ["fc-az802-vm-05", "fc-az802-vm-06", "fc-az802-vm-07"]
+        }
+      ]
+    },
+    {
+      "id": "hybrid-networking",
+      "title": "Implement on-premises and hybrid networking",
+      "domainId": "hybrid-networking",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/implement-windows-server-hybrid-networking-infrastructure/",
+      "modules": [
+        {
+          "id": "hybrid-networking-m1",
+          "title": "Implement name resolution",
+          "sectionIds": ["dns-on-premises"],
+          "cardIds": ["fc-az802-hn-01", "fc-az802-hn-02", "fc-az802-hn-03"]
+        },
+        {
+          "id": "hybrid-networking-m2",
+          "title": "Manage IP addressing with DHCP",
+          "sectionIds": ["dhcp-and-ip"],
+          "cardIds": ["fc-az802-hn-04", "fc-az802-hn-05", "fc-az802-hn-06"]
+        }
+      ]
+    },
+    {
+      "id": "storage-file-services",
+      "title": "Manage storage and file services",
+      "domainId": "storage-file-services",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/manage-storage-file-services-hybrid/",
+      "modules": [
+        {
+          "id": "storage-file-services-m1",
+          "title": "Configure Azure Files and Azure File Sync",
+          "sectionIds": ["azure-files-and-sync"],
+          "cardIds": ["fc-az802-sf-01", "fc-az802-sf-02", "fc-az802-sf-03", "fc-az802-sf-06"]
+        },
+        {
+          "id": "storage-file-services-m2",
+          "title": "Configure Windows Server file shares and storage",
+          "sectionIds": ["windows-file-shares", "windows-storage"],
+          "cardIds": ["fc-az802-sf-04", "fc-az802-sf-05", "fc-az802-sf-07", "fc-az802-sf-08"]
+        }
+      ]
+    },
+    {
+      "id": "secure-windows-server",
+      "title": "Secure Windows Server infrastructure",
+      "domainId": "secure-windows-server",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/secure-windows-server-infrastructure/",
+      "modules": [
+        {
+          "id": "secure-windows-server-m1",
+          "title": "Secure the Windows Server operating system",
+          "sectionIds": ["os-hardening", "defender-and-firewall"],
+          "cardIds": ["fc-az802-sw-01", "fc-az802-sw-02", "fc-az802-sw-06"]
+        },
+        {
+          "id": "secure-windows-server-m2",
+          "title": "Secure AD DS",
+          "sectionIds": ["secure-ad-ds"],
+          "cardIds": ["fc-az802-sw-03", "fc-az802-sw-04", "fc-az802-sw-05"]
+        }
+      ]
+    },
+    {
+      "id": "monitor-troubleshoot",
+      "title": "Monitor and troubleshoot Windows Server",
+      "domainId": "monitor-troubleshoot",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/monitor-troubleshoot-windows-server-environments/",
+      "modules": [
+        {
+          "id": "monitor-troubleshoot-m1",
+          "title": "Monitor Windows Server with local and Azure tools",
+          "sectionIds": ["monitoring-tools"],
+          "cardIds": ["fc-az802-mt-01", "fc-az802-mt-02", "fc-az802-mt-03"]
+        },
+        {
+          "id": "monitor-troubleshoot-m2",
+          "title": "Troubleshoot Windows Server and Active Directory",
+          "sectionIds": ["troubleshoot-windows", "troubleshoot-ad"],
+          "cardIds": ["fc-az802-mt-04", "fc-az802-mt-05", "fc-az802-mt-06"]
+        }
+      ]
+    }
+  ]
+}

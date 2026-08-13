@@ -39,6 +39,7 @@ export const WILD_PARUU: Record<string, WildParuu> = {
   // too.
   "az-140": { sheet: "wild-seal", flip: true },
   "az-700": { sheet: "wild-seal", flip: true },
+  "az-802": { sheet: "wild-seal", flip: true },
   "ai-901": { sheet: "wild-pufferfish" },
   // AI-103 and AI-300 became playable on 2026-08-12 and share their region
   // with AI-901.

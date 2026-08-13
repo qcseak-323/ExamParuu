@@ -258,10 +258,10 @@
     "series": "az",
     "msLevel": "Associate",
     "status": "beta",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Administer Windows Server on-premises, hybrid and in Azure — the consolidation of AZ-800 and AZ-801.",
-    "hasContent": false,
+    "hasContent": true,
     "catalogVerifiedAt": "2026-08-12",
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-802"
   },
