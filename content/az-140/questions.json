@@ -51,32 +51,67 @@
     "id": "in-04",
     "examCode": "az-140",
     "domain": "avd-infrastructure",
+    "kind": "yesno",
     "caseStudyId": "cs-tarnbrook-desktops",
-    "question": "Clinicians report lag while typing and scrolling, round-trip time averages 60 ms, and host performance counters are unremarkable. What should you implement?",
-    "options": [
-      "RDP Shortpath for public networks, with QoS policies marking the UDP traffic",
-      "Larger session host virtual machines",
-      "A second host pool in a closer Azure region",
-      "Breadth-first load balancing on the existing host pool"
+    "question": "Clinicians report lag while typing and scrolling, round-trip time averages 60 ms, and host performance counters are unremarkable. Judge each statement.",
+    "statements": [
+      {
+        "text": "With acceptable latency and healthy hosts, the remaining variable is the transport.",
+        "correct": true
+      },
+      {
+        "text": "RDP Shortpath replaces the relayed TCP path with a direct UDP one.",
+        "correct": true
+      },
+      {
+        "text": "QoS policies marking the Shortpath UDP traffic help protect interactive responsiveness.",
+        "correct": true
+      },
+      {
+        "text": "Larger session host virtual machines would address the reported lag.",
+        "correct": false
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "With acceptable latency and healthy hosts, the remaining variable is the transport: Shortpath replaces the relayed TCP path with a direct UDP one, which is what fixes interactive responsiveness. Resizing hosts addresses a bottleneck the counters say does not exist.",
+    "explanation": "Resizing hosts addresses a bottleneck the performance counters say does not exist, which is why the case gives those counters as unremarkable. The requirement names the connection layer specifically for the same reason.",
     "teaches": "avd-networking"
   },
   {
     "id": "in-05",
     "examCode": "az-140",
     "domain": "avd-infrastructure",
+    "kind": "dropdown",
     "caseStudyId": "cs-tarnbrook-desktops",
-    "question": "The imaging specialists need a dedicated machine each, local administrator rights, and software that cannot run multi-session. What should you provision for them?",
-    "options": [
-      "A personal host pool using a single-session operating system",
-      "A second pooled host pool with a maximum session limit of one",
-      "The existing pooled host pool with depth-first load balancing",
-      "A pooled host pool using multi-session with application masking"
+    "question": "Complete the statement about provisioning for the imaging specialists.",
+    "segments": [
+      {
+        "text": "They need "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "a personal host pool using a single-session operating system",
+          "a pooled host pool with a maximum session limit of one",
+          "a pooled multi-session host pool with application masking"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", because only that guarantees "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "the same user returns to the same host, supporting local administrator rights and persistent state",
+          "the lowest compute cost outside working hours",
+          "that Microsoft 365 Apps activate correctly"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "Personal host pools assign one host per user permanently, which is what supports local administrator rights and persistent state. A session limit of one on a pooled pool does not guarantee the same user returns to the same host, and multi-session is exactly what the software cannot tolerate.",
+    "explanation": "A session limit of one on a pooled pool does not guarantee the same user returns to the same host, so persistent state and local administrator rights are not safe there. Multi-session is exactly what the specialists' software cannot tolerate.",
     "teaches": "host-pool-planning"
   },
   {
@@ -316,7 +351,10 @@
       "It uses breadth-first load balancing across hosts",
       "It supports multi-session Windows Enterprise"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Personal pools assign one host per user and therefore run single-session Windows. Load-balancing algorithms and multi-session both belong to pooled host pools, where hosts are shared.",
     "teaches": "host-pool-planning"
   },
@@ -332,7 +370,10 @@
       "An inbound network security group rule permitting TCP 3389",
       "A public IP address on each session host"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Shortpath establishes a direct UDP path and must be enabled on the hosts. It does not require inbound rules or public IPs — reverse connect still applies, which is why answers involving inbound exposure are wrong throughout this exam.",
     "teaches": "avd-networking"
   },
@@ -348,7 +389,12 @@
       "Capture the virtual machine as an image",
       "Generalise the virtual machine with Sysprep"
     ],
-    "correctOrder": [1, 3, 2, 0],
+    "correctOrder": [
+      1,
+      3,
+      2,
+      0
+    ],
     "explanation": "Generalising sits between installing and capturing, and skipping it is what produces hosts that cannot register. Publishing to the gallery last is what makes the image versioned and replicable.",
     "teaches": "session-host-images"
   },
@@ -363,7 +409,11 @@
       "The host pool containing the session hosts",
       "The application group publishing a desktop or apps"
     ],
-    "correctOrder": [1, 2, 0],
+    "correctOrder": [
+      1,
+      2,
+      0
+    ],
     "explanation": "Host pool holds the hosts, an application group belongs to a host pool and publishes what is available, and the workspace surfaces application groups in the feed. Missing the last link is why a correctly assigned user sees nothing.",
     "teaches": "host-pool-implementation"
   },
@@ -374,10 +424,22 @@
     "kind": "match",
     "question": "Match each storage option to the deployment it suits.",
     "pairs": [
-      { "term": "Azure Files Premium", "definition": "The standard choice for profile containers at typical scale" },
-      { "term": "Azure NetApp Files", "definition": "Very large scale needing sub-millisecond latency" },
-      { "term": "Azure Files Standard", "definition": "Cost-sensitive, low-user-count or non-profile data" },
-      { "term": "FSLogix Cloud Cache", "definition": "Profiles that must survive a storage or region outage" }
+      {
+        "term": "Azure Files Premium",
+        "definition": "The standard choice for profile containers at typical scale"
+      },
+      {
+        "term": "Azure NetApp Files",
+        "definition": "Very large scale needing sub-millisecond latency"
+      },
+      {
+        "term": "Azure Files Standard",
+        "definition": "Cost-sensitive, low-user-count or non-profile data"
+      },
+      {
+        "term": "FSLogix Cloud Cache",
+        "definition": "Profiles that must survive a storage or region outage"
+      }
     ],
     "explanation": "The first three are storage tiers ordered by performance and cost; the fourth is not a tier at all but a resilience feature layered on top, which is why it appears in this comparison.",
     "teaches": "avd-storage-fslogix-backing"
@@ -389,19 +451,33 @@
     "kind": "dropdown",
     "question": "Complete the statement about host pool types.",
     "segments": [
-      { "text": "A workforce of task workers sharing hosts is served by " },
+      {
+        "text": "A workforce of task workers sharing hosts is served by "
+      },
       {
         "blankId": "b1",
-        "options": ["a pooled host pool", "a personal host pool", "a validation environment"],
+        "options": [
+          "a pooled host pool",
+          "a personal host pool",
+          "a validation environment"
+        ],
         "correctIndex": 0
       },
-      { "text": ", while users needing local administrator rights and persistent state need " },
+      {
+        "text": ", while users needing local administrator rights and persistent state need "
+      },
       {
         "blankId": "b2",
-        "options": ["a personal host pool", "a pooled host pool with depth-first balancing", "application masking"],
+        "options": [
+          "a personal host pool",
+          "a pooled host pool with depth-first balancing",
+          "application masking"
+        ],
         "correctIndex": 0
       },
-      { "text": "." }
+      {
+        "text": "."
+      }
     ],
     "explanation": "The pooled and personal split decides operating system edition, load balancing, backup strategy, and patching approach all at once, which is why it is the first design decision in a deployment.",
     "teaches": "host-pool-planning"
@@ -538,7 +614,10 @@
       "AD DS domain join with Entra Connect",
       "Microsoft Entra B2B guest accounts"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Entra join removes the domain entirely and Entra Domain Services provides a managed one. AD DS domain join is precisely the option that requires the on-premises directory, and B2B guests are not a host-join mechanism at all.",
     "teaches": "identity-integration"
   },
@@ -549,10 +628,22 @@
     "kind": "yesno",
     "question": "A user has been assigned to a desktop application group in a pooled host pool. Judge each statement.",
     "statements": [
-      { "text": "They can connect to a desktop once the group is registered to a workspace.", "correct": true },
-      { "text": "The assignment grants them rights to manage the host pool.", "correct": false },
-      { "text": "They must exist in the directory the session hosts are joined to.", "correct": true },
-      { "text": "Conditional Access policies can require multifactor authentication for the connection.", "correct": true }
+      {
+        "text": "They can connect to a desktop once the group is registered to a workspace.",
+        "correct": true
+      },
+      {
+        "text": "The assignment grants them rights to manage the host pool.",
+        "correct": false
+      },
+      {
+        "text": "They must exist in the directory the session hosts are joined to.",
+        "correct": true
+      },
+      {
+        "text": "Conditional Access policies can require multifactor authentication for the connection.",
+        "correct": true
+      }
     ],
     "explanation": "Use and administration are separate planes: assignment lets a user connect and grants nothing administrative. Managing the deployment requires a Desktop Virtualization role, which is never conferred by being assigned an application group.",
     "teaches": "avd-rbac-and-conditional-access"
@@ -749,7 +840,12 @@
       "The package is mounted to the session at sign-in",
       "Stage the package on a file share the session hosts can read"
     ],
-    "correctOrder": [1, 3, 0, 2],
+    "correctOrder": [
+      1,
+      3,
+      0,
+      2
+    ],
     "explanation": "The application is packaged, staged where hosts can reach it, assigned, and only then mounted at sign-in. Nothing is ever installed on the host, which is what makes updating it a package change rather than an image rebuild.",
     "teaches": "app-delivery-and-appattach"
   },
@@ -760,10 +856,22 @@
     "kind": "match",
     "question": "Match each application delivery method to when it fits.",
     "pairs": [
-      { "term": "Install into the image", "definition": "An application everybody uses, changing on the image cycle" },
-      { "term": "Deploy with Intune", "definition": "An application that must update independently of the image" },
-      { "term": "App attach", "definition": "An application for a subset of users, delivered without installing" },
-      { "term": "Publish as a RemoteApp", "definition": "A user who should see one application rather than a desktop" }
+      {
+        "term": "Install into the image",
+        "definition": "An application everybody uses, changing on the image cycle"
+      },
+      {
+        "term": "Deploy with Intune",
+        "definition": "An application that must update independently of the image"
+      },
+      {
+        "term": "App attach",
+        "definition": "An application for a subset of users, delivered without installing"
+      },
+      {
+        "term": "Publish as a RemoteApp",
+        "definition": "A user who should see one application rather than a desktop"
+      }
     ],
     "explanation": "The first three differ by when and where the application is installed; the fourth is about what the user sees rather than how it got there, which is why it is often confused with the others.",
     "teaches": "app-delivery-and-appattach"
@@ -772,24 +880,15 @@
     "id": "ue-15",
     "examCode": "az-140",
     "domain": "user-environments-apps",
-    "kind": "dropdown",
-    "question": "Complete the statement about FSLogix.",
-    "segments": [
-      { "text": "To make a user's profile follow them between pooled session hosts you configure " },
-      {
-        "blankId": "b1",
-        "options": ["a Profile Container", "an ODFC container", "application masking"],
-        "correctIndex": 0
-      },
-      { "text": ", and to keep those profiles available during a storage outage you add " },
-      {
-        "blankId": "b2",
-        "options": ["Cloud Cache", "a second Profile Container", "a larger share quota"],
-        "correctIndex": 0
-      },
-      { "text": "." }
+    "question": "Which FSLogix feature makes a user's profile follow them between pooled session hosts?",
+    "options": [
+      "A Profile Container",
+      "Cloud Cache",
+      "An ODFC container",
+      "Application masking"
     ],
-    "explanation": "The Profile Container solves roaming and Cloud Cache solves availability. They are separate concerns, and reaching for Cloud Cache when the problem is simply slow storage makes performance worse.",
+    "correctIndex": 0,
+    "explanation": "The Profile Container solves roaming; Cloud Cache solves availability during a storage outage. They are separate concerns, and reaching for Cloud Cache when the problem is simply slow storage makes performance worse.",
     "teaches": "fslogix-containers"
   },
   {
@@ -879,7 +978,10 @@
       "The host pool's registration token lifetime",
       "The maximum session limit for the pool"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Ramp-down governs how users are treated while hosts drain, which is what the message, delay, and forced sign-out settings decide. Session limits and registration tokens are host pool properties rather than scaling plan phases.",
     "teaches": "autoscaling-and-capacity"
   },
@@ -895,7 +997,12 @@
       "Off-peak, with minimum capacity running",
       "Peak, with capacity held for full demand"
     ],
-    "correctOrder": [1, 3, 0, 2],
+    "correctOrder": [
+      1,
+      3,
+      0,
+      2
+    ],
     "explanation": "The four phases follow the working day and each carries its own load-balancing algorithm and capacity threshold. Ramp-down is the phase that carries the user-facing settings, because it is the one that takes capacity away.",
     "teaches": "autoscaling-and-capacity"
   },
@@ -906,10 +1013,22 @@
     "kind": "match",
     "question": "Match each monitoring signal to the question it answers.",
     "pairs": [
-      { "term": "Connection diagnostics", "definition": "Why a session failed to establish" },
-      { "term": "Round-trip time", "definition": "Whether the network explains a responsiveness complaint" },
-      { "term": "Profile load time", "definition": "Whether profile storage is slowing sign-in" },
-      { "term": "Processor and memory counters", "definition": "Whether the session host is undersized" }
+      {
+        "term": "Connection diagnostics",
+        "definition": "Why a session failed to establish"
+      },
+      {
+        "term": "Round-trip time",
+        "definition": "Whether the network explains a responsiveness complaint"
+      },
+      {
+        "term": "Profile load time",
+        "definition": "Whether profile storage is slowing sign-in"
+      },
+      {
+        "term": "Processor and memory counters",
+        "definition": "Whether the session host is undersized"
+      }
     ],
     "explanation": "Four different complaints look identical to a user and are distinguished only by which signal is examined. Resizing hosts before checking the counters is the standard expensive mistake.",
     "teaches": "avd-monitoring"
@@ -918,15 +1037,15 @@
     "id": "mm-09",
     "examCode": "az-140",
     "domain": "monitor-maintain-avd",
-    "kind": "yesno",
-    "question": "A scaling plan has been assigned to a pooled host pool. Judge each statement.",
-    "statements": [
-      { "text": "It can deallocate session hosts outside working hours.", "correct": true },
-      { "text": "Its ramp-down phase can notify users before signing them out.", "correct": true },
-      { "text": "Each phase has its own load-balancing algorithm and capacity threshold.", "correct": true },
-      { "text": "It backs up the session hosts before deallocating them.", "correct": false }
+    "question": "Which of these is NOT something a scaling plan on a pooled host pool does?",
+    "options": [
+      "Back up session hosts before deallocating them",
+      "Deallocate session hosts outside working hours",
+      "Notify users before signing them out during ramp-down",
+      "Apply a load-balancing algorithm and capacity threshold per phase"
     ],
-    "explanation": "Scaling plans manage power state and session placement; they have nothing to do with backup. Pooled hosts are not backed up at all, because they are rebuilt from an image.",
+    "correctIndex": 0,
+    "explanation": "Scaling plans manage power state and session placement and have nothing to do with backup. Pooled hosts are not backed up at all, because they are rebuilt from an image.",
     "teaches": "autoscaling-and-capacity"
   }
 ]

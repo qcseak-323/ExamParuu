@@ -651,32 +651,67 @@
     "id": "va-15",
     "examCode": "pl-300",
     "domain": "visualize-analyze",
+    "kind": "dropdown",
     "caseStudyId": "cs-harborview-reporting",
-    "question": "Site managers are all assigned Member on the workspace but must not be able to edit or republish. What should you change?",
-    "options": [
-      "Distribute the report through an app and remove their workspace access",
-      "Assign them Contributor instead",
-      "Assign them Admin instead",
-      "Leave the roles and add a page-level filter"
+    "question": "Complete the statement about site managers who must view but not edit or republish.",
+    "segments": [
+      {
+        "text": "They currently hold Member on the workspace, which "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "permits editing and republishing",
+          "permits viewing only",
+          "permits editing but not republishing"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", so the requirement is met by "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "distributing the report through an app and removing their workspace access",
+          "assigning them Contributor instead",
+          "leaving the roles and adding a page-level filter"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "An app is the read-only distribution surface. Member and Contributor both permit editing, and Admin more so.",
+    "explanation": "An app is the read-only distribution surface. Member and Contributor both permit editing, so downgrading within the workspace does not reach read-only, and a page filter changes what is displayed rather than what a user may do.",
     "teaches": "apps-and-distribution"
   },
   {
     "id": "va-16",
     "examCode": "pl-300",
     "domain": "visualize-analyze",
+    "kind": "yesno",
     "caseStudyId": "cs-harborview-reporting",
-    "question": "Executives want a single monthly figure visible without opening the full report. What fits best?",
-    "options": [
-      "A card visual pinned to a dashboard",
-      "A fourteenth visual added to the existing page",
-      "A paginated report exported to PDF",
-      "A new workspace for executives"
+    "question": "Executives want a single monthly figure visible without opening the full report. Judge each statement.",
+    "statements": [
+      {
+        "text": "A card visual pinned to a dashboard surfaces one number at a glance.",
+        "correct": true
+      },
+      {
+        "text": "A pinned tile can be viewed without opening the report it came from.",
+        "correct": true
+      },
+      {
+        "text": "Adding a fourteenth visual to the existing page would work against the requirement to improve report open time.",
+        "correct": true
+      },
+      {
+        "text": "A separate workspace for executives is required before they can be given their own view.",
+        "correct": false
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "A pinned tile surfaces one number at a glance, which is exactly the stated need. Adding another visual to a page they already find slow works against the other requirement.",
+    "explanation": "A pinned tile is exactly the surface for one number seen without opening anything, and it costs nothing against the open-time requirement. A new workspace would solve a permissions problem Harborview does not have.",
     "teaches": "reports-for-people"
   },
   {
@@ -989,65 +1024,30 @@
     "id": "ms-10",
     "examCode": "pl-300",
     "domain": "manage-secure-powerbi",
-    "kind": "yesno",
-    "question": "A scheduled refresh is configured for an imported semantic model. Judge each statement.",
-    "statements": [
-      {
-        "text": "An on-premises source needs a gateway for the refresh to succeed.",
-        "correct": true
-      },
-      {
-        "text": "Refresh failures can be reviewed in the refresh history.",
-        "correct": true
-      },
-      {
-        "text": "Refresh updates the report layout as well as the data.",
-        "correct": false
-      },
-      {
-        "text": "Credentials must be stored for the data source.",
-        "correct": true
-      }
+    "question": "A scheduled refresh runs against an imported semantic model. What does it update?",
+    "options": [
+      "The data only — the report layout is unaffected",
+      "The data and any changes made to the report layout",
+      "The report layout only",
+      "The data, the layout, and the workspace role assignments"
     ],
-    "explanation": "Refresh reloads data only. It needs a route to the source and stored credentials to use it, and its outcome is recorded in the refresh history.",
+    "correctIndex": 0,
+    "explanation": "Refresh reloads data and nothing else. It needs a route to the source — a gateway for anything on-premises — and stored credentials to use it, and its outcome is recorded in the refresh history.",
     "teaches": "refresh-and-gateways"
   },
   {
     "id": "ms-11",
     "examCode": "pl-300",
     "domain": "manage-secure-powerbi",
-    "kind": "dropdown",
-    "question": "Complete the statement about securing Power BI content.",
-    "segments": [
-      {
-        "text": "Restricting which rows a user can see is done with "
-      },
-      {
-        "blankId": "b1",
-        "options": [
-          "row-level security",
-          "a workspace role",
-          "a page filter"
-        ],
-        "correctIndex": 0
-      },
-      {
-        "text": ", while giving people read-only access to a finished report is done by "
-      },
-      {
-        "blankId": "b2",
-        "options": [
-          "publishing an app",
-          "assigning Contributor",
-          "sharing the workspace"
-        ],
-        "correctIndex": 0
-      },
-      {
-        "text": "."
-      }
+    "question": "Which mechanism restricts which rows a user can see inside a shared semantic model?",
+    "options": [
+      "Row-level security",
+      "A workspace role",
+      "A page-level filter",
+      "A sensitivity label"
     ],
-    "explanation": "One controls what a user sees inside the data, the other controls what they can do with the report. Confusing them produces either over-permissioned editors or five duplicated reports.",
+    "correctIndex": 0,
+    "explanation": "Row-level security controls what a user sees inside the data; workspace roles control what they may do with the report. Confusing the two produces either over-permissioned editors or five duplicated reports, and a page filter is display only — the data is still in the model.",
     "teaches": "governance-and-labels"
   }
 ]

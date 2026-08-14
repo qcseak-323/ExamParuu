@@ -51,32 +51,67 @@
     "id": "cn-04",
     "examCode": "az-700",
     "domain": "core-networking",
+    "kind": "yesno",
     "caseStudyId": "cs-kesterly-network",
-    "question": "The Billing batch service opens very many short-lived outbound connections and fails intermittently at peak, while its backends report healthy. What should you deploy?",
-    "options": [
-      "An Azure NAT Gateway on the Billing subnet",
-      "A larger Standard Load Balancer SKU",
-      "An additional public IP address on each virtual machine",
-      "A second backend pool behind the load balancer"
+    "question": "The Billing batch service opens very many short-lived outbound connections and fails intermittently at peak while its backends report healthy. Judge each statement.",
+    "statements": [
+      {
+        "text": "Healthy backends with intermittent outbound failures under load points at SNAT port exhaustion.",
+        "correct": true
+      },
+      {
+        "text": "A NAT Gateway provides far more SNAT ports than load balancer outbound rules.",
+        "correct": true
+      },
+      {
+        "text": "A NAT Gateway takes precedence over other outbound methods on the subnet it is attached to.",
+        "correct": true
+      },
+      {
+        "text": "Moving to a larger Standard Load Balancer SKU would resolve it.",
+        "correct": false
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "Healthy backends with intermittent outbound failures under load is SNAT port exhaustion. NAT Gateway provides far more SNAT ports than load balancer outbound rules and takes precedence on the subnet, which is the recommended fix.",
+    "explanation": "The load balancer SKU does not change the SNAT port allocation that is being exhausted, so a larger one fails in the same way under the same load. NAT Gateway is the recommended fix precisely because it changes the port arithmetic rather than the throughput.",
     "teaches": "nat-and-route-server"
   },
   {
     "id": "cn-05",
     "examCode": "az-700",
     "domain": "core-networking",
+    "kind": "dropdown",
     "caseStudyId": "cs-kesterly-network",
-    "question": "The two DNS virtual machines must be retired while on-premises clients still resolve Azure private zone records and Azure workloads still resolve on-premises names. What should you deploy?",
-    "options": [
-      "Azure DNS Private Resolver with inbound and outbound endpoints and a forwarding ruleset",
-      "Azure-provided DNS on every virtual network",
-      "A private DNS zone linked to each virtual network with auto-registration",
-      "Conditional forwarders configured on each virtual machine"
+    "question": "Complete the statement about retiring the two DNS virtual machines.",
+    "segments": [
+      {
+        "text": "The managed replacement is "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "Azure DNS Private Resolver",
+          "a private DNS zone linked to each virtual network",
+          "Azure-provided DNS on every virtual network"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", where on-premises resolvers query Azure private zones through an inbound endpoint and Azure workloads resolve on-premises names through "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "an outbound endpoint with a forwarding ruleset",
+          "conditional forwarders on each virtual machine",
+          "auto-registration on the linked private zone"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "Private Resolver is the managed replacement for DNS virtual machines: inbound endpoints let on-premises resolvers query Azure private zones and outbound endpoints with rulesets let Azure resolve on-premises names. Linking a private zone solves only the Azure half.",
+    "explanation": "Linking a private zone solves only the Azure half of the requirement, and conditional forwarders on every machine is exactly the per-machine configuration the retirement is meant to remove. Resolution must work in both directions, which is what the two endpoint types provide.",
     "teaches": "name-resolution"
   },
   {
@@ -196,7 +231,10 @@
       "Peering requires a virtual network gateway in each network",
       "Peering traffic traverses the public internet"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Non-transitivity and non-overlap are the two defining constraints. Peering needs no gateway and never leaves Microsoft's backbone, which is exactly why it is preferred over a VPN between virtual networks.",
     "teaches": "vnet-connectivity-routing"
   },
@@ -212,7 +250,12 @@
       "Add a route for 0.0.0.0/0 with next hop Virtual Appliance",
       "Create a route table"
     ],
-    "correctOrder": [1, 3, 2, 0],
+    "correctOrder": [
+      1,
+      3,
+      2,
+      0
+    ],
     "explanation": "The appliance must exist before a route can point at its address, and the route table must exist before a route can be added to it. Associating last is what switches the behaviour on, which is why it is the step to schedule carefully.",
     "teaches": "vnet-connectivity-routing"
   },
@@ -223,10 +266,22 @@
     "kind": "match",
     "question": "Match each Network Watcher tool to the question it answers.",
     "pairs": [
-      { "term": "IP flow verify", "definition": "Which security rule allowed or denied this packet" },
-      { "term": "Next hop", "definition": "Where would a packet to this destination be sent" },
-      { "term": "Effective security rules", "definition": "What is the combined rule set on this interface" },
-      { "term": "Virtual network flow logs", "definition": "What traffic actually traversed the network" }
+      {
+        "term": "IP flow verify",
+        "definition": "Which security rule allowed or denied this packet"
+      },
+      {
+        "term": "Next hop",
+        "definition": "Where would a packet to this destination be sent"
+      },
+      {
+        "term": "Effective security rules",
+        "definition": "What is the combined rule set on this interface"
+      },
+      {
+        "term": "Virtual network flow logs",
+        "definition": "What traffic actually traversed the network"
+      }
     ],
     "explanation": "The first three reason about configuration and answer what would happen; the last records what did happen. A rule that looks correct and traffic that never arrived are different problems and need different tools.",
     "teaches": "network-monitoring"
@@ -238,19 +293,33 @@
     "kind": "dropdown",
     "question": "Complete the statement about outbound connectivity.",
     "segments": [
-      { "text": "A subnet whose workloads open many short-lived outbound connections should use " },
+      {
+        "text": "A subnet whose workloads open many short-lived outbound connections should use "
+      },
       {
         "blankId": "b1",
-        "options": ["an Azure NAT Gateway", "load balancer outbound rules", "default outbound access"],
+        "options": [
+          "an Azure NAT Gateway",
+          "load balancer outbound rules",
+          "default outbound access"
+        ],
         "correctIndex": 0
       },
-      { "text": ", and the failure it prevents is " },
+      {
+        "text": ", and the failure it prevents is "
+      },
       {
         "blankId": "b2",
-        "options": ["SNAT port exhaustion", "asymmetric routing", "DNS resolution failure"],
+        "options": [
+          "SNAT port exhaustion",
+          "asymmetric routing",
+          "DNS resolution failure"
+        ],
         "correctIndex": 0
       },
-      { "text": "." }
+      {
+        "text": "."
+      }
     ],
     "explanation": "SNAT port exhaustion presents as intermittent outbound failures under load while every backend looks healthy, which is why it is so often misdiagnosed as an application fault.",
     "teaches": "nat-and-route-server"
@@ -417,7 +486,10 @@
       "A single IKEv1 tunnel to a legacy device",
       "Static routing to one on-premises subnet"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "ExpressRoute coexistence and point-to-site both need route-based. A single IKEv1 tunnel to a legacy device is exactly the case policy-based still exists for.",
     "teaches": "site-to-site-vpn"
   },
@@ -433,7 +505,12 @@
       "Create the local network gateway describing the on-premises side",
       "Deploy the virtual network gateway"
     ],
-    "correctOrder": [1, 3, 2, 0],
+    "correctOrder": [
+      1,
+      3,
+      2,
+      0
+    ],
     "explanation": "The subnet must exist before the gateway can be deployed into it, and both gateway objects must exist before a connection can join them. The connection is always last.",
     "teaches": "site-to-site-vpn"
   },
@@ -444,10 +521,22 @@
     "kind": "match",
     "question": "Match each ExpressRoute feature to what it provides.",
     "pairs": [
-      { "term": "Global Reach", "definition": "Connectivity between two on-premises sites over Microsoft's backbone" },
-      { "term": "FastPath", "definition": "Data traffic that bypasses the ExpressRoute gateway" },
-      { "term": "ExpressRoute Direct", "definition": "A 10 or 100 Gbps connection directly into Microsoft's network" },
-      { "term": "Premium add-on", "definition": "Higher route limits and cross-geopolitical connectivity" }
+      {
+        "term": "Global Reach",
+        "definition": "Connectivity between two on-premises sites over Microsoft's backbone"
+      },
+      {
+        "term": "FastPath",
+        "definition": "Data traffic that bypasses the ExpressRoute gateway"
+      },
+      {
+        "term": "ExpressRoute Direct",
+        "definition": "A 10 or 100 Gbps connection directly into Microsoft's network"
+      },
+      {
+        "term": "Premium add-on",
+        "definition": "Higher route limits and cross-geopolitical connectivity"
+      }
     ],
     "explanation": "Each solves a different constraint — reach between sites, latency to virtual machines, raw capacity, and scale limits. Naming which constraint a scenario states is how these questions resolve.",
     "teaches": "expressroute"
@@ -599,7 +688,10 @@
       "It can route by URL path",
       "It can host a Web Application Firewall policy"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Global reach and edge caching are what distinguish Front Door. Path-based routing and WAF attachment are available on both, which is why scope rather than feature list is the deciding factor between them.",
     "teaches": "front-door"
   },
@@ -615,7 +707,12 @@
       "HTTP settings determine how the gateway connects to the backend",
       "The routing rule maps the listener to a backend pool"
     ],
-    "correctOrder": [1, 3, 2, 0],
+    "correctOrder": [
+      1,
+      3,
+      2,
+      0
+    ],
     "explanation": "A request is accepted by a listener, matched to a rule, shaped by HTTP settings, and delivered to a pool. Tracing that path in order is how a misrouted request is diagnosed.",
     "teaches": "application-gateway"
   },
@@ -731,10 +828,22 @@
     "kind": "yesno",
     "question": "A private endpoint has been created for an Azure SQL logical server in a spoke virtual network. Judge each statement.",
     "statements": [
-      { "text": "It can be reached from a peered virtual network.", "correct": true },
-      { "text": "It can be reached from on-premises over ExpressRoute.", "correct": true },
-      { "text": "The server's public endpoint is disabled automatically.", "correct": false },
-      { "text": "A private DNS zone is needed for the host name to resolve privately.", "correct": true }
+      {
+        "text": "It can be reached from a peered virtual network.",
+        "correct": true
+      },
+      {
+        "text": "It can be reached from on-premises over ExpressRoute.",
+        "correct": true
+      },
+      {
+        "text": "The server's public endpoint is disabled automatically.",
+        "correct": false
+      },
+      {
+        "text": "A private DNS zone is needed for the host name to resolve privately.",
+        "correct": true
+      }
     ],
     "explanation": "Creating a private endpoint adds a private path; it never removes the public one. Disabling public network access is a separate, deliberate step, and skipping it leaves the resource exposed despite the endpoint existing.",
     "teaches": "private-endpoints-and-link"
@@ -743,24 +852,15 @@
     "id": "pa-09",
     "examCode": "az-700",
     "domain": "private-access",
-    "kind": "dropdown",
-    "question": "Complete the statement about private access options.",
-    "segments": [
-      { "text": "To let an on-premises client reach a PaaS service without traversing the internet you need " },
-      {
-        "blankId": "b1",
-        "options": ["a private endpoint", "a service endpoint", "a service endpoint policy"],
-        "correctIndex": 0
-      },
-      { "text": ", and to restrict a subnet to only your own accounts over an existing service endpoint you need " },
-      {
-        "blankId": "b2",
-        "options": ["a service endpoint policy", "a private endpoint", "a network security group rule"],
-        "correctIndex": 0
-      },
-      { "text": "." }
+    "question": "A subnet already reaches Azure Storage over a service endpoint and must now be restricted to the organisation's own storage accounts. What should you configure?",
+    "options": [
+      "A service endpoint policy",
+      "A private endpoint for each account",
+      "A network security group rule for the storage service tag",
+      "A user-defined route for the storage prefix"
     ],
-    "explanation": "Service endpoints never extend past the virtual network, which rules them out for hybrid access; endpoint policies then narrow what a permitted subnet may actually reach.",
+    "correctIndex": 0,
+    "explanation": "Service endpoint policies narrow what a permitted subnet may actually reach over an endpoint it already has. A service tag NSG rule cannot distinguish one storage account from another, and replacing the endpoint with private endpoints is a larger change than the requirement asks for.",
     "teaches": "service-endpoints"
   },
   {
@@ -880,7 +980,10 @@
       "They can filter traffic by fully qualified domain name",
       "They can inspect the contents of an encrypted session"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Statefulness and first-match priority define how a network security group behaves. FQDN filtering belongs to Azure Firewall application rules, and inspecting inside TLS requires Firewall Premium.",
     "teaches": "nsg-and-asg"
   },
@@ -895,7 +998,11 @@
       "DNAT rules",
       "Network rules"
     ],
-    "correctOrder": [1, 2, 0],
+    "correctOrder": [
+      1,
+      2,
+      0
+    ],
     "explanation": "DNAT first, then network rules, then application rules. Because network rules come first, one written too broadly will match traffic you expected an FQDN-based application rule to handle.",
     "teaches": "azure-firewall"
   },
@@ -906,10 +1013,22 @@
     "kind": "match",
     "question": "Match each security control to what it does.",
     "pairs": [
-      { "term": "Network security group", "definition": "Stateful filtering by address, port, and protocol on a subnet or interface" },
-      { "term": "Azure Firewall application rule", "definition": "Outbound filtering by fully qualified domain name" },
-      { "term": "Web Application Firewall", "definition": "Protecting HTTP workloads against injection and scripting attacks" },
-      { "term": "Security admin rule", "definition": "A baseline a subscription owner cannot override" }
+      {
+        "term": "Network security group",
+        "definition": "Stateful filtering by address, port, and protocol on a subnet or interface"
+      },
+      {
+        "term": "Azure Firewall application rule",
+        "definition": "Outbound filtering by fully qualified domain name"
+      },
+      {
+        "term": "Web Application Firewall",
+        "definition": "Protecting HTTP workloads against injection and scripting attacks"
+      },
+      {
+        "term": "Security admin rule",
+        "definition": "A baseline a subscription owner cannot override"
+      }
     ],
     "explanation": "Four controls at four layers — address, name, application payload, and governance. A scenario naming a domain, a URL, or a subscription owner is pointing at exactly one of them.",
     "teaches": "azure-firewall"
@@ -918,14 +1037,14 @@
     "id": "ns-11",
     "examCode": "az-700",
     "domain": "network-security",
-    "kind": "yesno",
-    "question": "A Web Application Firewall policy has been associated with an Application Gateway. Judge each statement.",
-    "statements": [
-      { "text": "Managed rule sets based on the OWASP core rule set are available.", "correct": true },
-      { "text": "Exclusions can remove a specific header or form field from evaluation.", "correct": true },
-      { "text": "Custom rules can rate limit or geo-filter requests.", "correct": true },
-      { "text": "The same policy object also protects an Azure Front Door profile.", "correct": false }
+    "question": "A WAF policy is associated with an Application Gateway. What does it NOT do?",
+    "options": [
+      "Protect an Azure Front Door profile with the same policy object",
+      "Apply managed rule sets based on the OWASP core rule set",
+      "Exclude a specific header or form field from evaluation",
+      "Rate limit or geo-filter requests through custom rules"
     ],
+    "correctIndex": 0,
     "explanation": "WAF policies are configured separately for Application Gateway and for Front Door; they share concepts but are not the same object. Assuming one policy covers both leaves the global path unprotected.",
     "teaches": "waf"
   }

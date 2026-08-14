@@ -51,32 +51,67 @@
     "id": "dm-04",
     "examCode": "dp-420",
     "domain": "data-models",
+    "kind": "yesno",
     "caseStudyId": "cs-verdance-telemetry",
-    "question": "Traffic is 85% concentrated in a three-hour window and low overnight, on standard provisioned throughput sized for the peak. What should you configure?",
-    "options": [
-      "Autoscale throughput with the maximum set at the peak requirement",
-      "Serverless throughput on the container",
-      "Database-level shared throughput across all containers",
-      "A second account in another region to absorb the peak"
+    "question": "Traffic is 85% concentrated in a three-hour window and low overnight, on standard provisioned throughput sized for the peak. Judge each statement.",
+    "statements": [
+      {
+        "text": "Autoscale scales between ten per cent of the configured maximum and the maximum.",
+        "correct": true
+      },
+      {
+        "text": "Autoscale bills for what is used, which suits a strongly peaked pattern.",
+        "correct": true
+      },
+      {
+        "text": "Standard provisioned throughput sized for the peak is billed at that level around the clock.",
+        "correct": true
+      },
+      {
+        "text": "Serverless would be the better fit for this 90,000-device production workload.",
+        "correct": false
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "Autoscale scales between ten per cent of the maximum and the maximum and bills for what is used, which matches a strongly peaked pattern. Serverless has lower limits and no throughput SLA, which does not suit a 90,000-device production workload.",
+    "explanation": "Serverless has lower limits and no throughput SLA, which does not suit a production workload of this size however well its billing shape appears to match. Autoscale gives the peaked billing profile without giving up the guarantees.",
     "teaches": "throughput-and-sizing"
   },
   {
     "id": "dm-05",
     "examCode": "dp-420",
     "domain": "data-models",
+    "kind": "dropdown",
     "caseStudyId": "cs-verdance-telemetry",
-    "question": "Forty site-summary documents are re-read on every page load and change at most hourly. Reads must cost fewer request units without changing the refresh behaviour. What should you implement?",
-    "options": [
-      "The integrated cache, using a dedicated gateway and gateway mode",
-      "A composite index covering the summary documents",
-      "A materialised view maintained by the change feed",
-      "Time to live on the summary documents"
+    "question": "Complete the statement about the forty site-summary documents re-read on every page load.",
+    "segments": [
+      {
+        "text": "The feature that serves repeated identical reads at no request-unit cost is "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "the integrated cache",
+          "a composite index",
+          "time to live on the documents"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", and using it requires "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "a dedicated gateway and gateway connection mode",
+          "a materialised view maintained by the change feed",
+          "the account to be switched to strong consistency"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "The integrated cache serves repeated reads at no request-unit cost within a bounded staleness window, which is exactly a read-heavy pattern repeating identical reads on slowly changing data. Indexing reduces query cost but never to zero, and the requirement forbids changing how often the portal reads.",
+    "explanation": "Indexing reduces query cost but never to zero, and the requirement forbids changing how often the portal reads. The integrated cache is exactly the fit for a read-heavy pattern repeating identical reads on slowly changing data, within a bounded staleness window.",
     "teaches": "query-optimisation"
   },
   {
@@ -256,7 +291,10 @@
       "A small number of distinct values for easier management",
       "Monotonically increasing values such as a timestamp"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Cardinality spreads storage and requests, and appearing in common queries is what keeps those queries single-partition. Few distinct values and monotonically increasing values are the two classic mistakes, producing hot partitions in reads and writes respectively.",
     "teaches": "partitioning-strategy"
   },
@@ -272,7 +310,10 @@
       "It can be changed on an existing container",
       "It removes the 20 GB logical partition limit entirely"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Hierarchical keys subdivide storage beneath a prefix while keeping prefix queries efficient. Like any partition key they are fixed at container creation, and they relieve rather than remove the per-partition storage constraint.",
     "teaches": "partitioning-strategy"
   },
@@ -288,7 +329,12 @@
       "Migrate the data into the new container",
       "Create a new container with the chosen partition key"
     ],
-    "correctOrder": [1, 3, 2, 0],
+    "correctOrder": [
+      1,
+      3,
+      2,
+      0
+    ],
     "explanation": "A partition key cannot be changed in place, so correcting one always means a new container and a migration. Choosing the replacement before creating anything is what stops the exercise being repeated.",
     "teaches": "partitioning-strategy"
   },
@@ -303,7 +349,11 @@
       "A point read of a 1 KB document by id and partition key",
       "A single-partition query returning a few documents"
     ],
-    "correctOrder": [1, 2, 0],
+    "correctOrder": [
+      1,
+      2,
+      0
+    ],
     "explanation": "A point read is about one RU, a targeted query costs more because it goes through the query engine, and a fan-out query pays across every physical partition. Knowing that ordering is what makes a design decision quantitative.",
     "teaches": "queries-and-operations"
   },
@@ -314,10 +364,22 @@
     "kind": "match",
     "question": "Match each SDK capability to what it is for.",
     "pairs": [
-      { "term": "Transactional batch", "definition": "Atomic operations within one logical partition" },
-      { "term": "Bulk support", "definition": "Maximising throughput for a large ingestion" },
-      { "term": "Patch", "definition": "Updating part of a document without rewriting it" },
-      { "term": "Continuation token", "definition": "Resuming a paged query where the last page ended" }
+      {
+        "term": "Transactional batch",
+        "definition": "Atomic operations within one logical partition"
+      },
+      {
+        "term": "Bulk support",
+        "definition": "Maximising throughput for a large ingestion"
+      },
+      {
+        "term": "Patch",
+        "definition": "Updating part of a document without rewriting it"
+      },
+      {
+        "term": "Continuation token",
+        "definition": "Resuming a paged query where the last page ended"
+      }
     ],
     "explanation": "Atomicity, throughput, efficiency, and paging. Reaching for bulk when the requirement is atomicity is the confusion this set is built around, because both operate on many items at once.",
     "teaches": "queries-and-operations"
@@ -329,19 +391,33 @@
     "kind": "dropdown",
     "question": "Complete the statement about throughput provisioning.",
     "segments": [
-      { "text": "A workload with a strongly peaked daily pattern is best served by " },
+      {
+        "text": "A workload with a strongly peaked daily pattern is best served by "
+      },
       {
         "blankId": "b1",
-        "options": ["autoscale throughput", "standard provisioned throughput", "serverless throughput"],
+        "options": [
+          "autoscale throughput",
+          "standard provisioned throughput",
+          "serverless throughput"
+        ],
         "correctIndex": 0
       },
-      { "text": ", while a development workload with occasional traffic suits " },
+      {
+        "text": ", while a development workload with occasional traffic suits "
+      },
       {
         "blankId": "b2",
-        "options": ["serverless throughput", "autoscale throughput", "database-level shared throughput"],
+        "options": [
+          "serverless throughput",
+          "autoscale throughput",
+          "database-level shared throughput"
+        ],
         "correctIndex": 0
       },
-      { "text": "." }
+      {
+        "text": "."
+      }
     ],
     "explanation": "Autoscale follows a curve within a provisioned envelope; serverless has no envelope at all but lower limits and no throughput SLA, which is why it belongs to development rather than production peaks.",
     "teaches": "throughput-and-sizing"
@@ -398,10 +474,22 @@
     "kind": "yesno",
     "question": "A globally distributed Cosmos DB account is being designed. Judge each statement.",
     "statements": [
-      { "text": "Session consistency is the default and guarantees read-your-own-writes.", "correct": true },
-      { "text": "Stronger consistency costs latency and request units.", "correct": true },
-      { "text": "Multi-region writes introduce the possibility of conflicts.", "correct": true },
-      { "text": "Adding a read region requires the application to be redeployed.", "correct": false }
+      {
+        "text": "Session consistency is the default and guarantees read-your-own-writes.",
+        "correct": true
+      },
+      {
+        "text": "Stronger consistency costs latency and request units.",
+        "correct": true
+      },
+      {
+        "text": "Multi-region writes introduce the possibility of conflicts.",
+        "correct": true
+      },
+      {
+        "text": "Adding a read region requires the application to be redeployed.",
+        "correct": false
+      }
     ],
     "explanation": "Adding a region is an account configuration change; the client's preferred region list decides which replica it reads from, and updating that is a configuration matter rather than a redeployment.",
     "teaches": "replication-and-consistency"
@@ -473,10 +561,22 @@
     "kind": "match",
     "question": "Match each change feed pattern to what it achieves.",
     "pairs": [
-      { "term": "Denormalisation", "definition": "Keeping duplicated copies in step when the source changes" },
-      { "term": "Referential enforcement", "definition": "Validating or cascading to related documents on change" },
-      { "term": "Aggregation", "definition": "Maintaining running totals so reads need not compute them" },
-      { "term": "Archiving", "definition": "Moving ageing documents to cheaper storage" }
+      {
+        "term": "Denormalisation",
+        "definition": "Keeping duplicated copies in step when the source changes"
+      },
+      {
+        "term": "Referential enforcement",
+        "definition": "Validating or cascading to related documents on change"
+      },
+      {
+        "term": "Aggregation",
+        "definition": "Maintaining running totals so reads need not compute them"
+      },
+      {
+        "term": "Archiving",
+        "definition": "Moving ageing documents to cheaper storage"
+      }
     ],
     "explanation": "All four exist because a document database has no joins, no foreign keys, and no server-side aggregation across partitions worth relying on. The change feed is how those gaps are filled.",
     "teaches": "change-feed-integration"
@@ -613,7 +713,10 @@
       "Increasing provisioned throughput on the container",
       "Switching the account to eventual consistency"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Both reduce the work the engine does and therefore the charge. Raising throughput buys more capacity at the same unit cost, and consistency affects read cost modestly but is an account-wide correctness decision rather than a query optimisation.",
     "teaches": "query-optimisation"
   },
@@ -629,7 +732,12 @@
       "Re-measure the request charge to confirm the improvement",
       "Examine the query metrics to see how much was scanned and returned"
     ],
-    "correctOrder": [1, 3, 0, 2],
+    "correctOrder": [
+      1,
+      3,
+      0,
+      2
+    ],
     "explanation": "Measure, understand, change, re-measure. Changing an index before reading the metrics is how teams spend a week improving something that was never the cost.",
     "teaches": "query-optimisation"
   },
@@ -640,10 +748,22 @@
     "kind": "match",
     "question": "Match each index type to what it serves.",
     "pairs": [
-      { "term": "Range index", "definition": "Equality, range comparisons, and ORDER BY on one property" },
-      { "term": "Composite index", "definition": "ORDER BY across two or more properties" },
-      { "term": "Spatial index", "definition": "Geospatial queries over points and polygons" },
-      { "term": "Excluded path", "definition": "Reducing write cost for a property never filtered on" }
+      {
+        "term": "Range index",
+        "definition": "Equality, range comparisons, and ORDER BY on one property"
+      },
+      {
+        "term": "Composite index",
+        "definition": "ORDER BY across two or more properties"
+      },
+      {
+        "term": "Spatial index",
+        "definition": "Geospatial queries over points and polygons"
+      },
+      {
+        "term": "Excluded path",
+        "definition": "Reducing write cost for a property never filtered on"
+      }
     ],
     "explanation": "Three add capability and one removes cost. Because everything is indexed by default, deciding what not to index is as much a design decision as deciding what to.",
     "teaches": "indexing-strategy"
@@ -870,7 +990,10 @@
       "They can be scoped to a single container",
       "They are required for control plane operations"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Keys are shared secrets granting everything on the data plane and identifying nobody, which is why data plane RBAC exists. Control plane operations use Azure RBAC rather than keys.",
     "teaches": "cosmos-security"
   },
@@ -886,7 +1009,12 @@
       "Check whether throughput and storage are skewed across partitions",
       "Compare normalised RU consumption against average utilisation"
     ],
-    "correctOrder": [1, 3, 2, 0],
+    "correctOrder": [
+      1,
+      3,
+      2,
+      0
+    ],
     "explanation": "Confirm the symptom, then establish whether it is a capacity problem or a distribution problem, then look at the partitions themselves. Raising throughput first is what turns a partitioning fault into an expensive partitioning fault.",
     "teaches": "monitoring-cosmos"
   },
@@ -894,39 +1022,30 @@
     "id": "mt-17",
     "examCode": "dp-420",
     "domain": "maintenance",
-    "kind": "yesno",
-    "question": "An Azure Cosmos DB account is being secured. Judge each statement.",
-    "statements": [
-      { "text": "Control plane access is governed by Azure RBAC.", "correct": true },
-      { "text": "Data plane access can use Microsoft Entra identities instead of account keys.", "correct": true },
-      { "text": "Public network access can be disabled in favour of a private endpoint.", "correct": true },
-      { "text": "Disabling key-based access also disables Azure RBAC role assignments.", "correct": false }
+    "question": "Key-based access is disabled on an Azure Cosmos DB account. What is the effect on Azure RBAC role assignments?",
+    "options": [
+      "None — the control plane and data plane are independent",
+      "They are disabled along with the keys",
+      "They are converted to data plane role assignments",
+      "They apply only to the account's primary region"
     ],
-    "explanation": "The two planes are independent, which is the point of the distinction — disabling keys removes the shared-secret path on the data plane and leaves control plane RBAC entirely unaffected.",
+    "correctIndex": 0,
+    "explanation": "Disabling keys removes the shared-secret path on the data plane and leaves control plane RBAC entirely unaffected. The independence of the two planes is the point of the distinction, and it is what allows Microsoft Entra identities to replace account keys for data access.",
     "teaches": "cosmos-security"
   },
   {
     "id": "mt-18",
     "examCode": "dp-420",
     "domain": "maintenance",
-    "kind": "dropdown",
-    "question": "Complete the statement about diagnosing throttling.",
-    "segments": [
-      { "text": "A container throttling while average utilisation looks low is revealed by " },
-      {
-        "blankId": "b1",
-        "options": ["normalised RU consumption", "total request units consumed", "server-side latency"],
-        "correctIndex": 0
-      },
-      { "text": ", and the underlying cause is usually " },
-      {
-        "blankId": "b2",
-        "options": ["a poorly chosen partition key", "an outdated SDK version", "gateway connectivity mode"],
-        "correctIndex": 0
-      },
-      { "text": "." }
+    "question": "A container throttles while its average request-unit utilisation looks low. Which metric reveals the problem?",
+    "options": [
+      "Normalised RU consumption",
+      "Total request units consumed",
+      "Server-side latency",
+      "Provisioned throughput"
     ],
-    "explanation": "Throughput is divided across physical partitions, so skew produces throttling long before the account as a whole is busy. That is why the normalised metric exists and why raising throughput rarely fixes it.",
+    "correctIndex": 0,
+    "explanation": "Throughput is divided across physical partitions, so skew from a poorly chosen partition key produces throttling long before the account as a whole is busy. Normalised RU consumption reports the busiest partition, which is why an average conceals the fault by definition.",
     "teaches": "monitoring-cosmos"
   }
 ]

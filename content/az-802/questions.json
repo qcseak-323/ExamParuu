@@ -51,32 +51,67 @@
     "id": "ad-04",
     "examCode": "az-802",
     "domain": "ad-ds",
+    "kind": "dropdown",
     "caseStudyId": "cs-drummond-forest",
-    "question": "Nine service accounts must have their passwords managed by the operating system, including where an application runs on several servers. What should you implement?",
-    "options": [
-      "Group managed service accounts, after creating the KDS root key in the forest",
-      "Standalone managed service accounts on each server",
-      "Ordinary user accounts with a scripted password rotation",
-      "Local system accounts on each server"
+    "question": "Complete the statement about the nine service accounts.",
+    "segments": [
+      {
+        "text": "Because one application runs on more than one server, the correct account type is "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "a group managed service account",
+          "a standalone managed service account",
+          "an ordinary user account with scripted rotation"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", and before any can be created the forest needs "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "the KDS root key",
+          "a fine-grained password policy",
+          "the Active Directory Recycle Bin enabled"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "Standalone managed service accounts work on one machine only, which fails the multi-server requirement. Group managed service accounts span machines and manage their own passwords, and the KDS root key must exist in the forest before any can be created.",
+    "explanation": "Standalone managed service accounts work on one machine only, which fails the multi-server half of the requirement. Group managed service accounts span machines and manage their own passwords, and the KDS root key is the prerequisite people forget until the first creation fails.",
     "teaches": "users-groups-service-accounts"
   },
   {
     "id": "ad-05",
     "examCode": "az-802",
     "domain": "ad-ds",
+    "kind": "yesno",
     "caseStudyId": "cs-drummond-forest",
-    "question": "Three branches added last year have slow sign-ins, and their site objects already exist in Active Directory. What is most likely missing?",
-    "options": [
-      "The branch subnets have not been associated with those sites",
-      "The branches need their own read-only domain controllers",
-      "Universal group membership caching is disabled",
-      "The site links have no schedule configured"
+    "question": "Three branches added last year have slow sign-ins and their site objects already exist. Judge each statement.",
+    "statements": [
+      {
+        "text": "A client discovers its site from the subnet its address belongs to.",
+        "correct": true
+      },
+      {
+        "text": "A subnet belonging to no site leaves users authenticating across the WAN to whichever controller answers.",
+        "correct": true
+      },
+      {
+        "text": "Creating site objects without associating subnets to them achieves nothing.",
+        "correct": true
+      },
+      {
+        "text": "The branches need their own read-only domain controllers before sign-in times can improve.",
+        "correct": false
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "A client discovers its site from its subnet, so a subnet belonging to no site leaves users authenticating across the WAN to whichever controller answers. Creating site objects without mapping subnets to them achieves nothing, which is precisely the state described.",
+    "explanation": "The case states the site objects already exist, which is what points at the missing subnet associations rather than at missing infrastructure. Adding controllers would help nothing while clients still cannot work out which site they are in.",
     "teaches": "sites-trusts-replication"
   },
   {
@@ -151,7 +186,10 @@
       "Their passwords must be rotated manually every 30 days",
       "They can be added to the Protected Users group safely"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "The root key is the prerequisite and multi-server use is the point of them. Passwords are managed automatically, and adding service accounts to Protected Users typically breaks them, which is why that group is for people.",
     "teaches": "users-groups-service-accounts"
   },
@@ -167,7 +205,12 @@
       "Organisational unit policies, from the top of the hierarchy down",
       "Site-linked policies"
     ],
-    "correctOrder": [1, 3, 0, 2],
+    "correctOrder": [
+      1,
+      3,
+      0,
+      2
+    ],
     "explanation": "Local, site, domain, then OU top down — and the last writer wins, which is why an OU setting normally overrides a domain one. Enforced links and Block Inheritance are the two exceptions to that ordering.",
     "teaches": "group-policy"
   },
@@ -178,10 +221,22 @@
     "kind": "match",
     "question": "Match each group scope to what it is for.",
     "pairs": [
-      { "term": "Domain local", "definition": "Assigning permissions on resources in its own domain" },
-      { "term": "Global", "definition": "Collecting users from its own domain for use across the forest" },
-      { "term": "Universal", "definition": "Members from any domain, replicated to the global catalogue" },
-      { "term": "Local", "definition": "Existing only on one machine, outside the directory" }
+      {
+        "term": "Domain local",
+        "definition": "Assigning permissions on resources in its own domain"
+      },
+      {
+        "term": "Global",
+        "definition": "Collecting users from its own domain for use across the forest"
+      },
+      {
+        "term": "Universal",
+        "definition": "Members from any domain, replicated to the global catalogue"
+      },
+      {
+        "term": "Local",
+        "definition": "Existing only on one machine, outside the directory"
+      }
     ],
     "explanation": "The conventional layering runs accounts into global, global into universal, universal into domain local, and permissions on domain local — a pattern that exists to keep global catalogue replication small.",
     "teaches": "users-groups-service-accounts"
@@ -193,19 +248,33 @@
     "kind": "dropdown",
     "question": "Complete the statement about operations master roles.",
     "segments": [
-      { "text": "Moving a role while its current holder is online and healthy is called " },
+      {
+        "text": "Moving a role while its current holder is online and healthy is called "
+      },
       {
         "blankId": "b1",
-        "options": ["a transfer", "a seizure", "a promotion"],
+        "options": [
+          "a transfer",
+          "a seizure",
+          "a promotion"
+        ],
         "correctIndex": 0
       },
-      { "text": ", and after the forcible alternative the old holder " },
+      {
+        "text": ", and after the forcible alternative the old holder "
+      },
       {
         "blankId": "b2",
-        "options": ["must never rejoin the network", "should be rebooted and rejoined", "keeps the role until replication completes"],
+        "options": [
+          "must never rejoin the network",
+          "should be rebooted and rejoined",
+          "keeps the role until replication completes"
+        ],
         "correctIndex": 0
       },
-      { "text": "." }
+      {
+        "text": "."
+      }
     ],
     "explanation": "Transfer is cooperative and seizure is not. The prohibition after a seizure is absolute, because two holders of one role produce directory corruption that is far harder to fix than the original outage.",
     "teaches": "domain-controllers-and-fsmo"
@@ -312,7 +381,10 @@
       "Live migrating the server into an Azure region",
       "Converting the server into an Azure virtual machine"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Arc extends Azure management to a machine wherever it runs. It does not move or convert anything — the server stays exactly where it is, which is the point.",
     "teaches": "azure-arc-and-hybrid-services"
   },
@@ -418,7 +490,12 @@
       "Monitor replication health and the recovery point",
       "Enable replication on the virtual machine and choose the recovery points to keep"
     ],
-    "correctOrder": [1, 3, 0, 2],
+    "correctOrder": [
+      1,
+      3,
+      0,
+      2
+    ],
     "explanation": "The destination must accept replication before a source can be pointed at it, and a test failover is what turns an assumption into evidence. Replica bounds data loss by the replication interval rather than eliminating it, which is why it is disaster recovery and not high availability.",
     "teaches": "hyper-v-storage-network"
   },
@@ -519,10 +596,22 @@
     "kind": "match",
     "question": "Match each DNS configuration to what it does.",
     "pairs": [
-      { "term": "Conditional forwarder", "definition": "Sends queries for one named domain to a specific server" },
-      { "term": "Stub zone", "definition": "Holds only the name server records of another zone" },
-      { "term": "Root hints", "definition": "The fallback path when no forwarder is configured" },
-      { "term": "DNS policy", "definition": "Returns different answers by client subnet or time of day" }
+      {
+        "term": "Conditional forwarder",
+        "definition": "Sends queries for one named domain to a specific server"
+      },
+      {
+        "term": "Stub zone",
+        "definition": "Holds only the name server records of another zone"
+      },
+      {
+        "term": "Root hints",
+        "definition": "The fallback path when no forwarder is configured"
+      },
+      {
+        "term": "DNS policy",
+        "definition": "Returns different answers by client subnet or time of day"
+      }
     ],
     "explanation": "The first three decide where an unresolved query goes and differ in how much they know in advance. The fourth changes the answer itself, which is a different kind of control entirely.",
     "teaches": "dns-on-premises"
@@ -659,7 +748,10 @@
       "Share permissions always override NTFS permissions",
       "NTFS permissions apply only to local access"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Both permission sets apply and the tighter one wins, which is why the conventional design neutralises the share layer and controls everything with NTFS. NTFS applies to remote access too.",
     "teaches": "windows-file-shares"
   },
@@ -675,7 +767,12 @@
       "Add a server endpoint for the local path and enable cloud tiering",
       "Create a sync group with the Azure file share as the cloud endpoint"
     ],
-    "correctOrder": [1, 0, 3, 2],
+    "correctOrder": [
+      1,
+      0,
+      3,
+      2
+    ],
     "explanation": "The service exists first, the server registers with it, the sync group defines the cloud endpoint, and the server endpoint binds the local path to it. Tiering is a property of the server endpoint and so comes last.",
     "teaches": "azure-files-and-sync"
   },
@@ -761,10 +858,22 @@
     "kind": "yesno",
     "question": "Windows Defender Application Control is being introduced across a server estate. Judge each statement.",
     "statements": [
-      { "text": "It should be run in audit mode before enforcement.", "correct": true },
-      { "text": "Policies can allow code by publisher, path, or hash.", "correct": true },
-      { "text": "It is the successor to AppLocker for new deployments.", "correct": true },
-      { "text": "It protects credentials in memory from theft tools.", "correct": false }
+      {
+        "text": "It should be run in audit mode before enforcement.",
+        "correct": true
+      },
+      {
+        "text": "Policies can allow code by publisher, path, or hash.",
+        "correct": true
+      },
+      {
+        "text": "It is the successor to AppLocker for new deployments.",
+        "correct": true
+      },
+      {
+        "text": "It protects credentials in memory from theft tools.",
+        "correct": false
+      }
     ],
     "explanation": "Application Control decides what may run; Credential Guard protects secrets in memory. Attributing one's job to the other is the confusion this pairing tests.",
     "teaches": "os-hardening"
@@ -773,24 +882,15 @@
     "id": "sw-07",
     "examCode": "az-802",
     "domain": "secure-windows-server",
-    "kind": "dropdown",
-    "question": "Complete the statement about protecting administrative access.",
-    "segments": [
-      { "text": "To stop one compromised machine yielding the local administrator password of every other machine you deploy " },
-      {
-        "blankId": "b1",
-        "options": ["LAPS", "Credential Guard", "a fine-grained password policy"],
-        "correctIndex": 0
-      },
-      { "text": ", and to stop domain credentials being read out of memory you enable " },
-      {
-        "blankId": "b2",
-        "options": ["Credential Guard", "LAPS", "SmartScreen"],
-        "correctIndex": 0
-      },
-      { "text": "." }
+    "question": "Which protection stops domain credentials being read out of a compromised machine's memory?",
+    "options": [
+      "Credential Guard",
+      "LAPS",
+      "A fine-grained password policy",
+      "SmartScreen"
     ],
-    "explanation": "The two defend against consecutive stages of the same attack — obtaining a reusable local password, and harvesting domain credentials from a machine already compromised.",
+    "correctIndex": 0,
+    "explanation": "Credential Guard isolates secrets from the operating system so they cannot be harvested from memory. LAPS defends the previous stage of the same attack, by ensuring one compromised machine does not yield every other machine's local administrator password.",
     "teaches": "os-hardening"
   },
   {
@@ -880,7 +980,10 @@
       "gpresult /r",
       "Test-NetConnection"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "repadmin reports replication state and dcdiag tests domain controller health. gpresult reports policy application on a client, and Test-NetConnection tests a port — useful, but neither speaks to replication.",
     "teaches": "troubleshoot-ad"
   },
@@ -896,7 +999,12 @@
       "Clear the client resolver cache and retry",
       "Check whether the client cached a stale answer"
     ],
-    "correctOrder": [1, 0, 3, 2],
+    "correctOrder": [
+      1,
+      0,
+      3,
+      2
+    ],
     "explanation": "Establish who is being asked, then whether the answer exists at the source, then whether the client is holding an old one. Clearing the cache first destroys the evidence that would have explained the fault.",
     "teaches": "troubleshoot-windows"
   },
@@ -907,10 +1015,22 @@
     "kind": "match",
     "question": "Match each monitoring tool to what it is for.",
     "pairs": [
-      { "term": "Data collector set", "definition": "Recording counters on a schedule to build a baseline" },
-      { "term": "Resource Monitor", "definition": "A live per-process view of current resource use" },
-      { "term": "System Insights", "definition": "Predicting future capacity from local historical data" },
-      { "term": "VM Insights", "definition": "Performance and dependency views for Azure and Arc machines" }
+      {
+        "term": "Data collector set",
+        "definition": "Recording counters on a schedule to build a baseline"
+      },
+      {
+        "term": "Resource Monitor",
+        "definition": "A live per-process view of current resource use"
+      },
+      {
+        "term": "System Insights",
+        "definition": "Predicting future capacity from local historical data"
+      },
+      {
+        "term": "VM Insights",
+        "definition": "Performance and dependency views for Azure and Arc machines"
+      }
     ],
     "explanation": "Past, present, future, and hybrid estate. Reaching for a live view when the question is about a trend, or the reverse, is the usual error in this domain.",
     "teaches": "monitoring-tools"
@@ -919,15 +1039,15 @@
     "id": "mt-09",
     "examCode": "az-802",
     "domain": "monitor-troubleshoot",
-    "kind": "yesno",
-    "question": "The Active Directory Recycle Bin is being considered for a forest. Judge each statement.",
-    "statements": [
-      { "text": "Once enabled it cannot be disabled.", "correct": true },
-      { "text": "It restores a deleted object's attributes and group memberships.", "correct": true },
-      { "text": "It recovers objects deleted before it was enabled.", "correct": false },
-      { "text": "It requires the forest functional level to meet a minimum.", "correct": true }
+    "question": "An object was deleted before the Active Directory Recycle Bin was enabled. What follows?",
+    "options": [
+      "The Recycle Bin cannot recover it — it protects only deletions made after it was enabled",
+      "It can be recovered, because enabling the Recycle Bin retroactively tombstones prior deletions",
+      "It can be recovered once the forest functional level is raised",
+      "It can be recovered by disabling and re-enabling the Recycle Bin"
     ],
-    "explanation": "Enabling it is a one-way decision and it only protects deletions that happen afterwards. Discovering that it was never enabled during an incident is the situation Directory Services Restore Mode exists for.",
+    "correctIndex": 0,
+    "explanation": "The Recycle Bin only protects deletions that happen afterwards, and enabling it is a one-way decision that cannot be reversed. Discovering it was never enabled during an incident is the situation Directory Services Restore Mode exists for.",
     "teaches": "troubleshoot-ad"
   }
 ]

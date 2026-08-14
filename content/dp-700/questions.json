@@ -651,32 +651,67 @@
     "id": "it-18",
     "examCode": "dp-700",
     "domain": "ingest-transform",
+    "kind": "yesno",
     "caseStudyId": "cs-brightline-lakehouse",
-    "question": "Finance runs a nightly T-SQL procedure that writes reconciliation rows. Why must the gold layer stay in wh_reporting?",
-    "options": [
-      "A lakehouse SQL analytics endpoint is read-only",
-      "A lakehouse cannot store Delta tables",
-      "A warehouse is the only item that supports scheduling",
-      "A lakehouse cannot be queried with T-SQL at all"
+    "question": "Finance runs a nightly T-SQL procedure that writes reconciliation rows, and the gold layer's location is under review. Judge each statement.",
+    "statements": [
+      {
+        "text": "A lakehouse SQL analytics endpoint serves SELECT but not INSERT.",
+        "correct": true
+      },
+      {
+        "text": "Keeping the gold layer in wh_reporting is what preserves the nightly procedure.",
+        "correct": true
+      },
+      {
+        "text": "A lakehouse can still store Delta tables that the endpoint exposes for reading.",
+        "correct": true
+      },
+      {
+        "text": "A lakehouse cannot be queried with T-SQL at all.",
+        "correct": false
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "The endpoint serves SELECT but not INSERT. That read-versus-write split is the main reason to keep a warehouse alongside a lakehouse.",
+    "explanation": "The endpoint is a real T-SQL surface, which is why the distinction is read-versus-write rather than T-SQL-or-not. That split is the main reason to keep a warehouse alongside a lakehouse, and the requirement naming the writing procedure is what decides it.",
     "teaches": "choosing-a-data-store"
   },
   {
     "id": "it-19",
     "examCode": "dp-700",
     "domain": "ingest-transform",
+    "kind": "dropdown",
     "caseStudyId": "cs-brightline-lakehouse",
-    "question": "Engineers must read pipeline run history in BL-Prod without being able to change items. Which workspace role fits?",
-    "options": [
-      "Viewer",
-      "Contributor",
-      "Member",
-      "Admin"
+    "question": "Complete the statement about engineers reading pipeline run history in BL-Prod.",
+    "segments": [
+      {
+        "text": "The workspace role that grants read access to items and their run history with no authoring rights is "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "Viewer",
+          "Contributor",
+          "Member"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", and granting anything above it would breach the requirement that "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "nothing may be edited directly in BL-Prod",
+          "run history must be retained for audit",
+          "the deployment pipeline must run nightly"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "Viewer grants read access to items and their run history without any authoring rights. Contributor and above would let engineers edit production directly, which the requirements forbid.",
+    "explanation": "Viewer is the only role that reads without authoring. Contributor and above would let engineers edit production directly, which the requirement that every change arrives through the deployment pipeline explicitly forbids.",
     "teaches": "workspace-and-item-access"
   },
   {
@@ -989,65 +1024,30 @@
     "id": "mo-19",
     "examCode": "dp-700",
     "domain": "monitor-optimize",
-    "kind": "yesno",
-    "question": "An eventstream is feeding a Fabric eventhouse. Judge each statement.",
-    "statements": [
-      {
-        "text": "Events can be queried within seconds of arriving.",
-        "correct": true
-      },
-      {
-        "text": "Late-arriving events can be handled with windowing.",
-        "correct": true
-      },
-      {
-        "text": "The stream must be stopped before the data can be read.",
-        "correct": false
-      },
-      {
-        "text": "Throughput limits are affected by the capacity size.",
-        "correct": true
-      }
+    "question": "An eventstream feeds a Fabric eventhouse. What must happen before the arriving data can be queried?",
+    "options": [
+      "Nothing — streaming ingestion is queryable continuously, within seconds of arrival",
+      "The stream must be stopped so the data is committed",
+      "A scheduled refresh must complete",
+      "The eventhouse must be switched to batch mode"
     ],
-    "explanation": "Streaming ingestion is queryable continuously, and windowing is how out-of-order events are reconciled. Nothing needs stopping to read, and capacity governs how much the path can sustain.",
+    "correctIndex": 0,
+    "explanation": "Streaming ingestion is continuously queryable, which is what makes it suitable for a live operations dashboard. Windowing is how out-of-order events are reconciled, and the capacity size governs how much throughput the path sustains.",
     "teaches": "windowing-and-late-data"
   },
   {
     "id": "mo-20",
     "examCode": "dp-700",
     "domain": "monitor-optimize",
-    "kind": "dropdown",
-    "question": "Complete the statement about diagnosing Fabric workloads.",
-    "segments": [
-      {
-        "text": "To find out why a scheduled item failed you start with "
-      },
-      {
-        "blankId": "b1",
-        "options": [
-          "its run history",
-          "the capacity SKU",
-          "the workspace role list"
-        ],
-        "correctIndex": 0
-      },
-      {
-        "text": ", and to find out whether the capacity itself is the constraint you use "
-      },
-      {
-        "blankId": "b2",
-        "options": [
-          "the capacity metrics app",
-          "a OneLake shortcut",
-          "a deployment pipeline"
-        ],
-        "correctIndex": 0
-      },
-      {
-        "text": "."
-      }
+    "question": "A scheduled Fabric item failed overnight. Where should you start?",
+    "options": [
+      "Its run history",
+      "The capacity metrics app",
+      "The workspace role list",
+      "The deployment pipeline's stage comparison"
     ],
-    "explanation": "One question is about a single item and the other is about the resource everything shares. Reaching for capacity metrics first is why teams sometimes scale up to fix a broken query.",
+    "correctIndex": 0,
+    "explanation": "Run history answers a question about one item; capacity metrics answers a question about the resource everything shares. Reaching for capacity metrics first is why teams sometimes scale up to fix a broken query.",
     "teaches": "monitoring-fabric-items"
   }
 ]

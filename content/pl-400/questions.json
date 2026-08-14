@@ -51,32 +51,67 @@
     "id": "ep-04",
     "examCode": "pl-400",
     "domain": "extend-platform",
+    "kind": "dropdown",
     "caseStudyId": "cs-alderway-permits",
-    "question": "The nightly export is throttled into failure and re-reads every row. Which pair of changes addresses both problems?",
-    "options": [
-      "Honour the Retry-After header with backoff, and use change tracking to read only what changed",
-      "Increase the thread count, and read rows in alphabetical order",
-      "Retry immediately on 429, and filter on the modified-on column",
-      "Split the job across two application users, and disable change tracking"
+    "question": "Complete the statement about the nightly export.",
+    "segments": [
+      {
+        "text": "The throttling is resolved by "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "honouring the Retry-After header with backoff",
+          "retrying immediately on 429",
+          "increasing the thread count"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", and the re-reading of unchanged rows is resolved by "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "using change tracking, which also reports deletions",
+          "filtering on the modified-on column",
+          "reading rows in alphabetical order"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "429 signals service protection limits and Retry-After says when to resume; retrying immediately makes it worse, which is what the current code does. Change tracking returns only what has changed since the last token and reports deletions, which a modified-on filter cannot do.",
+    "explanation": "429 signals service protection limits and Retry-After says when to resume; retrying immediately makes it worse, which is what the current code does. A modified-on filter finds changes but cannot tell the export that a row was deleted, which change tracking does.",
     "teaches": "platform-apis"
   },
   {
     "id": "ep-05",
     "examCode": "pl-400",
     "domain": "extend-platform",
+    "kind": "yesno",
     "caseStudyId": "cs-alderway-permits",
-    "question": "Document generation takes four minutes and currently blocks the officer's save. What should you do?",
-    "options": [
-      "Hand the work off to an Azure Function and return from the plug-in immediately",
-      "Register the existing plug-in at the PreValidation stage instead",
-      "Increase the plug-in timeout beyond the two-minute limit",
-      "Move the plug-in to run in the calling user's context"
+    "question": "Document generation takes four minutes and currently blocks the officer's save. Judge each statement.",
+    "statements": [
+      {
+        "text": "A synchronous plug-in holds the transaction open for the duration of its work.",
+        "correct": true
+      },
+      {
+        "text": "The two-minute platform limit on a synchronous plug-in cannot be raised by configuration.",
+        "correct": true
+      },
+      {
+        "text": "Handing the work to an Azure Function releases the officer immediately.",
+        "correct": true
+      },
+      {
+        "text": "Registering the plug-in at the PreValidation stage would give it enough time to finish.",
+        "correct": false
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "A synchronous plug-in holds the transaction open and is bounded by a two-minute limit that cannot be raised, so four minutes of work does not belong there at all. Handing off to a Function releases the user immediately and gives the work a runtime suited to it.",
+    "explanation": "PreValidation runs outside the database transaction but is still bound by the same execution limit, so it buys nothing for four minutes of work. Work of that length does not belong in a plug-in at all.",
     "teaches": "azure-functions-and-flows"
   },
   {
@@ -241,7 +276,10 @@
       "It runs after the record has been saved",
       "It is the only stage that can register images"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "PreOperation runs inside the transaction before the main operation, which is what makes changes to the Target take effect on the write. Running after the save is PostOperation, and images are configured on registrations at more than one stage.",
     "teaches": "plugins-and-pipeline"
   },
@@ -257,7 +295,12 @@
       "The main operation writes to the database",
       "PreOperation, inside the transaction before the operation"
     ],
-    "correctOrder": [1, 3, 2, 0],
+    "correctOrder": [
+      1,
+      3,
+      2,
+      0
+    ],
     "explanation": "Only PreValidation sits outside the transaction, which is why it is the cheap place to cancel. Everything from PreOperation onwards is inside it, so a throw at any of those points rolls the whole thing back.",
     "teaches": "plugins-and-pipeline"
   },
@@ -268,10 +311,22 @@
     "kind": "match",
     "question": "Match each extension point to what it is for.",
     "pairs": [
-      { "term": "Plug-in", "definition": "Server-side logic on a Dataverse message that cannot be bypassed" },
-      { "term": "Custom API", "definition": "A new named Dataverse message with typed parameters" },
-      { "term": "Custom connector", "definition": "Wrapping an external REST API for use in flows and apps" },
-      { "term": "Azure Function", "definition": "Long-running or scheduled work outside the Dataverse transaction" }
+      {
+        "term": "Plug-in",
+        "definition": "Server-side logic on a Dataverse message that cannot be bypassed"
+      },
+      {
+        "term": "Custom API",
+        "definition": "A new named Dataverse message with typed parameters"
+      },
+      {
+        "term": "Custom connector",
+        "definition": "Wrapping an external REST API for use in flows and apps"
+      },
+      {
+        "term": "Azure Function",
+        "definition": "Long-running or scheduled work outside the Dataverse transaction"
+      }
     ],
     "explanation": "Two extend Dataverse itself and two reach outside it. Choosing between them usually comes down to whether the work must be inside the transaction and whether it must be unavoidable.",
     "teaches": "custom-apis-and-events"
@@ -283,10 +338,22 @@
     "kind": "yesno",
     "question": "A synchronous plug-in has been registered on Update of a table. Judge each statement.",
     "statements": [
-      { "text": "Throwing an exception rolls back the operation.", "correct": true },
-      { "text": "The Target contains only the columns that changed.", "correct": true },
-      { "text": "A two-minute execution limit applies.", "correct": true },
-      { "text": "It can run work lasting several minutes if the timeout is raised.", "correct": false }
+      {
+        "text": "Throwing an exception rolls back the operation.",
+        "correct": true
+      },
+      {
+        "text": "The Target contains only the columns that changed.",
+        "correct": true
+      },
+      {
+        "text": "A two-minute execution limit applies.",
+        "correct": true
+      },
+      {
+        "text": "It can run work lasting several minutes if the timeout is raised.",
+        "correct": false
+      }
     ],
     "explanation": "The two-minute limit is a platform boundary rather than a setting, which is why long work is handed to an Azure Function or the asynchronous pipeline rather than accommodated in place.",
     "teaches": "plugins-and-pipeline"
@@ -298,19 +365,33 @@
     "kind": "dropdown",
     "question": "Complete the statement about calling Dataverse.",
     "segments": [
-      { "text": "From JavaScript in a model-driven app you would use " },
+      {
+        "text": "From JavaScript in a model-driven app you would use "
+      },
       {
         "blankId": "b1",
-        "options": ["the Dataverse Web API", "the Organization service", "a custom connector"],
+        "options": [
+          "the Dataverse Web API",
+          "the Organization service",
+          "a custom connector"
+        ],
         "correctIndex": 0
       },
-      { "text": ", while from inside a plug-in you would use " },
+      {
+        "text": ", while from inside a plug-in you would use "
+      },
       {
         "blankId": "b2",
-        "options": ["the Organization service", "the Dataverse Web API", "an HTTP action"],
+        "options": [
+          "the Organization service",
+          "the Dataverse Web API",
+          "an HTTP action"
+        ],
         "correctIndex": 0
       },
-      { "text": "." }
+      {
+        "text": "."
+      }
     ],
     "explanation": "The Web API is OData over REST for JavaScript and external callers; the Organization service is the .NET SDK interface available inside plug-ins. The caller decides, not the operation.",
     "teaches": "platform-apis"
@@ -417,7 +498,10 @@
       "A role can explicitly deny a privilege granted by another role",
       "Only one role may be assigned to a user at a time"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Roles grant and accumulate, directly and through teams. There is no deny and no limit of one, which is why over-permissioned users are diagnosed by finding the extra grant rather than the missing restriction.",
     "teaches": "security-impact"
   },
@@ -428,10 +512,22 @@
     "kind": "match",
     "question": "Match each requirement to where the logic belongs.",
     "pairs": [
-      { "term": "Hide a field until another is filled in", "definition": "A business rule" },
-      { "term": "React as the user types on a form", "definition": "Client script" },
-      { "term": "Enforce a rule on every write path", "definition": "A plug-in" },
-      { "term": "Call another system and await approval", "definition": "A Power Automate cloud flow" }
+      {
+        "term": "Hide a field until another is filled in",
+        "definition": "A business rule"
+      },
+      {
+        "term": "React as the user types on a form",
+        "definition": "Client script"
+      },
+      {
+        "term": "Enforce a rule on every write path",
+        "definition": "A plug-in"
+      },
+      {
+        "term": "Call another system and await approval",
+        "definition": "A Power Automate cloud flow"
+      }
     ],
     "explanation": "Reading top to bottom this is configuration, experience, enforcement, and orchestration. Nearly every design question on this exam resolves to placing a requirement in one of those four buckets.",
     "teaches": "architecture-and-logic-placement"
@@ -538,7 +634,12 @@
       "Build a managed solution from the packed source",
       "Unpack the solution into source control and commit"
     ],
-    "correctOrder": [1, 3, 2, 0],
+    "correctOrder": [
+      1,
+      3,
+      2,
+      0
+    ],
     "explanation": "Source control sits in the middle of the pipeline rather than beside it: development exports, source control holds the reviewable truth, the build produces the managed artifact, and only that artifact is deployed onward.",
     "teaches": "pipelines-and-cicd"
   },
@@ -546,24 +647,15 @@
     "id": "bs-08",
     "examCode": "pl-400",
     "domain": "build-solutions",
-    "kind": "dropdown",
-    "question": "Complete the statement about solution layering.",
-    "segments": [
-      { "text": "When a component exists in both a managed solution and an unmanaged customisation, the behaviour comes from " },
-      {
-        "blankId": "b1",
-        "options": ["the unmanaged layer", "the managed layer", "whichever was installed most recently"],
-        "correctIndex": 0
-      },
-      { "text": ", and the way to restore the solution's own definition is to " },
-      {
-        "blankId": "b2",
-        "options": ["remove the unmanaged layer", "re-import the managed solution", "publish all customisations"],
-        "correctIndex": 0
-      },
-      { "text": "." }
+    "question": "A managed solution is re-imported with a corrected form, but the environment still shows the old form. Why?",
+    "options": [
+      "An unmanaged customisation sits above the managed layer and wins",
+      "The solution was imported before its dependencies",
+      "Customisations were not published after the import",
+      "The managed solution's version number was not incremented"
     ],
-    "explanation": "The unmanaged layer always sits on top, so re-importing changes something invisible underneath it. This is the single most common cause of 'the update did not take effect'.",
+    "correctIndex": 0,
+    "explanation": "The unmanaged layer always sits on top, so re-importing changes something invisible underneath it and the fix is to remove the unmanaged layer. This is the single most common cause of \"the update did not take effect\".",
     "teaches": "alm-solutions-and-layers"
   },
   {
@@ -683,7 +775,10 @@
       "Adding more data sources so each query is smaller",
       "Disabling delegation warnings in the studio"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Concurrency and doing less at start-up both reduce time to first screen. Adding data sources increases start-up cost, and hiding delegation warnings removes the signal without changing the behaviour.",
     "teaches": "canvas-performance"
   },
@@ -789,7 +884,12 @@
       "destroy, releasing resources",
       "updateView, rendering when data or context changes"
     ],
-    "correctOrder": [1, 3, 0, 2],
+    "correctOrder": [
+      1,
+      3,
+      0,
+      2
+    ],
     "explanation": "init runs once, updateView runs repeatedly, getOutputs is called after the component signals a change, and destroy runs when the component is removed. Rendering in init rather than updateView produces a component that never reflects later changes.",
     "teaches": "pcf-components"
   },
@@ -797,15 +897,15 @@
     "id": "ux-08",
     "examCode": "pl-400",
     "domain": "extend-user-experience",
-    "kind": "yesno",
-    "question": "Validation logic has been added to a model-driven form's OnSave handler in client script. Judge each statement.",
-    "statements": [
-      { "text": "It can cancel the save by calling preventDefault on the save event argument.", "correct": true },
-      { "text": "It runs when a user saves the record from that form.", "correct": true },
-      { "text": "It runs when the record is updated through the Dataverse Web API.", "correct": false },
-      { "text": "It requires the execution context to be passed to the handler.", "correct": true }
+    "question": "Validation logic sits in a model-driven form's OnSave handler in client script. When does it NOT run?",
+    "options": [
+      "When the record is updated through the Dataverse Web API",
+      "When a user saves the record from that form",
+      "When a user saves after changing a field on that form",
+      "When the save is triggered by the form's save-and-close command"
     ],
-    "explanation": "Client script protects the form and nothing else, so a rule that must hold everywhere needs a plug-in as well. That single limitation drives most of the design decisions on this exam.",
+    "correctIndex": 0,
+    "explanation": "Client script protects the form and nothing else, so an import, a flow, or an API write bypasses it entirely. A rule that must hold everywhere needs a plug-in as well, and that single limitation drives most of the design decisions on this exam.",
     "teaches": "client-scripting"
   },
   {
@@ -895,7 +995,10 @@
       "It requires an alternate key on the table",
       "It replaces the need for a service endpoint"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Change tracking is a per-table setting whose whole value is that deletions are included. Alternate keys serve a different purpose, and change tracking is a pull mechanism while service endpoints push.",
     "teaches": "data-synchronisation"
   },
@@ -911,7 +1014,12 @@
       "Register a step so the message is published on the chosen event",
       "Register the service endpoint using the Plug-in Registration Tool"
     ],
-    "correctOrder": [1, 3, 2, 0],
+    "correctOrder": [
+      1,
+      3,
+      2,
+      0
+    ],
     "explanation": "The destination has to exist before Dataverse can be pointed at it, the endpoint is registered, a step decides which event publishes, and only then is there anything for the consumer to read.",
     "teaches": "dataverse-events-publishing"
   },
@@ -922,10 +1030,22 @@
     "kind": "match",
     "question": "Match each integration endpoint to the situation it suits.",
     "pairs": [
-      { "term": "Azure Service Bus queue", "definition": "A receiver that may be offline, where no message may be lost" },
-      { "term": "Azure Event Hub", "definition": "High-throughput streaming of many events" },
-      { "term": "Webhook", "definition": "A direct HTTPS call to an always-available endpoint" },
-      { "term": "Change tracking", "definition": "A consumer that pulls what changed on its own schedule" }
+      {
+        "term": "Azure Service Bus queue",
+        "definition": "A receiver that may be offline, where no message may be lost"
+      },
+      {
+        "term": "Azure Event Hub",
+        "definition": "High-throughput streaming of many events"
+      },
+      {
+        "term": "Webhook",
+        "definition": "A direct HTTPS call to an always-available endpoint"
+      },
+      {
+        "term": "Change tracking",
+        "definition": "A consumer that pulls what changed on its own schedule"
+      }
     ],
     "explanation": "The first three push and differ by durability and volume; the fourth is the pull alternative. Choosing between push and pull is the first decision, and durability the second.",
     "teaches": "data-synchronisation"

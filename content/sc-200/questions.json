@@ -651,32 +651,67 @@
     "id": "ir-cs-04",
     "examCode": "sc-200",
     "domain": "incident-response",
+    "kind": "dropdown",
     "caseStudyId": "cs-northwind-intrusion",
-    "question": "Hunting queries written during an investigation, and the rows they returned, must stay attached to the incident. What should the analysts use?",
-    "options": [
-      "Bookmarks, attached to the incident",
-      "An analytics rule saved from the query",
-      "The workspace's saved searches",
-      "A workbook pinned to the incident"
+    "question": "Complete the statement about preserving the analysts' hunting work on the incident.",
+    "segments": [
+      {
+        "text": "The artefact that preserves the query, the rows it returned, and the analyst's notes is "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "a bookmark",
+          "a saved search",
+          "a workbook"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", and it satisfies the requirement because it can be "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "attached to the incident so a later analyst sees what was already checked",
+          "scheduled to re-run against the workspace each hour",
+          "exported to the archive tier for compliance"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "A bookmark preserves the query, the rows it returned and the analyst's notes, and can be attached to an incident so the next person sees what was already checked. A saved search keeps the query but none of the results or context.",
+    "explanation": "A saved search keeps the query but none of the results or context, and a workbook visualises data rather than freezing a finding. Only a bookmark carries the query, its rows, and the notes, and only a bookmark attaches to the incident — which is the whole of the requirement.",
     "teaches": "hunting-queries-and-bookmarks"
   },
   {
     "id": "ir-cs-05",
     "examCode": "sc-200",
     "domain": "incident-response",
+    "kind": "yesno",
     "caseStudyId": "cs-northwind-intrusion",
-    "question": "Data older than 90 days must stay searchable for compliance work without being rehydrated into the interactive tier. What should you use?",
-    "options": [
-      "A search job against the archived data",
-      "A restore of the archived table into the workspace",
-      "An increase of interactive retention to two years",
-      "A continuous export of the table to a storage account"
+    "question": "Data older than 90 days must stay searchable for compliance work without being rehydrated into the interactive tier. Judge each statement.",
+    "statements": [
+      {
+        "text": "A search job runs over archived data and writes only its results into a new table.",
+        "correct": true
+      },
+      {
+        "text": "A search job leaves the archived data where it is, which is what the requirement demands.",
+        "correct": true
+      },
+      {
+        "text": "Restoring the archived table is the operation the requirement rules out.",
+        "correct": true
+      },
+      {
+        "text": "Raising interactive retention to two years would satisfy the requirement more cheaply.",
+        "correct": false
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "A search job runs over archived data and writes only its results into a new table, leaving the archive where it is. A restore is the operation the requirement rules out: it puts the data back into the interactive tier.",
+    "explanation": "The requirement is specifically that the data stays out of the interactive tier, so both a restore and an extended interactive retention miss it — the second by putting everything in that tier permanently, at considerable cost. A search job is the only operation that reads the archive without moving it.",
     "teaches": "sentinel-roles-and-retention"
   },
   {
@@ -922,27 +957,15 @@
     "id": "ir-17",
     "examCode": "sc-200",
     "domain": "incident-response",
-    "kind": "yesno",
-    "question": "A device is isolated from the Microsoft Defender portal. Judge each statement.",
-    "statements": [
-      {
-        "text": "The device can still reach the Defender for Endpoint service.",
-        "correct": true
-      },
-      {
-        "text": "An analyst can still start a live response session on it.",
-        "correct": true
-      },
-      {
-        "text": "The signed-in user can still browse arbitrary internet sites.",
-        "correct": false
-      },
-      {
-        "text": "Isolation stays in force until it is released from the portal.",
-        "correct": true
-      }
+    "question": "A device has been isolated from the Microsoft Defender portal. What can an analyst still do with it?",
+    "options": [
+      "Start a live response session, because isolation leaves the Defender service reachable",
+      "Nothing until isolation is released, because all connectivity is cut",
+      "Only collect an investigation package, not run live response",
+      "Nothing — isolation lifts automatically after a set period"
     ],
-    "explanation": "Isolation cuts the device off from everything except the Defender service itself — which is exactly what keeps live response and the release action working. Nothing lifts it automatically.",
+    "correctIndex": 0,
+    "explanation": "Isolation cuts the device off from everything except the Defender service itself, which is exactly what keeps live response and the release action working. The signed-in user cannot browse arbitrary sites, and nothing lifts the isolation automatically.",
     "teaches": "endpoint-investigation-and-live-response"
   },
   {
@@ -1016,38 +1039,15 @@
     "id": "th-13",
     "examCode": "sc-200",
     "domain": "threat-hunting",
-    "kind": "dropdown",
-    "question": "Complete the statement about keeping hunting work.",
-    "segments": [
-      {
-        "text": "A hunting query that should keep running and raise incidents becomes "
-      },
-      {
-        "blankId": "b1",
-        "options": [
-          "an analytics rule",
-          "a bookmark",
-          "a workbook"
-        ],
-        "correctIndex": 0
-      },
-      {
-        "text": ", while a single interesting result kept for an investigation becomes "
-      },
-      {
-        "blankId": "b2",
-        "options": [
-          "a bookmark",
-          "a watchlist",
-          "a playbook"
-        ],
-        "correctIndex": 0
-      },
-      {
-        "text": "."
-      }
+    "question": "A hunting query has proved valuable and should now run continuously and raise incidents. What should it become?",
+    "options": [
+      "An analytics rule",
+      "A bookmark",
+      "A workbook",
+      "A watchlist"
     ],
-    "explanation": "Promoting a query to an analytics rule is how a one-off hunt becomes a standing detection. A bookmark goes the other way — it freezes one set of rows and the query that found them.",
+    "correctIndex": 0,
+    "explanation": "Promoting a query to an analytics rule is how a one-off hunt becomes a standing detection. A bookmark goes the other way — it freezes one set of rows and the query that found them, for an investigation rather than for continuous detection.",
     "teaches": "hunting-queries-and-bookmarks"
   }
 ]

@@ -651,32 +651,67 @@
     "id": "psd-cs-04",
     "examCode": "dp-600",
     "domain": "prepare-serve-data",
+    "kind": "yesno",
     "caseStudyId": "cs-aurora-fabric",
-    "question": "The silver table has grown to several thousand small Parquet files and queries have slowed. The notebook's logic must not change. What should you do?",
-    "options": [
-      "Run table maintenance to compact the files, with V-Order applied",
-      "Rewrite the notebook to append rather than overwrite each run",
-      "Move the silver table from the lakehouse into wh_finance",
-      "Scale the capacity from F64 to F128"
+    "question": "The silver table has grown to several thousand small Parquet files, queries have slowed, and the notebook's logic must not change. Judge each statement.",
+    "statements": [
+      {
+        "text": "Running table maintenance to compact the files addresses the cause without touching the notebook.",
+        "correct": true
+      },
+      {
+        "text": "Applying V-Order additionally optimises the compacted files for how the Fabric engine reads them.",
+        "correct": true
+      },
+      {
+        "text": "Rewriting the notebook to append rather than overwrite is ruled out by the requirements.",
+        "correct": true
+      },
+      {
+        "text": "Scaling the capacity from F64 to F128 would resolve the file layout problem.",
+        "correct": false
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "Thousands of small files is a layout problem, and compaction is the direct fix — V-Order additionally optimises the files for how the Fabric engine reads them. Rewriting the notebook is explicitly ruled out, and scaling the capacity spends money without changing the layout.",
+    "explanation": "Thousands of small files is a layout problem, and compaction is the direct fix. Scaling the capacity spends money to read a bad layout faster rather than changing it, which is the reflex answer worth resisting — the requirement that the notebook's logic stay unchanged is what rules out the other route.",
     "teaches": "performance-and-storage-optimization"
   },
   {
     "id": "psd-cs-05",
     "examCode": "dp-600",
     "domain": "prepare-serve-data",
+    "kind": "dropdown",
     "caseStudyId": "cs-aurora-fabric",
-    "question": "The team proposes moving the gold layer out of wh_finance and into lh_sales. What happens to finance's existing T-SQL reports?",
-    "options": [
-      "They can still read through the SQL analytics endpoint, but the ones that write staging rows will fail",
-      "They keep working unchanged, including the writes",
-      "They stop working entirely, because a lakehouse exposes no T-SQL surface",
-      "They work only once each report is rewritten as Spark SQL"
+    "question": "Complete the assessment of moving the gold layer out of wh_finance and into lh_sales.",
+    "segments": [
+      {
+        "text": "Finance's reports that only read would "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "keep working through the lakehouse's SQL analytics endpoint",
+          "fail, because a lakehouse exposes no T-SQL surface",
+          "need rewriting as Spark SQL"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", but the reports that write staging rows back would fail, because the endpoint is "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "read-only",
+          "limited to Delta format",
+          "available only inside the workspace"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "A lakehouse's SQL analytics endpoint is read-only, so SELECT survives the move and INSERT does not. That read-versus-write split is the main reason to keep a warehouse, and the requirement naming the write-back reports is what settles it.",
+    "explanation": "A lakehouse's SQL analytics endpoint serves SELECT but not INSERT, so the move survives the reading reports and breaks the writing ones. That read-versus-write split is the main reason to keep a warehouse, and the requirement naming the write-back reports is what settles it.",
     "teaches": "choosing-the-right-storage-item-lakehouse-vs-warehouse"
   },
   {
@@ -882,38 +917,15 @@
     "id": "psd-19",
     "examCode": "dp-600",
     "domain": "prepare-serve-data",
-    "kind": "dropdown",
-    "question": "Complete the statement about maintaining a Delta table.",
-    "segments": [
-      {
-        "text": "A table written by many small appends is compacted by running "
-      },
-      {
-        "blankId": "b1",
-        "options": [
-          "OPTIMIZE",
-          "VACUUM",
-          "REFRESH"
-        ],
-        "correctIndex": 0
-      },
-      {
-        "text": ", while deleting files no longer referenced by the table is the job of "
-      },
-      {
-        "blankId": "b2",
-        "options": [
-          "VACUUM",
-          "OPTIMIZE",
-          "CHECKPOINT"
-        ],
-        "correctIndex": 0
-      },
-      {
-        "text": "."
-      }
+    "question": "Which command reclaims the storage held by files a Delta table no longer references?",
+    "options": [
+      "VACUUM",
+      "OPTIMIZE",
+      "CHECKPOINT",
+      "REFRESH"
     ],
-    "explanation": "The two are often run together and do opposite halves of the job: one merges the live files into fewer, larger ones, the other reclaims the space held by files the table has stopped pointing at.",
+    "correctIndex": 0,
+    "explanation": "OPTIMIZE and VACUUM are usually run together and do opposite halves of the job: OPTIMIZE merges the live files into fewer, larger ones, while VACUUM deletes the files the table has stopped pointing at. Running only OPTIMIZE compacts the table and leaves the old files consuming storage.",
     "teaches": "performance-and-storage-optimization"
   },
   {
@@ -1027,27 +1039,15 @@
     "id": "ea-13",
     "examCode": "dp-600",
     "domain": "explore-analyze",
-    "kind": "yesno",
-    "question": "A notebook is being used for exploratory analysis in Fabric. Judge each statement.",
-    "statements": [
-      {
-        "text": "It can read a lakehouse table without first copying the data into the notebook.",
-        "correct": true
-      },
-      {
-        "text": "It can write its results back as a new Delta table in the lakehouse.",
-        "correct": true
-      },
-      {
-        "text": "It can only be written in Python.",
-        "correct": false
-      },
-      {
-        "text": "It consumes the Fabric capacity assigned to its workspace.",
-        "correct": true
-      }
+    "question": "Which statement about a Spark notebook used for exploratory analysis in Fabric is false?",
+    "options": [
+      "It can only be written in Python",
+      "It can read a lakehouse table without first copying the data",
+      "It can write its results back as a new Delta table in the lakehouse",
+      "It consumes the Fabric capacity assigned to its workspace"
     ],
-    "explanation": "A notebook attaches to a lakehouse and reads and writes it in place. Spark notebooks in Fabric also take Scala, SQL and R, and everything they run is billed against the workspace's capacity.",
+    "correctIndex": 0,
+    "explanation": "Spark notebooks in Fabric also take Scala, SQL, and R. The other three are true: a notebook attaches to a lakehouse and reads and writes it in place, and everything it runs is billed against the workspace's capacity.",
     "teaches": "exploratory-analytics-with-notebooks-and-sql"
   }
 ]

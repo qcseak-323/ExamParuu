@@ -651,32 +651,67 @@
     "id": "cs-04",
     "examCode": "az-104",
     "domain": "virtual-networking",
+    "kind": "dropdown",
     "caseStudyId": "cs-contoso-migration",
-    "question": "How should you meet the requirement for the contosoplantlogs storage account?",
-    "options": [
-      "A private endpoint in vnet-data with a linked private DNS zone, and public access disabled",
-      "A service endpoint on the vnet-data subnet, and public access disabled",
-      "A storage firewall rule allowing the Derby public IP range",
-      "A shared access signature scoped to vnet-data"
+    "question": "Complete the statement about meeting the requirement for the contosoplantlogs storage account.",
+    "segments": [
+      {
+        "text": "The account is given a private address reachable from vnet-data and from Derby over the VPN by deploying "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "a private endpoint in vnet-data",
+          "a service endpoint on the vnet-data subnet",
+          "a storage firewall rule allowing the Derby public IP range"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", and the account's public hostname resolves to that address because of "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "a linked private DNS zone",
+          "a host file entry on each virtual machine",
+          "the storage account's own public endpoint"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", after which public access is disabled."
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "Only a private endpoint gives the service a private address reachable from on-premises over the VPN, and the private DNS zone is what makes the public hostname resolve to it. A service endpoint keeps the service's public IP and does not work from on-premises.",
+    "explanation": "Only a private endpoint gives the service a private address reachable from on-premises over the VPN; a service endpoint keeps the service's public IP and does not work from on-premises at all. The private DNS zone is what makes the public hostname resolve to the private address, which is the half most often forgotten — without it clients resolve the public IP and the connection fails after everything looks correctly configured.",
     "teaches": "bastion-and-private-access"
   },
   {
     "id": "cs-05",
     "examCode": "az-104",
     "domain": "virtual-networking",
+    "kind": "yesno",
     "caseStudyId": "cs-contoso-migration",
-    "question": "What prevents vnet-legacy from being peered to vnet-hub as it stands?",
-    "options": [
-      "Its address space overlaps vnet-app",
-      "It is in a different subscription",
-      "It has no virtual network gateway",
-      "Its subscription is not under the Contoso management group"
+    "question": "The requirement states that vnet-legacy must eventually join the hub and that any proposal must account for its addressing. Judge each statement.",
+    "statements": [
+      {
+        "text": "vnet-legacy cannot be peered to vnet-hub as it stands, because its address space overlaps vnet-app.",
+        "correct": true
+      },
+      {
+        "text": "Peering requires the two address spaces not to overlap.",
+        "correct": true
+      },
+      {
+        "text": "Re-addressing vnet-legacy is required before it can be peered.",
+        "correct": true
+      },
+      {
+        "text": "Peering would also be blocked if vnet-legacy were in a different subscription.",
+        "correct": false
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "vnet-legacy uses 10.1.0.0/16, the same range as vnet-app. Peering requires non-overlapping address spaces; peering across subscriptions and tenants is otherwise supported.",
+    "explanation": "vnet-legacy uses 10.1.0.0/16, the same range as vnet-app, and overlapping address spaces are the one thing peering cannot tolerate. Peering across subscriptions and even across tenants is supported, so the subscription is not the obstacle — which is why the requirement singles out addressing rather than placement.",
     "teaches": "vnet-peering"
   },
   {
@@ -947,23 +982,15 @@
     "id": "vn-10",
     "examCode": "az-104",
     "domain": "virtual-networking",
-    "kind": "yesno",
-    "question": "An NSG is applied to a subnet, and a second NSG to a virtual machine's network interface in that subnet. Judge each statement.",
-    "statements": [
-      {
-        "text": "Inbound traffic must be allowed by both to reach the machine.",
-        "correct": true
-      },
-      {
-        "text": "Outbound traffic is filtered by the interface NSG first.",
-        "correct": true
-      },
-      {
-        "text": "Allowing an inbound flow needs a matching outbound rule for its reply.",
-        "correct": false
-      }
+    "question": "An NSG on a subnet and a second NSG on a virtual machine's network interface both allow inbound TCP 443. What is required for the reply traffic to leave the machine?",
+    "options": [
+      "Nothing — NSG rules are stateful, so the reply is allowed automatically",
+      "A matching outbound allow rule on the interface NSG",
+      "Matching outbound allow rules on both NSGs",
+      "An outbound allow rule on the subnet NSG only"
     ],
-    "explanation": "Inbound passes the subnet NSG then the interface NSG, and outbound runs the reverse. The filter is stateful, so a reply needs no rule of its own.",
+    "correctIndex": 0,
+    "explanation": "NSGs are stateful, so a flow allowed inbound has its reply allowed without a rule of its own. Inbound traffic is evaluated by the subnet NSG then the interface NSG, and outbound runs the reverse — but the reply to an established inbound flow is not an outbound evaluation at all.",
     "teaches": "network-security-groups"
   },
   {
@@ -1008,36 +1035,15 @@
     "id": "cp-13",
     "examCode": "az-104",
     "domain": "compute-resources",
-    "kind": "dropdown",
-    "question": "Complete the statement about ARM template deployment modes.",
-    "segments": [
-      {
-        "text": "Deploying in "
-      },
-      {
-        "blankId": "b1",
-        "options": [
-          "Incremental",
-          "Complete"
-        ],
-        "correctIndex": 1
-      },
-      {
-        "text": " mode deletes resources in the resource group that the template does not describe, while "
-      },
-      {
-        "blankId": "b2",
-        "options": [
-          "Incremental",
-          "Complete"
-        ],
-        "correctIndex": 0
-      },
-      {
-        "text": " mode, the default, leaves them alone."
-      }
+    "question": "An ARM template is deployed to a resource group in Complete mode. What happens to resources in that group which the template does not describe?",
+    "options": [
+      "They are deleted",
+      "They are left unchanged",
+      "They are moved to a new resource group",
+      "The deployment fails validation before making any change"
     ],
-    "explanation": "Complete mode is the source of the classic scenario where a deployment quietly removes resources nobody mentioned.",
+    "correctIndex": 0,
+    "explanation": "Complete mode makes the resource group match the template exactly, so anything the template omits is removed. Incremental mode is the default and leaves unmentioned resources alone. This is the source of the classic scenario where a deployment quietly removes resources nobody mentioned.",
     "teaches": "arm-templates-and-bicep"
   }
 ]

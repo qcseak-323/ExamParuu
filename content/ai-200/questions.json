@@ -51,32 +51,67 @@
     "id": "ds-04",
     "examCode": "ai-200",
     "domain": "ai-data-services",
+    "kind": "yesno",
     "caseStudyId": "cs-mirefield-assistant",
-    "question": "The PostgreSQL pilot takes eleven seconds per similarity query with no index on the vector column, and a small loss of recall is acceptable. What should you do?",
-    "options": [
-      "Create an approximate vector index such as HNSW or IVFFlat",
-      "Increase the statement timeout so the query completes",
-      "Reduce the embedding dimension count",
-      "Add a B-tree index on the vector column"
+    "question": "The PostgreSQL pilot takes eleven seconds per similarity query with no index on the vector column, and a small loss of recall is acceptable. Judge each statement.",
+    "statements": [
+      {
+        "text": "Without a vector index every query scans every row, which is exact and does not scale.",
+        "correct": true
+      },
+      {
+        "text": "HNSW and IVFFlat are approximate and trade a little recall for a large speed gain.",
+        "correct": true
+      },
+      {
+        "text": "The requirement explicitly accepts that trade.",
+        "correct": true
+      },
+      {
+        "text": "A B-tree index on the vector column would serve similarity search.",
+        "correct": false
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "Without a vector index every query scans every row, which is exact and does not scale. HNSW and IVFFlat are approximate and trade a little recall for a large speed gain — the trade the requirement explicitly accepts. A B-tree cannot serve similarity search.",
+    "explanation": "A B-tree orders values along one dimension and has nothing to say about distance in a high-dimensional space, so it cannot serve similarity search at all. The team's belief that pgvector supports exact search is correct and is exactly why the queries are slow.",
     "teaches": "postgres-pgvector"
   },
   {
     "id": "ds-05",
     "examCode": "ai-200",
     "domain": "ai-data-services",
+    "kind": "dropdown",
     "caseStudyId": "cs-mirefield-assistant",
-    "question": "Fee earners ask the same questions in slightly different wording all morning, and each is sent to the model afresh. What should you implement?",
-    "options": [
-      "Semantic caching in Azure Managed Redis, keyed by embedding similarity",
-      "An exact-match response cache keyed by the question string",
-      "A longer time to live on the Cosmos documents",
-      "A second model deployment to spread the load"
+    "question": "Complete the statement about the repeated, differently worded morning questions.",
+    "segments": [
+      {
+        "text": "An exact-match response cache fails here because "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "it misses whenever the wording differs",
+          "it cannot store model completions",
+          "it expires too quickly to be useful"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", so the fix is semantic caching in Azure Managed Redis, keyed by "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "embedding similarity, with the threshold acting as a correctness setting",
+          "the question string, normalised to lower case",
+          "the fee earner's identity and the time of day"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "An exact-match cache misses when the wording differs, which is precisely the pattern described. Semantic caching matches by meaning so equivalent questions hit the same cached answer, and the similarity threshold becomes a correctness setting.",
+    "explanation": "Semantic caching matches by meaning, so equivalent questions hit the same cached answer regardless of phrasing. The similarity threshold is a correctness setting rather than a tuning knob: set too loose, it answers one question with another question's answer.",
     "teaches": "managed-redis"
   },
   {
@@ -211,7 +246,10 @@
       "Raising provisioned throughput",
       "Enabling strong consistency"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Both reduce the work performed per operation. Raising throughput buys capacity at the same unit cost, and strong consistency increases read cost rather than reducing it.",
     "teaches": "cosmos-for-ai"
   },
@@ -227,7 +265,12 @@
       "Generate a new embedding for the changed text",
       "The change feed processor receives the change"
     ],
-    "correctOrder": [1, 3, 2, 0],
+    "correctOrder": [
+      1,
+      3,
+      2,
+      0
+    ],
     "explanation": "The change happens, the processor notices, the embedding is regenerated, and the document is updated. Because the write itself produces another change, the handler must recognise its own updates or it will loop.",
     "teaches": "cosmos-change-feed"
   },
@@ -238,10 +281,22 @@
     "kind": "match",
     "question": "Match each data service to the job it does in an AI solution.",
     "pairs": [
-      { "term": "Azure Cosmos DB for NoSQL", "definition": "Documents with embeddings, plus a change feed for derived data" },
-      { "term": "Azure Database for PostgreSQL", "definition": "Relational data with pgvector similarity search and metadata filters" },
-      { "term": "Azure Managed Redis", "definition": "Caching, including semantic caching of model responses" },
-      { "term": "Change feed processor", "definition": "Detecting changes so derived data can be rebuilt" }
+      {
+        "term": "Azure Cosmos DB for NoSQL",
+        "definition": "Documents with embeddings, plus a change feed for derived data"
+      },
+      {
+        "term": "Azure Database for PostgreSQL",
+        "definition": "Relational data with pgvector similarity search and metadata filters"
+      },
+      {
+        "term": "Azure Managed Redis",
+        "definition": "Caching, including semantic caching of model responses"
+      },
+      {
+        "term": "Change feed processor",
+        "definition": "Detecting changes so derived data can be rebuilt"
+      }
     ],
     "explanation": "Three stores with different shapes and one mechanism that keeps derived data honest. Choosing the store is a modelling decision; the change feed is what stops any of them drifting.",
     "teaches": "cosmos-change-feed"
@@ -253,19 +308,33 @@
     "kind": "dropdown",
     "question": "Complete the statement about vector search in PostgreSQL.",
     "segments": [
-      { "text": "A similarity query with no vector index performs " },
+      {
+        "text": "A similarity query with no vector index performs "
+      },
       {
         "blankId": "b1",
-        "options": ["an exact scan of every row", "an approximate graph traversal", "a partitioned list search"],
+        "options": [
+          "an exact scan of every row",
+          "an approximate graph traversal",
+          "a partitioned list search"
+        ],
         "correctIndex": 0
       },
-      { "text": ", and the index type giving the best recall and query speed at higher build cost is " },
+      {
+        "text": ", and the index type giving the best recall and query speed at higher build cost is "
+      },
       {
         "blankId": "b2",
-        "options": ["HNSW", "IVFFlat", "B-tree"],
+        "options": [
+          "HNSW",
+          "IVFFlat",
+          "B-tree"
+        ],
         "correctIndex": 0
       },
-      { "text": "." }
+      {
+        "text": "."
+      }
     ],
     "explanation": "No index means exact and unscalable. HNSW builds a graph that searches quickly with good recall, paying for it in build time and memory, while IVFFlat is cheaper to build and generally less accurate.",
     "teaches": "postgres-pgvector"
@@ -447,7 +516,10 @@
       "Tagging every image as latest",
       "Enabling geo-replication"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Removing the shared credential and granting scoped, attributable access are the two security measures. Geo-replication is a performance feature and the latest tag is a reproducibility problem rather than a security one.",
     "teaches": "container-registry-and-images"
   },
@@ -463,7 +535,12 @@
       "Apply the fix and confirm the container becomes healthy",
       "Read the platform events for the pod or revision"
     ],
-    "correctOrder": [1, 3, 0, 2],
+    "correctOrder": [
+      1,
+      3,
+      0,
+      2
+    ],
     "explanation": "Logs say what the application did, events say what the platform did to it, and connectivity covers a healthy container that cannot reach what it needs. Restarting before reading destroys the evidence.",
     "teaches": "app-service-containers"
   },
@@ -474,10 +551,22 @@
     "kind": "match",
     "question": "Match each container failure signature to its cause.",
     "pairs": [
-      { "term": "ImagePullBackOff", "definition": "The image could not be retrieved from the registry" },
-      { "term": "CrashLoopBackOff", "definition": "The container starts and exits repeatedly" },
-      { "term": "OOMKilled", "definition": "The container exceeded its memory limit" },
-      { "term": "Readiness probe failure", "definition": "The container runs but reports itself not ready to serve" }
+      {
+        "term": "ImagePullBackOff",
+        "definition": "The image could not be retrieved from the registry"
+      },
+      {
+        "term": "CrashLoopBackOff",
+        "definition": "The container starts and exits repeatedly"
+      },
+      {
+        "term": "OOMKilled",
+        "definition": "The container exceeded its memory limit"
+      },
+      {
+        "term": "Readiness probe failure",
+        "definition": "The container runs but reports itself not ready to serve"
+      }
     ],
     "explanation": "Four distinct signatures with four different investigations. Recognising which one you have is most of the diagnosis, and each points at a different place to look.",
     "teaches": "app-service-containers"
@@ -659,7 +748,10 @@
       "It pushes events to subscribers with retries and no consumer state",
       "It is intended primarily for announcing resource state changes"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Service Bus hands over work with delivery guarantees and dead-lettering. Pushing announcements to many subscribers is Event Grid's model, and choosing between them starts with whether the message is work or news.",
     "teaches": "service-bus"
   },
@@ -675,7 +767,12 @@
       "The message is dead-lettered if the delivery count is exceeded",
       "Processing fails and the lock expires, making the message visible again"
     ],
-    "correctOrder": [1, 3, 2, 0],
+    "correctOrder": [
+      1,
+      3,
+      2,
+      0
+    ],
     "explanation": "Lock, fail and redeliver, dead-letter after enough failures, or complete on success. The redelivery path is what makes at-least-once processing safe, and dead-lettering is what stops it looping forever.",
     "teaches": "service-bus"
   },
@@ -686,10 +783,22 @@
     "kind": "yesno",
     "question": "An Azure Function on the Consumption plan is being considered for a latency-sensitive API. Judge each statement.",
     "statements": [
-      { "text": "It scales to zero when idle and bills per execution.", "correct": true },
-      { "text": "It can experience cold starts after a period of inactivity.", "correct": true },
-      { "text": "The Premium plan removes cold starts with pre-warmed instances.", "correct": true },
-      { "text": "Consumption supports virtual network integration in the same way as Premium.", "correct": false }
+      {
+        "text": "It scales to zero when idle and bills per execution.",
+        "correct": true
+      },
+      {
+        "text": "It can experience cold starts after a period of inactivity.",
+        "correct": true
+      },
+      {
+        "text": "The Premium plan removes cold starts with pre-warmed instances.",
+        "correct": true
+      },
+      {
+        "text": "Consumption supports virtual network integration in the same way as Premium.",
+        "correct": false
+      }
     ],
     "explanation": "Virtual network integration is one of the main reasons to move to Premium or Flex Consumption. Assuming Consumption offers it is how a design reaches the network-isolation requirement and then has to change plan.",
     "teaches": "azure-functions"
@@ -856,7 +965,10 @@
       "It replaces the need for structured application logging",
       "It automatically propagates context across message queues"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Vendor neutrality and the Azure Monitor exporter are what make it the standard choice. Context across an asynchronous boundary must be carried deliberately, which is precisely where traces break.",
     "teaches": "opentelemetry"
   },
@@ -872,7 +984,12 @@
       "render a chart of the result",
       "where filters to the time range and conditions of interest"
     ],
-    "correctOrder": [1, 3, 0, 2],
+    "correctOrder": [
+      1,
+      3,
+      0,
+      2
+    ],
     "explanation": "Table, filter, aggregate, visualise. Filtering before aggregating is the single largest cost lever, because everything downstream then processes less data.",
     "teaches": "kql-queries"
   },
@@ -883,10 +1000,22 @@
     "kind": "match",
     "question": "Match each observability concept to what it provides.",
     "pairs": [
-      { "term": "Span", "definition": "A single unit of work within a trace" },
-      { "term": "Trace context", "definition": "The identifiers propagated across service boundaries" },
-      { "term": "Sampling", "definition": "Reducing telemetry volume, at the risk of losing outliers" },
-      { "term": "Dependency telemetry", "definition": "A record of a call to a downstream service and its outcome" }
+      {
+        "term": "Span",
+        "definition": "A single unit of work within a trace"
+      },
+      {
+        "term": "Trace context",
+        "definition": "The identifiers propagated across service boundaries"
+      },
+      {
+        "term": "Sampling",
+        "definition": "Reducing telemetry volume, at the risk of losing outliers"
+      },
+      {
+        "term": "Dependency telemetry",
+        "definition": "A record of a call to a downstream service and its outcome"
+      }
     ],
     "explanation": "Spans compose into traces, context links them across services, sampling decides how much is kept, and dependency telemetry is usually where the cause of a failure is named.",
     "teaches": "opentelemetry"
@@ -895,39 +1024,30 @@
     "id": "sm-14",
     "examCode": "ai-200",
     "domain": "secure-monitor",
-    "kind": "yesno",
-    "question": "Azure Key Vault is being configured for a production application. Judge each statement.",
-    "statements": [
-      { "text": "RBAC can scope access to an individual secret.", "correct": true },
-      { "text": "Soft delete is always enabled and cannot be turned off.", "correct": true },
-      { "text": "A managed identity removes the need for the application to hold a credential.", "correct": true },
-      { "text": "Purge protection can be disabled once enabled.", "correct": false }
+    "question": "Purge protection has been enabled on an Azure Key Vault. Can it be disabled afterwards?",
+    "options": [
+      "No — it is a one-way switch by design",
+      "Yes, by a vault owner with the Key Vault Contributor role",
+      "Yes, once the soft-delete retention period has elapsed",
+      "Yes, but only through the REST API"
     ],
-    "explanation": "Purge protection is a one-way switch, which is the point of it — a setting an attacker could turn off before destroying a vault would protect nothing.",
+    "correctIndex": 0,
+    "explanation": "A setting an attacker could turn off before destroying a vault would protect nothing, which is the whole point of making it irreversible. Soft delete is likewise always enabled and cannot be turned off.",
     "teaches": "key-vault-and-appconfig"
   },
   {
     "id": "sm-15",
     "examCode": "ai-200",
     "domain": "secure-monitor",
-    "kind": "dropdown",
-    "question": "Complete the statement about investigating a failing container.",
-    "segments": [
-      { "text": "A container repeatedly starting and exiting is reported as " },
-      {
-        "blankId": "b1",
-        "options": ["CrashLoopBackOff", "ImagePullBackOff", "OOMKilled"],
-        "correctIndex": 0
-      },
-      { "text": ", and the first place to look for the cause is " },
-      {
-        "blankId": "b2",
-        "options": ["the container's own logs", "the node metrics", "the ingress configuration"],
-        "correctIndex": 0
-      },
-      { "text": "." }
+    "question": "A container is repeatedly starting and exiting, reported as CrashLoopBackOff. Where should you look first?",
+    "options": [
+      "The container's own logs",
+      "The node metrics",
+      "The ingress configuration",
+      "The image registry's pull history"
     ],
-    "explanation": "The platform reports the loop; the application explains it. Reaching for a restart before reading the logs destroys the only evidence of why it exited.",
+    "correctIndex": 0,
+    "explanation": "The platform reports the loop; the application explains it. Reaching for a restart before reading the logs destroys the only evidence of why it exited, and CrashLoopBackOff says nothing about the cause on its own.",
     "teaches": "troubleshooting-containers"
   }
 ]

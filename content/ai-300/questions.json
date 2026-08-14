@@ -51,32 +51,67 @@
     "id": "gi-04",
     "examCode": "ai-300",
     "domain": "genaiops-infrastructure",
+    "kind": "yesno",
     "caseStudyId": "cs-verrick-aiops",
-    "question": "The application authenticates with an API key created by an engineer who has left. How should it reach the Foundry project instead?",
-    "options": [
-      "With a managed identity and an appropriate role assignment",
-      "With a new API key stored in Azure Key Vault",
-      "With a new API key rotated on a 30-day schedule",
-      "With a service principal using a client secret in an app setting"
+    "question": "The application authenticates with an API key created by an engineer who has left. Judge each statement.",
+    "statements": [
+      {
+        "text": "A managed identity's credential is created and rotated by Azure and never exists in a form anyone can take.",
+        "correct": true
+      },
+      {
+        "text": "An API key identifies nobody, so its use cannot be attributed to a person or workload.",
+        "correct": true
+      },
+      {
+        "text": "A key stored in Key Vault could still have been copied before it was moved there.",
+        "correct": true
+      },
+      {
+        "text": "Rotating the key on a 30-day schedule would satisfy the requirement.",
+        "correct": false
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "A managed identity's credential is created and rotated by Azure and never exists in a form anyone can take. Every other option keeps a bearer credential in existence that identifies nobody and could have been copied before rotation.",
+    "explanation": "Rotation shortens the window in which a taken credential works but keeps a bearer credential in existence throughout, which is the thing the requirement removes. Managed identity is the only option where nothing exists for a departing engineer to have taken.",
     "teaches": "genaiops-security"
   },
   {
     "id": "gi-05",
     "examCode": "ai-300",
     "domain": "genaiops-infrastructure",
+    "kind": "dropdown",
     "caseStudyId": "cs-verrick-aiops",
-    "question": "The deployment workflow authenticates to Azure with a repository secret that expires in five weeks. What should replace it?",
-    "options": [
-      "A federated credential, so the workflow exchanges its own token for an Azure token",
-      "A longer-lived client secret with a two-year expiry",
-      "A certificate credential with the private key stored as a repository secret",
-      "A managed identity assigned to the GitHub runner"
+    "question": "Complete the statement about the deployment workflow's expiring secret.",
+    "segments": [
+      {
+        "text": "The replacement that removes the expiry problem rather than deferring it is "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "a federated credential",
+          "a client secret with a two-year expiry",
+          "a certificate with its private key in a repository secret"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", because the workflow then "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "exchanges its own issuer's token for an Azure token, storing nothing",
+          "reads the credential from Key Vault at run time",
+          "runs under a managed identity on the GitHub runner"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "Workload identity federation removes the stored credential entirely and therefore removes the expiry problem with it. A longer secret only defers the same failure, a certificate is still a stored secret, and a managed identity is not available to a runner outside Azure.",
+    "explanation": "A longer secret only defers the same failure and a certificate is still a stored secret. A managed identity is not available to a runner outside Azure, which is what makes federation the answer rather than the obvious alternative.",
     "teaches": "genaiops-security"
   },
   {
@@ -166,7 +201,10 @@
       "The workload runs occasionally and unpredictably",
       "The workload uses an open-weight model you must host yourself"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Reserved capacity buys predictable latency and freedom from throttling. Occasional traffic is where per-token billing is cheaper, and self-hosting an open-weight model calls for managed compute instead.",
     "teaches": "foundation-model-deployment"
   },
@@ -182,7 +220,12 @@
       "Compare the results against the production baseline",
       "Run the evaluation dataset against the variant"
     ],
-    "correctOrder": [1, 3, 2, 0],
+    "correctOrder": [
+      1,
+      3,
+      2,
+      0
+    ],
     "explanation": "The change is captured, evaluated, compared, and only then promoted. Deploying first and measuring afterwards means a regression is discovered by underwriters rather than by the pipeline.",
     "teaches": "prompt-versioning"
   },
@@ -193,10 +236,22 @@
     "kind": "match",
     "question": "Match each hosting option to the workload it suits.",
     "pairs": [
-      { "term": "Serverless API endpoint", "definition": "Variable or low-volume traffic with no capacity planning" },
-      { "term": "Provisioned throughput units", "definition": "High volume with a strict latency requirement" },
-      { "term": "Managed compute", "definition": "An open-weight model you must host and isolate yourself" },
-      { "term": "Batch endpoint", "definition": "Large-volume asynchronous scoring with no latency requirement" }
+      {
+        "term": "Serverless API endpoint",
+        "definition": "Variable or low-volume traffic with no capacity planning"
+      },
+      {
+        "term": "Provisioned throughput units",
+        "definition": "High volume with a strict latency requirement"
+      },
+      {
+        "term": "Managed compute",
+        "definition": "An open-weight model you must host and isolate yourself"
+      },
+      {
+        "term": "Batch endpoint",
+        "definition": "Large-volume asynchronous scoring with no latency requirement"
+      }
     ],
     "explanation": "The first three are generative hosting options that differ by who owns the capacity; the fourth belongs to Azure Machine Learning and is included because confusing real-time and batch is this exam's most expensive mistake.",
     "teaches": "foundation-model-deployment"
@@ -208,19 +263,33 @@
     "kind": "dropdown",
     "question": "Complete the statement about credentials in a GenAIOps pipeline.",
     "segments": [
-      { "text": "An application running in Azure should reach a Foundry project using " },
+      {
+        "text": "An application running in Azure should reach a Foundry project using "
+      },
       {
         "blankId": "b1",
-        "options": ["a managed identity", "an API key in an app setting", "a shared service account"],
+        "options": [
+          "a managed identity",
+          "an API key in an app setting",
+          "a shared service account"
+        ],
         "correctIndex": 0
       },
-      { "text": ", while a GitHub Actions workflow should authenticate using " },
+      {
+        "text": ", while a GitHub Actions workflow should authenticate using "
+      },
       {
         "blankId": "b2",
-        "options": ["a federated credential", "a client secret repository secret", "a stored certificate"],
+        "options": [
+          "a federated credential",
+          "a client secret repository secret",
+          "a stored certificate"
+        ],
         "correctIndex": 0
       },
-      { "text": "." }
+      {
+        "text": "."
+      }
     ],
     "explanation": "Both answers remove the stored credential entirely, which also removes expiry and rotation as operational problems. The ranking is managed identity inside Azure, federation outside it.",
     "teaches": "genaiops-security"
@@ -432,7 +501,10 @@
       "It is designed for sub-second interactive responses",
       "It must be called once per row of input"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Batch endpoints process a dataset as a job and release compute afterwards. Interactive latency and per-row calling both describe the online endpoint, which is what people wrongly reach for when scoring an archive.",
     "teaches": "deployment-endpoints"
   },
@@ -448,7 +520,12 @@
       "Create a second deployment on the existing endpoint",
       "Route a small percentage of traffic to the new deployment"
     ],
-    "correctOrder": [1, 2, 3, 0],
+    "correctOrder": [
+      1,
+      2,
+      3,
+      0
+    ],
     "explanation": "The model is registered, deployed alongside the current version, given a small share of traffic, and only promoted further once the evidence supports it. Going straight to full traffic removes the point of having two deployments.",
     "teaches": "deployment-endpoints"
   },
@@ -459,10 +536,22 @@
     "kind": "match",
     "question": "Match each MLOps concept to what it addresses.",
     "pairs": [
-      { "term": "MLflow tracking", "definition": "Recording parameters, metrics, and artifacts per run" },
-      { "term": "Feature retrieval specification", "definition": "Making inference compute features the same way as training" },
-      { "term": "Traffic split", "definition": "Shifting load gradually between two deployments" },
-      { "term": "Data drift monitoring", "definition": "Detecting that production inputs no longer match the baseline" }
+      {
+        "term": "MLflow tracking",
+        "definition": "Recording parameters, metrics, and artifacts per run"
+      },
+      {
+        "term": "Feature retrieval specification",
+        "definition": "Making inference compute features the same way as training"
+      },
+      {
+        "term": "Traffic split",
+        "definition": "Shifting load gradually between two deployments"
+      },
+      {
+        "term": "Data drift monitoring",
+        "definition": "Detecting that production inputs no longer match the baseline"
+      }
     ],
     "explanation": "One records the past, one guards consistency, one controls release, and one watches production. Between them they answer what happened, what will happen, and what is happening now.",
     "teaches": "training-orchestration"
@@ -474,10 +563,22 @@
     "kind": "yesno",
     "question": "A model has been registered and deployed to a managed online endpoint with two deployments and a traffic split. Judge each statement.",
     "statements": [
-      { "text": "Rolling back means setting the new deployment's traffic share to zero.", "correct": true },
-      { "text": "Both deployments can run different model versions simultaneously.", "correct": true },
-      { "text": "Registration records lineage back to the run that produced the model.", "correct": true },
-      { "text": "The endpoint releases its compute between requests.", "correct": false }
+      {
+        "text": "Rolling back means setting the new deployment's traffic share to zero.",
+        "correct": true
+      },
+      {
+        "text": "Both deployments can run different model versions simultaneously.",
+        "correct": true
+      },
+      {
+        "text": "Registration records lineage back to the run that produced the model.",
+        "correct": true
+      },
+      {
+        "text": "The endpoint releases its compute between requests.",
+        "correct": false
+      }
     ],
     "explanation": "An online endpoint is provisioned continuously, which is what gives it low latency and what makes it the wrong instrument for a monthly bulk job. Batch endpoints are the ones that release compute when finished.",
     "teaches": "deployment-endpoints"
@@ -629,7 +730,10 @@
       "The registered model binary",
       "The production feature dataset"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Templates and environment specifications are code and benefit from review and history. Models and datasets are versioned as assets in the workspace and referenced by name and version instead.",
     "teaches": "iac-and-github"
   },
@@ -645,7 +749,12 @@
       "Authenticate the GitHub Actions workflow with a federated credential",
       "Deploy the template with the Azure CLI from the workflow"
     ],
-    "correctOrder": [1, 2, 3, 0],
+    "correctOrder": [
+      1,
+      2,
+      3,
+      0
+    ],
     "explanation": "The environment is described, the workflow is given a way to authenticate without a stored secret, the template is deployed, and only then is there somewhere for the pipeline to run.",
     "teaches": "iac-and-github"
   },
@@ -758,39 +867,30 @@
     "id": "qo-08",
     "examCode": "ai-300",
     "domain": "genai-quality-observability",
-    "kind": "yesno",
-    "question": "An evaluation dataset has been prepared for a RAG application. Judge each statement.",
-    "statements": [
-      { "text": "Groundedness can be computed without a ground-truth answer.", "correct": true },
-      { "text": "Retrieval metrics can show that the correct document was never returned.", "correct": true },
-      { "text": "Coherence judges the response without needing the retrieved context.", "correct": true },
-      { "text": "A high groundedness score guarantees the answer is correct.", "correct": false }
+    "question": "A RAG answer scores highly for groundedness. What does that not tell you?",
+    "options": [
+      "Whether the answer is correct",
+      "Whether the answer is supported by the retrieved context",
+      "Whether the response is internally consistent",
+      "Whether the evaluation ran against the prepared dataset"
     ],
-    "explanation": "Groundedness measures support by the retrieved context, so an answer faithfully grounded in a wrong document scores well and is still wrong. That is why retrieval metrics are measured alongside it rather than instead of it.",
+    "correctIndex": 0,
+    "explanation": "Groundedness measures support by the retrieved context, so an answer faithfully grounded in the wrong document scores well and is still wrong. That is why retrieval metrics — which can show the correct document was never returned — are measured alongside it rather than instead of it.",
     "teaches": "evaluation-metrics"
   },
   {
     "id": "qo-09",
     "examCode": "ai-300",
     "domain": "genai-quality-observability",
-    "kind": "dropdown",
-    "question": "Complete the statement about safety in a generative system.",
-    "segments": [
-      { "text": "To stop a harmful completion reaching a user you rely on " },
-      {
-        "blankId": "b1",
-        "options": ["a content filter", "a risk and safety evaluator", "tracing"],
-        "correctIndex": 0
-      },
-      { "text": ", and to report how often the system would produce one you rely on " },
-      {
-        "blankId": "b2",
-        "options": ["a risk and safety evaluator", "a content filter", "a quota limit"],
-        "correctIndex": 0
-      },
-      { "text": "." }
+    "question": "Which mechanism stops a harmful completion reaching a user, as opposed to reporting how often the system would produce one?",
+    "options": [
+      "A content filter, which acts in the request path",
+      "A risk and safety evaluator, which acts in the request path",
+      "Tracing, which records every completion",
+      "A quota limit, which caps the request rate"
     ],
-    "explanation": "The filter acts in the request path and the evaluator measures against adversarial prompts. Reporting one as though it did the other's job is the mistake this pairing is built around.",
+    "correctIndex": 0,
+    "explanation": "The filter acts in the request path and blocks; the evaluator measures against adversarial prompts and reports. Reporting one as though it did the other's job is the mistake this pairing is built around.",
     "teaches": "safety-evaluations"
   },
   {
@@ -895,7 +995,10 @@
       "It cannot be used for supervised fine-tuning",
       "It always requires more examples than real data"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Synthetic data inherits whatever the generator got wrong, which is why it is reviewed before use rather than trusted. It is perfectly usable for supervised fine-tuning and carries no inherent volume penalty.",
     "teaches": "fine-tuning-lifecycle"
   },
@@ -911,7 +1014,12 @@
       "Fine-tune a model on curated examples",
       "Add few-shot examples of the desired output"
     ],
-    "correctOrder": [1, 3, 0, 2],
+    "correctOrder": [
+      1,
+      3,
+      0,
+      2
+    ],
     "explanation": "The ladder runs from free and immediate to expensive and slow: prompt, then examples, then retrieval when the gap is missing knowledge, then fine-tuning when the gap is consistent form. Starting at the bottom rung wastes weeks.",
     "teaches": "fine-tuning-lifecycle"
   },
@@ -922,10 +1030,22 @@
     "kind": "match",
     "question": "Match each retrieval symptom to its most likely cause.",
     "pairs": [
-      { "term": "Exact product codes are never found", "definition": "Vector-only search, which carries little signal for identifiers" },
-      { "term": "Answers miss facts split across a page break", "definition": "Chunking without overlap" },
-      { "term": "The assistant often finds nothing at all", "definition": "A similarity threshold set too high" },
-      { "term": "Prompts are full of irrelevant passages", "definition": "A similarity threshold set too low" }
+      {
+        "term": "Exact product codes are never found",
+        "definition": "Vector-only search, which carries little signal for identifiers"
+      },
+      {
+        "term": "Answers miss facts split across a page break",
+        "definition": "Chunking without overlap"
+      },
+      {
+        "term": "The assistant often finds nothing at all",
+        "definition": "A similarity threshold set too high"
+      },
+      {
+        "term": "Prompts are full of irrelevant passages",
+        "definition": "A similarity threshold set too low"
+      }
     ],
     "explanation": "Two of these are structural choices made at index time and two are the same dial turned in opposite directions. Diagnosing which before changing anything is what separates tuning from guessing.",
     "teaches": "rag-optimisation"

@@ -176,7 +176,10 @@
       "They are visible to all users in the tenant by default",
       "They can only be applied to guest users"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Custom security attributes are organised into attribute sets and are deliberately invisible without an Attribute Definition or Attribute Assignment role — even a Global Administrator does not read them by default. They apply to users and service principals alike.",
     "teaches": "users-groups-and-licenses"
   },
@@ -192,7 +195,12 @@
       "Publish the TXT or MX record supplied by Microsoft Entra in public DNS",
       "Select Verify and wait for Microsoft Entra to confirm ownership"
     ],
-    "correctOrder": [1, 2, 3, 0],
+    "correctOrder": [
+      1,
+      2,
+      3,
+      0
+    ],
     "explanation": "The domain is declared first so Microsoft Entra can issue a record to publish, then the record is published, then verification confirms ownership. Only after verification succeeds can the suffix be used on a user.",
     "teaches": "entra-tenant-configuration"
   },
@@ -203,10 +211,22 @@
     "kind": "match",
     "question": "Match each hybrid identity component to what it does.",
     "pairs": [
-      { "term": "Password hash synchronisation", "definition": "Validates the password in the cloud using a synchronised hash" },
-      { "term": "Pass-through authentication", "definition": "Validates the password against a domain controller through an agent" },
-      { "term": "Seamless single sign-on", "definition": "Signs domain-joined machines in without a prompt" },
-      { "term": "Microsoft Entra Connect Health", "definition": "Monitors the sync agents and raises alerts when sync stops" }
+      {
+        "term": "Password hash synchronisation",
+        "definition": "Validates the password in the cloud using a synchronised hash"
+      },
+      {
+        "term": "Pass-through authentication",
+        "definition": "Validates the password against a domain controller through an agent"
+      },
+      {
+        "term": "Seamless single sign-on",
+        "definition": "Signs domain-joined machines in without a prompt"
+      },
+      {
+        "term": "Microsoft Entra Connect Health",
+        "definition": "Monitors the sync agents and raises alerts when sync stops"
+      }
     ],
     "explanation": "Three of these decide where the password is checked or whether the user is prompted; the fourth watches the machinery itself. Connect Health is the one that answers 'why did synchronisation stop three days ago'.",
     "teaches": "hybrid-identity-and-sync"
@@ -263,32 +283,67 @@
     "id": "aa-04",
     "examCode": "sc-300",
     "domain": "authentication-access",
+    "kind": "dropdown",
     "caseStudyId": "cs-halden-identity",
-    "question": "When the security team disables a compromised account, tokens already issued must stop working within minutes. What delivers this?",
-    "options": [
-      "Continuous access evaluation",
-      "A sign-in frequency session control set to one hour",
-      "Reducing the refresh token lifetime in the tenant",
-      "A Conditional Access policy that blocks the user"
+    "question": "Complete the statement about revoking access to a disabled account within minutes.",
+    "segments": [
+      {
+        "text": "The capability that meets the requirement is "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "continuous access evaluation",
+          "a sign-in frequency session control set to one hour",
+          "a reduced refresh token lifetime"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", because it "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "pushes critical events to supporting services, which reject the existing token in near real time",
+          "forces the user to sign in again at the next hourly interval",
+          "shortens how long any issued token remains valid tenant-wide"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "Continuous access evaluation pushes critical events such as account disable to supporting services, which then reject the existing token in near real time. Every other option shortens or re-evaluates the window rather than closing it on the event itself.",
+    "explanation": "Every alternative shortens or re-evaluates the window rather than closing it on the event itself, so an account disabled just after a re-evaluation still holds a working token for the rest of the interval. Continuous access evaluation reacts to the disable itself, which is what \"within minutes\" requires.",
     "teaches": "conditional-access-controls"
   },
   {
     "id": "aa-05",
     "examCode": "sc-300",
     "domain": "authentication-access",
+    "kind": "yesno",
     "caseStudyId": "cs-halden-identity",
-    "question": "Administrators must be forced onto phishing-resistant authentication without disturbing the rest of the workforce. What should you do?",
-    "options": [
-      "Add a Conditional Access policy targeting the administrator roles that requires a phishing-resistant authentication strength",
-      "Change the existing all-users policy to require a phishing-resistant authentication strength",
-      "Disable SMS in the authentication methods policy for the whole tenant",
-      "Require a compliant device for the administrator roles"
+    "question": "Administrators must be forced onto phishing-resistant authentication without disturbing the rest of the workforce. Judge each statement.",
+    "statements": [
+      {
+        "text": "An authentication strength names which methods count rather than merely demanding a second factor.",
+        "correct": true
+      },
+      {
+        "text": "Targeting the administrator roles in a separate Conditional Access policy leaves the rest of the workforce alone.",
+        "correct": true
+      },
+      {
+        "text": "Disabling SMS in the tenant-wide authentication methods policy would affect everyone, not only administrators.",
+        "correct": true
+      },
+      {
+        "text": "Requiring a compliant device for the administrator roles would satisfy the phishing-resistance requirement.",
+        "correct": false
+      }
     ],
-    "correctIndex": 0,
-    "explanation": "Authentication strength is the grant control that names which methods count rather than merely demanding a second factor, and targeting the administrator roles leaves everyone else alone. Editing the all-users policy or disabling SMS tenant-wide would affect the whole workforce, which the requirement forbids.",
+    "explanation": "Device compliance says something about the machine, not about how the credential resists phishing, so it leaves the stated requirement unmet. Authentication strength is the grant control that names methods, and scoping it to the administrator roles is what keeps the change off everyone else.",
     "teaches": "conditional-access-controls"
   },
   {
@@ -423,7 +478,10 @@
       "Require the user to be a member of an administrative unit",
       "Require the sign-in to originate from a named location"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Compliance and approved client app are grant controls. Location is an assignment condition that decides when the policy applies, not something the user can be asked to satisfy, and administrative unit membership is not a Conditional Access control at all.",
     "teaches": "conditional-access-controls"
   },
@@ -439,7 +497,12 @@
       "Enable the policy in report-only mode",
       "Review the report-only results in the sign-in logs"
     ],
-    "correctOrder": [1, 2, 3, 0],
+    "correctOrder": [
+      1,
+      2,
+      3,
+      0
+    ],
     "explanation": "Excluding break-glass accounts comes first because a mistake made later is what locks the tenant out. Report-only then gathers real evidence, the evidence is read, and only then is the policy enforced.",
     "teaches": "conditional-access-design"
   },
@@ -450,10 +513,22 @@
     "kind": "yesno",
     "question": "Microsoft Entra ID Protection has raised a user risk detection of 'leaked credentials' for an account. Judge each statement.",
     "statements": [
-      { "text": "Requiring a secure password change is an appropriate remediation.", "correct": true },
-      { "text": "The detection means the account's password was found outside the organisation.", "correct": true },
-      { "text": "Requiring multifactor authentication alone invalidates the leaked password.", "correct": false },
-      { "text": "An administrator can dismiss the risk if investigation shows a false positive.", "correct": true }
+      {
+        "text": "Requiring a secure password change is an appropriate remediation.",
+        "correct": true
+      },
+      {
+        "text": "The detection means the account's password was found outside the organisation.",
+        "correct": true
+      },
+      {
+        "text": "Requiring multifactor authentication alone invalidates the leaked password.",
+        "correct": false
+      },
+      {
+        "text": "An administrator can dismiss the risk if investigation shows a false positive.",
+        "correct": true
+      }
     ],
     "explanation": "Leaked credentials is a user risk detection, and user risk is remediated by replacing the credential. Multifactor authentication proves who is signing in but leaves the exposed password perfectly valid, which is the trap in this family of questions.",
     "teaches": "id-protection-and-risk"
@@ -465,19 +540,33 @@
     "kind": "dropdown",
     "question": "Complete the statement about risk in Microsoft Entra ID Protection.",
     "segments": [
-      { "text": "A detection that this particular authentication looks illegitimate raises " },
+      {
+        "text": "A detection that this particular authentication looks illegitimate raises "
+      },
       {
         "blankId": "b1",
-        "options": ["sign-in risk", "user risk", "workload identity risk"],
+        "options": [
+          "sign-in risk",
+          "user risk",
+          "workload identity risk"
+        ],
         "correctIndex": 0
       },
-      { "text": ", and the natural remediation for it is " },
+      {
+        "text": ", and the natural remediation for it is "
+      },
       {
         "blankId": "b2",
-        "options": ["multifactor authentication", "a secure password change", "deleting the service principal"],
+        "options": [
+          "multifactor authentication",
+          "a secure password change",
+          "deleting the service principal"
+        ],
         "correctIndex": 0
       },
-      { "text": "." }
+      {
+        "text": "."
+      }
     ],
     "explanation": "Sign-in risk questions the authentication rather than the account, so proving the person is present resolves it. Pairing the wrong remediation with the wrong risk type is the most common mistake in this domain.",
     "teaches": "id-protection-and-risk"
@@ -659,7 +748,10 @@
       "They always require administrator consent",
       "They are used by daemon services that run with no user"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Delegated permissions act on behalf of a user and are bounded by that user's own rights. Always requiring administrator consent and suiting daemons are both properties of application permissions.",
     "teaches": "app-registrations-and-permissions"
   },
@@ -675,7 +767,12 @@
       "Call the storage account using the identity's token",
       "Remove the connection string from the application settings"
     ],
-    "correctOrder": [1, 0, 3, 2],
+    "correctOrder": [
+      1,
+      0,
+      3,
+      2
+    ],
     "explanation": "The identity must exist before it can be granted anything, and the grant must exist before the connection string can be safely removed. Removing the secret before the role assignment is in place breaks the function.",
     "teaches": "managed-identities-and-principals"
   },
@@ -686,10 +783,22 @@
     "kind": "match",
     "question": "Match each single sign-on option to the situation it suits.",
     "pairs": [
-      { "term": "SAML-based sign-on", "definition": "An established SaaS product that federates but predates OpenID Connect" },
-      { "term": "OpenID Connect", "definition": "A modern application registered against the Microsoft identity platform" },
-      { "term": "Password-based sign-on", "definition": "An application with no federation support, where credentials are vaulted and replayed" },
-      { "term": "Linked sign-on", "definition": "A tile that points at an existing sign-on experience elsewhere" }
+      {
+        "term": "SAML-based sign-on",
+        "definition": "An established SaaS product that federates but predates OpenID Connect"
+      },
+      {
+        "term": "OpenID Connect",
+        "definition": "A modern application registered against the Microsoft identity platform"
+      },
+      {
+        "term": "Password-based sign-on",
+        "definition": "An application with no federation support, where credentials are vaulted and replayed"
+      },
+      {
+        "term": "Linked sign-on",
+        "definition": "A tile that points at an existing sign-on experience elsewhere"
+      }
     ],
     "explanation": "The first two are real federation and differ by protocol generation. The third is a workaround for applications that cannot federate at all, and the fourth grants nothing — it is only a shortcut in the portal.",
     "teaches": "enterprise-applications"
@@ -698,24 +807,15 @@
     "id": "wi-15",
     "examCode": "sc-300",
     "domain": "workload-identities",
-    "kind": "dropdown",
-    "question": "Complete the statement about application credentials.",
-    "segments": [
-      { "text": "For an application running inside Azure, the credential that requires no storage or rotation by you is " },
-      {
-        "blankId": "b1",
-        "options": ["a managed identity", "a client secret", "a shared user account"],
-        "correctIndex": 0
-      },
-      { "text": ", while for a workflow running outside Azure the equivalent is " },
-      {
-        "blankId": "b2",
-        "options": ["a federated credential", "a client secret with a long expiry", "a certificate stored in the pipeline"],
-        "correctIndex": 0
-      },
-      { "text": "." }
+    "question": "A GitHub Actions workflow running outside Azure needs to authenticate to Microsoft Entra without a stored secret. What should you configure?",
+    "options": [
+      "A federated credential on the app registration",
+      "A client secret with a long expiry",
+      "A certificate stored in the pipeline",
+      "A managed identity assigned to the workflow"
     ],
-    "explanation": "Both answers remove the stored secret entirely, which is the ranking the exam wants: managed identity inside Azure, workload identity federation outside it, and secrets only when nothing else is possible.",
+    "correctIndex": 0,
+    "explanation": "Workload identity federation lets an external workflow present its own issuer's token and exchange it, removing the stored secret entirely. A managed identity is the equivalent for something running inside Azure and cannot be assigned to a workflow outside it; the ranking is managed identity inside, federation outside, secrets only when neither is possible.",
     "teaches": "app-registrations-and-permissions"
   },
   {
@@ -880,7 +980,10 @@
       "The review recurrence interval",
       "Whether recommendations based on last sign-in are shown"
     ],
-    "correctIndexes": [0, 1],
+    "correctIndexes": [
+      0,
+      1
+    ],
     "explanation": "Auto apply enforces the decisions that were made, and the no-response action decides the fate of everything nobody reviewed. Recurrence and recommendations change how often the review runs and how easy it is to complete, not what it does at the end.",
     "teaches": "access-reviews"
   },
@@ -896,7 +999,12 @@
       "The role is active for the configured duration and then expires",
       "The user completes multifactor authentication and supplies a justification"
     ],
-    "correctOrder": [1, 3, 0, 2],
+    "correctOrder": [
+      1,
+      3,
+      0,
+      2
+    ],
     "explanation": "Activation is requested, the conditions configured in the role settings are satisfied, an approver decides, and the resulting assignment is time-bound. The expiry at the end is what makes the privilege just-in-time rather than permanent.",
     "teaches": "privileged-identity-management"
   },
@@ -907,10 +1015,22 @@
     "kind": "match",
     "question": "Match each Microsoft Entra log or report to the question it answers.",
     "pairs": [
-      { "term": "Sign-in logs", "definition": "Which Conditional Access policies applied to an authentication and what they decided" },
-      { "term": "Audit logs", "definition": "Who changed a directory object, and when" },
-      { "term": "Provisioning logs", "definition": "Why a user failed to be created in a connected SaaS application" },
-      { "term": "Identity Secure Score", "definition": "Which identity controls are still missing, ranked by effect" }
+      {
+        "term": "Sign-in logs",
+        "definition": "Which Conditional Access policies applied to an authentication and what they decided"
+      },
+      {
+        "term": "Audit logs",
+        "definition": "Who changed a directory object, and when"
+      },
+      {
+        "term": "Provisioning logs",
+        "definition": "Why a user failed to be created in a connected SaaS application"
+      },
+      {
+        "term": "Identity Secure Score",
+        "definition": "Which identity controls are still missing, ranked by effect"
+      }
     ],
     "explanation": "The first three are records of what happened and differ by what kind of event they capture. The fourth is forward-looking — a prioritised backlog rather than a history.",
     "teaches": "identity-monitoring-and-logs"
@@ -919,15 +1039,15 @@
     "id": "ig-14",
     "examCode": "sc-300",
     "domain": "identity-governance",
-    "kind": "yesno",
-    "question": "An access package has been created with a policy allowing users in a connected organisation to request it. Judge each statement.",
-    "statements": [
-      { "text": "The policy can require approval before the assignment is created.", "correct": true },
-      { "text": "The assignment can be set to expire after a fixed number of days.", "correct": true },
-      { "text": "A separation of duties rule can prevent a requestor who holds an incompatible package.", "correct": true },
-      { "text": "The package can be used to assign a Microsoft 365 licence directly.", "correct": false }
+    "question": "Which of these is NOT something an access package can do directly?",
+    "options": [
+      "Assign a Microsoft 365 licence",
+      "Require approval before the assignment is created",
+      "Expire the assignment after a fixed number of days",
+      "Apply a separation of duties rule against an incompatible package"
     ],
-    "explanation": "Approval, expiry, and separation of duties are all access package policy features. Licensing is not a resource type in a catalog — the standard route is to include a group and let group-based licensing do the rest.",
+    "correctIndex": 0,
+    "explanation": "Licensing is not a resource type in a catalog. The standard route is to include a group in the package and let group-based licensing do the rest, which is why the answer is a licence rather than any of the policy features.",
     "teaches": "entitlement-management"
   }
 ]
