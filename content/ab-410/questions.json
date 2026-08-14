@@ -1,0 +1,1053 @@
+[
+  {
+    "id": "fn-01",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "question": "A requirement reads: \"When a case is closed, the account's last-contact date must be updated.\" Which implementation should you recommend first?",
+    "options": [
+      "A cloud flow or business rule triggered by the change",
+      "A canvas app screen the agent opens after closing",
+      "A Copilot Studio agent the user asks to update the account",
+      "A plug-in registered on the case table"
+    ],
+    "correctIndex": 0,
+    "explanation": "\"Something must happen when a record changes\" is the sentence that describes a trigger, and the lowest rung that satisfies it is declarative. A plug-in solves the same problem one rung up the extensibility ladder and costs lifecycle the flow does not.",
+    "teaches": "solution-design-with-ai"
+  },
+  {
+    "id": "fn-02",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "question": "A department asks for a solution so staff can \"ask in plain English which orders are late and why\". Which component fits the requirement?",
+    "options": [
+      "An agent",
+      "A model-driven app with an interactive dashboard",
+      "A canvas app with a search box",
+      "A Power BI report embedded in a model-driven app"
+    ],
+    "correctIndex": 0,
+    "explanation": "A request phrased as a natural-language question is an agent. The other three all answer the question, but each requires the user to know where to look rather than to ask.",
+    "teaches": "solution-design-with-ai"
+  },
+  {
+    "id": "fn-03",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "question": "A maker plans a custom Copilot Studio agent for a task that a first-party Dynamics 365 agent already performs. What should you recommend?",
+    "options": [
+      "Evaluate and adopt the built-in agent, and build custom only for what it does not cover",
+      "Build the custom agent so the organisation controls the whole experience",
+      "Build the custom agent and disable the built-in one to avoid duplication",
+      "Build both and let users choose"
+    ],
+    "correctIndex": 0,
+    "explanation": "Built-in agents are evaluated before custom ones are built. A custom agent is warranted only when nothing shipped covers the task or the task needs knowledge and actions unique to the organisation.",
+    "teaches": "solution-design-with-ai"
+  },
+  {
+    "id": "fn-04",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "question": "A pilot app built by a business user in the default environment is about to be rolled out to 400 staff. What should you do first?",
+    "options": [
+      "Move the solution into a dedicated production environment",
+      "Restrict who can create apps in the default environment",
+      "Add a data loss prevention policy to the default environment",
+      "Convert the app's solution to managed in place"
+    ],
+    "correctIndex": 0,
+    "explanation": "Every licensed user can create in the default environment and it cannot be governed as a real one, so it should not host a governed business solution. The other three are useful hygiene but leave the app where it should not be.",
+    "teaches": "solution-design-with-ai"
+  },
+  {
+    "id": "fn-05",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "question": "Which environment type should a maker use to build and experiment at no licence cost, with no other users needing access?",
+    "options": [
+      "Developer",
+      "Sandbox",
+      "Trial",
+      "Production"
+    ],
+    "correctIndex": 0,
+    "explanation": "A developer environment is free and single-user and is the intended place to build. Sandbox is the resettable copy used for testing with others, and production carries the support commitments.",
+    "teaches": "solution-design-with-ai"
+  },
+  {
+    "id": "fn-06",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "question": "A team imported an unmanaged solution into production and now cannot cleanly remove one of its components. Why?",
+    "options": [
+      "Unmanaged components have no solution layer to remove, so uninstalling does not delete them",
+      "Production environments block component deletion by default",
+      "The publisher prefix was left as the default one",
+      "The solution was imported without its connection references"
+    ],
+    "correctIndex": 0,
+    "explanation": "Managed solutions install as a removable layer; unmanaged components become part of the environment itself. This is why unmanaged belongs only in development and is very hard to unwind afterwards.",
+    "teaches": "solutions-and-alm"
+  },
+  {
+    "id": "fn-07",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "question": "The same managed solution must be imported into test and production and connect to a different SharePoint site in each. What makes that possible?",
+    "options": [
+      "Environment variables supplying the site value at import time",
+      "A separate unmanaged solution per environment",
+      "Editing the flow in each target after import",
+      "A cloud flow that reads the environment name and branches"
+    ],
+    "correctIndex": 0,
+    "explanation": "Environment variables and connection references hold what differs per environment outside the component, which is exactly what lets one managed artefact serve several environments. Editing after import defeats the point of a managed solution.",
+    "teaches": "solutions-and-alm"
+  },
+  {
+    "id": "fn-08",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "question": "Copilot generated a table in the data workspace with a text column holding one of five status values typed by hand. What should you change before using it?",
+    "options": [
+      "Replace it with a choice column",
+      "Add a business rule validating the five values",
+      "Make the column required",
+      "Add a formula column that normalises the casing"
+    ],
+    "correctIndex": 0,
+    "explanation": "A fixed list is a choice column, which stores an integer behind a label. Generated models tend to be flat and generously typed, and reviewing column types is the required step after generation. Validating free text is treating the symptom.",
+    "teaches": "dataverse-tables-and-columns"
+  },
+  {
+    "id": "fn-09",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "question": "A custom table was created with organisation ownership. Users must now see only the rows they own. What is required?",
+    "options": [
+      "Recreate the table with user-or-team ownership and migrate the data",
+      "Change the ownership type on the existing table",
+      "Set the User depth on the read privilege for the table",
+      "Enable column-level security on the owner column"
+    ],
+    "correctIndex": 0,
+    "explanation": "Ownership type is set at creation and cannot be changed. Privilege depth is meaningless on an organisation-owned table because there is no owner to compare against, so the only route to row-level security is a new table.",
+    "teaches": "dataverse-tables-and-columns"
+  },
+  {
+    "id": "fn-10",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "question": "Projects and consultants are related many-to-many, and each pairing must record the consultant's role and day rate on that project. How should you model it?",
+    "options": [
+      "A Project Assignment table between two one-to-many relationships",
+      "A many-to-many relationship with the role and rate on the consultant",
+      "A many-to-many relationship with the role and rate on the project",
+      "Two one-to-many relationships with the role stored as a choice on both sides"
+    ],
+    "correctIndex": 0,
+    "explanation": "An intersect table holds no attributes of its own, so a many-to-many that needs a role and a rate is really an entity. Putting the values on either end is wrong because they differ per pairing, not per project or per consultant.",
+    "teaches": "dataverse-relationships"
+  },
+  {
+    "id": "fn-11",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "kind": "match",
+    "question": "Match each cascade configuration on a one-to-many relationship to what it does to child rows.",
+    "pairs": [
+      {
+        "term": "Restrict Delete",
+        "definition": "Blocks deleting the parent while any child still references it"
+      },
+      {
+        "term": "Remove Link",
+        "definition": "Allows the delete and clears the child's lookup value"
+      },
+      {
+        "term": "Cascade All",
+        "definition": "Propagates the action to every child row"
+      },
+      {
+        "term": "Cascade None",
+        "definition": "Leaves child rows entirely untouched"
+      }
+    ],
+    "explanation": "Restrict Delete protects the association by refusing the delete; Remove Link permits it and loses the association instead. Confusing the two is how child rows quietly become orphans.",
+    "teaches": "dataverse-relationships"
+  },
+  {
+    "id": "fn-12",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "question": "A maker wants a column on the case table holding a one-line summary of a long description, refreshed as descriptions change. Which feature fits?",
+    "options": [
+      "A prompt column",
+      "A calculated column",
+      "A rollup column",
+      "A row summary"
+    ],
+    "correctIndex": 0,
+    "explanation": "A prompt column runs a generative prompt against the row and stores the result, which is the shape of an interpretive value like a summary. A row summary is a reading aid rendered for the user rather than stored data on the row.",
+    "teaches": "prompt-columns-and-row-summaries"
+  },
+  {
+    "id": "fn-13",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "question": "A maker proposes a prompt column to hold the invoice total for each order, calculated from the order lines. Why should you reject this?",
+    "options": [
+      "It is generated by a model call, so it is neither exact nor auditable",
+      "Prompt columns cannot read related rows",
+      "Prompt columns are limited to text output",
+      "Prompt columns recalculate only on a schedule"
+    ],
+    "correctIndex": 0,
+    "explanation": "A prompt column is generated, not computed, so it costs a model call and can be wrong. A currency total must be exact and defensible, which makes this a design error twice over — expensive and unreliable.",
+    "teaches": "prompt-columns-and-row-summaries"
+  },
+  {
+    "id": "fn-14",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "kind": "yesno",
+    "question": "A user can see more records than intended, so an administrator adds a further, more restrictive security role to their account. Judge each statement.",
+    "statements": [
+      {
+        "text": "Adding the role cannot reduce what the user can see.",
+        "correct": true
+      },
+      {
+        "text": "A user's effective access is the union of every role held directly and through their teams.",
+        "correct": true
+      },
+      {
+        "text": "The correct fix is to remove the role granting the wider privilege.",
+        "correct": true
+      },
+      {
+        "text": "Where two roles disagree on a privilege, the more restrictive depth applies.",
+        "correct": false
+      }
+    ],
+    "explanation": "Dataverse security is additive and has no deny, so the widest depth held always wins and adding a role can only widen access. This is the most common troubleshooting mistake in the model: an administrator tries to restrict somebody and enlarges their access instead.",
+    "teaches": "dataverse-security-model"
+  },
+  {
+    "id": "fn-15",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "question": "Salary must be hidden from users who can otherwise open the employee record. What should you configure?",
+    "options": [
+      "Column-level security with a column security profile",
+      "Remove the column from every form",
+      "A business rule that hides the column",
+      "A separate main form without the column, assigned by role"
+    ],
+    "correctIndex": 0,
+    "explanation": "Only column-level security actually withholds the value. All three alternatives change what a form displays while leaving the data readable through the API, exports, and advanced find.",
+    "teaches": "dataverse-security-model"
+  },
+  {
+    "id": "fn-16",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "kind": "multi",
+    "question": "Which two facts about a solution publisher prefix should drive your decision before development starts? Choose two.",
+    "options": [
+      "It becomes part of the schema name of every component the solution creates",
+      "It cannot be changed after components have been created with it",
+      "It determines which environments the solution can be imported into",
+      "It controls whether the solution installs as managed or unmanaged"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "The prefix is baked into schema names and is permanent, which is why a custom publisher is set before anything is built. It has no bearing on target environments or on the managed/unmanaged decision, which is made at export.",
+    "teaches": "solutions-and-alm"
+  },
+  {
+    "id": "fn-17",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "kind": "order",
+    "question": "Put the extensibility options in the order you should evaluate them, lowest cost of ownership first.",
+    "items": [
+      "Configuration in the maker portal",
+      "Power Fx expressions",
+      "A plug-in or custom connector",
+      "A pro-code service outside the platform"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "The ladder is configuration, then Power Fx, then plug-in or custom connector, then pro-code. Each rung up adds lifecycle and support cost, so the correct choice is the lowest rung that meets the requirement.",
+    "teaches": "solution-design-with-ai"
+  },
+  {
+    "id": "ia-01",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "question": "A table must present a service-focused form to support staff and a sales-focused form to the sales team. What is the supported approach?",
+    "options": [
+      "Create two main forms and assign security roles to each",
+      "Create two model-driven apps, each with its own copy of the table",
+      "Use one form and hide sections with a business rule based on the user's role",
+      "Create a form for support and a generative page for sales"
+    ],
+    "correctIndex": 0,
+    "explanation": "Multiple main forms with roles assigned is how one table serves two audiences. A business rule cannot read the user's security role, and duplicating the app duplicates maintenance for no benefit.",
+    "teaches": "model-driven-forms-and-views"
+  },
+  {
+    "id": "ia-02",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "question": "Users report that searching for a supplier's reference number in a model-driven app returns nothing, although the value is visible on the record. What should you check first?",
+    "options": [
+      "Whether the column is in the table's quick find view",
+      "Whether the column is on the main form",
+      "Whether the user's security role grants read on the column",
+      "Whether the table is included in the app's site map"
+    ],
+    "correctIndex": 0,
+    "explanation": "Quick find decides which columns are searchable, and a column missing from it produces exactly this symptom — visible on the record, invisible to search. A permissions problem would hide the value on the record too.",
+    "teaches": "model-driven-forms-and-views"
+  },
+  {
+    "id": "ia-03",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "question": "A maker generates a page from a natural-language description and needs it to move to production with the rest of the solution. What is true?",
+    "options": [
+      "It is a solution component and moves with the solution like any other",
+      "It must be regenerated in each environment from the same prompt",
+      "It can move only if it is first converted to a custom page",
+      "It is stored with the user who generated it and cannot be shared"
+    ],
+    "correctIndex": 0,
+    "explanation": "A generative page produces real, editable app content rather than a black box, so it behaves as an ordinary solution component. Regenerating per environment would give different output from the same prompt and defeat ALM.",
+    "teaches": "generative-pages"
+  },
+  {
+    "id": "ia-04",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "question": "A user opens a model-driven app and sees the Projects area in the navigation but an empty grid with no error. What is the most likely cause?",
+    "options": [
+      "Their security role grants no read privilege on the Project table",
+      "The table was not added to the app's site map",
+      "The app has not been shared with them",
+      "The default view has no columns configured"
+    ],
+    "correctIndex": 0,
+    "explanation": "Adding a table to an app only places it in navigation; data access is a separate configuration. Seeing the area at all proves the site map and the share are fine, which narrows it to privileges.",
+    "teaches": "model-driven-app-composition"
+  },
+  {
+    "id": "ia-05",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "question": "Two managers open the same model-driven chart and see different totals. What is the most likely explanation?",
+    "options": [
+      "The chart honours the underlying view's filter and each user's row-level access",
+      "The chart is cached per user and one of them is stale",
+      "One manager's app is running an older published version",
+      "The chart aggregates only the rows loaded into the current page"
+    ],
+    "correctIndex": 0,
+    "explanation": "A chart is built on a view, inherits its filter, and returns only rows the reader can see. Different numbers for different users is the security model working, not a defect.",
+    "teaches": "charts-and-dashboards"
+  },
+  {
+    "id": "ia-06",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "question": "A canvas app filters a 90,000-row Dataverse table and shows a count. The editor shows a delegation warning. What will users experience?",
+    "options": [
+      "A count computed from the first 500 rows, with no error shown",
+      "An error when the screen loads",
+      "A correct count after a noticeable delay",
+      "An empty gallery until the delegation limit is raised"
+    ],
+    "correctIndex": 0,
+    "explanation": "Non-delegable expressions do not fail — they evaluate over the delegation limit's worth of rows and return a confident wrong answer. That silence is precisely why delegation warnings must be treated as errors.",
+    "teaches": "canvas-apps-data-and-design"
+  },
+  {
+    "id": "ia-07",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "question": "A canvas app takes 30 seconds to open. Its OnStart runs ClearCollect over a large table. What should you do?",
+    "options": [
+      "Remove the collection and bind the gallery to the data source with a delegable filter",
+      "Move the ClearCollect to the first screen's OnVisible",
+      "Raise the delegation limit to 2,000 rows",
+      "Split the ClearCollect across several concurrent calls"
+    ],
+    "correctIndex": 0,
+    "explanation": "Preloading a table moves every row at launch, breaks past the delegation limit, and holds stale data for the session. Deferring or parallelising it treats the timing, not the cause; binding directly lets paging do the work.",
+    "teaches": "canvas-apps-data-and-design"
+  },
+  {
+    "id": "ia-08",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "question": "A value derived from a user's selection must always be current across every screen without being recomputed by hand. What should you use?",
+    "options": [
+      "A named formula in App.Formulas",
+      "A global variable set with Set in OnStart",
+      "A context variable updated on each screen",
+      "A collection rebuilt with ClearCollect when the screen becomes visible"
+    ],
+    "correctIndex": 0,
+    "explanation": "A named formula is a definition evaluated when read, so it is automatically current. A variable is an assignment and is stale the moment its inputs change, and that staleness is invisible.",
+    "teaches": "canvas-reuse-variables-and-errors"
+  },
+  {
+    "id": "ia-09",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "question": "A Patch sometimes fails and users believe their record saved. What should you add?",
+    "options": [
+      "IfError around the Patch, with Errors inspected to report the failure",
+      "A Notify call after every Patch",
+      "A Set that records the last saved record",
+      "A confirmation screen after the Patch completes"
+    ],
+    "correctIndex": 0,
+    "explanation": "IfError inspects the result and Errors returns the data-source errors after a Patch or SubmitForm. The other options all report success unconditionally, which is the behaviour causing the problem.",
+    "teaches": "canvas-reuse-variables-and-errors"
+  },
+  {
+    "id": "ia-10",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "question": "A screen is slow only in production and cannot be reproduced in the studio. Which tool should you use?",
+    "options": [
+      "Monitor attached to the published app",
+      "App Checker",
+      "Test Studio",
+      "The formula bar's delegation warnings"
+    ],
+    "correctIndex": 0,
+    "explanation": "Monitor works against a published app as well as one in the studio and logs every call with timing, which is what makes a production-only problem diagnosable. App Checker and delegation warnings are static, and Test Studio replays interactions rather than profiling them.",
+    "teaches": "canvas-testing-and-agents"
+  },
+  {
+    "id": "ia-11",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "question": "Which task is the poorest candidate for converting a canvas app into a Copilot Studio agent?",
+    "options": [
+      "Reconciling 200 rows against an uploaded spreadsheet in one sitting",
+      "Checking the status of a submitted request",
+      "Raising a simple facilities ticket",
+      "Answering a question about this month's figures"
+    ],
+    "correctIndex": 0,
+    "explanation": "An agent suits tasks expressed as a request. Bulk work over many rows needs a grid, a precise layout, and visible state, all of which a conversational surface handles badly.",
+    "teaches": "canvas-testing-and-agents"
+  },
+  {
+    "id": "ia-12",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "question": "A canvas app must resize sensibly on phones and desktops. What is the correct starting point?",
+    "options": [
+      "Turn off Scale to fit and lay out with containers sized against the parent",
+      "Design at desktop size and let Scale to fit shrink it",
+      "Build separate apps for phone and desktop",
+      "Set absolute X and Y coordinates from the screen width"
+    ],
+    "correctIndex": 0,
+    "explanation": "Responsiveness comes from disabling Scale to fit and using containers that size relatively. Scale to fit preserves the aspect ratio of a fixed design, which is the opposite of responsive.",
+    "teaches": "canvas-apps-data-and-design"
+  },
+  {
+    "id": "ia-13",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "kind": "multi",
+    "question": "Which two are required for a model-driven app user to open the app and see data? Choose two.",
+    "options": [
+      "The app is shared with them, ideally through a security role",
+      "A security role granting privileges on the tables the app uses",
+      "The tables are added to the app's site map",
+      "A personal view saved on each table"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "A user needs a licence, a role granting table privileges, and the app shared with them. The site map governs navigation rather than access, and personal views are a convenience.",
+    "teaches": "model-driven-app-composition"
+  },
+  {
+    "id": "ia-14",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "kind": "multi",
+    "question": "Which two accessibility requirements are checked when a canvas app is graded for accessibility? Choose two.",
+    "options": [
+      "Every interactive control has an accessible label",
+      "Tab order follows the reading order of the screen",
+      "Every screen uses the same background colour",
+      "All images are stored as SVG"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Accessible labels and a sensible tab order are graded requirements, along with contrast and keyboard reachability. Uniform backgrounds and image format are not accessibility criteria.",
+    "teaches": "canvas-apps-data-and-design"
+  },
+  {
+    "id": "ia-15",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "kind": "order",
+    "question": "Put these steps in the order you would take to diagnose a user reporting \"the app is empty\".",
+    "items": [
+      "Confirm the user has a licence for the app",
+      "Confirm the app has been shared with them",
+      "Confirm their security role grants read on the table",
+      "Confirm the default view's filter returns rows for them"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Work outward from what stops the app opening at all to what filters its content: licence, then share, then privileges, then the view's own query. Each step rules out a whole class of cause.",
+    "teaches": "model-driven-app-composition"
+  },
+  {
+    "id": "ia-16",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "kind": "order",
+    "question": "Put these canvas app scopes in order from narrowest to widest.",
+    "items": [
+      "A context variable set with UpdateContext",
+      "A global variable set with Set",
+      "A named formula declared in App.Formulas",
+      "A component library shared across apps"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "A context variable is one screen, a global variable is the app, a named formula is app-wide and always current, and a component library reaches beyond the app entirely.",
+    "teaches": "canvas-reuse-variables-and-errors"
+  },
+  {
+    "id": "ia-17",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "kind": "match",
+    "question": "Match each canvas app surface to what it is for.",
+    "pairs": [
+      {
+        "term": "Monitor",
+        "definition": "Logs every network call and formula evaluation with timing, live"
+      },
+      {
+        "term": "Test Studio",
+        "definition": "Records and replays interactions as a regression suite"
+      },
+      {
+        "term": "App Checker",
+        "definition": "Statically flags accessibility, performance, and rule violations"
+      },
+      {
+        "term": "Component library",
+        "definition": "Packages controls for reuse across apps with versioned updates"
+      }
+    ],
+    "explanation": "Monitor profiles a running app, Test Studio automates regression, App Checker analyses without running, and a component library is about reuse rather than quality.",
+    "teaches": "canvas-testing-and-agents"
+  },
+  {
+    "id": "la-01",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "caseStudyId": "cs-thornwick-expenses",
+    "question": "The claim flow runs about eleven thousand times a day against four hundred real claims. Which change satisfies the requirement that the fix must not consume a run in order to decide not to act?",
+    "options": [
+      "Add a select-columns filter and a trigger condition to the trigger",
+      "Add a Condition as the flow's first action and terminate when it is not met",
+      "Change the trigger's change type from Added or Modified to Added only",
+      "Reduce the flow's concurrency so fewer runs execute at once"
+    ],
+    "correctIndex": 0,
+    "explanation": "Select columns and trigger conditions are evaluated before a run starts, so a write the flow does not care about never fires it. A Condition inside the flow still consumes the run and still loops, which is what the requirement rules out. Restricting to Added only would stop the flow doing its job on edits.",
+    "teaches": "cloud-flow-triggers-and-connectors"
+  },
+  {
+    "id": "la-02",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "caseStudyId": "cs-thornwick-expenses",
+    "question": "Managers approve claims against a header Total that can be an hour out of date, and a ticket asks Microsoft to run the rollup recalculation every minute. What should you do?",
+    "options": [
+      "Replace the rollup column with a formula column and withdraw the ticket",
+      "Ask Microsoft to shorten the rollup recalculation interval as requested",
+      "Add a cloud flow that recalculates the rollup whenever a line changes",
+      "Trigger the mass calculate rollup field job from the app when a manager opens a claim"
+    ],
+    "correctIndex": 0,
+    "explanation": "A rollup is computed by a scheduled system job and is eventually consistent by design, so no interval makes it correct at the moment of reading — the requirement explicitly rules out a scheduled component in the path. A formula column evaluates on read and is always current. The two flow-based options reintroduce the same lag with more moving parts.",
+    "teaches": "business-rules-and-columns"
+  },
+  {
+    "id": "la-03",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "caseStudyId": "cs-thornwick-expenses",
+    "question": "The driver app takes forty seconds to open and does not show lines added by colleagues until it is restarted. Which single change addresses both symptoms?",
+    "options": [
+      "Remove the OnStart ClearCollect and bind the gallery to the data source with a delegable filter",
+      "Move the ClearCollect from OnStart to the gallery screen's OnVisible",
+      "Refresh the collection on a timer while the app is open",
+      "Filter the ClearCollect to the current driver's own lines"
+    ],
+    "correctIndex": 0,
+    "explanation": "Both symptoms are the same cause: a snapshot of sixty thousand rows taken once at launch. Binding directly to the source removes the launch cost and makes the gallery current by construction. Moving or filtering the collection reduces the cost but keeps the snapshot, so colleagues' lines are still missing.",
+    "teaches": "canvas-apps-data-and-design"
+  },
+  {
+    "id": "la-04",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "kind": "dropdown",
+    "caseStudyId": "cs-thornwick-expenses",
+    "question": "Complete the statement about the 130 subcontractor claims that never reach an approver.",
+    "segments": [
+      {
+        "text": "The approval action fails rather than approving by default because "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "Assigned to resolves to an empty value from the Manager lookup",
+          "subcontractors hold no Power Automate licence",
+          "the flow's connection was created by a user without approval rights"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", and the change that meets the requirement without weakening approval for employees is to "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "branch on an empty manager and route those claims to a depot approver team",
+          "switch the action to Create an approval so the flow continues",
+          "set the approval type to First to respond"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "An approval with no approver fails at the action; it does not silently pass. The requirement is that every claim reaches an approver, so the fix is a fallback route for rows with no manager. Create an approval would merely stop the flow blocking while still assigning to nobody, and First to respond changes the quorum, not who receives it.",
+    "teaches": "cloud-flow-actions-and-control"
+  },
+  {
+    "id": "la-05",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "kind": "yesno",
+    "caseStudyId": "cs-thornwick-expenses",
+    "question": "Consider the receipt categorisation prompt and its forty-fold credit consumption. Judge each statement.",
+    "statements": [
+      {
+        "text": "Adding the chart of accounts as knowledge and requiring the output to be one of its values would stop categories such as \"probably fuel\" being returned.",
+        "correct": true
+      },
+      {
+        "text": "Invoking the prompt inside an Apply to each over every line makes credit consumption proportional to line count rather than to claim count.",
+        "correct": true
+      },
+      {
+        "text": "Moving the prompt out of the loop and passing all of a claim's lines in one call would reduce consumption, and is acceptable only if the output still returns a category per line.",
+        "correct": true
+      },
+      {
+        "text": "Switching the prompt to a cheaper model would satisfy the requirement that only chart-of-accounts values are returned.",
+        "correct": false
+      }
+    ],
+    "explanation": "Grounding plus a constrained output shape is what fixes invented categories; model choice trades capability, latency, and cost and does nothing about the value set. The loop is the source of the bill, and aggregating is legitimate here only because the requirement preserves per-line accuracy for genuinely mixed claims.",
+    "teaches": "ai-hub-prompts"
+  },
+  {
+    "id": "la-06",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "A flow works perfectly for its author and never fires for anyone else. Which trigger setting should you check?",
+    "options": [
+      "Scope",
+      "Change type",
+      "Select columns",
+      "Concurrency control"
+    ],
+    "correctIndex": 0,
+    "explanation": "Scope decides whose rows count. Left at User, the trigger only sees rows owned by the flow's owner, which produces exactly this symptom. Select columns narrows which changes fire it, not whose.",
+    "teaches": "cloud-flow-triggers-and-connectors"
+  },
+  {
+    "id": "la-07",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "A flow must reach a SQL Server instance hosted in the company's own data centre. What is required?",
+    "options": [
+      "An on-premises data gateway",
+      "A custom connector wrapping the database",
+      "A virtual network connection on the environment",
+      "An HTTP action calling the server directly"
+    ],
+    "correctIndex": 0,
+    "explanation": "The gateway is what bridges a cloud flow to a source inside a corporate network. A custom connector solves a different problem — an API with no connector — and does nothing about network reachability.",
+    "teaches": "cloud-flow-triggers-and-connectors"
+  },
+  {
+    "id": "la-08",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "A maker adds a premium connector to a flow that 300 staff will trigger. What is the licensing consequence?",
+    "options": [
+      "All 300 users need a licence covering premium connectors",
+      "Only the maker needs a premium licence",
+      "Only users who edit the flow need a premium licence",
+      "The environment needs a premium capacity add-on but users do not"
+    ],
+    "correctIndex": 0,
+    "explanation": "Premium entitlement follows the users who run the flow, not the person who built it. That makes connector choice a licensing decision as much as a technical one.",
+    "teaches": "cloud-flow-triggers-and-connectors"
+  },
+  {
+    "id": "la-09",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "An Apply to each accumulates a running total in a variable. A maker raises its concurrency to 20 and the total becomes wrong intermittently. Why?",
+    "options": [
+      "Concurrent iterations race on the shared variable",
+      "The variable's type reverts to string under concurrency",
+      "Concurrency silently caps the loop at 20 items",
+      "The variable is reinitialised on each parallel branch"
+    ],
+    "correctIndex": 0,
+    "explanation": "Raising concurrency removes any guarantee of ordering and lets iterations read and write the same variable simultaneously. Accumulation inside a concurrent loop is the classic case where the loop must stay sequential.",
+    "teaches": "cloud-flow-actions-and-control"
+  },
+  {
+    "id": "la-10",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "A flow must send a notification whenever its main block of actions fails. What should you configure?",
+    "options": [
+      "A second scope with Configure run after set to has failed, timed out, and is skipped",
+      "A Do until that repeats the block until it succeeds",
+      "A Condition after the block testing whether it succeeded",
+      "A retry policy on each action in the block"
+    ],
+    "correctIndex": 0,
+    "explanation": "Scopes plus run-after configuration are how a flow implements try/catch. Without run-after the flow stops at the first failure and never reaches a Condition placed afterwards.",
+    "teaches": "cloud-flow-actions-and-control"
+  },
+  {
+    "id": "la-11",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "An approval must go to four managers and complete as soon as any one of them responds. Which configuration is correct?",
+    "options": [
+      "Start and wait for an approval, type First to respond",
+      "Start and wait for an approval, type Everyone must approve",
+      "Create an approval, type First to respond",
+      "Four separate approval actions in a concurrent branch"
+    ],
+    "correctIndex": 0,
+    "explanation": "First to respond closes the approval on the first reply, and Start and wait holds the flow until that happens. Create an approval would not wait, so the flow would continue before anyone responded.",
+    "teaches": "cloud-flow-actions-and-control"
+  },
+  {
+    "id": "la-12",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "A flow calling an external API begins failing with HTTP 429 during busy periods. What is the correct response?",
+    "options": [
+      "Reduce concurrency and batch the calls",
+      "Add an immediate retry loop around the action",
+      "Increase the flow's timeout",
+      "Recreate the connection with a different account"
+    ],
+    "correctIndex": 0,
+    "explanation": "429 is throttling, and a tight retry loop against a throttled service extends the throttling rather than clearing it. Slowing the caller down is the only thing that resolves it.",
+    "teaches": "flow-testing-and-troubleshooting"
+  },
+  {
+    "id": "la-13",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "A flow triggered by many different users writes every record as the same account. Why?",
+    "options": [
+      "The flow acts as the identity that created the connection",
+      "Dataverse records the flow owner as the creator of every row",
+      "The trigger's scope is set to Organisation",
+      "The connection reference has not been updated since import"
+    ],
+    "correctIndex": 0,
+    "explanation": "A flow acts as whoever created the connection, not whoever triggered it, which is also why a 401 or 403 points at the connection rather than the user. Scope governs which rows fire the trigger, not which identity writes.",
+    "teaches": "flow-testing-and-troubleshooting"
+  },
+  {
+    "id": "la-14",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "A nightly flow processing 40,000 records exceeds the maximum flow run duration. What should you do?",
+    "options": [
+      "Redesign it to batch the work, for example across child flows",
+      "Request an increased run duration limit for the environment",
+      "Raise the Apply to each concurrency to its maximum",
+      "Move the flow to a scheduled trigger that runs more often"
+    ],
+    "correctIndex": 0,
+    "explanation": "Maximum run duration is a platform limit that configuration cannot raise, so work exceeding it needs a different shape. Raising concurrency may help but does not remove the ceiling, and a more frequent schedule does not by itself divide the work.",
+    "teaches": "flow-testing-and-troubleshooting"
+  },
+  {
+    "id": "la-15",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "A prompt confidently returns wrong answers about the organisation's internal policies. What should you change?",
+    "options": [
+      "Add the policy documents to the prompt as knowledge",
+      "Lower the prompt's temperature setting",
+      "Switch the prompt to a more capable model",
+      "Add more examples of the desired tone to the instruction"
+    ],
+    "correctIndex": 0,
+    "explanation": "Grounding is what makes an answer come from the organisation's content rather than the model's general training, and it also makes the answer traceable to a source. A better model produces a more fluent wrong answer.",
+    "teaches": "ai-hub-prompts"
+  },
+  {
+    "id": "la-16",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "A flow parses a prompt's output and breaks whenever the model phrases its answer differently. What is the fix?",
+    "options": [
+      "Constrain the prompt to return JSON with named fields",
+      "Add a Condition that tests for each known phrasing",
+      "Retry the prompt until the expected phrasing appears",
+      "Pin the prompt to a specific model version"
+    ],
+    "correctIndex": 0,
+    "explanation": "The output shape belongs in the instruction. Parsing free prose is fragile in a way that is invisible until the model rephrases, and enumerating phrasings or retrying only postpones the same failure.",
+    "teaches": "ai-hub-prompts"
+  },
+  {
+    "id": "la-17",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "The same summarisation logic is needed in a canvas app, a cloud flow, and a Dataverse column. What should you do?",
+    "options": [
+      "Author one prompt in AI Hub and consume it from all three",
+      "Write the instruction inline in each of the three places",
+      "Build a custom AI model and call it from all three",
+      "Create a child flow the app and the column both call"
+    ],
+    "correctIndex": 0,
+    "explanation": "A saved prompt is a component with declared inputs and output, consumable from an app, a flow, and a prompt column alike. Inlining the instruction three times guarantees they drift apart.",
+    "teaches": "ai-hub-models-and-consumption"
+  },
+  {
+    "id": "la-18",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "Supplier invoices in a standard layout must have their totals and dates extracted. What should you use?",
+    "options": [
+      "The prebuilt invoice processing model",
+      "A custom document processing model trained on the invoices",
+      "A prompt asking the model to read the invoice",
+      "An Optical Character Recognition action followed by string parsing"
+    ],
+    "correctIndex": 0,
+    "explanation": "Prebuilt models cover the well-defined tasks and need no training, so one should be used whenever it matches. Training a custom model is warranted only when the document set is specific to the organisation.",
+    "teaches": "ai-hub-models-and-consumption"
+  },
+  {
+    "id": "la-19",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "kind": "dropdown",
+    "question": "Complete the statement about business rule scope.",
+    "segments": [
+      {
+        "text": "A business rule scoped to a specific form runs "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "client-side only, in that form",
+          "server-side only, on every write",
+          "client-side in every app that uses the table"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", so to have a validation apply to a data import as well you must scope it to "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "the table",
+          "all forms",
+          "the solution"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "A form-scoped rule is absent from imports, API writes, and flows because it never leaves the client. Table scope also runs server-side, which is what makes it a validation of the data rather than of the form.",
+    "teaches": "business-rules-and-columns"
+  },
+  {
+    "id": "la-20",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "A stakeholder says a business process flow will prevent records reaching the invoicing stage before approval. Is that correct?",
+    "options": [
+      "No — a business process flow guides users but does not enforce the sequence",
+      "Yes — stages cannot be skipped once the flow is applied",
+      "Yes, provided the flow is scoped to the table rather than a form",
+      "Yes, provided each stage has at least one required column"
+    ],
+    "correctIndex": 0,
+    "explanation": "A business process flow is presentation and guidance. Data can still be written out of order by a flow, an import, or the API, so enforcement has to come from elsewhere.",
+    "teaches": "business-rules-and-columns"
+  },
+  {
+    "id": "la-21",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "A column must show the number of open child cases and be accurate the moment a user reads the parent record. Which column type should you use?",
+    "options": [
+      "None of these — a rollup is the only aggregate and it is scheduled, so the requirement needs a different design",
+      "A rollup column",
+      "A formula column",
+      "A calculated column"
+    ],
+    "correctIndex": 0,
+    "explanation": "Aggregating child rows is what a rollup does, and rollups are computed by a scheduled job, so they cannot be current on read. Formula and calculated columns evaluate on read but cannot aggregate across a one-to-many relationship, which is why this requirement forces a flow or a plug-in maintaining a counter.",
+    "teaches": "business-rules-and-columns"
+  },
+  {
+    "id": "la-22",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "Which action should you use when a flow must send an approval and continue doing other work while it waits?",
+    "options": [
+      "Create an approval",
+      "Start and wait for an approval",
+      "Send an email with options",
+      "Wait for an approval with a timeout"
+    ],
+    "correctIndex": 0,
+    "explanation": "Create an approval sends it and lets the flow continue, picking the outcome up later. Start and wait blocks until a response arrives, which is what most approval processes want but not what this requirement asks for.",
+    "teaches": "cloud-flow-actions-and-control"
+  },
+  {
+    "id": "la-23",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "question": "A flow fails intermittently with a null reference deep in an expression. What is the most likely cause?",
+    "options": [
+      "An optional column is absent from the trigger payload on some rows",
+      "The connection has expired",
+      "The flow is being throttled",
+      "The trigger's select-columns filter excludes the column"
+    ],
+    "correctIndex": 0,
+    "explanation": "Optional fields simply do not appear in the payload when empty, so an expression reaching into one fails on exactly the rows that leave it blank. A null check or coalesce is the fix.",
+    "teaches": "flow-testing-and-troubleshooting"
+  },
+  {
+    "id": "la-24",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "kind": "multi",
+    "question": "Which two changes stop a Dataverse-triggered flow from retriggering on its own writes? Choose two.",
+    "options": [
+      "List only the columns the flow reacts to in the trigger's select columns",
+      "Add a trigger condition expression that excludes the flow's own update",
+      "Add a Terminate action at the end of the flow",
+      "Set the trigger's scope to Organisation"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Both fixes are trigger-side and are evaluated before a run starts. Terminate runs after the flow has already been consumed, and scope governs whose rows fire the trigger, not which changes do.",
+    "teaches": "cloud-flow-triggers-and-connectors"
+  },
+  {
+    "id": "la-25",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "kind": "order",
+    "question": "Put these steps in order for diagnosing a cloud flow that failed overnight.",
+    "items": [
+      "Open the failed run in run history",
+      "Inspect the inputs and outputs of the failing action",
+      "Correct the cause in the flow definition",
+      "Resubmit the failed run with its original trigger payload"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Run history is the primary diagnostic and resubmit is the last step, because replaying the original payload only proves anything once the cause has been fixed.",
+    "teaches": "flow-testing-and-troubleshooting"
+  },
+  {
+    "id": "la-26",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "kind": "match",
+    "question": "Match each computed column type to how it produces its value.",
+    "pairs": [
+      {
+        "term": "Formula column",
+        "definition": "Power Fx evaluated in real time on read"
+      },
+      {
+        "term": "Rollup column",
+        "definition": "Aggregates child rows on a scheduled system job"
+      },
+      {
+        "term": "Calculated column",
+        "definition": "Evaluated on read from columns on the row and its parent"
+      },
+      {
+        "term": "Prompt column",
+        "definition": "Generated by a model call against the row"
+      }
+    ],
+    "explanation": "Only the rollup is scheduled, which is what makes it eventually consistent. The prompt column is the only one whose value is generated rather than computed, and therefore the only one that can be wrong.",
+    "teaches": "business-rules-and-columns"
+  }
+]

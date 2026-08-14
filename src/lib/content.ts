@@ -173,6 +173,13 @@ import ai200StudyGuide from "../../content/ai-200/study-guide.json";
 import ai200Path from "../../content/ai-200/learning-path.json";
 import ai200CaseStudies from "../../content/ai-200/case-studies.json";
 
+import ab410Outline from "../../content/ab-410/outline.json";
+import ab410Questions from "../../content/ab-410/questions.json";
+import ab410Flashcards from "../../content/ab-410/flashcards.json";
+import ab410StudyGuide from "../../content/ab-410/study-guide.json";
+import ab410Path from "../../content/ab-410/learning-path.json";
+import ab410CaseStudies from "../../content/ab-410/case-studies.json";
+
 import pl900Outline from "../../content/pl-900/outline.json";
 import pl900Questions from "../../content/pl-900/questions.json";
 import pl900Flashcards from "../../content/pl-900/flashcards.json";
@@ -403,6 +410,14 @@ const examRegistry: Record<string, ExamContent> = {
     studyGuide: ai200StudyGuide as StudyGuideDomain[],
     learningPath: ai200Path as ExamLearningPath,
     caseStudies: ai200CaseStudies as CaseStudy[],
+  },
+  "ab-410": {
+    outline: ab410Outline as Outline,
+    questions: ab410Questions as Question[],
+    flashcards: ab410Flashcards as Flashcard[],
+    studyGuide: ab410StudyGuide as StudyGuideDomain[],
+    learningPath: ab410Path as ExamLearningPath,
+    caseStudies: ab410CaseStudies as CaseStudy[],
   },
   "pl-900": {
     outline: pl900Outline as Outline,

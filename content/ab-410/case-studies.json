@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-thornwick-expenses",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "title": "Thornwick Freight — an expense app that approves the wrong number",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Thornwick Freight runs 900 drivers and subcontractors across four depots. Expense claims are captured in a canvas app on drivers' phones, held in Dataverse as a claim header with many claim lines, and approved by depot managers in a model-driven app before a nightly export to the finance system.",
+          "The solution was built in three weeks and works for its author. Finance has now refused to sign off the quarter until five specific complaints are resolved, and the platform team has been given the list below."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "A cloud flow triggered by 'When a row is added, modified or deleted' on the claim table stamps a processing status back onto the same claim row. It has no select-columns filter and no trigger condition. Run history shows roughly eleven thousand runs a day against about four hundred real claims, and the flow is now being throttled during the evening peak.",
+          "The claim header carries a Total column configured as a rollup over its claim lines. Managers report that after a driver adds a line, the header keeps showing the previous total for up to an hour, and several claims have been approved against a number that was already wrong at the moment of approval. A ticket has been raised asking Microsoft to make the rollup recalculation run every minute.",
+          "The driver canvas app takes around forty seconds to open. Its OnStart runs ClearCollect over the claim line table, which currently holds about sixty thousand rows. Monitor shows the launch is dominated by that one operation, and drivers report that lines added by a colleague do not appear until they close and reopen the app.",
+          "Approvals are sent by a 'Start and wait for an approval' action whose Assigned to is set from a Manager lookup on the driver record. For the 130 subcontractors that lookup is empty, because subcontractors are not managed by a depot. Those claims sit in the app showing 'Submitted' and no approval is ever received by anyone; the flow run shows a failure at the approval action.",
+          "Receipt descriptions are categorised by a prompt authored in AI Hub, invoked from inside an Apply to each over every line on the claim. The prompt was written from blank, has no knowledge added, and asks the model to 'say what kind of expense this is'. It returns free prose, and finance has received categories including 'travel-ish', 'probably fuel', and 'a meal, I think', none of which exist in the chart of accounts. The AI Builder credit consumption for the app is roughly forty times what was forecast.",
+          "The nightly export flow reads approved claims and posts them to the finance API. When the API returns 429 the flow retries immediately in a Do until, and the export has twice run past its maximum flow duration without completing."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "The claim flow must stop retriggering on its own writes, and the fix must not consume a flow run in order to decide not to act.",
+          "The header total must be correct at the moment a manager reads it, with no scheduled component in the path.",
+          "The driver app must open quickly and must show lines added by other drivers without being restarted.",
+          "Every claim must reach an approver, including the 130 subcontractor claims that today have no manager.",
+          "Categorisation must return only values that exist in the finance chart of accounts, and its credit consumption must come down without giving up per-line accuracy where a claim genuinely has mixed lines.",
+          "The nightly export must survive throttling and finish inside the platform's maximum run duration."
+        ]
+      }
+    ]
+  }
+]

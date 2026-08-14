@@ -48,12 +48,12 @@
     "series": "ab",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 120,
     "passingScore": 700,
     "summary": "Build intelligent applications across the Microsoft AI portfolio — new in 2026.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
-    "sourceUrl": null
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-14",
+    "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ab-410"
   },
   {
     "code": "ab-610",

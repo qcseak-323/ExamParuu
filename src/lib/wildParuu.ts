@@ -69,6 +69,8 @@ export const WILD_PARUU: Record<string, WildParuu> = {
   // wrong for one whose region already has a species.
   "ab-730": { sheet: "wild-snail" },
   "ab-731": { sheet: "wild-snail" },
+  // The AB Associates share Agent Atoll with the three AB Fundamentals.
+  "ab-410": { sheet: "wild-snail" },
   "pl-900": { sheet: "wild-hedgehog" },
   // Same reuse as az-104: PL-300 and PL-400 share the Mangroves with PL-900.
   "pl-300": { sheet: "wild-hedgehog" },

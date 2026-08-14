@@ -1,0 +1,352 @@
+[
+  {
+    "id": "fc-ab410-fn-01",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "front": "App, flow, agent, or column?",
+    "back": "See and edit records = model-driven app. Something happens on change = flow or business rule. Ask in natural language = agent. Always equals a derived value = a column type. Keyword: pick the tool from the sentence."
+  },
+  {
+    "id": "fc-ab410-fn-02",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "front": "Built-in agent before custom agent",
+    "back": "Evaluate the agents Microsoft already ships before building one in Copilot Studio. Custom is warranted only when nothing shipped covers the task. Keyword: buy before build."
+  },
+  {
+    "id": "fc-ab410-fn-03",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "front": "The extensibility ladder",
+    "back": "Configuration, then Power Fx, then plug-in or custom connector, then pro-code. Each rung up costs lifecycle and support. Keyword: lowest rung that works."
+  },
+  {
+    "id": "fc-ab410-fn-04",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "front": "Why not the default environment?",
+    "back": "Every licensed user can create in it and it cannot be governed like a real environment. Never host a production business solution there. Keyword: default is not production."
+  },
+  {
+    "id": "fc-ab410-fn-05",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "front": "Environment types",
+    "back": "Developer = free, single user, build here. Sandbox = copy, test, resettable. Production = users and support commitments. Keyword: build, test, serve."
+  },
+  {
+    "id": "fc-ab410-fn-06",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "front": "Unmanaged vs managed",
+    "back": "Unmanaged is the editable source and belongs only in development. Managed is the deployed artefact, is not editable in the target, and uninstalls cleanly. Keyword: unmanaged in dev, managed downstream."
+  },
+  {
+    "id": "fc-ab410-fn-07",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "front": "Custom publisher prefix",
+    "back": "The prefix is baked into every schema name the solution creates and cannot be changed later. Set it before you build anything. Keyword: prefix is permanent."
+  },
+  {
+    "id": "fc-ab410-fn-08",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "front": "What makes a solution portable?",
+    "back": "Connection references and environment variables hold per-environment connection and configuration outside the component, so one managed solution serves test and production. Keyword: externalise what differs."
+  },
+  {
+    "id": "fc-ab410-fn-09",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "front": "Ownership type is permanent",
+    "back": "User-or-team ownership enables row-level security; organisation ownership does not. It is set at table creation and cannot be switched afterwards. Keyword: choose ownership once."
+  },
+  {
+    "id": "fc-ab410-fn-10",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "front": "Many-to-many that needs its own data",
+    "back": "An intersect table holds no attributes. If the relationship needs a date, role, or quantity, model it as a table between two one-to-many relationships. Keyword: the relationship is an entity."
+  },
+  {
+    "id": "fc-ab410-fn-11",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "front": "Restrict Delete vs Remove Link",
+    "back": "Restrict Delete blocks deleting a parent that still has children. Remove Link clears the child's lookup instead of deleting the child. Keyword: block or unhook."
+  },
+  {
+    "id": "fc-ab410-fn-12",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "front": "What does a prompt column cost?",
+    "back": "A model call each time it runs. It is generated, not recalculated on read, so it is wrong for anything exact, current-to-the-second, or auditable. Keyword: interpretive values only."
+  },
+  {
+    "id": "fc-ab410-fn-13",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "front": "Dataverse security is additive",
+    "back": "A user gets the union of every role held directly and through teams. There is no deny. To remove access, remove a role — adding one can only widen. Keyword: no deny, ever."
+  },
+  {
+    "id": "fc-ab410-fn-14",
+    "examCode": "ab-410",
+    "domain": "foundation",
+    "front": "Hiding a column on a form is not security",
+    "back": "The data is still returned by the API, still in exports, still in advanced find. Only column-level security with a column security profile actually hides it. Keyword: form hiding is cosmetic."
+  },
+  {
+    "id": "fc-ab410-ia-01",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "front": "One table, two audiences",
+    "back": "Assign security roles to different main forms rather than building two apps. A form with no roles assigned is available to everyone. Keyword: roles on forms."
+  },
+  {
+    "id": "fc-ab410-ia-02",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "front": "Search returns nothing for an obvious term",
+    "back": "The quick find view decides which columns are searchable. A missing column there looks exactly like missing data. Keyword: check quick find first."
+  },
+  {
+    "id": "fc-ab410-ia-03",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "front": "What is a generative page?",
+    "back": "A page described in natural language and generated as real, editable app content — a solution component that moves between environments. Keyword: first draft, not a black box."
+  },
+  {
+    "id": "fc-ab410-ia-04",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "front": "The empty grid symptom",
+    "back": "Adding a table to an app only puts it in navigation. Data access comes from security roles, configured elsewhere. Keyword: navigation is not permission."
+  },
+  {
+    "id": "fc-ab410-ia-05",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "front": "Three independent things a user needs",
+    "back": "A licence, a security role granting table privileges, and the app shared with them. Check all three; the first cause you find may not be the only one. Keyword: licence, role, share."
+  },
+  {
+    "id": "fc-ab410-ia-06",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "front": "Why does one chart show different numbers?",
+    "back": "A chart is built on a view and inherits its filter, and it honours row-level security. Different users legitimately see different totals. Keyword: charts obey the view."
+  },
+  {
+    "id": "fc-ab410-ia-07",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "front": "Dashboard or Power BI?",
+    "back": "Dashboard answers 'what do I work on next'. Power BI answers analytical questions across volume or systems — embed it, do not rebuild it as charts. Keyword: operational vs analytical."
+  },
+  {
+    "id": "fc-ab410-ia-08",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "front": "What delegation actually does when it fails",
+    "back": "Nothing errors. The expression is evaluated over the first 500 rows (up to 2,000) and returns a confident wrong answer. Keyword: silent, not broken."
+  },
+  {
+    "id": "fc-ab410-ia-09",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "front": "ClearCollect the table on OnStart",
+    "back": "The standard performance mistake: every row over the network at launch, breaks past the delegation limit, and stale for the session. Bind galleries to the source instead. Keyword: do not preload the table."
+  },
+  {
+    "id": "fc-ab410-ia-10",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "front": "Set vs UpdateContext vs ClearCollect",
+    "back": "Set = global variable. UpdateContext = one screen only. ClearCollect = an in-memory table. Keyword: global, screen, table."
+  },
+  {
+    "id": "fc-ab410-ia-11",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "front": "Named formula vs variable",
+    "back": "A named formula in App.Formulas is a definition — evaluated when read and always current. A variable set at start is stale the moment its inputs change, invisibly. Keyword: define, do not assign."
+  },
+  {
+    "id": "fc-ab410-ia-12",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "front": "Catching a failed Patch",
+    "back": "IfError and IsError inspect a result, Errors returns data-source errors after Patch or SubmitForm, and App.OnError is the last resort. Keyword: a silent Patch failure is the enemy."
+  },
+  {
+    "id": "fc-ab410-ia-13",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "front": "What Monitor gives you",
+    "back": "Every network call, formula evaluation, and data operation with timing, on a published app as well as in the studio. Keyword: evidence, not guesswork."
+  },
+  {
+    "id": "fc-ab410-ia-14",
+    "examCode": "ab-410",
+    "domain": "intelligent-apps",
+    "front": "When is an agent better than the app?",
+    "back": "When the task is a request — check status, raise a simple item, answer a question. Not when it needs a form, a precise layout, or bulk work on many rows. Keyword: requests, not forms."
+  },
+  {
+    "id": "fc-ab410-la-01",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Three settings on the Dataverse trigger",
+    "back": "Change type, scope, and select columns. Scope decides whose rows count — a flow that works only for its author is scoped to User. Keyword: scope is why it fires for nobody else."
+  },
+  {
+    "id": "fc-ab410-la-02",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Flow that triggers itself",
+    "back": "It updates the row that triggered it. Fix on the trigger — select columns plus a trigger condition — because testing inside the flow still consumes a run and still loops. Keyword: fix it before it runs."
+  },
+  {
+    "id": "fc-ab410-la-03",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Premium connector licensing",
+    "back": "Every user who runs the flow needs the premium licence, not just the maker. Choosing a connector is a licensing decision. Keyword: the runner pays."
+  },
+  {
+    "id": "fc-ab410-la-04",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Reaching a source inside the corporate network",
+    "back": "The on-premises data gateway. A custom connector wraps an API that has no connector — different problem, different tool. Keyword: gateway for network, custom connector for API."
+  },
+  {
+    "id": "fc-ab410-la-05",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "The cost of raising Apply to each concurrency",
+    "back": "Order is no longer guaranteed and any variable accumulated inside the loop races. Faster, and quietly wrong if the loop assumed sequence. Keyword: concurrency breaks accumulation."
+  },
+  {
+    "id": "fc-ab410-la-06",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "How a flow does try/catch",
+    "back": "A scope of actions, then a second scope with Configure run after set to has failed, timed out, or is skipped. Without it the flow just stops. Keyword: run after is the catch block."
+  },
+  {
+    "id": "fc-ab410-la-07",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Start and wait vs Create an approval",
+    "back": "Start and wait blocks the flow until a response arrives. Create an approval sends it and continues, picking the outcome up later. Keyword: block or carry on."
+  },
+  {
+    "id": "fc-ab410-la-08",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Approval assigned to nobody",
+    "back": "Typically a lookup that was blank on the triggering row. The action fails there — it does not approve by default. Keyword: blank approver fails, not passes."
+  },
+  {
+    "id": "fc-ab410-la-09",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "First to respond vs everyone must approve",
+    "back": "First to respond closes on the first reply. Everyone must approve waits for all of them. Keyword: quorum of one, or of all."
+  },
+  {
+    "id": "fc-ab410-la-10",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "What a 429 means and what it does not",
+    "back": "Throttling. Slow down — reduce concurrency, add delay, batch. A tight retry loop extends the throttling rather than clearing it. Keyword: retrying harder makes it worse."
+  },
+  {
+    "id": "fc-ab410-la-11",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Whose identity does a flow act as?",
+    "back": "Whoever created the connection, not whoever triggered the flow. That is what a 401 or 403 in run history is telling you. Keyword: the connection owner acts."
+  },
+  {
+    "id": "fc-ab410-la-12",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Resubmit vs rerun",
+    "back": "Resubmit replays a failed run with its original trigger payload once the cause is fixed, so the shape being tested is the real one. Keyword: replay the real payload."
+  },
+  {
+    "id": "fc-ab410-la-13",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Platform limits are not configuration",
+    "back": "Maximum run duration and per-connection request limits cannot be raised by asking. Work that exceeds them needs a different design — child flow, queue, or batch. Keyword: redesign, do not request."
+  },
+  {
+    "id": "fc-ab410-la-14",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "What adding knowledge to a prompt fixes",
+    "back": "Confident, plausible, wrong answers about internal matters. Grounding draws the answer from your content and makes it traceable to a source. Keyword: ground it or it guesses."
+  },
+  {
+    "id": "fc-ab410-la-15",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Constrain the output shape in the prompt",
+    "back": "Ask for JSON with named fields, or one of a fixed list. A downstream flow parsing free prose breaks the first time the model rephrases. Keyword: shape the output, not just the answer."
+  },
+  {
+    "id": "fc-ab410-la-16",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Why save a prompt as a component?",
+    "back": "One prompt then serves an app, a flow, and a prompt column with the same declared inputs and output, instead of being rewritten three times. Keyword: author once, consume anywhere."
+  },
+  {
+    "id": "fc-ab410-la-17",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Prebuilt or custom AI model?",
+    "back": "Prebuilt covers invoices, receipts, business cards, text recognition, key phrases, language, sentiment — use it if it matches. Custom only for document or category sets unique to you. Keyword: prebuilt first."
+  },
+  {
+    "id": "fc-ab410-la-18",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Where the surprise AI Builder bill comes from",
+    "back": "Credits are consumed per call. A prompt inside an Apply to each over a thousand rows is a thousand calls. Aggregate the input and call once where the task allows. Keyword: the loop is the bill."
+  },
+  {
+    "id": "fc-ab410-la-19",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Business rule scope",
+    "back": "Form scope runs client-side in that form only. Table scope also runs server-side, so it applies to imports, API writes, and flows. Keyword: form-only validation validates nothing."
+  },
+  {
+    "id": "fc-ab410-la-20",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Does a business process flow enforce anything?",
+    "back": "No. It guides and presents stages. Data can still be written out of order by other means. Keyword: guidance, not enforcement."
+  },
+  {
+    "id": "fc-ab410-la-21",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Why a rollup column shows stale totals",
+    "back": "It is computed by a scheduled system job, hourly by default. It is eventually consistent by design and cannot be made real-time. Keyword: rollups run on a clock."
+  },
+  {
+    "id": "fc-ab410-la-22",
+    "examCode": "ab-410",
+    "domain": "logic-automation",
+    "front": "Calculated, rollup, or formula column?",
+    "back": "Calculated and formula evaluate on read and are always current; formula uses Power Fx and is the modern default. Rollup aggregates children on a schedule. Keyword: on read, or on a clock."
+  }
+]

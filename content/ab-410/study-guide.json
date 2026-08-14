@@ -1,0 +1,185 @@
+[
+  {
+    "domainId": "foundation",
+    "sections": [
+      {
+        "id": "solution-design-with-ai",
+        "heading": "Designing a solution before building it",
+        "paragraphs": [
+          "The first decision on any Power Platform requirement is not which control to drop on a screen, it is which of four things the requirement actually is: an app, a flow, an agent, or a piece of declarative logic sitting on the table itself. A request phrased as \"users need to see and edit records\" is a model-driven app. \"Something must happen when a record changes\" is a cloud flow or a business rule. \"Someone wants to ask a question in natural language and get an answer from our data\" is an agent. \"This field must always equal the sum of those child records\" is a column type, not code. Reaching for a canvas app because it is the most familiar tool is the single most common design error the exam tests.",
+          "Built-in agents should be evaluated before a custom one is built. Microsoft ships agents across Dynamics 365 and Microsoft 365 that already do common jobs, and a custom Copilot Studio agent is warranted only when no shipped agent covers the task or the task needs knowledge and actions unique to the organisation. Extensibility follows the same ladder, low-code first: configuration, then Power Fx, then a plug-in or custom connector, then pro-code. Every rung up costs lifecycle and support that the rung below does not.",
+          "Environment types matter because they are not interchangeable. A developer environment is free, single-user, and the right place to build. Sandbox is the copy you test and reset. Production is what users touch and what backup and support commitments apply to. A default environment exists in every tenant, every licensed user can create in it, and it should not host a governed business solution — putting a production app there is a governance failure that is very hard to unwind later."
+        ]
+      },
+      {
+        "id": "solutions-and-alm",
+        "heading": "Solutions, pipelines, and ALM",
+        "paragraphs": [
+          "Everything intended to move between environments must be built inside a solution from the beginning. Components created outside a solution live in the default solution and have to be added retrospectively, which is where missing dependencies come from. Use a custom publisher with your own prefix rather than the default one: the prefix is baked into every schema name the solution creates and cannot be changed afterwards.",
+          "An unmanaged solution is the editable source. A managed solution is the deployed artefact — its components cannot be edited in the target, and uninstalling it removes them cleanly. The rule is unmanaged in development, managed everywhere downstream. Importing an unmanaged solution into production is the mistake that makes an environment impossible to roll back, because unmanaged changes have no layer to remove.",
+          "Pipelines in Power Platform run the deployment from inside the product rather than from a build server, which puts ALM within reach of a maker who has no access to Azure DevOps or GitHub Actions. Connection references and environment variables are what make a solution portable: they hold the per-environment connection and configuration outside the component, so the same managed solution can be imported into test and production and be pointed at different data by supplying different values at import time."
+        ]
+      },
+      {
+        "id": "dataverse-tables-and-columns",
+        "heading": "Tables, columns, and the data workspace",
+        "paragraphs": [
+          "The data workspace lets a maker describe a table in natural language and have Copilot propose tables, columns, relationships, and sample data. What it produces is a starting point that must be reviewed, because the generated model tends to be flat and generously typed — text columns where a choice or lookup belongs. Accepting it unedited is how a model ends up with no referential integrity.",
+          "Column type is a decision that is expensive to reverse, because changing a column's type after data exists generally means creating a new column and migrating. Choice columns store an integer value behind a label and are the right shape for a fixed list. A lookup is the right shape when the list is itself data that someone maintains. Text with a hand-typed list of allowed values is the wrong shape for both, and is what the generated model will often give you.",
+          "Standard tables — Account, Contact, and the rest — carry relationships, forms, views, and business logic that the platform and first-party apps already understand. Extending a standard table is nearly always better than creating a parallel custom one; a custom \"Customer\" table alongside Account is a decision that costs integration work forever. Table properties set at creation and never changeable afterwards include the table's ownership type: user-or-team ownership enables row-level security, organisation ownership does not, and switching is not possible later."
+        ]
+      },
+      {
+        "id": "dataverse-relationships",
+        "heading": "Relationships and referential behaviour",
+        "paragraphs": [
+          "A one-to-many relationship creates a lookup column on the many side. A many-to-many relationship creates an intersect table that holds no other data, which is why a many-to-many that needs its own attributes — a date, a role, a quantity — must be modelled instead as a table between two one-to-many relationships. Recognising when a many-to-many is secretly an entity is a standard modelling question.",
+          "Cascade behaviour on a one-to-many relationship decides what happens to child rows when the parent is assigned, shared, reparented, or deleted. Cascade All propagates the action to every child. Cascade None leaves children alone. Restrict Delete blocks deleting a parent that still has children, and Remove Link clears the lookup instead of deleting. The default on a custom relationship is referential rather than parental, so assigning a parent does not reassign its children unless the relationship is configured to.",
+          "Views and forms are where the model becomes visible. Public views are shared and appear in the view selector; personal views belong to whoever saved them. The main form is the one model-driven apps use by default, and multiple main forms with different security roles assigned is how one table serves two audiences without building two apps."
+        ]
+      },
+      {
+        "id": "prompt-columns-and-row-summaries",
+        "heading": "Prompt columns and row summaries",
+        "paragraphs": [
+          "A prompt column runs a generative AI prompt against a row and stores the result on the row itself. It is how a table gains a summarised, categorised, or extracted value without a flow, an app, or a plug-in — the classification of an incoming enquiry, the sentiment of a comment, a one-line summary of a long description. The prompt is authored in AI Hub and bound to the column, and the columns it reads from the row become its inputs.",
+          "The property that catches people out is when a prompt column evaluates. It is not a formula that recalculates on read; it is generated, and it costs a model call each time it runs. That makes it the wrong choice for a value that must be exact, current to the second, or auditable, and the right choice for a value that is interpretive. A prompt column holding a currency total is a design error twice over: it is expensive and it can be wrong.",
+          "Row summaries produce a natural-language summary of a record for users reading it in a model-driven app, drawing on the columns and related rows the record exposes. They are a reading aid rather than stored data, and the useful control over them is which columns they may consider — a summary that reaches into a column holding sensitive notes will surface those notes to anyone who can open the row."
+        ]
+      },
+      {
+        "id": "dataverse-security-model",
+        "heading": "The Dataverse security model",
+        "paragraphs": [
+          "Dataverse security is cumulative and additive: a user gets the union of every security role assigned to them directly and through their teams, and there is no deny. Removing access therefore means removing a role, never adding a restrictive one — the most common troubleshooting mistake is to add a role in an attempt to limit somebody and widen their access instead.",
+          "Each privilege on a role has a depth: User, Business Unit, Parent-Child Business Unit, or Organisation. Depth is what makes \"read only my own rows\" different from \"read everything\", and it works only on user-or-team-owned tables, because an organisation-owned table has no owner to compare against. Business units partition ownership; a user in one business unit does not see another's rows unless a role grants a wider depth or a row is explicitly shared.",
+          "Column-level security is separate from row-level security and is the only way to hide an individual column from someone who can otherwise read the row. Enable it on the column, then grant read, update, or create through a column security profile. Hiding a column on a form is not security — the data is still returned by the API, still visible in an export, and still readable in advanced find."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "intelligent-apps",
+    "sections": [
+      {
+        "id": "model-driven-forms-and-views",
+        "heading": "Forms and views in model-driven apps",
+        "paragraphs": [
+          "Model-driven apps render themselves from the data model, so most of the design work is done on forms and views rather than on a canvas. A main form is composed of tabs, sections, and columns; business rules can show, hide, require, and set values on it declaratively, and the same business rule applied at table scope also runs server-side. Form scripting exists but is the rung above and should be justified.",
+          "Assigning security roles to a form is how one table presents differently to different audiences — a service form and a sales form on the same Account. A form with no roles assigned is available to everyone, and the fallback order matters: a user who qualifies for no assigned form gets the first form in the form order they do have access to.",
+          "Views define columns, sorting, and filtering, and their filter is a real query, so a view is also a performance decision. Quick find views set which columns are searchable; a search that returns nothing for an obvious term is usually a quick find view that never had that column added rather than a data problem."
+        ]
+      },
+      {
+        "id": "generative-pages",
+        "heading": "Generative pages",
+        "paragraphs": [
+          "A generative page is built by describing what the page should do in natural language, and the platform produces a working page inside the model-driven app with layout, controls, and data bindings already wired to Dataverse. It fills the gap that used to force makers to embed a canvas app for anything that was not a form or a view — a landing page, a mixed dashboard, a guided task across several tables.",
+          "The output is real, editable app content rather than a black box, which is the property that matters for lifecycle: a generative page is a solution component, moves between environments in a solution, and can be edited afterwards by hand. Treat the generation as a first draft — it will reflect exactly what the prompt described, including whatever the prompt failed to mention about permissions or filtering."
+        ]
+      },
+      {
+        "id": "model-driven-app-composition",
+        "heading": "Composing an app and controlling access",
+        "paragraphs": [
+          "The app designer assembles pages — tables, dashboards, generative pages, custom pages, and URLs — into a navigation structure of areas, groups, and subareas. Including a table in an app does not grant anybody access to its data; it only puts it in the navigation. Data access comes from security roles on the table, and the two are configured in different places, which is the source of the classic \"the app shows an empty grid\" symptom.",
+          "Access to the app itself is separate again. An app must be shared, and shared with security roles rather than only with individuals if it is to survive staff changes. A user therefore needs three things independently: a licence, a role granting privileges on the tables, and the app shared with them. Diagnosing an access problem means checking all three rather than assuming the first one found is the cause."
+        ]
+      },
+      {
+        "id": "charts-and-dashboards",
+        "heading": "Charts and dashboards",
+        "paragraphs": [
+          "Model-driven charts are built on a view, and they inherit that view's filter, which is why the same chart shows different numbers to different users — it is honouring row-level security and the view's own query. Interactive dashboards add filtering and drill-down and are intended for queue-driven work; classic dashboards are static arrangements of charts, lists, and iframes.",
+          "A dashboard is the right surface when the question is \"what should I work on next\" and the wrong one when the question is analytical across large volumes or across systems. That second case belongs in Power BI, embedded into the app rather than reimplemented as a chart, and knowing where the boundary sits is a recurring design question."
+        ]
+      },
+      {
+        "id": "canvas-apps-data-and-design",
+        "heading": "Canvas apps: data, delegation, and design",
+        "paragraphs": [
+          "The concept that decides whether a canvas app works at scale is delegation. A delegable expression is evaluated by the data source, so it can operate over the whole table; a non-delegable one pulls at most the delegation limit — 500 rows by default, up to 2,000 — into the client and evaluates there. The app does not fail, it silently gives an answer computed over the first N rows, which is worse than failing. Filter, Sort, and equality comparisons delegate against Dataverse; Search behaviour varies by source, and functions such as CountRows over a filtered set or in-memory collections do not.",
+          "Loading a whole table into a collection on OnStart is the standard performance mistake. It moves every row over the network at launch, breaks as soon as the table outgrows the delegation limit, and holds stale data for the rest of the session. Bind galleries directly to the data source with delegable filters and let paging do its job.",
+          "Accessibility is graded, not incidental: every interactive control needs an accessible label, colour contrast must be sufficient, tab order must follow reading order, and screen-reader users must be able to reach everything the mouse can. Responsiveness comes from turning off Scale to fit and building with containers that size against parent width, rather than from absolute coordinates."
+        ]
+      },
+      {
+        "id": "canvas-reuse-variables-and-errors",
+        "heading": "Reuse, variables, and error handling",
+        "paragraphs": [
+          "Canvas apps have three ways to hold a value and they are not interchangeable. A global variable set with Set is visible across every screen. A context variable set with UpdateContext is scoped to one screen. A collection built with ClearCollect is an in-memory table. Named formulas, declared in App.Formulas, are different in kind: they are definitions rather than assignments, evaluated when read and automatically kept current, which removes a great deal of OnStart work and the startup delay that comes with it.",
+          "User-defined functions let a maker name a piece of Power Fx with typed parameters and reuse it, and component libraries package controls for reuse across apps with a versioned update path. Prefer a named formula over a variable whenever the value is derived from something else — a variable set once at start is stale the moment its inputs change, and that staleness is invisible.",
+          "Error handling is explicit. IfError and IsError inspect a result, Errors returns the errors on a data source after a Patch or SubmitForm, and the app-level OnError handler is the last resort that stops an unhandled error surfacing to the user. Patch that silently fails and leaves the user believing the record saved is the failure mode this prevents."
+        ]
+      },
+      {
+        "id": "canvas-testing-and-agents",
+        "heading": "Testing canvas apps and turning one into an agent",
+        "paragraphs": [
+          "Monitor attaches to a running app and logs every network call, formula evaluation, and data operation with timing. It is the tool that answers \"why is this screen slow\" with evidence, and it is where a delegation warning turns from a blue underline in the editor into a visible 500-row request. It works against a published app as well as one in the studio, so a problem only reproducible in production is still diagnosable.",
+          "Test Studio records and replays interactions as test cases, giving a regression suite that can run before a release. The App Checker covers accessibility, performance, and rule violations statically and should be clean before publishing.",
+          "A Copilot Studio agent can be created from a canvas app, taking the app's data connections and turning what the app does into something a user can ask for in natural language. The judgement being tested is when that is appropriate: an agent is a good fit for a task expressed as a request — checking status, raising a simple item, answering a question over the same data — and a poor fit for a task that needs a form, a precise layout, or bulk work on many rows at once."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "logic-automation",
+    "sections": [
+      {
+        "id": "cloud-flow-triggers-and-connectors",
+        "heading": "Triggers and connectors",
+        "paragraphs": [
+          "Choosing the trigger is most of the design. Automated flows run on an event, scheduled flows run on a clock, and instant flows run when a person or an app asks. The Dataverse trigger \"When a row is added, modified or deleted\" carries three settings that decide whether the flow is correct or a runaway: the change type, the scope, and the select-columns filter. Scope decides whose rows count — User, Business Unit, Parent-Child, or Organisation — and a flow that works for its author and for nobody else is almost always scoped to User.",
+          "A flow that updates the row that triggered it will trigger itself again. The fix is to narrow the trigger so the flow's own write does not match it: list the columns the flow cares about in the select-columns filter so an update to any other column does not fire it, and add a trigger condition expression for anything the column list cannot express. Both are trigger-side; testing for the condition inside the flow still consumes a run and still loops.",
+          "Connectors are standard or premium, and premium connectors — including Dataverse itself in some contexts, SQL Server, and HTTP — require a premium licence for every user who runs the flow, not just the maker. Choosing a premium connector is a licensing decision as much as a technical one. Custom connectors wrap an API that has no connector; the on-premises data gateway is what reaches a source inside a corporate network."
+        ]
+      },
+      {
+        "id": "cloud-flow-actions-and-control",
+        "heading": "Actions, conditions, loops, and approvals",
+        "paragraphs": [
+          "Apply to each iterates a collection, and by default it does so sequentially. Raising its concurrency setting speeds it up and simultaneously destroys any assumption that items are processed in order or that a variable accumulated inside the loop is reliable — concurrent iterations racing on one Set variable is a genuine and hard-to-see bug. Do until needs both a condition and a count-and-timeout limit, and a Do until whose condition can never become true is bounded only by those limits.",
+          "Scopes group actions and, combined with Configure run after, are how a flow implements try/catch: a scope of actions, then a second scope configured to run only after the first has failed, timed out, or been skipped. Without run-after configuration a flow simply stops at the first failure, and any compensating work never happens.",
+          "The Approvals actions come in two shapes and the difference matters. \"Start and wait for an approval\" blocks the flow until a response arrives, which is what most approval processes want. \"Create an approval\" sends it and continues, letting the flow do other work and pick the outcome up later. First to respond closes on the first reply; everyone must approve waits for all. An approval assigned to an empty approver — typically a lookup that was blank on the triggering row — fails at that action rather than approving by default."
+        ]
+      },
+      {
+        "id": "flow-testing-and-troubleshooting",
+        "heading": "Testing and troubleshooting flows",
+        "paragraphs": [
+          "The run history is the primary diagnostic: it shows each action's inputs, outputs, and duration, and resubmit replays a failed run with its original trigger payload once the cause is fixed. Test with automatic replay of a recent trigger rather than by manufacturing data, because the payload shape is part of what is being tested.",
+          "Failures cluster into a few recognisable kinds. A 429 is throttling and the answer is to slow down — reduce concurrency, add a delay, batch the work — not to retry harder, because a tight retry loop against a throttled service extends the throttling. A 401 or 403 is the connection's identity, which is whoever created the connection and not whoever triggered the flow. A null-reference failure deep in an expression is usually an optional field absent from the payload, and coalesce or a null check is the fix.",
+          "Flows have platform limits that cannot be raised by configuration: a single flow run has a maximum duration, and actions have per-connection request limits over a rolling window. A design that needs more than the limits allow needs to be a different design — a child flow, a queue, or a batched job — rather than a request for a higher limit."
+        ]
+      },
+      {
+        "id": "ai-hub-prompts",
+        "heading": "Prompts in AI Hub",
+        "paragraphs": [
+          "AI Hub is where prompts are authored, tested, and saved as reusable components. A prompt starts from a template — summarise, classify, extract, translate, sentiment — or from blank, and it takes typed inputs that are substituted into the instruction text at run time. Testing inside the authoring surface with real sample values is part of building it, because a prompt that reads well and produces the wrong shape of output will fail silently downstream.",
+          "Adding knowledge grounds a prompt in specific data — Dataverse tables, files, or other connected sources — so the answer is drawn from the organisation's content rather than the model's general training. This is the fix for a prompt that produces confident, plausible, wrong answers about internal matters. Grounding is also what makes the output defensible, because the answer traces to a source.",
+          "Prompt settings include which model the prompt runs against, and model choice is a genuine trade-off between capability, latency, and cost rather than a preference. The output shape should be constrained in the instruction — asking for JSON with named fields, or for one of a fixed list of categories — because a downstream flow parsing free prose is fragile in a way that is not visible until the model phrases something differently."
+        ]
+      },
+      {
+        "id": "ai-hub-models-and-consumption",
+        "heading": "Consuming prompts and models",
+        "paragraphs": [
+          "A saved prompt is consumed from a canvas app through the AI Builder connector and from a cloud flow through its own action, and in both cases it is invoked with its declared inputs and returns its declared output. The same prompt can therefore serve an app, a flow, and a prompt column without being rewritten three times, which is the reason to save a prompt as a component rather than inline the instruction.",
+          "Prebuilt AI models cover the well-defined tasks — text recognition, invoice and receipt processing, business card reading, key phrase extraction, language detection, sentiment. They need no training and are the correct choice whenever one of them matches the task. Custom models are trained on your own tagged data and are warranted only when the document or category set is specific to the organisation.",
+          "Every prompt and model call consumes AI Builder credits, and that consumption is per call rather than per user. A prompt invoked inside an Apply to each over a thousand rows is a thousand calls, which is where an unnoticed loop becomes an unexpected bill. Calling the model once over an aggregated input, where the task allows it, is both cheaper and faster."
+        ]
+      },
+      {
+        "id": "business-rules-and-columns",
+        "heading": "Business rules, process flows, and computed columns",
+        "paragraphs": [
+          "Business rules apply declarative logic to a table without code: show or hide, enable or disable, set a value, set required, and validate. Scope decides where they run — a rule scoped to a specific form runs only in that form and only client-side, while a rule scoped to the table runs server-side too and therefore also applies to an import, an API write, or a flow. A validation that exists only on the form is not a validation of the data.",
+          "A business process flow is a guided sequence of stages across one or more tables, visible to the user as a bar at the top of the record. It is presentation and guidance rather than enforcement; it does not prevent data being written out of order by other means.",
+          "The three computed column types are distinct and choosing wrongly is a common error. A calculated column is evaluated on read, so it is always current, and it can reference columns on the row and on its parent. A rollup column aggregates child rows and is computed by a scheduled system job — hourly by default — so it is eventually consistent and is the wrong choice for a value that must be correct the moment it is read. A formula column uses Power Fx, is evaluated in real time like a calculated column, and is the modern default for a derived scalar."
+        ]
+      }
+    ]
+  }
+]

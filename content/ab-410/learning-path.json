@@ -1,0 +1,203 @@
+{
+  "examCode": "ab-410",
+  "note": "Three paths, one per exam domain. Microsoft has published no learning paths for AB-410 — the 'Prepare for the exam' section of the credential page is empty — so these point at the closest published Power Platform paths, the same accommodation made for SC-500 and AI-200. Revisit the links once Microsoft publishes a dedicated set. Module titles follow Microsoft Learn conventions; the sections and cards behind each are this site's own.",
+  "paths": [
+    {
+      "id": "foundation",
+      "title": "Create a foundation for intelligent applications",
+      "domainId": "foundation",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/create-tables-power-apps/",
+      "modules": [
+        {
+          "id": "foundation-m1",
+          "title": "Design Power Platform solutions with AI-enabled tools",
+          "sectionIds": [
+            "solution-design-with-ai"
+          ],
+          "cardIds": [
+            "fc-ab410-fn-01",
+            "fc-ab410-fn-02",
+            "fc-ab410-fn-03",
+            "fc-ab410-fn-04"
+          ]
+        },
+        {
+          "id": "foundation-m2",
+          "title": "Apply a solution and application lifecycle management strategy",
+          "sectionIds": [
+            "solutions-and-alm"
+          ],
+          "cardIds": [
+            "fc-ab410-fn-05",
+            "fc-ab410-fn-06",
+            "fc-ab410-fn-07",
+            "fc-ab410-fn-08"
+          ]
+        },
+        {
+          "id": "foundation-m3",
+          "title": "Build data models in Dataverse",
+          "sectionIds": [
+            "dataverse-tables-and-columns",
+            "dataverse-relationships"
+          ],
+          "cardIds": [
+            "fc-ab410-fn-09",
+            "fc-ab410-fn-10",
+            "fc-ab410-fn-11"
+          ]
+        },
+        {
+          "id": "foundation-m4",
+          "title": "Configure prompt columns, row summaries, and security",
+          "sectionIds": [
+            "prompt-columns-and-row-summaries",
+            "dataverse-security-model"
+          ],
+          "cardIds": [
+            "fc-ab410-fn-12",
+            "fc-ab410-fn-13",
+            "fc-ab410-fn-14"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "intelligent-apps",
+      "title": "Create intelligent applications",
+      "domainId": "intelligent-apps",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/create-powerapps/",
+      "modules": [
+        {
+          "id": "intelligent-apps-m1",
+          "title": "Create and compose model-driven apps",
+          "sectionIds": [
+            "model-driven-forms-and-views",
+            "model-driven-app-composition"
+          ],
+          "cardIds": [
+            "fc-ab410-ia-01",
+            "fc-ab410-ia-02",
+            "fc-ab410-ia-04",
+            "fc-ab410-ia-05"
+          ]
+        },
+        {
+          "id": "intelligent-apps-m2",
+          "title": "Create generative pages, charts, and dashboards",
+          "sectionIds": [
+            "generative-pages",
+            "charts-and-dashboards"
+          ],
+          "cardIds": [
+            "fc-ab410-ia-03",
+            "fc-ab410-ia-06",
+            "fc-ab410-ia-07"
+          ]
+        },
+        {
+          "id": "intelligent-apps-m3",
+          "title": "Create canvas apps using data",
+          "sectionIds": [
+            "canvas-apps-data-and-design"
+          ],
+          "cardIds": [
+            "fc-ab410-ia-08",
+            "fc-ab410-ia-09",
+            "fc-ab410-ia-12"
+          ]
+        },
+        {
+          "id": "intelligent-apps-m4",
+          "title": "Reuse, test, and extend canvas apps",
+          "sectionIds": [
+            "canvas-reuse-variables-and-errors",
+            "canvas-testing-and-agents"
+          ],
+          "cardIds": [
+            "fc-ab410-ia-10",
+            "fc-ab410-ia-11",
+            "fc-ab410-ia-13",
+            "fc-ab410-ia-14"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "logic-automation",
+      "title": "Build business application logic and automation",
+      "domainId": "logic-automation",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/automate-process-power-automate/",
+      "modules": [
+        {
+          "id": "logic-automation-m1",
+          "title": "Recommend cloud flow triggers and evaluate connectors",
+          "sectionIds": [
+            "cloud-flow-triggers-and-connectors"
+          ],
+          "cardIds": [
+            "fc-ab410-la-01",
+            "fc-ab410-la-02",
+            "fc-ab410-la-03",
+            "fc-ab410-la-04"
+          ]
+        },
+        {
+          "id": "logic-automation-m2",
+          "title": "Configure flow actions, control, and approvals",
+          "sectionIds": [
+            "cloud-flow-actions-and-control"
+          ],
+          "cardIds": [
+            "fc-ab410-la-05",
+            "fc-ab410-la-06",
+            "fc-ab410-la-07",
+            "fc-ab410-la-08",
+            "fc-ab410-la-09"
+          ]
+        },
+        {
+          "id": "logic-automation-m3",
+          "title": "Test and troubleshoot cloud flows",
+          "sectionIds": [
+            "flow-testing-and-troubleshooting"
+          ],
+          "cardIds": [
+            "fc-ab410-la-10",
+            "fc-ab410-la-11",
+            "fc-ab410-la-12",
+            "fc-ab410-la-13"
+          ]
+        },
+        {
+          "id": "logic-automation-m4",
+          "title": "Create prompts and consume AI models in AI Hub",
+          "sectionIds": [
+            "ai-hub-prompts",
+            "ai-hub-models-and-consumption"
+          ],
+          "cardIds": [
+            "fc-ab410-la-14",
+            "fc-ab410-la-15",
+            "fc-ab410-la-16",
+            "fc-ab410-la-17",
+            "fc-ab410-la-18"
+          ]
+        },
+        {
+          "id": "logic-automation-m5",
+          "title": "Implement business rules, process flows, and computed columns",
+          "sectionIds": [
+            "business-rules-and-columns"
+          ],
+          "cardIds": [
+            "fc-ab410-la-19",
+            "fc-ab410-la-20",
+            "fc-ab410-la-21",
+            "fc-ab410-la-22"
+          ]
+        }
+      ]
+    }
+  ]
+}
