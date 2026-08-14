@@ -1,0 +1,202 @@
+{
+  "examCode": "ab-650",
+  "note": "Three paths, one per exam domain. AB-650 is the first exam in this catalogue for which Microsoft has published real learning paths — one matching each domain — so unlike SC-500, AI-200, AB-410, AB-620, AB-210 and AB-250, these msLearnUrl values point at the genuine article rather than the nearest approximation. Module titles follow Microsoft Learn conventions; the sections and cards behind each are this site's own.",
+  "paths": [
+    {
+      "id": "tenant-workloads",
+      "title": "Configure and manage Microsoft 365 tenants and workloads",
+      "domainId": "tenant-workloads",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/configure-manage-microsoft-365-tenants-workloads/",
+      "modules": [
+        {
+          "id": "tenant-workloads-m1",
+          "title": "Configure a Microsoft 365 tenant",
+          "sectionIds": [
+            "tenant-configuration"
+          ],
+          "cardIds": [
+            "fc-ab650-tw-01",
+            "fc-ab650-tw-02",
+            "fc-ab650-tw-03",
+            "fc-ab650-tw-04"
+          ]
+        },
+        {
+          "id": "tenant-workloads-m2",
+          "title": "Manage licences, backup, and connectivity",
+          "sectionIds": [
+            "licensing-and-costs",
+            "backup-and-connectivity"
+          ],
+          "cardIds": [
+            "fc-ab650-tw-05",
+            "fc-ab650-tw-06",
+            "fc-ab650-tw-07",
+            "fc-ab650-tw-08",
+            "fc-ab650-tw-09"
+          ]
+        },
+        {
+          "id": "tenant-workloads-m3",
+          "title": "Manage Microsoft 365 workloads for Copilot",
+          "sectionIds": [
+            "exchange-and-teams-workloads",
+            "sharepoint-onedrive-for-copilot"
+          ],
+          "cardIds": [
+            "fc-ab650-tw-10",
+            "fc-ab650-tw-11"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "govern-secure",
+      "title": "Govern and secure Microsoft 365 tenants and workloads",
+      "domainId": "govern-secure",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/govern-secure-microsoft-365-tenants-workloads/",
+      "modules": [
+        {
+          "id": "govern-secure-m1",
+          "title": "Manage identities in Microsoft Entra",
+          "sectionIds": [
+            "entra-identities"
+          ],
+          "cardIds": [
+            "fc-ab650-gs-01",
+            "fc-ab650-gs-02",
+            "fc-ab650-gs-03",
+            "fc-ab650-gs-04",
+            "fc-ab650-gs-05"
+          ]
+        },
+        {
+          "id": "govern-secure-m2",
+          "title": "Manage roles, PIM, and administrative units",
+          "sectionIds": [
+            "roles-and-pim"
+          ],
+          "cardIds": [
+            "fc-ab650-gs-06",
+            "fc-ab650-gs-07"
+          ]
+        },
+        {
+          "id": "govern-secure-m3",
+          "title": "Implement authentication and access",
+          "sectionIds": [
+            "authentication-methods",
+            "conditional-access"
+          ],
+          "cardIds": [
+            "fc-ab650-gs-08",
+            "fc-ab650-gs-09",
+            "fc-ab650-gs-10",
+            "fc-ab650-gs-11",
+            "fc-ab650-gs-12",
+            "fc-ab650-gs-13"
+          ]
+        },
+        {
+          "id": "govern-secure-m4",
+          "title": "Secure Microsoft 365 workloads with Defender",
+          "sectionIds": [
+            "defender-for-office"
+          ],
+          "cardIds": [
+            "fc-ab650-gs-14",
+            "fc-ab650-gs-15",
+            "fc-ab650-gs-16"
+          ]
+        },
+        {
+          "id": "govern-secure-m5",
+          "title": "Protect data with Microsoft Purview",
+          "sectionIds": [
+            "purview-dlp",
+            "purview-protection-lifecycle"
+          ],
+          "cardIds": [
+            "fc-ab650-gs-17",
+            "fc-ab650-gs-18",
+            "fc-ab650-gs-19",
+            "fc-ab650-gs-20"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ai-services",
+      "title": "Manage and secure Microsoft 365 AI services",
+      "domainId": "ai-services",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/manage-secure-microsoft-365-ai-services/",
+      "modules": [
+        {
+          "id": "ai-services-m1",
+          "title": "Assess tenant and data readiness for Copilot",
+          "sectionIds": [
+            "copilot-readiness"
+          ],
+          "cardIds": [
+            "fc-ab650-ai-01",
+            "fc-ab650-ai-02",
+            "fc-ab650-ai-03",
+            "fc-ab650-ai-04"
+          ]
+        },
+        {
+          "id": "ai-services-m2",
+          "title": "Configure Copilot across the tenant",
+          "sectionIds": [
+            "copilot-configuration"
+          ],
+          "cardIds": [
+            "fc-ab650-ai-05",
+            "fc-ab650-ai-06",
+            "fc-ab650-ai-07",
+            "fc-ab650-ai-08",
+            "fc-ab650-ai-09"
+          ]
+        },
+        {
+          "id": "ai-services-m3",
+          "title": "Manage agent identity and access",
+          "sectionIds": [
+            "agent-identity-and-access"
+          ],
+          "cardIds": [
+            "fc-ab650-ai-10",
+            "fc-ab650-ai-11",
+            "fc-ab650-ai-12"
+          ]
+        },
+        {
+          "id": "ai-services-m4",
+          "title": "Govern agents with the registry and Agent 365",
+          "sectionIds": [
+            "agent-registry",
+            "agent-365-governance"
+          ],
+          "cardIds": [
+            "fc-ab650-ai-13",
+            "fc-ab650-ai-14",
+            "fc-ab650-ai-15",
+            "fc-ab650-ai-16"
+          ]
+        },
+        {
+          "id": "ai-services-m5",
+          "title": "Monitor cost, usage, and adoption of AI services",
+          "sectionIds": [
+            "ai-monitoring-and-cost"
+          ],
+          "cardIds": [
+            "fc-ab650-ai-17",
+            "fc-ab650-ai-18",
+            "fc-ab650-ai-19"
+          ]
+        }
+      ]
+    }
+  ]
+}

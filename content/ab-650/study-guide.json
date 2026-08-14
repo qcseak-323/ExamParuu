@@ -1,0 +1,180 @@
+[
+  {
+    "domainId": "tenant-workloads",
+    "sections": [
+      {
+        "id": "tenant-configuration",
+        "heading": "Tenant configuration, domains, and service health",
+        "paragraphs": [
+          "A Microsoft 365 tenant is configured through the admin centre's organisation settings — branding, the organisation profile, and the security and privacy settings that decide what users may do for themselves. Branding is more than cosmetic: a customised sign-in page is one of the practical defences against credential phishing, because a user who has learned what their own sign-in screen looks like has a chance of noticing a fake.",
+          "A custom domain is added by proving ownership through a DNS record, then given the services it will carry — Exchange, Teams, and so on. The distinction worth holding is between verifying a domain and using it: a verified domain that has not been assigned to Exchange will not accept mail, and a domain cannot be removed while any object still references it, which is why domain removal turns into an object-hunting exercise rather than a delete.",
+          "Service health reports Microsoft-side incidents and advisories, and its most consequential setting is notification configuration. By default nobody is paged. Configuring which administrators receive which service notifications is what turns service health from a page somebody remembers to check into something that reaches the person who needs it — and the absence of that configuration is why an outage is often reported by users before the help desk knows."
+        ]
+      },
+      {
+        "id": "licensing-and-costs",
+        "heading": "Licensing, including AI services",
+        "paragraphs": [
+          "Licences can be assigned directly to a user or through group-based licensing, and group-based is the one that scales: membership drives entitlement, so a joiner picks up licences from the groups they land in and a leaver loses them when they are removed. Direct assignment is what leaves an organisation paying for people who left, because nothing removes it automatically.",
+          "Group-based licensing fails in recognisable ways. A licence with insufficient units leaves members in an error state rather than silently skipping them, and conflicting service plans between two groups produce a resolution the administrator has to unpick. Both are reported per user on the group's licence page, which is the first place to look when somebody says they are missing a product they should have.",
+          "AI services are licensed on top of the base plan, and Microsoft 365 Copilot, Microsoft Agent 365, and Copilot Studio are each their own entitlement. Copilot Studio additionally consumes capacity, so its cost is not a flat per-user figure — it moves with how much the agents actually do. Pay-as-you-go arrangements bill consumption against an Azure subscription, which puts part of the Microsoft 365 estate's cost on an Azure invoice, and knowing that is what prevents an unexplained charge appearing on the wrong budget."
+        ]
+      },
+      {
+        "id": "backup-and-connectivity",
+        "heading": "Microsoft 365 Backup and connectivity insights",
+        "paragraphs": [
+          "Microsoft 365 Backup protects Exchange, SharePoint, and OneDrive inside the service, with restore points that allow a rollback to a point in time. The reason it exists alongside retention is that they solve different problems: retention decides how long content is kept and stops it being permanently removed, while backup restores content to a previous state after corruption or a mass encryption event. Treating retention as a backup is the misconception this feature was introduced to correct.",
+          "Backup is configured by scoping which sites, accounts, or mailboxes it covers, and it is billed on the volume protected — so the scoping decision is a cost decision. A restore can be run at item or site level, and restore points are only as useful as their frequency, which is worth establishing before an incident rather than during one.",
+          "Network connectivity insights measure the actual experience between users and Microsoft 365 from the locations they work in, surfacing problems such as traffic being hairpinned through a distant egress or broken out inefficiently. The guidance it reflects is that Microsoft 365 traffic should reach the service as directly as possible, and the common finding is a corporate network forcing everything through one central proxy — which shows up as latency nobody can attribute to any single component."
+        ]
+      },
+      {
+        "id": "exchange-and-teams-workloads",
+        "heading": "Mailboxes, Teams, and meeting Copilot",
+        "paragraphs": [
+          "Mailboxes come in several shapes and choosing wrongly is expensive to reverse. A user mailbox belongs to a person and needs a licence; a shared mailbox is accessed by several people and needs no licence until it exceeds the size limit or needs its own archive; a resource mailbox represents a room or piece of equipment and participates in scheduling. Converting a leaver's mailbox to shared is the standard way to retain access to their mail without continuing to pay for a licence.",
+          "Teams membership is governed by the underlying Microsoft 365 group, which is the fact that explains most Teams administration questions: adding somebody to the group adds them to the team, and group expiration policies will eventually delete a team nobody has renewed. Ownership matters more than it appears — a team whose owners have all left is orphaned, and orphaned teams accumulate quietly until somebody audits for them.",
+          "Copilot in Teams meetings depends on the meeting being transcribed or recorded, which makes transcription a prerequisite rather than a nice-to-have. That in turn raises consent and policy questions, and the setting that decides how much Copilot can do — during the meeting only, or during and after — is a deliberate governance choice about whether a recap of a sensitive conversation persists afterwards."
+        ]
+      },
+      {
+        "id": "sharepoint-onedrive-for-copilot",
+        "heading": "Preparing SharePoint and OneDrive for Copilot",
+        "paragraphs": [
+          "Copilot answers from what the asking user already has permission to open, which means it never grants access — it only makes existing access visible. That single fact reframes most Copilot data incidents: an assistant surfacing a document somebody should not have seen has revealed a permissions problem that predates it, and disabling Copilot hides the finding rather than fixing anything.",
+          "SharePoint Advanced Management is the tooling built for exactly this remediation. It surfaces oversharing reports showing which sites are broadly shared, supports site access reviews that put the decision in front of the site owner rather than the tenant administrator, offers restricted access control to limit a site to a defined group, and provides inactive site policies for the abandoned sites that accumulate over years. Restricted content discovery is the control that excludes a site from Copilot and organisation-wide search without changing who can open it directly — the surgical option when a site must stay available but must not be summarised.",
+          "Site exclusions and Microsoft Search configuration decide what is discoverable, and the sequencing that works is to measure oversharing first, remediate permissions with the owners, then exclude what genuinely must not be reachable. Starting from exclusions produces an ever-growing list and leaves the underlying permissions exactly as wrong as they were."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "govern-secure",
+    "sections": [
+      {
+        "id": "entra-identities",
+        "heading": "Users, guests, groups, and bulk management",
+        "paragraphs": [
+          "Identities arrive three ways — created in the cloud, synchronised from on-premises Active Directory, or invited as guests — and the source of authority governs where they are edited. A synchronised user cannot have their attributes changed in the cloud, and attempting it is the usual explanation for a change that appears to save and then reverts at the next sync cycle.",
+          "Guest access is configured at two levels that people conflate. External collaboration settings decide who may invite guests and what guests can see of the directory; cross-tenant access settings decide which partner organisations may be trusted, and can accept another tenant's multifactor authentication so a partner is not challenged twice. Leaving external collaboration at its most permissive is how a directory ends up enumerable by anyone who has ever been invited to anything.",
+          "Groups come as security groups, which grant access, and Microsoft 365 groups, which additionally provision a mailbox, a SharePoint site, and a team. Dynamic membership is driven by an attribute rule and is the mechanism that keeps entitlement current without anybody maintaining a list — and it is only as good as the attribute it reads, so a dynamic group on a department field that nobody populates is a group that stays empty. Microsoft Graph PowerShell is the bulk instrument for all of this, and it is worth knowing as the answer to any question phrased as \"for several thousand users\"."
+        ]
+      },
+      {
+        "id": "roles-and-pim",
+        "heading": "Roles, PIM, and administrative units",
+        "paragraphs": [
+          "Administrative roles should be assigned on the principle of least privilege and by role rather than by handing out Global Administrator, which remains the most over-assigned role in most tenants. Microsoft recommends keeping the number of Global Administrators very small and using the specific service roles for everything else — Exchange Administrator, SharePoint Administrator, User Administrator, and so on.",
+          "Privileged Identity Management converts a standing assignment into an eligible one: the administrator activates the role when they need it, for a bounded period, optionally with approval, justification, and multifactor authentication at activation. The security value is that a compromised account is not automatically a compromised administrator, and the audit value is that every activation is a recorded event with a stated reason.",
+          "Administrative units scope a role to a subset of the directory, so a regional help desk can reset passwords for their own region's users and nobody else's. They are the answer whenever a requirement says an administrator must manage some users but not all, and they compose with roles rather than replacing them — the role says what may be done, the administrative unit says to whom."
+        ]
+      },
+      {
+        "id": "authentication-methods",
+        "heading": "Authentication methods and password protection",
+        "paragraphs": [
+          "The authentication methods policy decides which methods exist in the tenant and who may register each. The direction of travel is away from telephony: SMS and voice are the weakest supported methods and are phishable and interceptable, while passkeys and Windows Hello for Business are phishing-resistant because the credential is bound to the device and the site. Microsoft Authenticator with number matching sits between them.",
+          "Microsoft Entra Password Protection blocks weak and organisation-specific passwords using a global banned list plus a custom list, and it can be extended to on-premises Active Directory with agents on the domain controllers — which is what stops a user simply setting the banned password on-premises and having it synchronise up. Self-service password reset needs the user registered for enough methods to satisfy the policy, and combined registration for reset and multifactor authentication is what avoids asking people to register twice.",
+          "Authentication troubleshooting starts in the sign-in logs, where the failure reason and the correlation identifier tell you far more than the user's description does. The distinction that resolves most tickets is whether the sign-in failed at the first factor, at the second factor, or at a Conditional Access grant control — three very different problems that all look to the user like \"it will not let me in\"."
+        ]
+      },
+      {
+        "id": "conditional-access",
+        "heading": "Conditional Access, ID Protection, and MFA",
+        "paragraphs": [
+          "A Conditional Access policy is a set of assignments — users, target resources, network, conditions — and a set of controls that are applied when they match. Policies are additive and all matching policies must be satisfied, so an allow in one does not override a block in another; block always wins. Building a policy set means thinking about what happens when several apply at once, not just what each does alone.",
+          "Every policy set needs emergency access accounts excluded from it. A Conditional Access policy that requires a compliant device, applied to all users with no exclusion, can lock every administrator out of the tenant including the person who created it — and the report-only mode exists precisely so a policy can be measured against real sign-ins before it is enforced. Using report-only first is the practice that separates a considered rollout from an incident.",
+          "Microsoft Entra ID Protection contributes risk as a condition: user risk reflects the likelihood an identity is compromised, sign-in risk reflects the likelihood a particular sign-in is not the user. The standard pairing is to require a password change on high user risk and multifactor authentication on elevated sign-in risk, which turns risk detection into an automatic response rather than a report somebody reads later. Continuous access evaluation shortens the window further by having supporting services react to critical events such as an account being disabled, in near real time rather than at token expiry."
+        ]
+      },
+      {
+        "id": "defender-for-office",
+        "heading": "Defender for Office 365",
+        "paragraphs": [
+          "Defender for Office 365 protects mail and collaboration through layered policies: anti-phishing, including impersonation and spoof protection; Safe Links, which rewrites and checks URLs at the time of click rather than at delivery; and Safe Attachments, which detonates attachments in a sandbox. Checking at click time is the important property, because a link that was benign when the mail arrived can be weaponised afterwards.",
+          "Preset security policies — Standard and Strict — apply Microsoft's recommended settings and update as those recommendations change, which is the right default for most organisations. Custom policies are evaluated in a defined priority order and the first matching policy of each type wins, so a broad custom policy above a specific one silently makes the specific one unreachable. That ordering is the single most common cause of a policy that appears configured and never applies.",
+          "Investigation runs through Threat Explorer and the incident queue, and remediation includes purging delivered mail from mailboxes after the fact. Attack simulation training completes the loop by sending controlled phishing to staff and assigning training to those who fall for it — and the number worth watching is not the click rate alone but whether it moves after the training, since a stable click rate means the training is not working."
+        ]
+      },
+      {
+        "id": "purview-dlp",
+        "heading": "Data Loss Prevention, including for Copilot",
+        "paragraphs": [
+          "A DLP policy matches conditions against content and applies actions, across Exchange, SharePoint, OneDrive, Teams, and endpoints. The design decision that matters most is the balance between detection strength and false positives: matching a credit-card pattern alone produces noise, while requiring supporting evidence nearby, or matching an exact data match built from an authoritative list, produces alerts people act on. A policy that generates alerts everyone ignores is worse than no policy, because it consumes the attention a real incident needs.",
+          "Policies should be deployed in simulation mode first, which shows what would have matched without blocking anybody, and only then enforced. Policy tips explain to the user what is happening at the moment they do it, which is where behaviour actually changes; a block with no explanation produces a help desk ticket and a workaround.",
+          "DLP now extends to Copilot, and that is a genuinely different control surface: it can prevent labelled content being used in Copilot responses, so a document the user could open is nonetheless excluded from what Copilot will summarise or cite. The endpoint scope covers copy to removable media, upload to unsanctioned sites, and printing, and it needs devices onboarded before it can act — an unonboarded device is invisible to endpoint DLP."
+        ]
+      },
+      {
+        "id": "purview-protection-lifecycle",
+        "heading": "Information protection, lifecycle, and DSPM for AI",
+        "paragraphs": [
+          "Sensitivity labels classify content and can enforce encryption, watermarking, and access restrictions that travel with the file wherever it goes — which is what distinguishes labelling from a permission on a location. Label policies decide who sees which labels, whether a default is applied, and whether justification is required to lower one. Labels also matter to Copilot: an encrypted document's protection is honoured, and labelled content can be excluded from Copilot processing by DLP.",
+          "Sensitive information types are the detection primitives — built-in patterns, custom patterns, exact data match for an authoritative list, and trainable classifiers for categories that resist pattern matching, such as a document being a contract. Choosing among them is choosing an accuracy and maintenance trade-off.",
+          "Data lifecycle management retains and deletes on a schedule. Retention labels apply to individual items and can trigger disposition review; retention policies apply broadly to a location. When rules conflict, retention wins over deletion and the longest retention wins — which is why a tenant with overlapping policies keeps far more than anybody intended and requires the conflict rules to be reasoned about rather than discovered.",
+          "Data Security Posture Management for AI is the surface built for this exam's subject: it reports what sensitive data AI is actually touching, which prompts and responses involve labelled content, and where oversharing is exposing material to Copilot. It answers the question a Copilot rollout raises — not \"is Copilot secure\" but \"what is our Copilot reaching\" — and it is where a data-readiness conversation should start."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "ai-services",
+    "sections": [
+      {
+        "id": "copilot-readiness",
+        "heading": "Tenant and data readiness for Copilot",
+        "paragraphs": [
+          "Technical readiness for Copilot is largely unremarkable — licences, supported clients, the services it draws on — and it is not where deployments fail. They fail on data readiness, because Copilot's reach is the union of everything each user can already open, and most tenants have accumulated a decade of broadly shared sites, links set to \"anyone in the organisation\", and abandoned team sites nobody owns.",
+          "The failure mode is specific and worth naming precisely: Copilot does not leak data, it surfaces data the user could always have found and never did. Search made that content technically reachable; Copilot makes it conversationally reachable, which is a difference of practice rather than permission. That is why the remediation is permissions work, and why disabling Copilot after such an incident resolves nothing — the exposure remains, merely harder to notice again.",
+          "A readiness exercise therefore runs in order: measure with oversharing reports and DSPM for AI, remediate the worst sites with their owners through access reviews, protect what needs it with sensitivity labels and DLP, and only then exclude anything that must stay out of reach entirely. Rolling Copilot out to a pilot group whose data is in good order, rather than to the whole tenant at once, is what keeps the first incident small."
+        ]
+      },
+      {
+        "id": "copilot-configuration",
+        "heading": "Configuring Copilot across the tenant",
+        "paragraphs": [
+          "Web search is the setting with the clearest governance consequence: allowing Copilot to ground answers in the public web improves them and sends the query context outside the organisation's boundary. It is controlled at tenant level and can be scoped, and it is a decision to be made deliberately rather than left at the default. Microsoft 365 Copilot Search extends the same grounding across connected sources, and Copilot connectors are what bring external repositories into that index — with the important property that a connector's results are trimmed to what the asking user may see in the source system.",
+          "Tenant settings also govern self-service purchase, which is off by default in most organisations for good reason; release preferences, which decide whether the tenant receives features early; the AI disclaimer shown to users; and whether image and video generation are available. Managing Copilot user experiences means deciding which in-app surfaces appear where, and Microsoft 365 Copilot Cowork covers the agent-assisted collaborative work built on top.",
+          "Third-party AI providers are configured and governed separately, and the question to settle before enabling one is where its processing happens and what leaves the tenant — the same question web search raises, with a different answer for each provider."
+        ]
+      },
+      {
+        "id": "agent-identity-and-access",
+        "heading": "Agent identity and access",
+        "paragraphs": [
+          "Microsoft Entra Agent ID gives an agent a first-class identity in the directory rather than letting it act as a shared account or borrow a person's credentials. That is the foundation everything else in agent governance rests on: an agent with its own identity can be granted, reviewed, audited, and revoked like any other principal, and its actions are attributable.",
+          "Because an agent is a principal, the ordinary governance machinery applies to it. Access packages can grant an agent the resources it needs with an approval step and an expiry, Conditional Access can constrain where and how it authenticates, and lifecycle workflows handle its joiner-mover-leaver equivalent — which matters because an agent built for a project that ended is exactly the kind of thing that keeps its access forever.",
+          "Every agent needs a named owner, and this is the control most often skipped. An unowned agent is one nobody reviews, nobody updates when it breaks, and nobody decommissions. Requiring an owner at creation is cheap; discovering a tenant full of ownerless agents two years later is not."
+        ]
+      },
+      {
+        "id": "agent-registry",
+        "heading": "The agent registry and Agent 365 tools",
+        "paragraphs": [
+          "The agent registry is the tenant's inventory and control point for agents, both Microsoft's and third parties'. It supports discovery of what exists, a review workflow in which an administrator publishes or rejects an agent, and per-agent control over whether users may install it, whether it is blocked, and who has access. Custom agents can be uploaded into the same governed path rather than living outside it.",
+          "Agent settings decide the shape of what is possible before any individual agent is reviewed: which agent types are allowed at all, whether agents may be shared and with whom, which templates are available, and which users may install agents. Setting these first is what makes the review queue manageable — an open tenant produces a queue nobody can keep up with, which in practice means approvals stop being read.",
+          "Tools in Agent 365 are the capabilities an agent can invoke, and managing them is the same least-privilege exercise as managing any other permission set. An agent with a tool it never needs is standing exposure, and the review question at publish time is not only \"is this agent useful\" but \"does it hold only the tools its job requires\"."
+        ]
+      },
+      {
+        "id": "agent-365-governance",
+        "heading": "Governing agents with Agent 365",
+        "paragraphs": [
+          "Agent 365 provides the operational half of agent governance: monitoring what agents are actually doing, protecting the sensitive data they touch, and evaluating where compliance gaps sit. Monitoring agent activity is what turns an approved agent from a one-time decision into something under continuing observation — approval at publish time says nothing about behaviour six months later.",
+          "Protecting sensitive data through Agent 365 connects agent activity to the Purview controls the rest of the estate already uses, so an agent handling labelled content is subject to the same protection as a person handling it. That consistency is the goal: agents should not be a parallel governance regime with its own rules, but principals inside the existing one.",
+          "Compliance gap evaluation reports where agent behaviour falls outside policy, which is the input to a review cycle rather than an alert to be cleared. The useful cadence is periodic review of what agents exist, who owns them, what they have been doing, and whether each still has a reason to exist — the same discipline applied to service accounts, for the same reasons."
+        ]
+      },
+      {
+        "id": "ai-monitoring-and-cost",
+        "heading": "Monitoring cost, usage, and adoption",
+        "paragraphs": [
+          "AI services cost money in two shapes and conflating them produces bad forecasts. Per-user licences are predictable and are paid whether or not the user engages. Consumption — Copilot Studio capacity, agent activity, pay-as-you-go arrangements — moves with what the estate does, and can move sharply when an agent is pointed at a large body of records. Monitoring both is the only way a budget survives contact with a rollout.",
+          "Usage reports in the Microsoft 365 admin centre show adoption by workload, and the number that matters is active use rather than licences assigned. A department with full licence coverage and near-zero usage has an adoption problem that no amount of further licensing will fix, and finding it early is what makes the difference between a renewal conversation and a cancellation.",
+          "The Copilot Control System brings usage, adoption, and service health for AI services into one place, which is what makes those signals reviewable together rather than assembled by hand from several reports. Service health for AI services matters in its own right, because a Copilot experience degrading is reported by users as \"the AI is being stupid today\" rather than as an incident, and the only way to distinguish a genuine service issue from a data or prompt problem is to look."
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,1052 @@
+[
+  {
+    "id": "tw-01",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "question": "A custom domain has been verified but mail sent to addresses on it is rejected. What is most likely missing?",
+    "options": [
+      "The domain has not been assigned to Exchange Online",
+      "The domain's TXT verification record has been removed",
+      "The domain has not been set as the default domain",
+      "Users have not been assigned licences"
+    ],
+    "correctIndex": 0,
+    "explanation": "Verifying a domain proves ownership; assigning services decides what it carries. A verified domain with no Exchange assignment accepts no mail, which is why the two steps are worth keeping distinct.",
+    "teaches": "tenant-configuration"
+  },
+  {
+    "id": "tw-02",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "question": "An administrator cannot remove a custom domain from the tenant. What must happen first?",
+    "options": [
+      "Every object still referencing the domain must be updated or removed",
+      "The domain must be unverified in DNS",
+      "The domain must be removed from the organisation profile",
+      "All users must be converted to cloud-only accounts"
+    ],
+    "correctIndex": 0,
+    "explanation": "Domain removal is blocked while any object — a user, a group, a distribution list — still uses an address on it, which turns removal into an object hunt rather than a delete.",
+    "teaches": "tenant-configuration"
+  },
+  {
+    "id": "tw-03",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "question": "Users report a Microsoft 365 outage before the help desk knows about it. What should you configure?",
+    "options": [
+      "Service health notifications for the relevant administrators",
+      "A Microsoft 365 Backup policy covering the affected workload",
+      "Network connectivity insights for each office",
+      "An attack simulation training campaign"
+    ],
+    "correctIndex": 0,
+    "explanation": "Service health notifies nobody by default. Configuring which administrators receive which notifications is what turns it from a page somebody remembers to check into something that reaches the right person.",
+    "teaches": "tenant-configuration"
+  },
+  {
+    "id": "tw-04",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "question": "An organisation is still paying for licences assigned to people who left months ago. What should you implement?",
+    "options": [
+      "Group-based licensing driven by directory membership",
+      "A monthly report of assigned licences for manual review",
+      "Pay-as-you-go billing for the affected products",
+      "Administrative units scoping licence management by region"
+    ],
+    "correctIndex": 0,
+    "explanation": "With group-based licensing, entitlement follows membership, so removing somebody from the group removes their licence. Direct assignment is precisely what leaves an organisation paying for leavers, because nothing removes it automatically.",
+    "teaches": "licensing-and-costs"
+  },
+  {
+    "id": "tw-05",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "question": "A licensing group has more members than the subscription has available units. What happens?",
+    "options": [
+      "Members beyond the available units land in an error state, reported per user",
+      "The group's licence assignment is disabled entirely",
+      "Members are licensed in alphabetical order until units run out, silently",
+      "The subscription automatically purchases additional units"
+    ],
+    "correctIndex": 0,
+    "explanation": "The failure is visible rather than silent, and is reported on the group's licence page per user. That visibility is what makes it findable when somebody says they are missing a product they should have.",
+    "teaches": "licensing-and-costs"
+  },
+  {
+    "id": "tw-06",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "question": "Which statement about licensing AI services in Microsoft 365 is correct?",
+    "options": [
+      "Microsoft 365 Copilot, Microsoft Agent 365, and Copilot Studio are each licensed separately from the base plan",
+      "A Microsoft 365 E5 plan includes Copilot for all its users",
+      "Copilot Studio is included with any Microsoft 365 Copilot licence",
+      "Agent 365 is licensed per tenant rather than per user"
+    ],
+    "correctIndex": 0,
+    "explanation": "Each is its own entitlement on top of the base plan, and Copilot Studio additionally consumes capacity — so its cost moves with what the agents actually do rather than being a flat per-user figure.",
+    "teaches": "licensing-and-costs"
+  },
+  {
+    "id": "tw-07",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "question": "A team's SharePoint site was corrupted by a mass file-encryption incident. Retention policies are in place. What restores the site to its prior state?",
+    "options": [
+      "Microsoft 365 Backup, restoring to a point in time",
+      "The retention policy, which preserves the previous versions",
+      "The recycle bin, which holds the pre-encryption copies",
+      "eDiscovery hold placed on the site"
+    ],
+    "correctIndex": 0,
+    "explanation": "Retention decides how long content is kept and stops permanent removal; it does not roll a site back. Backup restores to a previous state, and treating retention as a backup is the misconception this feature exists to correct.",
+    "teaches": "backup-and-connectivity"
+  },
+  {
+    "id": "tw-08",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "question": "Network connectivity insights show high latency to Microsoft 365 from three branch offices. What is the most likely cause?",
+    "options": [
+      "Traffic is being backhauled through a distant central egress point",
+      "The branches are missing Microsoft 365 licences",
+      "Service health is reporting a regional incident",
+      "The branches are using a different tenant"
+    ],
+    "correctIndex": 0,
+    "explanation": "The guidance the insights reflect is that Microsoft 365 traffic should reach the service as directly as possible. A corporate network forcing everything through one proxy shows up as latency nobody can attribute to a single component.",
+    "teaches": "backup-and-connectivity"
+  },
+  {
+    "id": "tw-09",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "question": "A departing employee's mail must remain accessible to their manager without continuing to pay for a licence. What should you do?",
+    "options": [
+      "Convert the mailbox to a shared mailbox and grant the manager access",
+      "Forward all mail to the manager and delete the account",
+      "Place the mailbox on litigation hold and remove the licence",
+      "Export the mailbox to a PST and delete the account"
+    ],
+    "correctIndex": 0,
+    "explanation": "A shared mailbox needs no licence until it exceeds the size limit or requires its own archive, and it preserves the mail in place. Removing a licence without converting first puts the mailbox on a countdown to deletion.",
+    "teaches": "exchange-and-teams-workloads"
+  },
+  {
+    "id": "tw-10",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "question": "Copilot produces no meeting recap for a team's meetings. What is the prerequisite to check?",
+    "options": [
+      "Whether transcription or recording is enabled for those meetings",
+      "Whether the attendees hold Teams Premium licences",
+      "Whether the meeting was scheduled from a channel",
+      "Whether the tenant allows external participants"
+    ],
+    "correctIndex": 0,
+    "explanation": "Copilot in Teams meetings works from the transcript, so transcription is a prerequisite rather than an enhancement. The during-only versus during-and-after setting is then a separate governance decision about whether a recap persists.",
+    "teaches": "exchange-and-teams-workloads"
+  },
+  {
+    "id": "tw-11",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "kind": "multi",
+    "question": "Which two capabilities does SharePoint Advanced Management provide for a Copilot readiness exercise? Choose two.",
+    "options": [
+      "Oversharing reports showing which sites are broadly shared",
+      "Site access reviews that put the decision to the site owner",
+      "Automatic relabelling of every document in the tenant",
+      "Per-user encryption of all OneDrive content"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Advanced Management is built for measuring and remediating oversharing, and access reviews are what move the decision to the person who actually knows who should have access. Neither bulk relabelling nor blanket encryption is what it does.",
+    "teaches": "sharepoint-onedrive-for-copilot"
+  },
+  {
+    "id": "tw-12",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "kind": "order",
+    "question": "Put these steps in order for preparing SharePoint content before a Copilot rollout.",
+    "items": [
+      "Run oversharing reports to measure the current state",
+      "Remediate the worst sites with their owners through access reviews",
+      "Apply sensitivity labels and DLP to what needs protecting",
+      "Exclude anything that must not be reachable at all"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Measuring first tells you what the problem actually is. Starting from exclusions produces an ever-growing list and leaves the underlying permissions exactly as wrong as they were, which is why exclusion is last.",
+    "teaches": "sharepoint-onedrive-for-copilot"
+  },
+  {
+    "id": "tw-13",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "kind": "match",
+    "question": "Match each mailbox type to what it is for.",
+    "pairs": [
+      {
+        "term": "User mailbox",
+        "definition": "Belongs to a person and requires a licence"
+      },
+      {
+        "term": "Shared mailbox",
+        "definition": "Accessed by several people, unlicensed within its size limit"
+      },
+      {
+        "term": "Resource mailbox",
+        "definition": "Represents a room or equipment and takes part in scheduling"
+      },
+      {
+        "term": "Archive mailbox",
+        "definition": "Additional storage for a mailbox's older items"
+      }
+    ],
+    "explanation": "Choosing wrongly is expensive to reverse, which is why the distinctions are worth holding. Converting a leaver's user mailbox to shared is the standard way to keep their mail without keeping their licence.",
+    "teaches": "exchange-and-teams-workloads"
+  },
+  {
+    "id": "gs-01",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "caseStudyId": "cs-ravensmoor-copilot",
+    "question": "The board has asked whether Copilot caused the exposure of the pay review workbook. What should the assessment state?",
+    "options": [
+      "Copilot did not cause it — every member of staff could already open the workbook, and Copilot made that pre-existing access visible",
+      "Copilot caused it by indexing a site that should have been excluded from its index",
+      "Copilot caused it by elevating its own permissions to read the site",
+      "Copilot caused it by ignoring the sensitivity label applied to the workbook"
+    ],
+    "correctIndex": 0,
+    "explanation": "Copilot answers only from what the asking user can already open, so it never grants access. The site was shared with the whole organisation in 2019 and the workbook carries no label. The requirement that turning Copilot off is not acceptable follows directly from this: the exposure predates it and survives it.",
+    "teaches": "copilot-readiness"
+  },
+  {
+    "id": "gs-02",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "caseStudyId": "cs-ravensmoor-copilot",
+    "question": "The 190 ownerless sites must be reviewed by people who know who should have access, without the tenant administrator adjudicating each one. What should you do?",
+    "options": [
+      "Assign accountable owners to the sites, then run site access reviews that route each decision to its owner",
+      "Have the tenant administrator remove the whole-organisation group from all 190 sites",
+      "Apply restricted content discovery to all 190 sites",
+      "Delete the 190 sites, since their owners have left the organisation"
+    ],
+    "correctIndex": 0,
+    "explanation": "Access reviews put the decision to the site owner, which is the requirement — but the sites have no owners, so ownership has to be established first or there is nobody to route the review to. Bulk permission removal by the administrator is exactly the central adjudication the requirement rules out, and deletion destroys content nobody has assessed.",
+    "teaches": "sharepoint-onedrive-for-copilot"
+  },
+  {
+    "id": "gs-03",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "caseStudyId": "cs-ravensmoor-copilot",
+    "question": "One named site must stay openable by the staff who need it while being excluded from Copilot and organisation-wide search entirely. What should you configure?",
+    "options": [
+      "Restricted content discovery on that site",
+      "Restricted access control limiting the site to a named group",
+      "A sensitivity label applying encryption to the site's contents",
+      "A DLP policy blocking the site's content in Copilot responses"
+    ],
+    "correctIndex": 0,
+    "explanation": "Restricted content discovery removes a site from Copilot and organisation-wide search without changing who can open it directly, which is exactly the two-part requirement. Restricted access control and encryption both change who can open it, and a DLP policy addresses Copilot without addressing search.",
+    "teaches": "sharepoint-onedrive-for-copilot"
+  },
+  {
+    "id": "gs-04",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "kind": "dropdown",
+    "caseStudyId": "cs-ravensmoor-copilot",
+    "question": "Complete the plan for the nineteen agents produced by the pilot.",
+    "segments": [
+      {
+        "text": "The six ownerless agents are a governance failure because an unowned agent is "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "never reviewed, updated, or decommissioned by anybody",
+          "unable to authenticate once its creator changes role",
+          "automatically disabled after ninety days"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", and the requirement that no further agents be installed without review is met by " },
+      {
+        "blankId": "b2",
+        "options": [
+          "configuring the agent registry's publish-or-reject workflow before allowing installs",
+          "removing the Agent 365 licences from all pilot users",
+          "blocking each of the nineteen agents individually"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "Ravensmoor allowed installs before configuring any review workflow, which is how nineteen agents appeared with two holding estate-wide read tools. Blocking them one by one addresses today's nineteen and none of tomorrow's, and withdrawing licences ends the pilot rather than governing it.",
+    "teaches": "agent-registry"
+  },
+  {
+    "id": "gs-05",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "kind": "yesno",
+    "caseStudyId": "cs-ravensmoor-copilot",
+    "question": "Finance is at 96 per cent weekly active use of Copilot and the six area teams at 2 to 5 per cent, on identical licensing. Judge each statement.",
+    "statements": [
+      {
+        "text": "The gap is an adoption problem, and buying further licences would not address it.",
+        "correct": true
+      },
+      {
+        "text": "Active use rather than licences assigned is the number that should drive the renewal decision.",
+        "correct": true
+      },
+      {
+        "text": "Usage reports in the admin centre can show adoption broken down by workload.",
+        "correct": true
+      },
+      {
+        "text": "Because licensing is identical, the difference must be a service health issue affecting the area teams.",
+        "correct": false
+      }
+    ],
+    "explanation": "Identical licensing is what rules out an entitlement cause and points at adoption. A service issue would not persist for one group across every workload while another group is unaffected, which is why the reports are the place to look before any further spend.",
+    "teaches": "ai-monitoring-and-cost"
+  },
+  {
+    "id": "gs-06",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "question": "An administrator changes a synchronised user's job title in the Microsoft 365 admin centre and it reverts within the hour. Why?",
+    "options": [
+      "The user's source of authority is on-premises Active Directory",
+      "The administrator lacks the User Administrator role",
+      "The change was made outside the tenant's change window",
+      "The attribute is read-only for all users in Microsoft Entra"
+    ],
+    "correctIndex": 0,
+    "explanation": "A synchronised object is edited where it is authored. The next sync cycle overwrites a cloud edit, which is why the change appears to save and then disappears.",
+    "teaches": "entra-identities"
+  },
+  {
+    "id": "gs-07",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "question": "Engineers from a partner organisation are challenged for multifactor authentication twice — once by their own tenant and again by yours. What should you configure?",
+    "options": [
+      "Cross-tenant access settings to trust the partner tenant's multifactor authentication",
+      "External collaboration settings to allow anyone to invite guests",
+      "A Conditional Access policy excluding all guests from multifactor authentication",
+      "A separate guest account for each engineer in your tenant"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cross-tenant access settings decide which partner organisations are trusted and can accept their MFA claim. Excluding guests from MFA altogether meets the convenience requirement by removing the control, which is not the same thing.",
+    "teaches": "entra-identities"
+  },
+  {
+    "id": "gs-08",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "question": "A dynamic group built on a department attribute has no members, although the users exist. What should you check?",
+    "options": [
+      "Whether the department attribute is populated on those users",
+      "Whether the group has an owner assigned",
+      "Whether the group is a security group rather than a Microsoft 365 group",
+      "Whether the users hold the correct licences"
+    ],
+    "correctIndex": 0,
+    "explanation": "Dynamic membership is only as good as the attribute behind it, so a rule reading a field nobody fills produces an empty group. The rule is correct and the data is not.",
+    "teaches": "entra-identities"
+  },
+  {
+    "id": "gs-09",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "question": "Administrators should hold no standing privileged access, activating roles only when needed with approval and justification. What should you implement?",
+    "options": [
+      "Microsoft Entra Privileged Identity Management with eligible assignments",
+      "Administrative units scoping each role to a region",
+      "Conditional Access requiring multifactor authentication for administrators",
+      "A separate cloud-only account for each administrator"
+    ],
+    "correctIndex": 0,
+    "explanation": "PIM converts a standing assignment into an eligible one, activated for a bounded period with approval and justification. The security value is that a compromised account is no longer automatically a compromised administrator.",
+    "teaches": "roles-and-pim"
+  },
+  {
+    "id": "gs-10",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "question": "A regional help desk must reset passwords for their own region's users only. What should you configure?",
+    "options": [
+      "An administrative unit containing that region's users, with the role scoped to it",
+      "A custom role granting password reset on all users",
+      "A dynamic group containing the region's users, with the role assigned to the group",
+      "A Conditional Access policy limiting the help desk by location"
+    ],
+    "correctIndex": 0,
+    "explanation": "Administrative units answer any requirement of the form \"manage some users but not all\". The role says what may be done and the administrative unit says to whom; assigning a role to a group scopes who holds it, not what it reaches.",
+    "teaches": "roles-and-pim"
+  },
+  {
+    "id": "gs-11",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "question": "Which authentication method should an organisation move administrators onto to resist phishing?",
+    "options": [
+      "Passkeys or Windows Hello for Business",
+      "SMS one-time codes",
+      "Voice call approval",
+      "Email one-time passcode"
+    ],
+    "correctIndex": 0,
+    "explanation": "Passkeys and Windows Hello for Business bind the credential to the device and the site, which is what makes them phishing-resistant. SMS and voice are the weakest supported methods and are both phishable and interceptable.",
+    "teaches": "authentication-methods"
+  },
+  {
+    "id": "gs-12",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "question": "Users banned from setting weak passwords in the cloud are still setting them on-premises, and the passwords synchronise up. What is required?",
+    "options": [
+      "Microsoft Entra Password Protection agents on the domain controllers",
+      "A custom banned password list in the cloud",
+      "Self-service password reset enabled for all users",
+      "Password hash synchronisation disabled"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cloud-side protection cannot inspect a password set on-premises. The domain controller agents are what extend the banned list to Active Directory, which closes exactly this gap.",
+    "teaches": "authentication-methods"
+  },
+  {
+    "id": "gs-13",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "question": "Two Conditional Access policies apply to the same sign-in — one grants access with multifactor authentication, the other blocks. What happens?",
+    "options": [
+      "The sign-in is blocked, because block always wins",
+      "The sign-in succeeds with multifactor authentication, because grant is evaluated first",
+      "The policy created most recently applies",
+      "The sign-in fails with a policy conflict error"
+    ],
+    "correctIndex": 0,
+    "explanation": "Policies are additive and all matching ones must be satisfied, so an allow in one never overrides a block in another. Reasoning about what happens when several apply at once is the whole of Conditional Access design.",
+    "teaches": "conditional-access"
+  },
+  {
+    "id": "gs-14",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "question": "Before enforcing a new Conditional Access policy across all users, what should you do?",
+    "options": [
+      "Run it in report-only mode and review its effect on real sign-ins",
+      "Apply it to administrators first as a pilot group",
+      "Enable it outside business hours to limit disruption",
+      "Duplicate it as a backup policy in case it needs reverting"
+    ],
+    "correctIndex": 0,
+    "explanation": "Report-only measures a policy against actual sign-ins without enforcing it, which is what separates a considered rollout from an incident. Piloting on administrators is the group whose lockout would be hardest to recover from.",
+    "teaches": "conditional-access"
+  },
+  {
+    "id": "gs-15",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "question": "Microsoft Entra ID Protection reports high user risk for an account. What is the standard automatic response?",
+    "options": [
+      "Require a secure password change",
+      "Require multifactor authentication on the next sign-in",
+      "Block the account until an administrator reviews it",
+      "Revoke the user's licences"
+    ],
+    "correctIndex": 0,
+    "explanation": "User risk means the identity itself is likely compromised, so the credential must change. Sign-in risk means a particular attempt is suspect, and the matching response there is multifactor authentication.",
+    "teaches": "conditional-access"
+  },
+  {
+    "id": "gs-16",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "question": "Why does Safe Links check URLs when a user clicks rather than when the mail is delivered?",
+    "options": [
+      "A link that was benign at delivery can be weaponised afterwards",
+      "Delivery-time checking would delay mail unacceptably",
+      "Attachments cannot be scanned until they are opened",
+      "The recipient's device determines which links are safe"
+    ],
+    "correctIndex": 0,
+    "explanation": "Time-of-click checking is the whole point of the control, because attackers commonly send a clean link and change what it points at later. Delivery-time inspection alone misses that entirely.",
+    "teaches": "defender-for-office"
+  },
+  {
+    "id": "gs-17",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "question": "A custom anti-phishing policy for the finance team never applies, although its settings are correct. What should you check?",
+    "options": [
+      "Whether a broader policy sits above it in the priority order",
+      "Whether the finance users hold Defender for Office 365 licences",
+      "Whether the policy was published after being saved",
+      "Whether Safe Attachments is enabled for the tenant"
+    ],
+    "correctIndex": 0,
+    "explanation": "Policies of each type are evaluated in priority order and the first match wins, so a broad policy above a specific one makes the specific one unreachable. That ordering is the most common cause of a policy that looks configured and never fires.",
+    "teaches": "defender-for-office"
+  },
+  {
+    "id": "gs-18",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "question": "A new DLP policy should be introduced without disrupting users while its accuracy is assessed. What should you do?",
+    "options": [
+      "Deploy it in simulation mode and review what would have matched",
+      "Deploy it in enforcement mode with policy tips only",
+      "Deploy it to a pilot group with blocking enabled",
+      "Deploy it with the lowest possible confidence threshold"
+    ],
+    "correctIndex": 0,
+    "explanation": "Simulation shows what would have matched without blocking anybody, which is how a policy's false-positive rate is learned before anyone is affected. A policy generating alerts everyone ignores is worse than none, because it consumes the attention a real incident needs.",
+    "teaches": "purview-dlp"
+  },
+  {
+    "id": "gs-19",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "question": "Two retention policies apply to the same content — one retains for three years, the other deletes after one. What is the outcome?",
+    "options": [
+      "The content is retained for three years",
+      "The content is deleted after one year",
+      "The policies conflict and neither applies",
+      "The policy applied most recently wins"
+    ],
+    "correctIndex": 0,
+    "explanation": "Retention wins over deletion and the longest retention wins. That is why a tenant with overlapping policies keeps far more than anybody intended, and why the conflict rules have to be reasoned about rather than discovered.",
+    "teaches": "purview-protection-lifecycle"
+  },
+  {
+    "id": "gs-20",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "kind": "multi",
+    "question": "Which two are true of sensitivity labels? Choose two.",
+    "options": [
+      "Encryption applied by a label travels with the file wherever it goes",
+      "A label policy can require justification to lower a label",
+      "Labels replace the need for DLP policies",
+      "A label can only be applied by an administrator"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Protection travelling with the file is what distinguishes labelling from a permission on a location. Labels and DLP are complementary — one classifies and protects content, the other governs actions on it — and users apply labels routinely.",
+    "teaches": "purview-protection-lifecycle"
+  },
+  {
+    "id": "gs-21",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "kind": "multi",
+    "question": "Which two detection approaches reduce false positives in a DLP policy? Choose two.",
+    "options": [
+      "Requiring supporting evidence near the matched pattern",
+      "Using exact data match built from an authoritative list",
+      "Lowering the confidence level of the sensitive information type",
+      "Applying the policy to every location in the tenant"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Corroborating evidence and exact data match both raise precision. Lowering confidence and widening scope do the opposite, and produce the alert volume that trains people to ignore the policy.",
+    "teaches": "purview-dlp"
+  },
+  {
+    "id": "gs-22",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "kind": "order",
+    "question": "Put these steps in order for investigating a user who cannot sign in.",
+    "items": [
+      "Open the user's sign-in logs and find the failed entry",
+      "Read the failure reason and note the correlation identifier",
+      "Establish whether it failed at first factor, second factor, or a grant control",
+      "Correct the specific cause and confirm with a fresh sign-in"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "The sign-in logs say far more than the user's description does, and the distinction between the three failure stages is what resolves most tickets — they are very different problems that all look identical to the person locked out.",
+    "teaches": "authentication-methods"
+  },
+  {
+    "id": "gs-23",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "kind": "order",
+    "question": "Put these Purview steps in the order a data protection programme should run them.",
+    "items": [
+      "Define sensitive information types for the data that matters",
+      "Publish sensitivity labels and a label policy",
+      "Deploy DLP policies in simulation and review the matches",
+      "Enforce the DLP policies with policy tips"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Detection primitives come first because everything downstream matches on them, then classification, then measurement, then enforcement. Enforcing before simulating is what produces the alert volume nobody acts on.",
+    "teaches": "purview-dlp"
+  },
+  {
+    "id": "gs-24",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "kind": "match",
+    "question": "Match each Purview detection primitive to what it suits.",
+    "pairs": [
+      {
+        "term": "Built-in sensitive information type",
+        "definition": "A well-known pattern such as a card or passport number"
+      },
+      {
+        "term": "Exact data match",
+        "definition": "Matching against an authoritative list of real values"
+      },
+      {
+        "term": "Trainable classifier",
+        "definition": "A category that resists pattern matching, such as a contract"
+      },
+      {
+        "term": "Custom sensitive information type",
+        "definition": "An organisation-specific format the built-in types miss"
+      }
+    ],
+    "explanation": "The four differ in accuracy and maintenance cost. Choosing among them is choosing that trade-off, and reaching for a pattern where an exact data match is needed is the usual source of DLP noise.",
+    "teaches": "purview-protection-lifecycle"
+  },
+  {
+    "id": "gs-25",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "kind": "yesno",
+    "question": "An organisation is planning Conditional Access. Judge each statement.",
+    "statements": [
+      {
+        "text": "Emergency access accounts should be excluded from the policy set.",
+        "correct": true
+      },
+      {
+        "text": "Report-only mode measures a policy against real sign-ins without enforcing it.",
+        "correct": true
+      },
+      {
+        "text": "Continuous access evaluation lets supporting services react to an account being disabled in near real time.",
+        "correct": true
+      },
+      {
+        "text": "A policy granting access overrides another policy that blocks the same sign-in.",
+        "correct": false
+      }
+    ],
+    "explanation": "Block always wins, because policies are additive and every matching one must be satisfied. The other three are the practices that keep a policy set from locking out the people who administer it.",
+    "teaches": "conditional-access"
+  },
+  {
+    "id": "ai-01",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "Which statement best describes what Microsoft 365 Copilot can reach?",
+    "options": [
+      "Everything the asking user already has permission to open",
+      "Everything in the tenant, filtered by sensitivity label",
+      "Everything in sites the administrator has indexed for it",
+      "Everything the user has opened in the past ninety days"
+    ],
+    "correctIndex": 0,
+    "explanation": "Copilot never grants access — it operates within the user's existing permissions. That single fact reframes most Copilot data incidents as pre-existing permission problems it has made visible.",
+    "teaches": "copilot-readiness"
+  },
+  {
+    "id": "ai-02",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "After Copilot surfaces a document a user should never have seen, what is the correct remediation?",
+    "options": [
+      "Fix the permissions on the content that was overshared",
+      "Disable Copilot for the affected users",
+      "Exclude the user's account from Copilot indexing",
+      "Reduce Copilot's response length so it cites less"
+    ],
+    "correctIndex": 0,
+    "explanation": "The exposure predates Copilot and survives disabling it — the content stays readable, merely harder to notice again. Only permissions work removes it.",
+    "teaches": "copilot-readiness"
+  },
+  {
+    "id": "ai-03",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "A site must remain openable by the staff who need it but must not appear in Copilot answers or organisation-wide search. What should you use?",
+    "options": [
+      "Restricted content discovery",
+      "Restricted access control",
+      "A sensitivity label with encryption",
+      "Removing the site from the SharePoint admin centre"
+    ],
+    "correctIndex": 0,
+    "explanation": "Restricted content discovery is the surgical control: it removes a site from Copilot and search while leaving direct access untouched. The alternatives all change who can open it.",
+    "teaches": "sharepoint-onedrive-for-copilot"
+  },
+  {
+    "id": "ai-04",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "What is the main governance consequence of allowing Copilot web search?",
+    "options": [
+      "Query context leaves the organisation's boundary",
+      "Copilot stops honouring sensitivity labels",
+      "Responses are no longer attributable to a source",
+      "Users can bypass Conditional Access policies"
+    ],
+    "correctIndex": 0,
+    "explanation": "Web search improves grounding and sends context outside the tenant, which is a deliberate trade rather than a default to be left unexamined. It changes nothing about label enforcement or access control.",
+    "teaches": "copilot-configuration"
+  },
+  {
+    "id": "ai-05",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "A Copilot connector indexes a third-party repository. What determines what each user sees from it?",
+    "options": [
+      "Their permissions in the source system, which trim the results",
+      "The tenant-wide Copilot settings only",
+      "The sensitivity labels applied after indexing",
+      "The connector's own service account permissions"
+    ],
+    "correctIndex": 0,
+    "explanation": "Connector results are permission-trimmed against the source, which is what makes connectors safe for content with real access control. A shared service account view would show everyone the same thing.",
+    "teaches": "copilot-configuration"
+  },
+  {
+    "id": "ai-06",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "Which tenant setting should most governed organisations disable for AI products?",
+    "options": [
+      "Self-service purchase",
+      "The AI disclaimer shown to users",
+      "Microsoft 365 Copilot Search",
+      "Release preferences"
+    ],
+    "correctIndex": 0,
+    "explanation": "Self-service purchase lets users buy their own licences outside procurement, which most governed organisations turn off deliberately. The others are configuration choices rather than spending controls.",
+    "teaches": "copilot-configuration"
+  },
+  {
+    "id": "ai-07",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "What does Microsoft Entra Agent ID provide?",
+    "options": [
+      "A first-class directory identity for an agent, so its actions are attributable",
+      "A shared service account agents authenticate through",
+      "A licence entitlement for each agent in the tenant",
+      "An audit log of every prompt sent to an agent"
+    ],
+    "correctIndex": 0,
+    "explanation": "Giving an agent its own identity is the foundation everything else rests on — it can then be granted, reviewed, audited, and revoked like any other principal, rather than borrowing a person's credentials.",
+    "teaches": "agent-identity-and-access"
+  },
+  {
+    "id": "ai-08",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "An agent needs time-limited access to a set of resources, with approval before it is granted. What should you use?",
+    "options": [
+      "An access package with an approval step and an expiry",
+      "A Conditional Access policy scoped to the agent",
+      "A sensitivity label applied to the resources",
+      "A dynamic group containing the agent's identity"
+    ],
+    "correctIndex": 0,
+    "explanation": "Because an agent is a directory principal, the ordinary entitlement machinery applies to it. Access packages are exactly the mechanism for approved, expiring grants — which matters because an agent built for a project that ended otherwise keeps its access forever.",
+    "teaches": "agent-identity-and-access"
+  },
+  {
+    "id": "ai-09",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "Which control is most often skipped when agents are deployed, and causes the most trouble later?",
+    "options": [
+      "Assigning a named owner to each agent",
+      "Restricting which models an agent may use",
+      "Limiting the number of agents per user",
+      "Setting a maximum conversation length"
+    ],
+    "correctIndex": 0,
+    "explanation": "An unowned agent is one nobody reviews, updates, or decommissions. Requiring an owner at creation is cheap; discovering a tenant full of ownerless agents two years later is not.",
+    "teaches": "agent-identity-and-access"
+  },
+  {
+    "id": "ai-10",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "What does the agent registry allow an administrator to do?",
+    "options": [
+      "Discover agents, review them, and control whether users may install or are blocked from each",
+      "Author new agents from templates without Copilot Studio",
+      "Assign licences to agents in bulk",
+      "Monitor the token consumption of each agent in real time"
+    ],
+    "correctIndex": 0,
+    "explanation": "The registry is the tenant's inventory and control point — discovery, a publish-or-reject workflow, and per-agent install and block decisions, including for custom uploads.",
+    "teaches": "agent-registry"
+  },
+  {
+    "id": "ai-11",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "Why should agent settings be configured before users are allowed to install agents?",
+    "options": [
+      "They decide what is possible at all, which keeps the review queue manageable",
+      "They cannot be changed once an agent has been installed",
+      "They are required before Entra Agent ID can issue identities",
+      "They determine which licences the agents consume"
+    ],
+    "correctIndex": 0,
+    "explanation": "Allowed types, sharing, templates, and who may install shape the queue before anything reaches it. An open tenant produces a queue nobody can keep up with, which in practice means approvals stop being read.",
+    "teaches": "agent-registry"
+  },
+  {
+    "id": "ai-12",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "An agent holds a tool it has never used and does not need. How should this be treated?",
+    "options": [
+      "As standing exposure to be removed at review",
+      "As harmless, since the tool is unused",
+      "As a licensing issue to be raised with procurement",
+      "As a performance problem affecting the agent's latency"
+    ],
+    "correctIndex": 0,
+    "explanation": "Least privilege applies to agents as to anything else. The publish-time question is not only whether the agent is useful but whether it holds only the tools its job requires.",
+    "teaches": "agent-registry"
+  },
+  {
+    "id": "ai-13",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "What does Agent 365 add beyond the approval decision made at publish time?",
+    "options": [
+      "Continuing monitoring of agent activity, data protection, and compliance gap evaluation",
+      "Automatic retraining of the agent's underlying model",
+      "Licence assignment for each agent's users",
+      "Authoring tools for building new agents"
+    ],
+    "correctIndex": 0,
+    "explanation": "Approval at publish time says nothing about behaviour six months later. Agent 365 is the operational half — watching what agents do, protecting the data they touch, and reporting where behaviour falls outside policy.",
+    "teaches": "agent-365-governance"
+  },
+  {
+    "id": "ai-14",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "How should agent governance relate to the organisation's existing Purview controls?",
+    "options": [
+      "Agents should be subject to the same protection as people handling the same content",
+      "Agents need a separate governance regime with its own policies",
+      "Agents should be exempt from DLP to avoid breaking automations",
+      "Agents should only handle content with no sensitivity label"
+    ],
+    "correctIndex": 0,
+    "explanation": "The goal is consistency — agents as principals inside the existing regime rather than a parallel one. An exemption for agents is an exemption for whatever an agent can be persuaded to fetch.",
+    "teaches": "agent-365-governance"
+  },
+  {
+    "id": "ai-15",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "Which cost of AI services is hardest to forecast and needs monitoring rather than estimating once?",
+    "options": [
+      "Consumption, which moves with what agents actually do",
+      "Per-user Copilot licences",
+      "The base Microsoft 365 subscription",
+      "Attack simulation training campaigns"
+    ],
+    "correctIndex": 0,
+    "explanation": "Per-user licences are predictable and paid whether used or not. Consumption moves with activity and can jump sharply when an agent is pointed at a large body of records, which is why both must be watched separately.",
+    "teaches": "ai-monitoring-and-cost"
+  },
+  {
+    "id": "ai-16",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "A department holds full Copilot licence coverage and shows almost no weekly active use. What does this indicate?",
+    "options": [
+      "An adoption problem that further licensing will not fix",
+      "A licensing assignment error to be corrected in the admin centre",
+      "A service health incident affecting that department",
+      "A Conditional Access policy blocking Copilot for those users"
+    ],
+    "correctIndex": 0,
+    "explanation": "Active use rather than licences assigned is the number that matters. Finding a coverage-without-use gap early is what makes the difference between a renewal conversation and a cancellation.",
+    "teaches": "ai-monitoring-and-cost"
+  },
+  {
+    "id": "ai-17",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "Users report that \"the AI is being stupid today\". What should you check to distinguish a service issue from a data or prompt problem?",
+    "options": [
+      "Service health for AI services, through the Copilot Control System",
+      "The tenant's licence assignment report",
+      "The Defender for Office 365 incident queue",
+      "The DLP simulation results for Copilot"
+    ],
+    "correctIndex": 0,
+    "explanation": "A degrading Copilot experience is reported by users as a quality complaint rather than as an incident, and the only way to tell a genuine service problem from a data or prompt one is to look at service health.",
+    "teaches": "ai-monitoring-and-cost"
+  },
+  {
+    "id": "ai-18",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "question": "A document is readable by a user but must never be cited in a Copilot response. What should you configure?",
+    "options": [
+      "A DLP policy scoped to Copilot, acting on the document's sensitivity label",
+      "Restricted access control on the document's site",
+      "Removal of the user's Copilot licence",
+      "An exclusion of the document from Microsoft Search"
+    ],
+    "correctIndex": 0,
+    "explanation": "DLP for Copilot is the control that separates what a user may open from what Copilot may use, which is exactly this requirement. Changing access or removing the licence solves it by taking something else away.",
+    "teaches": "purview-dlp"
+  },
+  {
+    "id": "ai-19",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "kind": "multi",
+    "question": "Which two questions does Data Security Posture Management for AI help answer? Choose two.",
+    "options": [
+      "Which sensitive data is AI actually touching",
+      "Where oversharing is exposing material to Copilot",
+      "Which users hold Copilot licences",
+      "How many tokens each Copilot response consumed"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "DSPM for AI answers \"what is our Copilot reaching\" rather than \"is Copilot secure\", which is why it is where a data-readiness conversation should start. Licensing and token accounting are reported elsewhere.",
+    "teaches": "purview-protection-lifecycle"
+  },
+  {
+    "id": "ai-20",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "kind": "order",
+    "question": "Put these steps in order for bringing a pilot's ungoverned agents under control.",
+    "items": [
+      "Configure agent settings, including allowed types and who may install",
+      "Enable the registry's publish-or-reject review workflow",
+      "Assign an accountable owner to every existing agent",
+      "Review each agent's tools against what its job requires"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Constrain what is possible first, then gate what arrives, then establish accountability for what already exists, then narrow permissions. Starting from the tool review means auditing a set that is still growing.",
+    "teaches": "agent-registry"
+  },
+  {
+    "id": "ai-21",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "kind": "match",
+    "question": "Match each Copilot readiness control to what it does.",
+    "pairs": [
+      {
+        "term": "Oversharing report",
+        "definition": "Measures which sites are broadly shared across the tenant"
+      },
+      {
+        "term": "Site access review",
+        "definition": "Puts the access decision to the site's own owner"
+      },
+      {
+        "term": "Restricted content discovery",
+        "definition": "Hides a site from Copilot and search without changing access"
+      },
+      {
+        "term": "DSPM for AI",
+        "definition": "Reports which sensitive data AI activity is actually touching"
+      }
+    ],
+    "explanation": "The four map onto the readiness sequence — measure, remediate, exclude, and monitor. Reaching for exclusion before measurement produces a growing list and leaves the permissions untouched.",
+    "teaches": "copilot-readiness"
+  },
+  {
+    "id": "ai-22",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "kind": "dropdown",
+    "question": "Complete the statement about Copilot and existing permissions.",
+    "segments": [
+      {
+        "text": "Copilot answers from "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "content the asking user already has permission to open",
+          "all content indexed in the tenant, filtered by label",
+          "content the administrator has explicitly published to it"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", which means an incident where it surfaces something sensitive is remediated by "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "fixing the permissions that were already wrong",
+          "disabling Copilot for the affected users",
+          "shortening the responses Copilot is allowed to give"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "Search made overshared content technically reachable and Copilot made it conversationally reachable — a difference of practice rather than permission. That is why disabling Copilot resolves nothing and permissions work resolves everything.",
+    "teaches": "copilot-readiness"
+  }
+]

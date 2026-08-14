@@ -84,6 +84,20 @@
     "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ab-620"
   },
   {
+    "code": "ab-650",
+    "title": "AI Services Administrator",
+    "family": "AI Business Solutions",
+    "series": "ab",
+    "msLevel": "Associate",
+    "status": "beta",
+    "durationMinutes": 100,
+    "passingScore": 700,
+    "summary": "Configure, govern, and secure Microsoft 365 tenants and the AI services on top of them, including Copilot and Agent 365.",
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-14",
+    "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ab-650"
+  },
+  {
     "code": "ab-730",
     "title": "AI Business Professional",
     "family": "AI Business Solutions",
@@ -166,6 +180,20 @@
     "hasContent": true,
     "catalogVerifiedAt": "2026-08-12",
     "sourceUrl": null
+  },
+  {
+    "code": "ai-500",
+    "title": "Multi-Agent AI Solutions Expert",
+    "family": "Azure AI",
+    "series": "ai",
+    "msLevel": "Expert",
+    "status": "beta",
+    "durationMinutes": null,
+    "passingScore": 700,
+    "summary": "Design, build, and operate production multi-agent AI systems on Microsoft Foundry — the first Expert exam in the AI series.",
+    "hasContent": false,
+    "catalogVerifiedAt": "2026-08-14",
+    "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ai-500"
   },
   {
     "code": "ai-901",

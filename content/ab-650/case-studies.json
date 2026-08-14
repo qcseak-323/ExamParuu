@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-ravensmoor-copilot",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "title": "Ravensmoor Housing — Copilot found what everyone could already open",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Ravensmoor Housing manages 21,000 homes with 900 staff across a head office and six area teams. It bought 900 Microsoft 365 Copilot licences and enabled them for the whole tenant on a single day, alongside Agent 365 for a small automation pilot.",
+          "Eleven days later the chief executive was shown a Copilot answer summarising the senior leadership pay review, quoting figures correctly. The immediate instruction was to turn Copilot off. The director of technology has asked for an assessment before that happens."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "The pay review workbook sits in a SharePoint site created in 2019 for a restructuring project. The project ended, its owners have both left the organisation, and the site's permissions were set to the whole-organisation group on the day it was created. Every one of the 900 staff has always been able to open the workbook. Nobody had, until Copilot cited it.",
+          "An audit of the tenant found 340 sites shared with the whole organisation, 190 sites whose only listed owners have left, and roughly 40,000 sharing links set to 'anyone in the organisation'. No oversharing report had ever been run and Data Security Posture Management for AI has never been opened.",
+          "Sensitivity labels exist and were published two years ago. Fewer than four per cent of documents carry one. There is no DLP policy scoped to Copilot.",
+          "Copilot web search is enabled tenant-wide at its default setting. Nobody recalls making that decision.",
+          "The Agent 365 pilot has produced nineteen agents. Six were created by staff who have since changed role, and those six have no listed owner. Two of them hold tools that can read the whole SharePoint estate, granted because the template offered them. No review workflow was configured before users were allowed to install agents.",
+          "Adoption reports show the finance team at 96 per cent weekly active use of Copilot and the six area teams between 2 and 5 per cent, despite identical licensing."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "The pay review workbook must stop being reachable by staff who should never have had it, and the assessment must state plainly whether Copilot caused the exposure.",
+          "Turning Copilot off is not an acceptable remediation on its own; the board wants the underlying problem fixed, not hidden.",
+          "The 190 ownerless sites must be reviewed by people who actually know who should have access, without the tenant administrator adjudicating 190 sites personally.",
+          "One named site must remain openable by the staff who need it while being excluded from Copilot and organisation-wide search entirely.",
+          "Every agent must have an accountable owner, and no further agents may be installed without review.",
+          "The gap between finance's adoption and the area teams' must be explained before any further licences are bought."
+        ]
+      }
+    ]
+  }
+]

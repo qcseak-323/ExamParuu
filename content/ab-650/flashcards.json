@@ -1,0 +1,352 @@
+[
+  {
+    "id": "fc-ab650-tw-01",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "front": "Why custom sign-in branding is a security control",
+    "back": "A user who knows what their own sign-in page looks like has a chance of spotting a fake one. Keyword: familiarity defeats phishing."
+  },
+  {
+    "id": "fc-ab650-tw-02",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "front": "Verified domain vs domain in use",
+    "back": "Verification proves ownership; assigning services decides what it carries. A verified domain not assigned to Exchange accepts no mail. Keyword: two separate steps."
+  },
+  {
+    "id": "fc-ab650-tw-03",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "front": "Why a domain will not delete",
+    "back": "Some object still references it. Domain removal is an object hunt, not a delete. Keyword: find the references first."
+  },
+  {
+    "id": "fc-ab650-tw-04",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "front": "Nobody hears about the outage",
+    "back": "Service health notifications are not configured by default. Set which administrators receive which alerts. Keyword: nobody is paged by default."
+  },
+  {
+    "id": "fc-ab650-tw-05",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "front": "Why group-based licensing scales",
+    "back": "Membership drives entitlement, so joiners gain and leavers lose licences automatically. Direct assignment is what leaves you paying for leavers. Keyword: entitlement follows membership."
+  },
+  {
+    "id": "fc-ab650-tw-06",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "front": "Not enough licence units in a group",
+    "back": "Members land in an error state rather than being silently skipped, reported per user on the group's licence page. Keyword: errors, not silence."
+  },
+  {
+    "id": "fc-ab650-tw-07",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "front": "AI services are separate entitlements",
+    "back": "Microsoft 365 Copilot, Microsoft Agent 365, and Copilot Studio each license separately on top of the base plan. Keyword: three more line items."
+  },
+  {
+    "id": "fc-ab650-tw-08",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "front": "Backup vs retention",
+    "back": "Retention decides how long content is kept and stops permanent removal. Backup restores content to a previous state after corruption. Keyword: keep, or roll back."
+  },
+  {
+    "id": "fc-ab650-tw-09",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "front": "What connectivity insights usually find",
+    "back": "Traffic hairpinned through a distant central egress or proxy. Microsoft 365 traffic should reach the service as directly as possible. Keyword: break out locally."
+  },
+  {
+    "id": "fc-ab650-tw-10",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "front": "Retaining a leaver's mail without a licence",
+    "back": "Convert the user mailbox to a shared mailbox. Shared needs no licence until it exceeds the size limit or needs its own archive. Keyword: convert to shared."
+  },
+  {
+    "id": "fc-ab650-tw-11",
+    "examCode": "ab-650",
+    "domain": "tenant-workloads",
+    "front": "Copilot in a Teams meeting needs what?",
+    "back": "Transcription or recording — it is a prerequisite, not an option. The during-only vs during-and-after setting is a governance choice. Keyword: no transcript, no Copilot."
+  },
+  {
+    "id": "fc-ab650-gs-01",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "A cloud edit that reverts",
+    "back": "The user is synchronised from on-premises Active Directory, so the source of authority is on-premises. Edit it there. Keyword: source of authority wins."
+  },
+  {
+    "id": "fc-ab650-gs-02",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "External collaboration vs cross-tenant access",
+    "back": "External collaboration decides who may invite guests and what guests see. Cross-tenant access decides which partner tenants are trusted, including accepting their MFA. Keyword: who invites, or who is trusted."
+  },
+  {
+    "id": "fc-ab650-gs-03",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "A dynamic group that stays empty",
+    "back": "Its rule reads an attribute nobody populates. Dynamic membership is only as good as the attribute behind it. Keyword: populate the attribute."
+  },
+  {
+    "id": "fc-ab650-gs-04",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "Security group vs Microsoft 365 group",
+    "back": "Security groups grant access. Microsoft 365 groups additionally provision a mailbox, a SharePoint site, and a team. Keyword: access, or workspace."
+  },
+  {
+    "id": "fc-ab650-gs-05",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "\"For several thousand users\"",
+    "back": "That phrasing is asking for Microsoft Graph PowerShell. Keyword: bulk means Graph PowerShell."
+  },
+  {
+    "id": "fc-ab650-gs-06",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "What PIM actually changes",
+    "back": "A standing role assignment becomes eligible — activated for a bounded period with approval, justification, and MFA. A compromised account is no longer automatically a compromised admin. Keyword: eligible, not permanent."
+  },
+  {
+    "id": "fc-ab650-gs-07",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "Manage some users but not all",
+    "back": "An administrative unit scopes a role to a subset of the directory. The role says what; the unit says to whom. Keyword: scope the role."
+  },
+  {
+    "id": "fc-ab650-gs-08",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "The weakest supported auth methods",
+    "back": "SMS and voice — phishable and interceptable. Passkeys and Windows Hello for Business are phishing-resistant because the credential binds to device and site. Keyword: move off telephony."
+  },
+  {
+    "id": "fc-ab650-gs-09",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "Banned password set on-premises anyway",
+    "back": "Password Protection needs agents on the domain controllers to extend the ban to on-premises AD, or the weak password syncs up. Keyword: deploy the DC agents."
+  },
+  {
+    "id": "fc-ab650-gs-10",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "Three ways \"it won't let me in\"",
+    "back": "First factor, second factor, or a Conditional Access grant control. The sign-in logs say which. Keyword: find the stage first."
+  },
+  {
+    "id": "fc-ab650-gs-11",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "Do Conditional Access policies override each other?",
+    "back": "No. They are additive and all matching policies must be satisfied — block always wins over allow. Keyword: everything must pass."
+  },
+  {
+    "id": "fc-ab650-gs-12",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "The policy that locks out the tenant",
+    "back": "Require compliant device, all users, no exclusions. Always exclude emergency access accounts and test in report-only mode first. Keyword: break-glass and report-only."
+  },
+  {
+    "id": "fc-ab650-gs-13",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "User risk vs sign-in risk",
+    "back": "User risk = the identity is likely compromised, so force a password change. Sign-in risk = this sign-in is likely not them, so require MFA. Keyword: who, or which attempt."
+  },
+  {
+    "id": "fc-ab650-gs-14",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "Why Safe Links checks at click time",
+    "back": "A link benign at delivery can be weaponised afterwards. Rewriting and checking on click catches that. Keyword: delivery-time checks are not enough."
+  },
+  {
+    "id": "fc-ab650-gs-15",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "A Defender policy that never applies",
+    "back": "A broader custom policy sits above it in priority order, and the first matching policy of each type wins. Keyword: check the priority order."
+  },
+  {
+    "id": "fc-ab650-gs-16",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "The number to watch on attack simulation",
+    "back": "Not the click rate, but whether it moves after training. A stable rate means the training is not working. Keyword: measure the change."
+  },
+  {
+    "id": "fc-ab650-gs-17",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "Deploy DLP in simulation first",
+    "back": "It shows what would have matched without blocking anyone. A policy generating alerts everyone ignores is worse than none. Keyword: measure before enforcing."
+  },
+  {
+    "id": "fc-ab650-gs-18",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "DLP for Copilot",
+    "back": "It can stop labelled content being used in Copilot responses — so a document the user can open is still excluded from what Copilot will cite. Keyword: readable but not citable."
+  },
+  {
+    "id": "fc-ab650-gs-19",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "When retention rules conflict",
+    "back": "Retention wins over deletion, and the longest retention wins. That is why overlapping policies keep far more than intended. Keyword: longest retention wins."
+  },
+  {
+    "id": "fc-ab650-gs-20",
+    "examCode": "ab-650",
+    "domain": "govern-secure",
+    "front": "What DSPM for AI answers",
+    "back": "Not \"is Copilot secure\" but \"what is our Copilot reaching\" — which sensitive data AI touches and where oversharing exposes it. Keyword: start data readiness here."
+  },
+  {
+    "id": "fc-ab650-ai-01",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "Does Copilot grant access?",
+    "back": "Never. It answers from what the asking user can already open, so it makes existing access visible rather than creating it. Keyword: it reveals, it does not grant."
+  },
+  {
+    "id": "fc-ab650-ai-02",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "Why disabling Copilot fixes nothing",
+    "back": "The oversharing predates it and remains — merely harder to notice again. The remediation is permissions work. Keyword: hiding is not fixing."
+  },
+  {
+    "id": "fc-ab650-ai-03",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "Search made it reachable; Copilot made it what?",
+    "back": "Conversationally reachable. The difference is practice, not permission — which is why the fix is upstream. Keyword: same access, new habit."
+  },
+  {
+    "id": "fc-ab650-ai-04",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "The data readiness order",
+    "back": "Measure with oversharing reports and DSPM, remediate with owners through access reviews, protect with labels and DLP, exclude last. Keyword: exclusions come last."
+  },
+  {
+    "id": "fc-ab650-ai-05",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "Restricted content discovery",
+    "back": "Excludes a site from Copilot and organisation-wide search without changing who can open it directly. The surgical option. Keyword: hidden from Copilot, still available."
+  },
+  {
+    "id": "fc-ab650-ai-06",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "Who should run a site access review?",
+    "back": "The site owner, not the tenant administrator — they are the only ones who know who should have access. Keyword: push it to the owner."
+  },
+  {
+    "id": "fc-ab650-ai-07",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "The cost of allowing Copilot web search",
+    "back": "Better answers, and query context leaving the organisation's boundary. A deliberate tenant-level decision, not a default. Keyword: grounding vs boundary."
+  },
+  {
+    "id": "fc-ab650-ai-08",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "Copilot connectors and permissions",
+    "back": "Results from a connected external source are trimmed to what the asking user may see in that source system. Keyword: the index respects the source."
+  },
+  {
+    "id": "fc-ab650-ai-09",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "Self-service purchase",
+    "back": "Lets users buy their own AI licences without procurement. Off in most governed tenants for exactly that reason. Keyword: turn it off deliberately."
+  },
+  {
+    "id": "fc-ab650-ai-10",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "What Microsoft Entra Agent ID gives an agent",
+    "back": "A first-class directory identity, so it can be granted, reviewed, audited, and revoked like any principal — and its actions are attributable. Keyword: agents become principals."
+  },
+  {
+    "id": "fc-ab650-ai-11",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "Governing an agent uses which machinery?",
+    "back": "The ordinary one — access packages with approval and expiry, Conditional Access, and lifecycle workflows. Keyword: no parallel regime."
+  },
+  {
+    "id": "fc-ab650-ai-12",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "The control most often skipped on agents",
+    "back": "A named owner. An unowned agent is never reviewed, never updated, never decommissioned. Keyword: require an owner at creation."
+  },
+  {
+    "id": "fc-ab650-ai-13",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "What the agent registry is for",
+    "back": "Discovery of what exists, a publish-or-reject review workflow, and per-agent control over install, block, and access — including custom uploads. Keyword: inventory plus gate."
+  },
+  {
+    "id": "fc-ab650-ai-14",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "Why set agent settings before reviewing agents",
+    "back": "Allowed types, sharing, templates, and who may install decide the shape of the queue. An open tenant produces a queue nobody reads. Keyword: constrain first, review second."
+  },
+  {
+    "id": "fc-ab650-ai-15",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "The publish-time question about tools",
+    "back": "Not only \"is this agent useful\" but \"does it hold only the tools its job requires\". An unused tool is standing exposure. Keyword: least privilege for agents."
+  },
+  {
+    "id": "fc-ab650-ai-16",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "Approval is not governance",
+    "back": "Approval at publish time says nothing about behaviour six months later. Agent 365 monitoring is the continuing half. Keyword: watch after you approve."
+  },
+  {
+    "id": "fc-ab650-ai-17",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "Two shapes of AI cost",
+    "back": "Per-user licences, paid whether used or not; and consumption, which moves with what agents do. Forecast both separately. Keyword: fixed plus variable."
+  },
+  {
+    "id": "fc-ab650-ai-18",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "Full licences, near-zero usage",
+    "back": "An adoption problem no further licensing fixes. Watch active use, not licences assigned. Keyword: measure use, not entitlement."
+  },
+  {
+    "id": "fc-ab650-ai-19",
+    "examCode": "ab-650",
+    "domain": "ai-services",
+    "front": "\"The AI is being stupid today\"",
+    "back": "Could be a genuine service incident, a data problem, or a prompt problem. Only service health for AI services distinguishes them. Keyword: check health before blaming the model."
+  }
+]
