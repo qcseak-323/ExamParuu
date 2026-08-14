@@ -1,0 +1,1053 @@
+[
+  {
+    "id": "pc-01",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "An agent will be published to a public website for unauthenticated visitors. Which knowledge source is unsafe to attach?",
+    "options": [
+      "An internal SharePoint library indexed as knowledge",
+      "A public product documentation site",
+      "A published price list stored as a file",
+      "A set of authored topics containing published FAQs"
+    ],
+    "correctIndex": 0,
+    "explanation": "An unauthenticated agent has no user identity to act as, so anything it can reach is effectively public to every visitor. Internal content behind an agent with no sign-in is a leak regardless of the source's own permissions.",
+    "teaches": "plan-agent-solution"
+  },
+  {
+    "id": "pc-02",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "An agent queries a system where each user is entitled to see different records. Which authentication approach is required?",
+    "options": [
+      "Act on behalf of the signed-in user",
+      "A single stored connection created by the agent's owner",
+      "A service principal with read access to all records",
+      "No authentication, with results filtered inside the topic"
+    ],
+    "correctIndex": 0,
+    "explanation": "Acting as the signed-in user preserves the source's own authorisation. A shared connection returns identical results to everyone, which turns the agent into a way to read other people's records, and filtering after retrieval means the data was already fetched.",
+    "teaches": "plan-agent-solution"
+  },
+  {
+    "id": "pc-03",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "An agent answers questions about internal policy but sometimes invents plausible detail that appears nowhere in the source documents. What should you change first?",
+    "options": [
+      "Disable general knowledge so the agent must answer only from configured sources",
+      "Add more documents to the knowledge source",
+      "Raise the content moderation setting to its maximum",
+      "Switch the agent to a more capable model"
+    ],
+    "correctIndex": 0,
+    "explanation": "An agent permitted to use general knowledge falls back to it fluently and without signalling the change, so adding content does not stop it. Forcing grounding makes it say it does not know instead of improvising.",
+    "teaches": "responsible-ai-and-governance"
+  },
+  {
+    "id": "pc-04",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "Which control prevents an agent combining a connector holding customer data with one that can post to a public service?",
+    "options": [
+      "A data loss prevention policy on the environment",
+      "Content moderation set to high",
+      "Removing the connector from the agent's tool list",
+      "Publishing the agent only to Teams"
+    ],
+    "correctIndex": 0,
+    "explanation": "DLP classifies connectors into business and non-business groups and is enforced at the environment, so it applies regardless of what any individual maker wires up. The others are per-agent choices anyone can undo.",
+    "teaches": "responsible-ai-and-governance"
+  },
+  {
+    "id": "pc-05",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "Three agents each need the same six topics for handling expenses. What is the best design?",
+    "options": [
+      "Publish an expenses agent and have the three delegate to it",
+      "Copy the six topics into each agent and keep them in sync manually",
+      "Put the six topics in a solution and import it into all three agents",
+      "Move the six topics into an agent flow each agent calls"
+    ],
+    "correctIndex": 0,
+    "explanation": "A child agent is the largest unit of reuse and gives the capability its own lifecycle, tests, and owner. Copying guarantees drift, and topics are conversational logic rather than the deterministic work a flow is for.",
+    "teaches": "reusable-agent-components"
+  },
+  {
+    "id": "pc-06",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "A discount calculation must produce exactly the same result every time it is applied. Where should it live?",
+    "options": [
+      "In an agent flow the agent invokes",
+      "In the agent's instructions",
+      "In a custom prompt configured on the topic",
+      "In the generative answers node's grounding content"
+    ],
+    "correctIndex": 0,
+    "explanation": "The model decides what the user wants; the flow does the part that must be exact. Business logic expressed as instructions or a prompt is re-derived by a model on every call and is not reproducible.",
+    "teaches": "agent-flows"
+  },
+  {
+    "id": "pc-07",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "Under generative orchestration, an agent flow is invoked at the wrong moments. Which is the most likely cause?",
+    "options": [
+      "Its name and parameter descriptions do not say when it applies",
+      "Its trigger phrases are too few",
+      "It has too many input parameters",
+      "It is not included in the agent's solution"
+    ],
+    "correctIndex": 0,
+    "explanation": "Generative orchestration selects tools by reading their names and descriptions, which makes those descriptions functional rather than documentation. Trigger phrases belong to classic orchestration.",
+    "teaches": "agent-flows"
+  },
+  {
+    "id": "pc-08",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "An agent flow calls a back-end process that takes eight minutes. Conversations time out. What should you do?",
+    "options": [
+      "Acknowledge, start the work asynchronously, and return the result later",
+      "Raise the flow's timeout setting",
+      "Split the flow into two flows called one after the other",
+      "Increase the flow's concurrency"
+    ],
+    "correctIndex": 0,
+    "explanation": "A conversational flow is bounded by how long a person will wait as well as by platform limits, so a longer timeout does not make an eight-minute wait acceptable. Acknowledging and returning later is the correct shape.",
+    "teaches": "agent-flows"
+  },
+  {
+    "id": "pc-09",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "An agent can issue refunds up to £500. Which control should you add?",
+    "options": [
+      "A human-in-the-loop step requiring named approval before the refund",
+      "A confirmation question inside the topic before proceeding",
+      "Content moderation set to high",
+      "A note in the agent's instructions to be careful with refunds"
+    ],
+    "correctIndex": 0,
+    "explanation": "Anything that spends money warrants a named human approving it, and human-in-the-loop records that approval. Asking the requester to confirm their own request is not an authorisation control, and instructions are advisory to a model.",
+    "teaches": "human-in-the-loop-and-errors"
+  },
+  {
+    "id": "pc-10",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "When an agent flow fails, users see a generic apology and simply ask again. What should you implement?",
+    "options": [
+      "Run-after handling that returns a meaningful output the topic can react to",
+      "A retry policy on the failing action",
+      "A longer timeout on the flow",
+      "An escalation to a live agent on every failure"
+    ],
+    "correctIndex": 0,
+    "explanation": "Unhandled failures surface as an apology with no diagnosis. Returning a meaningful error lets the topic tell the user what went wrong and what to do next, which is what stops the loop of asking again.",
+    "teaches": "human-in-the-loop-and-errors"
+  },
+  {
+    "id": "pc-11",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "Which orchestration style lets the model combine several topics, tools, and knowledge sources to answer one request?",
+    "options": [
+      "Generative orchestration",
+      "Classic orchestration",
+      "Trigger-phrase orchestration",
+      "Fallback orchestration"
+    ],
+    "correctIndex": 0,
+    "explanation": "Classic orchestration matches an utterance to one topic and follows its authored path. Generative orchestration lets the model choose and compose, which is what makes tool descriptions load-bearing.",
+    "teaches": "topics-and-responses"
+  },
+  {
+    "id": "pc-12",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "You want authored topics to handle known questions and retrieval to handle everything else. How should you configure the generative answers node?",
+    "options": [
+      "As the system fallback, so it handles unmatched requests",
+      "Inside every authored topic as its first node",
+      "As the trigger for each authored topic",
+      "Disabled, with a topic authored for each anticipated question"
+    ],
+    "correctIndex": 0,
+    "explanation": "As the system fallback the node catches what no topic matched, which is precisely the split described. Placing it first inside every topic would pre-empt the authored path it was meant to complement.",
+    "teaches": "topics-and-responses"
+  },
+  {
+    "id": "pc-13",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "A value captured in one topic is empty when a second topic reads it. What is the cause?",
+    "options": [
+      "It was declared as a topic variable rather than a global one",
+      "Global variables are cleared between topics",
+      "System variables override topic variables of the same name",
+      "The value was captured before authentication completed"
+    ],
+    "correctIndex": 0,
+    "explanation": "Topic variables exist only within their topic. Crossing a topic boundary requires promoting the value to global or declaring it as an input on the receiving topic.",
+    "teaches": "adaptive-cards-and-variables"
+  },
+  {
+    "id": "pc-14",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "A single REST call is needed in one topic and nowhere else, with no governance requirement. What is the appropriate choice?",
+    "options": [
+      "A Send HTTP request node in the topic",
+      "A custom connector built from the API's OpenAPI document",
+      "An agent flow wrapping the call",
+      "An MCP server exposing the endpoint"
+    ],
+    "correctIndex": 0,
+    "explanation": "Send HTTP request is the fastest route and is appropriate for a simple one-off. The others buy reuse, managed authentication, and DLP classification, none of which this requirement asks for.",
+    "teaches": "adaptive-cards-and-variables"
+  },
+  {
+    "id": "pc-15",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "question": "An adaptive card renders correctly in the test pane but not for users. What should you check?",
+    "options": [
+      "Whether the publishing channel supports that card's elements",
+      "Whether the card's JSON is valid",
+      "Whether the agent has been republished",
+      "Whether the user has a Copilot Studio licence"
+    ],
+    "correctIndex": 0,
+    "explanation": "Card rendering varies by channel, so a card must be tested where it will be published rather than only in the test pane. Invalid JSON would fail in the test pane too.",
+    "teaches": "adaptive-cards-and-variables"
+  },
+  {
+    "id": "pc-16",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "kind": "multi",
+    "question": "Which two settings most directly reduce an agent stating things absent from its knowledge sources? Choose two.",
+    "options": [
+      "Disabling general knowledge on the agent",
+      "Raising the content moderation level",
+      "Adding more trigger phrases to each topic",
+      "Publishing the agent to fewer channels"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Disabling general knowledge forces grounding, and higher moderation makes the agent decline rather than answer from a weak match. Trigger phrases and channels have no bearing on where an answer comes from.",
+    "teaches": "responsible-ai-and-governance"
+  },
+  {
+    "id": "pc-17",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "kind": "multi",
+    "question": "Which two are true of input and output parameters on an agent flow? Choose two.",
+    "options": [
+      "Their descriptions influence when the orchestrator invokes the flow",
+      "They form the contract between the agent and the flow",
+      "They are inferred automatically from the flow's actions",
+      "They must all be of type text"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Parameters are declared, not inferred, and are typed. Their descriptions are read by the orchestrator when deciding whether the flow applies, which is why a parameter named `input1` gets used at the wrong moments.",
+    "teaches": "agent-flows"
+  },
+  {
+    "id": "pc-18",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "kind": "order",
+    "question": "Put these planning decisions in the order they should be made, because each constrains the next.",
+    "items": [
+      "Decide whether the audience is internal or external",
+      "Decide the identity and authentication strategy",
+      "Decide which knowledge sources the agent may reach",
+      "Decide which channels the agent is published to"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Audience decides whether there is a user identity at all; identity decides what knowledge can be safely attached; and channels are chosen last but still early, because capability varies by channel.",
+    "teaches": "plan-agent-solution"
+  },
+  {
+    "id": "pc-19",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "kind": "match",
+    "question": "Match each Copilot Studio surface to what it is for.",
+    "pairs": [
+      {
+        "term": "Topic",
+        "definition": "An authored conversational path the agent can follow"
+      },
+      {
+        "term": "Agent flow",
+        "definition": "Deterministic work with declared inputs and outputs"
+      },
+      {
+        "term": "Generative answers node",
+        "definition": "Retrieval over configured knowledge to compose an answer"
+      },
+      {
+        "term": "Adaptive card",
+        "definition": "A structured, interactive response rendered in the channel"
+      }
+    ],
+    "explanation": "Topics are authored conversation, flows are deterministic execution, generative answers is retrieval, and an adaptive card is presentation. Putting exact logic in any surface other than the flow makes it non-reproducible.",
+    "teaches": "topics-and-responses"
+  },
+  {
+    "id": "pc-20",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "kind": "yesno",
+    "question": "An agent will be published for unauthenticated external visitors. Judge each statement.",
+    "statements": [
+      {
+        "text": "Any knowledge source attached to it is effectively readable by every visitor.",
+        "correct": true
+      },
+      {
+        "text": "Connectors cannot act on behalf of a signed-in user, because there is no signed-in user.",
+        "correct": true
+      },
+      {
+        "text": "Disabling general knowledge is still worth doing, so answers stay within published content.",
+        "correct": true
+      },
+      {
+        "text": "A source's own permissions will still trim results per visitor.",
+        "correct": false
+      }
+    ],
+    "explanation": "Permission trimming needs an identity to trim against, and an unauthenticated agent has none — every visitor sees whatever the agent's own connection can reach. That is why the audience decision constrains everything downstream of it.",
+    "teaches": "plan-agent-solution"
+  },
+  {
+    "id": "ie-01",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "caseStudyId": "cs-halloway-agents",
+    "question": "The agent stated a 36-month warranty tier that Halloway has never offered, and adding twelve more documents changed nothing. What should you do?",
+    "options": [
+      "Disable general knowledge so the agent answers only from the configured sources",
+      "Re-index the SharePoint library so the new documents are picked up",
+      "Raise content moderation to its maximum setting",
+      "Replace the SharePoint knowledge source with Azure AI Search"
+    ],
+    "correctIndex": 0,
+    "explanation": "That adding content changed nothing is the clue: the answer was never coming from the library. With general knowledge enabled the agent falls back to the model fluently and without signalling it, so no amount of content displaces the fallback. The requirement — say it does not know rather than improvise — is exactly what disabling general knowledge produces.",
+    "teaches": "responsible-ai-and-governance"
+  },
+  {
+    "id": "ie-02",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "caseStudyId": "cs-halloway-agents",
+    "question": "Order status is answered from a nightly CSV export indexed as knowledge, and engineers have quoted stale delivery dates. What should replace it?",
+    "options": [
+      "A connector or API tool that queries the ERP when the question is asked",
+      "The same CSV export refreshed hourly instead of nightly",
+      "An Azure AI Search index over the CSV with a freshness filter",
+      "A Fabric data agent over a copy of the ERP tables"
+    ],
+    "correctIndex": 0,
+    "explanation": "Order status is a live lookup, not knowledge — the question is \"what is the status of this order now\", which no index can answer correctly. A more frequent export shortens the staleness window without removing it, which the requirement rules out.",
+    "teaches": "enterprise-knowledge-sources"
+  },
+  {
+    "id": "ie-03",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "caseStudyId": "cs-halloway-agents",
+    "question": "Parts requests reach the ERP as the maker who built the agent, so the API's per-user entitlement checks pass unconditionally. What should you change?",
+    "options": [
+      "Move the call into a custom connector configured to act on behalf of the signed-in user",
+      "Create a second stored connection for each region and branch on the engineer's region",
+      "Add a topic step that asks the engineer to confirm their cost centre",
+      "Restrict the maker's ERP account to the minimum required permissions"
+    ],
+    "correctIndex": 0,
+    "explanation": "The requirement is that the request is authorised against the engineer's identity, which only user-delegated authentication achieves. Per-region connections and confirmation prompts both leave the ERP checking the wrong identity, and narrowing the maker's account limits the blast radius without fixing who is acting.",
+    "teaches": "custom-connectors-and-apis"
+  },
+  {
+    "id": "ie-04",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "kind": "dropdown",
+    "caseStudyId": "cs-halloway-agents",
+    "question": "Complete the assessment of the legacy warranty portal integration.",
+    "segments": [
+      {
+        "text": "Computer use began failing after the portal added a consent banner because "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "it depends on the target's visual layout, which has no contract",
+          "consent banners block automated sign-in by policy",
+          "its credentials expire when the portal changes"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", so the recommendation is to "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "pursue an API or connector and keep computer use only until one exists",
+          "add a step that dismisses the banner and continue as before",
+          "run the agent against a cached copy of the portal"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "Computer use is the last resort precisely because a redesign, a dialog, or a slow load breaks it in ways an API contract would not. Dismissing this particular banner fixes today's symptom and leaves the fragility, which is what the requirement asks for a recommendation on.",
+    "teaches": "computer-use"
+  },
+  {
+    "id": "ie-05",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "kind": "yesno",
+    "caseStudyId": "cs-halloway-agents",
+    "question": "Consider the four cost-centre topics duplicated from the finance team's agent. Judge each statement.",
+    "statements": [
+      {
+        "text": "Delegating to the finance agent removes the duplication without the service desk owning finance's logic.",
+        "correct": true
+      },
+      {
+        "text": "Delegation would reduce the service desk agent's own tool and topic count, which tends to improve orchestration quality.",
+        "correct": true
+      },
+      {
+        "text": "The finance agent's knowledge and connection identities apply when it is delegated to, not the parent's.",
+        "correct": true
+      },
+      {
+        "text": "Because the parent agent authenticates the engineer, the finance agent will automatically return results scoped to that engineer.",
+        "correct": false
+      }
+    ],
+    "explanation": "Delegation does not carry the parent's permissions — a child agent runs with its own knowledge configuration and connection identities, which is why authentication has to be aligned across a multi-agent solution deliberately rather than assumed to propagate.",
+    "teaches": "multi-agent-design"
+  },
+  {
+    "id": "ie-06",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "An agent must answer from ServiceNow articles, and each user must see only the articles they are entitled to. What should you use?",
+    "options": [
+      "A Copilot connector indexing ServiceNow",
+      "A Power Platform connector querying ServiceNow per request",
+      "A nightly export of the articles into SharePoint",
+      "An Azure AI Search index built from a full export"
+    ],
+    "correctIndex": 0,
+    "explanation": "Copilot connectors index into the Microsoft 365 semantic index and trim results to what the asking user may see in the source, which is exactly the requirement. Exports lose the permissions along with the freshness.",
+    "teaches": "enterprise-knowledge-sources"
+  },
+  {
+    "id": "ie-07",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "Which question is best served by an action connector rather than an indexed knowledge source?",
+    "options": [
+      "What is the current status of order 4471?",
+      "What does our returns policy say about damaged goods?",
+      "Which safety standards apply to this instrument?",
+      "What are the warranty tiers we offer?"
+    ],
+    "correctIndex": 0,
+    "explanation": "A live per-record lookup must query the system when the question is asked; an index would answer from whenever it last ran. The other three are content somebody wrote down, which is what knowledge is for.",
+    "teaches": "enterprise-knowledge-sources"
+  },
+  {
+    "id": "ie-08",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "An agent retrieves the correct documents but quotes irrelevant passages from them. What should you change?",
+    "options": [
+      "Move retrieval to an Azure AI Search index with controlled chunking and ranking",
+      "Add more documents covering the same topics",
+      "Disable general knowledge on the agent",
+      "Raise the content moderation level"
+    ],
+    "correctIndex": 0,
+    "explanation": "Right document, wrong passage is a chunking and ranking problem rather than a content problem, and Azure AI Search is the option that puts both under direct control. Adding content makes the ranking problem worse.",
+    "teaches": "azure-integration"
+  },
+  {
+    "id": "ie-09",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "A supplier system exposes a documented REST API. An agent needs to call it from several agents over time. What should you build?",
+    "options": [
+      "A custom connector from the API's OpenAPI document",
+      "A Send HTTP request node in each topic that needs it",
+      "A computer use configuration driving the supplier's web portal",
+      "A nightly export indexed as a knowledge source"
+    ],
+    "correctIndex": 0,
+    "explanation": "A custom connector gives managed authentication, DLP classification, and reuse across agents, apps, and flows. Repeating a raw HTTP call in every topic is the drift problem a connector exists to prevent.",
+    "teaches": "custom-connectors-and-apis"
+  },
+  {
+    "id": "ie-10",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "What is the distinguishing property of connecting an MCP server to an agent?",
+    "options": [
+      "The agent gains every tool the server publishes, including ones added later",
+      "The tools run inside the agent's own environment",
+      "The server's tools bypass data loss prevention policies",
+      "Each tool must be individually approved before first use"
+    ],
+    "correctIndex": 0,
+    "explanation": "An MCP server describes its own capabilities, so the agent picks up new tools without being re-authored. That dynamism is the benefit and the governance question, which is why the server must be one you run or have vetted.",
+    "teaches": "mcp-tools"
+  },
+  {
+    "id": "ie-11",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "A legacy application has no API and no connector. What is the appropriate integration, and with what caveat?",
+    "options": [
+      "Computer use, accepting that it breaks when the interface changes",
+      "Computer use, which is as robust as an API once configured",
+      "A Copilot connector, which can index any application",
+      "An MCP server, which can wrap any user interface automatically"
+    ],
+    "correctIndex": 0,
+    "explanation": "Computer use is the last resort in the preference order and is fragile by nature because it depends on visual layout. Neither a Copilot connector nor MCP can conjure an interface that the application does not expose.",
+    "teaches": "computer-use"
+  },
+  {
+    "id": "ie-12",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "An agent has accumulated 40 tools and 60 topics, and its answers have become less reliable. What should you do?",
+    "options": [
+      "Split capabilities into child agents the parent delegates to",
+      "Switch from generative to classic orchestration",
+      "Add more detailed trigger phrases to each topic",
+      "Move the agent to a more capable model"
+    ],
+    "correctIndex": 0,
+    "explanation": "Generative orchestration degrades as it chooses among many tools with overlapping descriptions. Delegation reduces the parent's choice set to a few distinct capabilities, which is why splitting improves answer quality rather than merely tidying.",
+    "teaches": "multi-agent-design"
+  },
+  {
+    "id": "ie-13",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "Which question should be routed to a Fabric data agent?",
+    "options": [
+      "What was our north-west revenue last quarter?",
+      "What does our expenses policy say about mileage?",
+      "What is the warranty period on this product line?",
+      "How do I submit a purchase requisition?"
+    ],
+    "correctIndex": 0,
+    "explanation": "A Fabric data agent generates and runs queries to compute an answer that was never written down. The other three retrieve passages somebody wrote, which is ordinary knowledge retrieval.",
+    "teaches": "foundry-and-fabric-agents"
+  },
+  {
+    "id": "ie-14",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "A team needs a specific model, custom orchestration logic, and evaluation tooling that Copilot Studio does not expose. What should they use?",
+    "options": [
+      "Build the agent in Microsoft Foundry and connect it into the Copilot Studio solution",
+      "Build it in Copilot Studio and add a custom prompt",
+      "Build it in Copilot Studio and connect an MCP server",
+      "Build it as an agent flow with pro-code actions"
+    ],
+    "correctIndex": 0,
+    "explanation": "The split is control versus speed: Foundry is where a developer takes direct control of models and orchestration, and the resulting agent can participate in a Copilot Studio solution. The alternatives all stay inside the low-code surface.",
+    "teaches": "foundry-and-fabric-agents"
+  },
+  {
+    "id": "ie-15",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "What does the A2A protocol enable?",
+    "options": [
+      "Agents on different platforms discovering and calling one another via agent cards",
+      "Two agents sharing one knowledge index",
+      "An agent invoking Power Automate flows across environments",
+      "Automatic failover between a primary and secondary agent"
+    ],
+    "correctIndex": 0,
+    "explanation": "Agent2Agent is the open protocol for cross-platform, cross-vendor delegation using published capability descriptions. It carries the same trust consideration as MCP: a called agent is a system you are trusting with what you send.",
+    "teaches": "foundry-and-fabric-agents"
+  },
+  {
+    "id": "ie-16",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "An agent depends on four back-end services and you need to correlate its failures with theirs. What should you configure?",
+    "options": [
+      "Application Insights",
+      "Copilot Studio analytics",
+      "Agent flow run history",
+      "A test set covering the four services"
+    ],
+    "correctIndex": 0,
+    "explanation": "Copilot Studio analytics answers how the agent is doing; Application Insights puts agent telemetry alongside the rest of the estate's and answers why. Run history is per-flow and cannot correlate across services.",
+    "teaches": "azure-integration"
+  },
+  {
+    "id": "ie-17",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "Why configure a custom prompt to use a model from the Foundry model catalogue?",
+    "options": [
+      "To make capability, latency, cost, and data residency an explicit choice",
+      "To bypass the environment's data loss prevention policy",
+      "To allow the prompt to run without consuming capacity",
+      "To let the prompt access knowledge sources it otherwise could not"
+    ],
+    "correctIndex": 0,
+    "explanation": "Model selection is a design decision — a reasoning-heavy classification and a short summarisation do not need the same model. It changes none of the governance or knowledge configuration around the prompt.",
+    "teaches": "azure-integration"
+  },
+  {
+    "id": "ie-18",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "An agent tool wrapping a REST operation is described as \"handles requests\". What is the consequence under generative orchestration?",
+    "options": [
+      "The model invokes it unpredictably, including when it does not apply",
+      "The tool is ignored until trigger phrases are added",
+      "The tool fails validation and cannot be published",
+      "The tool runs only when explicitly named by the user"
+    ],
+    "correctIndex": 0,
+    "explanation": "The orchestrator chooses tools by name and description, so a vague description is an unreliable selection rule. Describing what the operation does, when it applies, and what each parameter means is functional work.",
+    "teaches": "custom-connectors-and-apis"
+  },
+  {
+    "id": "ie-19",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "Two teams each own a business capability and want to ship on their own cadence. How should the multi-agent solution be split?",
+    "options": [
+      "One agent per team, with delegation between them",
+      "One agent with topics grouped by team",
+      "One agent per channel the teams publish to",
+      "One agent per knowledge source the teams maintain"
+    ],
+    "correctIndex": 0,
+    "explanation": "Boundaries drawn by ownership and lifecycle are the ones that hold up, because each agent then has its own tests, owner, and release cadence. Splitting by channel or source cuts across ownership rather than along it.",
+    "teaches": "multi-agent-design"
+  },
+  {
+    "id": "ie-20",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "Computer use is configured with an account that has broad access to the target system. What is the risk?",
+    "options": [
+      "The agent can reach everything that account can reach",
+      "The agent cannot sign in without multi-factor authentication",
+      "The account's permissions are ignored during automation",
+      "Computer use runs with the signed-in user's identity instead"
+    ],
+    "correctIndex": 0,
+    "explanation": "An agent driving a user interface has exactly the access of the account it signs in as, which is why those credentials must be scoped to the task. Computer use does not act as the conversing user.",
+    "teaches": "computer-use"
+  },
+  {
+    "id": "ie-21",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "An organisation wants to connect an MCP server published by an external vendor. What should be required first?",
+    "options": [
+      "That it is vetted, scoped with least-privilege credentials, and covered by DLP",
+      "That every tool it publishes is copied into a custom connector",
+      "That it is hosted in the same Azure region as the environment",
+      "That the agent uses classic orchestration when calling it"
+    ],
+    "correctIndex": 0,
+    "explanation": "Because the server can add tools the agent will then use without re-authoring, it is a trust boundary. Vetting, credential scoping, and DLP coverage are the controls; region and orchestration style are irrelevant to the risk.",
+    "teaches": "mcp-tools"
+  },
+  {
+    "id": "ie-22",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "question": "A parent agent authenticates the user, then delegates to a child agent that uses a shared connection. What do users experience?",
+    "options": [
+      "Results from the child that are not scoped to the asking user",
+      "An authentication prompt from the child agent",
+      "The child agent inheriting the parent's user context automatically",
+      "The delegation failing because the identities differ"
+    ],
+    "correctIndex": 0,
+    "explanation": "A child agent runs with its own connection identities, so a shared connection returns the same results to everyone regardless of what the parent established. Aligning authentication across agents is part of designing the solution.",
+    "teaches": "multi-agent-design"
+  },
+  {
+    "id": "ie-23",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "kind": "multi",
+    "question": "Which two are reasons to prefer Azure AI Search over a built-in knowledge source? Choose two.",
+    "options": [
+      "You need control over chunking and ranking",
+      "You need filters over your own metadata",
+      "You need results trimmed to each user's source permissions",
+      "You need the content indexed without any configuration"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Azure AI Search is the option when retrieval itself must be controlled. Permission trimming from the source system is what Copilot connectors provide, and zero-configuration indexing is the opposite of what Azure AI Search offers.",
+    "teaches": "azure-integration"
+  },
+  {
+    "id": "ie-24",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "kind": "order",
+    "question": "Put these integration options in the order you should evaluate them for a back-end system.",
+    "items": [
+      "An official connector for the system",
+      "A custom connector over its REST API",
+      "A Send HTTP request call from a topic",
+      "Computer use driving its interface"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "An official connector is governed and maintained for you; a custom connector gives the same governance over your own API; a raw HTTP call trades governance for speed; and computer use is last because it depends on a visual layout with no contract.",
+    "teaches": "computer-use"
+  },
+  {
+    "id": "ie-25",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "kind": "order",
+    "question": "Put these steps in order for adding an existing REST API to an agent as a governed tool.",
+    "items": [
+      "Import the API's OpenAPI document into a custom connector",
+      "Configure the connector's authentication, including whether it acts as the user",
+      "Add the connector to the agent as a tool",
+      "Write a description saying what the operation does and when it applies"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "The definition comes first, then the authentication decision that determines whose data is returned, then attaching it, and finally the description the orchestrator will actually use to choose it.",
+    "teaches": "custom-connectors-and-apis"
+  },
+  {
+    "id": "ie-26",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "kind": "dropdown",
+    "question": "Complete the statement contrasting two ways an agent reaches enterprise data.",
+    "segments": [
+      {
+        "text": "A Copilot connector makes content searchable by "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "indexing it into the Microsoft 365 semantic index",
+          "querying the source system on every request",
+          "copying it into Dataverse on a schedule"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", while a Fabric data agent answers by "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "generating and running queries over the data",
+          "retrieving the closest matching passages",
+          "summarising a cached report"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "The distinction is retrieval versus computation. A connector finds passages someone wrote down; a data agent produces an answer that exists nowhere until the query runs.",
+    "teaches": "foundry-and-fabric-agents"
+  },
+  {
+    "id": "tm-01",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "question": "Why does an agent need a test set more than a conventional application does?",
+    "options": [
+      "A change can improve one class of question and silently degrade another",
+      "Agents cannot be tested manually",
+      "Agent flows have no run history",
+      "Agents are deployed without solutions"
+    ],
+    "correctIndex": 0,
+    "explanation": "Agent behaviour is not deterministic, so a change to an instruction, a knowledge source, or a model produces effects that nothing announces. A fixed set of inputs is the only way to see them.",
+    "teaches": "evaluate-agent-performance"
+  },
+  {
+    "id": "tm-02",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "question": "An agent answers open-ended questions with no single correct wording. Which evaluation method fits?",
+    "options": [
+      "Model-graded evaluation against criteria such as groundedness and relevance",
+      "Exact string matching against an expected answer",
+      "Similarity matching against a reference answer",
+      "Counting how many questions produced any answer at all"
+    ],
+    "correctIndex": 0,
+    "explanation": "Exact and similarity matching need a reference string that open-ended answers do not have. Model grading scales to those cases by scoring against criteria rather than comparing text.",
+    "teaches": "evaluate-agent-performance"
+  },
+  {
+    "id": "tm-03",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "question": "After changing an agent's knowledge configuration, which metric most directly shows it has started answering from the model rather than your content?",
+    "options": [
+      "Groundedness",
+      "Relevance",
+      "Session resolution rate",
+      "Average response latency"
+    ],
+    "correctIndex": 0,
+    "explanation": "Groundedness measures whether the answer is supported by the retrieved content, so a drop in it is the measurable form of the agent drifting off your sources. An ungrounded answer can still be relevant and fast.",
+    "teaches": "evaluate-agent-performance"
+  },
+  {
+    "id": "tm-04",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "question": "A team runs its test set once and reports a groundedness score of 0.78. What is the problem with that as a conclusion?",
+    "options": [
+      "A single run has no baseline to compare against",
+      "Groundedness cannot be scored numerically",
+      "Test sets must contain at least 100 questions",
+      "Groundedness is only valid for authored topics"
+    ],
+    "correctIndex": 0,
+    "explanation": "Evaluation results are read as deltas: the same set before and after a change says what the change did, where one number in isolation says almost nothing.",
+    "teaches": "evaluate-agent-performance"
+  },
+  {
+    "id": "tm-05",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "question": "A multi-agent solution was exported and imported into test. The parent agent now delegates to nothing. What was missed?",
+    "options": [
+      "The child agents were not added to the solution",
+      "The parent agent was exported as unmanaged",
+      "The environment variables were not supplied at import",
+      "The test environment lacks a Copilot Studio licence"
+    ],
+    "correctIndex": 0,
+    "explanation": "Child agents are dependencies like flows and connectors and must be added explicitly. The failure appears only when somebody asks the question that would have been delegated, which is why dependency checking cannot be skipped.",
+    "teaches": "agent-solutions-and-alm"
+  },
+  {
+    "id": "tm-06",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "question": "An agent was built outside a solution and now needs to move to test. What is the risk?",
+    "options": [
+      "Its dependent flows, connectors, and knowledge configurations are left behind",
+      "It cannot be added to a solution at all",
+      "It will import as managed and become uneditable",
+      "Its conversation history will be lost"
+    ],
+    "correctIndex": 0,
+    "explanation": "Adding an agent retrospectively brings the agent, not automatically everything it depends on. Building inside a solution from the start is what keeps the dependency graph complete.",
+    "teaches": "agent-solutions-and-alm"
+  },
+  {
+    "id": "tm-07",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "question": "A solution imported into test with no value supplied for an environment variable. What happens?",
+    "options": [
+      "The import succeeds and the component behaves as misconfigured",
+      "The import fails with a validation error",
+      "The variable falls back to its development value",
+      "The variable is created empty and the agent refuses to publish"
+    ],
+    "correctIndex": 0,
+    "explanation": "A missing environment variable value does not fail loudly, which is the trap. Supplying values as part of the pipeline rather than by hand afterwards is what makes a deployment repeatable.",
+    "teaches": "environment-variables-and-pipelines"
+  },
+  {
+    "id": "tm-08",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "question": "Governance requires an approval before a solution reaches production, which the built-in pipeline does not provide. What should you do?",
+    "options": [
+      "Extend the pipeline with an approval step before the production stage",
+      "Abandon pipelines and deploy solutions manually",
+      "Move production deployment into a separate tenant",
+      "Convert the solution to unmanaged so it can be reviewed in place"
+    ],
+    "correctIndex": 0,
+    "explanation": "Power Platform pipelines are extensible — an approval, or a call out to Azure DevOps or GitHub Actions — which is the usual answer when governance needs a gate the built-in flow lacks.",
+    "teaches": "environment-variables-and-pipelines"
+  },
+  {
+    "id": "tm-09",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "question": "Which values are the most important to hold in environment variables for an agent solution?",
+    "options": [
+      "Knowledge source addresses and API base URLs",
+      "The agent's display name and greeting",
+      "The agent's topic trigger phrases",
+      "The content moderation level"
+    ],
+    "correctIndex": 0,
+    "explanation": "Those are precisely the values that must differ between environments, and the ones that cause a test agent to read and write production data if they do not.",
+    "teaches": "environment-variables-and-pipelines"
+  },
+  {
+    "id": "tm-10",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "question": "What is the practical arrangement for evaluating agent changes at scale?",
+    "options": [
+      "Automated evaluation on every change, with human review of the disagreements",
+      "Human review of every response before each release",
+      "Automated evaluation only, with no human involvement",
+      "Manual spot checks after each release reaches production"
+    ],
+    "correctIndex": 0,
+    "explanation": "Automation gives coverage on every change and humans remain the arbiter where it matters. Reviewing everything by hand does not scale, and reviewing nothing misses the cases automation grades wrongly.",
+    "teaches": "evaluate-agent-performance"
+  },
+  {
+    "id": "tm-11",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "kind": "multi",
+    "question": "Which two must be checked when adding an existing agent to a solution? Choose two.",
+    "options": [
+      "The agent flows it invokes",
+      "Any child agents it delegates to",
+      "The channels it is published to",
+      "Its conversation transcripts"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Flows and child agents are dependencies that must travel with the solution. Channels are configured per environment and transcripts are runtime data, neither of which is a solution component.",
+    "teaches": "agent-solutions-and-alm"
+  },
+  {
+    "id": "tm-12",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "kind": "order",
+    "question": "Put these steps in order for making a measurable change to a published agent.",
+    "items": [
+      "Run the existing test set to establish a baseline",
+      "Make the change in the development environment",
+      "Run the same test set and compare against the baseline",
+      "Promote the solution through the pipeline"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "The baseline has to exist before the change, or the comparison that gives the result its meaning is impossible. Promotion comes last, once the comparison shows the change did what was intended.",
+    "teaches": "evaluate-agent-performance"
+  },
+  {
+    "id": "tm-13",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "kind": "match",
+    "question": "Match each evaluation approach to the case it suits.",
+    "pairs": [
+      {
+        "term": "Exact matching",
+        "definition": "A question with exactly one correct answer string"
+      },
+      {
+        "term": "Similarity matching",
+        "definition": "An answer that may be worded differently but means the same"
+      },
+      {
+        "term": "Model-graded evaluation",
+        "definition": "An open-ended answer scored against criteria such as groundedness"
+      },
+      {
+        "term": "Human review",
+        "definition": "The cases where the cost of being wrong is highest"
+      }
+    ],
+    "explanation": "The methods form a ladder from cheapest and most brittle to most expensive and most reliable, and a working arrangement uses all four on different parts of the same test set.",
+    "teaches": "evaluate-agent-performance"
+  },
+  {
+    "id": "tm-14",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "kind": "match",
+    "question": "Match each ALM artefact to what it carries between environments.",
+    "pairs": [
+      {
+        "term": "Solution",
+        "definition": "The agent and its components, as a deployable unit"
+      },
+      {
+        "term": "Environment variable",
+        "definition": "A value that must differ per environment"
+      },
+      {
+        "term": "Connection reference",
+        "definition": "The binding to a connection, resolved at import"
+      },
+      {
+        "term": "Pipeline",
+        "definition": "The promotion of a solution through the environments"
+      }
+    ],
+    "explanation": "The solution is the payload, environment variables and connection references are what make it portable, and the pipeline is the mechanism that moves it. Missing any of the middle two produces a solution that imports and misbehaves.",
+    "teaches": "agent-solutions-and-alm"
+  }
+]

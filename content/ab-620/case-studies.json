@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-halloway-agents",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "title": "Halloway Instruments — an agent that answers confidently and acts on nothing",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Halloway Instruments sells laboratory equipment through 40 field engineers and a 12-person service desk. A Copilot Studio agent published to Teams was meant to answer product and warranty questions, look up open service orders, and raise replacement parts requests.",
+          "Six weeks after launch the service desk has asked for it to be withdrawn. Engineers say it is confidently wrong about warranty terms, it cannot be trusted with order status, and the one action it performs works about half the time. The platform team has been asked to fix it rather than remove it."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "Warranty terms live in a SharePoint document library that is configured as a knowledge source. The agent's generative answers node is left at its default, and general knowledge has never been disabled. Engineers report answers that sound authoritative and cite nothing — one told a customer about a 36-month warranty tier that Halloway has never offered. Adding twelve more documents to the library did not change the behaviour.",
+          "Service order status comes from the ERP system. Because the ERP exposes no connector, a colleague indexed a nightly CSV export of open orders as a second knowledge source. The agent answers order-status questions from it, and engineers have twice quoted a delivery date that had changed that morning.",
+          "The parts request action calls a REST API through a Send HTTP request node placed directly in a topic. It uses a single stored connection created by the maker who built the agent. Every request therefore arrives at the ERP as that maker, and the API's own per-user entitlement checks pass unconditionally — an engineer raised a request against another region's cost centre and nothing objected.",
+          "A separate legacy warranty portal has no API at all. Computer use was configured to read entitlement from it. It worked for three weeks and now fails most afternoons; the portal added a consent banner on first load. The failures produce no error code, only a conversation in which the agent apologises and stops.",
+          "A second agent, owned by the finance team, already answers cost-centre questions well. The service desk agent duplicates four of its topics, copied and pasted, and the two have drifted.",
+          "There is no test set. The team judged the agent ready by asking it about fifteen questions they thought of on the day, and they have no way to tell whether last week's instruction change helped or hurt."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "The agent must never state a warranty term that is not in Halloway's own content, and must say it does not know rather than improvise.",
+          "Order status must reflect the ERP at the moment the question is asked, not a nightly snapshot.",
+          "A parts request must be authorised against the identity of the engineer who asked, not the identity of the maker who built the agent.",
+          "Entitlement lookups against the legacy portal must stop failing silently, and the team wants a recommendation on whether to keep driving its user interface at all.",
+          "The four duplicated cost-centre topics must stop drifting from the finance team's version, without the service desk taking ownership of finance's logic.",
+          "Every future change must be measurable against a fixed set of questions before it is published."
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,352 @@
+[
+  {
+    "id": "fc-ab620-pc-01",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "Internal or external audience decides everything",
+    "back": "An external agent has no user identity to act as, so anything it can reach is effectively public to every visitor. Keyword: external means public."
+  },
+  {
+    "id": "fc-ab620-pc-02",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "Shared connection vs user identity",
+    "back": "A shared connection gives every user identical results regardless of entitlement. Acting as the signed-in user honours the source's own permissions. Keyword: whose permissions apply?"
+  },
+  {
+    "id": "fc-ab620-pc-03",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "Why choose channels early",
+    "back": "Adaptive cards, file upload, and authentication all behave differently per channel. A topic authored around a rich card may not render where you publish. Keyword: channel decides capability."
+  },
+  {
+    "id": "fc-ab620-pc-04",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "The single best fix for confident wrong answers",
+    "back": "Turn off general knowledge so the agent must ground in your sources and says it does not know instead of improvising. Keyword: force grounding."
+  },
+  {
+    "id": "fc-ab620-pc-05",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "What content moderation actually trades",
+    "back": "High = conservative, declines more. Low = attempts answers from weaker matches. It is a business decision about wrong answers versus unhelpful ones. Keyword: strictness is a choice."
+  },
+  {
+    "id": "fc-ab620-pc-06",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "What a DLP policy stops an agent doing",
+    "back": "It classifies connectors into business and non-business groups, so the connector holding customer data cannot be combined with one that posts to the internet. Keyword: block the exfiltration path."
+  },
+  {
+    "id": "fc-ab620-pc-07",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "The largest unit of reuse",
+    "back": "A child agent. Publish the capability as its own agent with its own lifecycle, tests, and owner, and let others delegate to it. Keyword: delegate, do not copy."
+  },
+  {
+    "id": "fc-ab620-pc-08",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "What belongs in a flow, not a prompt",
+    "back": "Anything that must happen the same way every time. The model decides what the user wants; the flow does the deterministic part. Keyword: exact logic is not a prompt."
+  },
+  {
+    "id": "fc-ab620-pc-09",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "Why parameter descriptions are load-bearing",
+    "back": "The orchestrator reads names and descriptions to decide when a flow applies and what to pass. 'input1' with no description gets called at the wrong moments. Keyword: descriptions are code."
+  },
+  {
+    "id": "fc-ab620-pc-10",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "Long-running back end in an agent flow",
+    "back": "Raising the timeout is not the fix. Acknowledge, start the work, return the result later — the asynchronous or human-in-the-loop pattern. Keyword: do not make the user wait."
+  },
+  {
+    "id": "fc-ab620-pc-11",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "What human-in-the-loop is for",
+    "back": "Any action that spends money, changes an entitlement, or contacts a customer. The agent proposes, a named human disposes, the approval is recorded. Keyword: consequential means approved."
+  },
+  {
+    "id": "fc-ab620-pc-12",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "Unhandled flow error inside a conversation",
+    "back": "Produces a generic apology and no diagnosis, so the user just asks again. Use run-after to return a meaningful output the topic can react to. Keyword: fail usefully."
+  },
+  {
+    "id": "fc-ab620-pc-13",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "Classic vs generative orchestration",
+    "back": "Classic matches trigger phrases to one authored topic. Generative lets the model choose and combine topics, tools, and knowledge. Keyword: matched, or chosen."
+  },
+  {
+    "id": "fc-ab620-pc-14",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "What the generative answers node does",
+    "back": "The retrieval-augmented step: searches configured knowledge and answers from what it finds. Its key setting is whether it may add general knowledge. Keyword: RAG in a node."
+  },
+  {
+    "id": "fc-ab620-pc-15",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "When not to use an adaptive card",
+    "back": "When the answer has no structure and needs no action. Overusing cards makes the agent feel like the form it was meant to replace. Keyword: cards for structure only."
+  },
+  {
+    "id": "fc-ab620-pc-16",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "Send HTTP request vs custom connector",
+    "back": "Send HTTP request is fastest and least governed — fine for a one-off. Anything reused, or needing managed auth and DLP classification, belongs in a custom connector. Keyword: reuse means connector."
+  },
+  {
+    "id": "fc-ab620-pc-17",
+    "examCode": "ab-620",
+    "domain": "plan-configure",
+    "front": "Variable scope in a conversation",
+    "back": "Topic variables live in their topic, global variables span the session, system variables expose the user and conversation. Crossing topics needs global or an input. Keyword: topic scope does not travel."
+  },
+  {
+    "id": "fc-ab620-ie-01",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "Why Copilot connectors for enterprise content",
+    "back": "They index into the Microsoft 365 semantic index and respect the source's own permissions, so each user sees only what they could see in the source. Keyword: indexed and trimmed."
+  },
+  {
+    "id": "fc-ab620-ie-02",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "Knowledge source or action connector?",
+    "back": "'What does our content say about X' is knowledge and needs an index. 'What is the status of order 4471' is an action against a live system. Keyword: written down, or looked up."
+  },
+  {
+    "id": "fc-ab620-ie-03",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "When Azure AI Search earns its cost",
+    "back": "When chunking, ranking, or filtering must be controlled directly — custom analysers, hybrid and vector search, your own metadata. Keyword: control the retrieval."
+  },
+  {
+    "id": "fc-ab620-ie-04",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "Right documents, wrong passages",
+    "back": "That is a chunking and ranking problem, not a content problem. Point generative answers at your own Azure AI Search index through Foundry. Keyword: fix retrieval, not content."
+  },
+  {
+    "id": "fc-ab620-ie-05",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "Why computer use is the last resort",
+    "back": "It depends on the target's visual layout, so a redesign, a new consent dialog, or a slow page breaks it. Keyword: no contract, only pixels."
+  },
+  {
+    "id": "fc-ab620-ie-06",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "The integration preference order",
+    "back": "Official connector, then REST API or custom connector, then computer use only when neither exists. Keyword: UI automation is last."
+  },
+  {
+    "id": "fc-ab620-ie-07",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "What an agent driving a UI can access",
+    "back": "Everything the account it signs in as can access. Scope those credentials to exactly the task. Keyword: computer use inherits the account."
+  },
+  {
+    "id": "fc-ab620-ie-08",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "What makes MCP different from adding actions",
+    "back": "Connecting one server adds every tool it publishes at once, and the agent picks up new tools as the server adds them without being re-authored. Keyword: the tool set is dynamic."
+  },
+  {
+    "id": "fc-ab620-ie-09",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "Why an MCP server is a trust boundary",
+    "back": "Someone else may control which tools your agent gains. Use a server you run or have vetted, scope its credentials, and cover it with DLP. Keyword: dynamic means trusted."
+  },
+  {
+    "id": "fc-ab620-ie-10",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "What a custom connector buys over a raw call",
+    "back": "Managed authentication, a place in DLP classification, and reuse across agents, apps, and flows. Keyword: governance and reuse."
+  },
+  {
+    "id": "fc-ab620-ie-11",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "The API auth decision that leaks data",
+    "back": "Using one stored connection for an API that returns per-user data. Act on behalf of the signed-in user whenever the caller might not be entitled to everything. Keyword: service or user?"
+  },
+  {
+    "id": "fc-ab620-ie-12",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "Where to draw multi-agent boundaries",
+    "back": "By ownership and lifecycle. The team that owns expenses owns the expenses agent, tests it, and ships it on its own cadence. Keyword: split by owner."
+  },
+  {
+    "id": "fc-ab620-ie-13",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "Why splitting improves answer quality",
+    "back": "Generative orchestration degrades as it chooses among more tools with overlapping descriptions. Delegation shrinks the parent's choice set. Keyword: fewer, clearer options."
+  },
+  {
+    "id": "fc-ab620-ie-14",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "Delegation does not carry permissions",
+    "back": "A child agent has its own knowledge configuration and connection identities, so routing through a parent can return different results. Keyword: align auth across agents."
+  },
+  {
+    "id": "fc-ab620-ie-15",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "Copilot Studio or Foundry?",
+    "back": "Copilot Studio for fast assembly with governed connectors. Foundry when you need a specific model, custom orchestration, or its evaluation tooling. Keyword: speed or control."
+  },
+  {
+    "id": "fc-ab620-ie-16",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "Knowledge source vs Fabric data agent",
+    "back": "A knowledge source retrieves passages someone wrote down. A data agent generates and runs queries to compute an answer nobody wrote down. Keyword: retrieve or compute."
+  },
+  {
+    "id": "fc-ab620-ie-17",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "\"What did we sell in the north-west last quarter\"",
+    "back": "A Fabric data agent question — the answer must be computed from data, not retrieved from a document. Keyword: aggregates are computed."
+  },
+  {
+    "id": "fc-ab620-ie-18",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "What A2A adds",
+    "back": "An open protocol letting agents discover and call one another across platforms and vendors via published agent cards. Keyword: cross-vendor delegation."
+  },
+  {
+    "id": "fc-ab620-ie-19",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "Why choose a model from the Foundry catalogue",
+    "back": "It makes capability, latency, cost, and data residency an explicit decision. A reasoning-heavy step and a short summary do not need the same model. Keyword: model choice is a design choice."
+  },
+  {
+    "id": "fc-ab620-ie-20",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "Built-in analytics vs Application Insights",
+    "back": "Analytics answers 'how is the agent doing' — resolved, escalated, abandoned. Application Insights answers 'why', by correlating with the back ends. Keyword: outcome or cause."
+  },
+  {
+    "id": "fc-ab620-ie-21",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "Why descriptions matter on REST tools",
+    "back": "Under generative orchestration the model picks tools by name and description. 'Does the thing' gets invoked unpredictably. Keyword: describe when it applies."
+  },
+  {
+    "id": "fc-ab620-ie-22",
+    "examCode": "ab-620",
+    "domain": "integrate-extend",
+    "front": "Copilot connector permission trimming",
+    "back": "Results are trimmed to what the asking user may see in the source system, which is why they suit content with real access control. Keyword: the index respects ACLs."
+  },
+  {
+    "id": "fc-ab620-tm-01",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "front": "Why test sets matter more for agents",
+    "back": "Behaviour is not deterministic. A change to an instruction, a source, or a model can improve one class of question and quietly degrade another. Keyword: nothing announces a regression."
+  },
+  {
+    "id": "fc-ab620-tm-02",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "front": "What a test set actually is",
+    "back": "Inputs with expected outcomes, run to produce a measurable result rather than an impression. Keyword: measure, do not eyeball."
+  },
+  {
+    "id": "fc-ab620-tm-03",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "front": "When exact matching is not enough",
+    "back": "Open-ended answers with no single expected string. Use model-graded evaluation on groundedness, relevance, and completeness. Keyword: grade, do not compare."
+  },
+  {
+    "id": "fc-ab620-tm-04",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "front": "The practical evaluation arrangement",
+    "back": "Automated evaluation on every change, human review of the disagreements. Humans stay the arbiter where it matters. Keyword: automate the bulk, review the edges."
+  },
+  {
+    "id": "fc-ab620-tm-05",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "front": "How to read evaluation results",
+    "back": "By comparison. One run tells you little; the same set before and after a change tells you what the change did. Keyword: deltas, not absolutes."
+  },
+  {
+    "id": "fc-ab620-tm-06",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "front": "What a falling groundedness score means",
+    "back": "The measurable form of the agent starting to answer from the model instead of your content. Watch it whenever knowledge configuration changes. Keyword: groundedness tracks drift."
+  },
+  {
+    "id": "fc-ab620-tm-07",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "front": "An agent built outside a solution",
+    "back": "Has to be added retrospectively, which is where its flows, connectors, and knowledge configurations get left behind. Keyword: start inside the solution."
+  },
+  {
+    "id": "fc-ab620-tm-08",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "front": "Exporting a multi-agent solution",
+    "back": "Check dependencies — flows, custom connectors, prompts, and child agents. A parent without its children imports as a parent that delegates to nothing. Keyword: children are dependencies."
+  },
+  {
+    "id": "fc-ab620-tm-09",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "front": "What environment variables protect you from",
+    "back": "A test environment pointing at production knowledge sources and API addresses. Those are exactly the values that must differ. Keyword: externalise the endpoints."
+  },
+  {
+    "id": "fc-ab620-tm-10",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "front": "A missing environment variable value",
+    "back": "Does not fail loudly. The solution imports and the component behaves as misconfigured, because it is. Supply values in the pipeline, not by hand. Keyword: silent misconfiguration."
+  },
+  {
+    "id": "fc-ab620-tm-11",
+    "examCode": "ab-620",
+    "domain": "test-manage",
+    "front": "Extending Power Platform pipelines",
+    "back": "Add approvals before a stage, or call out to Azure DevOps or GitHub Actions, when governance needs a gate the built-in pipeline lacks. Keyword: extend rather than abandon."
+  }
+]

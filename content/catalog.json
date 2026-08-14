@@ -76,12 +76,12 @@
     "series": "ab",
     "msLevel": "Associate",
     "status": "GA",
-    "durationMinutes": null,
+    "durationMinutes": 120,
     "passingScore": 700,
     "summary": "Build AI agents with Copilot Studio and the Microsoft agent stack — the flagship of the new AB series.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
-    "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/ai-agent-builder-associate/"
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-14",
+    "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ab-620"
   },
   {
     "code": "ab-730",

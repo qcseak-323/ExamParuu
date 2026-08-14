@@ -1,0 +1,55 @@
+{
+  "examCode": "AB-620",
+  "examName": "Designing and Building Integrated AI Solutions in Copilot Studio",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for AB-620. Three defects on the published page are recorded here so nobody 'corrects' them from the page later. (1) The study guide carries TWO 'Study resources' sections with different content, and the first one's 'Get trained' link points at AI-900's page rather than AB-620's; the second block links correctly. (2) The page heading reads 'Designing and Building Integrated AI Solutions in Copilot Studio' while the page description reads 'Designing and Building Integrated AI Agent Solutions in Copilot Studio' — the heading is used here. The credential earned is 'AI Agent Builder', which is a third distinct name and is what catalog.json carries. (3) Like SC-500, AI-300, AZ-802, AI-200 and AB-410, the guide carries no 'Skills measured as of <date>' line. This is the third Microsoft page defect the project has found, after SC-300's self-contradicting weights and DP-800's wrong heading.",
+  "domains": [
+    {
+      "id": "plan-configure",
+      "name": "Plan and configure agent solutions",
+      "weight": "30-35%",
+      "subtopics": [
+        "Plan integration with enterprise systems and an identity strategy",
+        "Plan channels and deployment, and design agents for internal or external audiences",
+        "Plan a responsible AI strategy and evaluate security and governance considerations",
+        "Plan reusable agent components",
+        "Create agent flows, including human-in-the-loop flows",
+        "Configure actions and connectors, add input and output parameters, and monitor agent flows",
+        "Implement error handling in agent flows",
+        "Add agent flows and tools to a topic and configure agent response formatting",
+        "Configure advanced responses with custom prompts, custom knowledge sources, and Send HTTP request",
+        "Configure the generative answers node, adaptive cards, and variables"
+      ]
+    },
+    {
+      "id": "integrate-extend",
+      "name": "Integrate and extend agents in Copilot Studio",
+      "weight": "40-45%",
+      "subtopics": [
+        "Connect to Copilot connectors and Microsoft Power Platform connectors",
+        "Connect to Azure AI Search as a knowledge source",
+        "Configure and monitor computer use for an agent",
+        "Configure MCP tools and add a tool by using an existing custom connector",
+        "Add REST APIs to an agent",
+        "Design multi-agent solutions in Copilot Studio and integrate an existing agent",
+        "Integrate a Foundry agent and a Fabric data agent",
+        "Create a multi-agent solution by using the A2A protocol",
+        "Configure generative answers by using Azure AI Search with Foundry",
+        "Configure custom prompts to use the Foundry model catalogue",
+        "Monitor agents by using Application Insights"
+      ]
+    },
+    {
+      "id": "test-manage",
+      "name": "Test and manage agents",
+      "weight": "20-25%",
+      "subtopics": [
+        "Create a test set",
+        "Choose an evaluation method",
+        "Review test results",
+        "Create a solution and add existing agents to it",
+        "Create and use environment variables",
+        "Implement and extend Microsoft Power Platform Pipelines"
+      ]
+    }
+  ]
+}

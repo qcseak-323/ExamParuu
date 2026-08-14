@@ -1,0 +1,166 @@
+[
+  {
+    "domainId": "plan-configure",
+    "sections": [
+      {
+        "id": "plan-agent-solution",
+        "heading": "Planning an agent solution",
+        "paragraphs": [
+          "The first question about any agent is who is talking to it, because that decision cascades into identity, channels, and knowledge. An internal agent can authenticate users with Microsoft Entra, act on their behalf, and reach knowledge the organisation already governs. An external agent generally cannot: unauthenticated visitors have no identity to act as, so anything the agent can reach is effectively public to every visitor. Building an internal agent's knowledge into an externally published one is the failure that leaks a document library to the internet.",
+          "Copilot Studio offers three broad authentication settings, and the difference is what the agent can do rather than who can talk to it. No authentication suits a public agent answering from public content. Authenticate with Microsoft means users sign in with their work identity. Authenticate manually wires a custom OAuth provider for a third-party system. The setting that matters most in practice is whether connectors and knowledge run as the signed-in user or as a single stored connection: user identity gives per-user results and honours the source's own permissions, while a shared connection gives every user the same results regardless of what they are entitled to see.",
+          "Channels decide where the agent appears — Teams, Microsoft 365 Copilot, a website, a custom app through Direct Line — and not every capability is available in every channel. Adaptive card rendering, file upload, and authentication behaviour all vary. Choosing channels late is expensive, because a topic authored around a rich card may simply not render where the agent is eventually published."
+        ]
+      },
+      {
+        "id": "responsible-ai-and-governance",
+        "heading": "Responsible AI, security, and governance",
+        "paragraphs": [
+          "Grounding is the primary responsible-AI control an agent builder has. An agent that can answer from the model's general knowledge will do so when its knowledge sources return nothing, and it will do so fluently and without signalling that it has stopped using your content. Turning off general knowledge forces the agent to say it does not know rather than to improvise, which is nearly always the correct behaviour for an enterprise agent and is the single most effective change against confident wrong answers.",
+          "Content moderation controls the trade-off between how often the agent answers and how strictly it stays on topic. A high setting makes the agent conservative and more likely to decline; a lower setting makes it more willing to attempt an answer from weaker matches. This is a business decision about the cost of a wrong answer versus the cost of an unhelpful one, and it should be recorded as such rather than left at the default by accident.",
+          "Governance for agents runs on the same machinery as the rest of Power Platform: environments, data loss prevention policies that classify connectors into business and non-business groups, and managed environments for tenant-wide controls. A DLP policy that separates the connector holding customer data from the connector that can post to the internet is what stops an agent being wired into an exfiltration path, and it is enforced at the environment rather than negotiated per agent."
+        ]
+      },
+      {
+        "id": "reusable-agent-components",
+        "heading": "Reusable components",
+        "paragraphs": [
+          "Anything used by more than one agent should be authored once. Topics, agent flows, prompts, custom connectors, and knowledge configurations are all components that can live in a solution and be shared, and the discipline is the same as it is for apps: duplicate logic drifts, and the copy nobody remembers is the one that breaks.",
+          "A child agent is the largest unit of reuse. Rather than copying a set of topics into three agents, publish the capability as its own agent and let the others delegate to it. That also gives it its own lifecycle, its own tests, and its own owner — and it is the design that multi-agent collaboration is built to support."
+        ]
+      },
+      {
+        "id": "agent-flows",
+        "heading": "Agent flows",
+        "paragraphs": [
+          "An agent flow is deterministic work an agent invokes: a sequence of actions with declared inputs and outputs, running on the Power Automate engine but authored and owned inside Copilot Studio. The division of labour is the point — the model decides what the user wants and which flow to call, and the flow does the part that must happen the same way every time. Business logic that must be exact does not belong in a prompt.",
+          "Input and output parameters are the contract between the agent and the flow. Declaring them with meaningful names and descriptions is not cosmetic: the orchestrator uses those descriptions to decide when the flow applies and what to pass, so a parameter named `input1` with no description is a flow the agent will call at the wrong moments or not at all.",
+          "Flows invoked from a conversation are bounded by how long a person will wait, and by the platform's own limits. A flow that calls a long-running back-end synchronously will time out, and raising a timeout is rarely the fix. The correct shape is to acknowledge, start the work, and return the result later — which in an agent is the human-in-the-loop or asynchronous pattern rather than a longer wait."
+        ]
+      },
+      {
+        "id": "human-in-the-loop-and-errors",
+        "heading": "Human in the loop, errors, and monitoring",
+        "paragraphs": [
+          "A human-in-the-loop agent flow pauses for a person to approve, correct, or supply something before it continues. It is the control that makes an agent safe to give consequential actions: the agent proposes, a named human disposes, and the approval is recorded. Any action that spends money, changes an entitlement, or contacts a customer is a candidate.",
+          "Error handling in an agent flow matters more than in an ordinary flow because the failure is visible to a user mid-conversation. A flow that fails without handling produces a generic apology from the agent and no diagnosis, and the user simply asks again. Configure run-after behaviour so a failure returns a meaningful output the topic can react to, and make the agent say what went wrong and what to do next.",
+          "Monitoring covers both halves. Copilot Studio's own analytics report session outcomes — resolved, escalated, abandoned — and which topics fired, while agent flow run history gives the action-level detail. Application Insights is the integration that puts agent telemetry alongside the rest of the estate's, which is what makes it possible to correlate an agent's failures with the back-end service that actually broke."
+        ]
+      },
+      {
+        "id": "topics-and-responses",
+        "heading": "Topics, tools, and generative answers",
+        "paragraphs": [
+          "Copilot Studio runs two orchestration styles and it is important to know which is active. Classic orchestration matches an utterance to a topic's trigger phrases and follows that topic's authored path. Generative orchestration lets the model choose among the agent's topics, tools, and knowledge, and compose several of them to answer one request. Generative orchestration is what makes descriptions load-bearing: the names and descriptions of topics and tools are how the model decides what to use.",
+          "The generative answers node is the retrieval-augmented step — it searches the configured knowledge, and answers from what it finds. Placed inside an authored topic it becomes a fallback for questions the topic did not anticipate; placed as the system fallback it handles everything unmatched. Its most consequential setting is whether it may supplement retrieved content with the model's general knowledge.",
+          "Response formatting decides whether the agent replies in plain text, Markdown, or an adaptive card. A card is right when the answer has structure or needs actions the user can press; plain text is right when it does not. Overusing cards makes an agent feel like a form, which is the thing the agent was supposed to replace."
+        ]
+      },
+      {
+        "id": "adaptive-cards-and-variables",
+        "heading": "Adaptive cards, HTTP requests, and variables",
+        "paragraphs": [
+          "Adaptive cards are authored as JSON and can be built from a static template with variables substituted in, or returned dynamically from a flow or API. They render differently by channel, so a card must be tested where it will actually be published rather than only in the test pane.",
+          "The Send HTTP request node calls an endpoint directly from a topic without a connector, which is the fastest route to a REST API and the one with the least governance around it. It is appropriate for a simple, well-understood call; anything reused across agents, or needing managed authentication and DLP classification, belongs in a custom connector instead.",
+          "Variables carry values through a conversation and have scope. A topic variable exists within its topic, a global variable spans the session across topics, and system variables expose things such as the signed-in user's identity and the conversation id. Passing a value between topics means either promoting it to global or declaring it as an input on the receiving topic — an assumption that a topic variable is visible elsewhere is a common source of an empty value at run time."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "integrate-extend",
+    "sections": [
+      {
+        "id": "enterprise-knowledge-sources",
+        "heading": "Enterprise knowledge sources",
+        "paragraphs": [
+          "Copilot connectors — formerly Graph connectors — index external content such as ServiceNow, SAP, Confluence, or a file share into the Microsoft 365 semantic index, making it available to Copilot and to Copilot Studio agents as governed knowledge. The important property is that they respect the source's own permissions, so a user asking the agent sees only what they could see in the source system. That is what makes them the right answer for enterprise content with real access control.",
+          "Power Platform connectors reach a system to perform an action or fetch a record on demand, rather than indexing it for search. The distinction that decides which to use is whether the question is \"tell me what our content says about X\" — that is knowledge and needs an index — or \"what is the status of order 4471\" — that is an action against a live system, and indexing would give a stale answer.",
+          "Azure AI Search is the option when the content, chunking, or ranking has to be controlled directly: custom analysers, hybrid semantic and vector search, filters over your own metadata. It is more work than a Copilot connector and is warranted when the out-of-the-box retrieval is not good enough or when the content already lives in a search index the organisation maintains."
+        ]
+      },
+      {
+        "id": "computer-use",
+        "heading": "Computer use",
+        "paragraphs": [
+          "Computer use lets an agent operate an application through its user interface — seeing the screen, clicking, and typing — for systems that expose no API. It is the last resort by design, because it is the most fragile integration available: it depends on the target's visual layout, so a redesign, a new consent dialog, or a slow-loading page breaks it in ways an API contract would not.",
+          "The rule that follows is a preference order. An official connector first, then a REST API or custom connector, then computer use only when neither exists. When computer use is unavoidable it needs monitoring in its own right, because its failures are silent and situational rather than a clean error code, and it needs credentials scoped to exactly what the task requires — an agent driving a UI has whatever access the account it signs in as has."
+        ]
+      },
+      {
+        "id": "mcp-tools",
+        "heading": "MCP tools",
+        "paragraphs": [
+          "Model Context Protocol is an open standard for exposing tools and data to a model through a server that describes its own capabilities. Connecting an MCP server to an agent adds every tool that server publishes at once, and — this is the property that makes it different from adding actions one by one — the agent picks up new tools as the server adds them, without the agent being re-authored.",
+          "That dynamism is also the governance question. The tools available to the agent are defined by a server someone else may control, so an MCP server is a trust boundary: it should be one the organisation runs or has vetted, connected with credentials scoped to what the agent legitimately needs, and covered by the environment's DLP policy like any other connector."
+        ]
+      },
+      {
+        "id": "custom-connectors-and-apis",
+        "heading": "Custom connectors and REST APIs",
+        "paragraphs": [
+          "A custom connector wraps a REST API in a definition — usually from an OpenAPI document — giving it managed authentication, a place in DLP classification, and reuse across agents, apps, and flows. Adding an existing custom connector as a tool is therefore the governed way to give an agent an API, and it is preferred over calling the API from a topic whenever the call will be used more than once.",
+          "REST APIs can also be added to an agent directly, and the same rules about descriptions apply as for flows: under generative orchestration the model chooses tools by their names and descriptions, so an operation described as \"does the thing\" will be invoked unpredictably. Describe what the operation does, when it applies, and what each parameter means.",
+          "Authentication choice is where most integration effort goes. A single stored connection makes every user's request identical and is appropriate for a service-level API. Acting on behalf of the signed-in user preserves the source's own authorisation and is required whenever the API returns anything the caller might not be entitled to. Choosing the former for the latter case is how an agent becomes a way to read other people's records."
+        ]
+      },
+      {
+        "id": "multi-agent-design",
+        "heading": "Designing multi-agent solutions",
+        "paragraphs": [
+          "Multi-agent collaboration lets one agent delegate to another that owns a capability, rather than one agent accumulating every topic, tool, and knowledge source in the organisation. The design question is where to draw the boundaries, and the answer that holds up is to split by ownership and lifecycle: the team that owns expenses owns the expenses agent, tests it, and ships it on its own cadence.",
+          "An agent that grows past a certain size degrades under generative orchestration for a concrete reason — the orchestrator is choosing among more tools and topics with overlapping descriptions, and its choices get worse. Delegating to a child agent reduces the parent's choice set to a handful of clearly distinct capabilities, which is why splitting often improves answer quality rather than merely tidying the structure.",
+          "Delegation does not carry the parent's permissions. A child agent runs with its own knowledge configuration and its own connection identities, so the same question routed through a parent can return different results from asking the child directly. Aligning authentication across the agents in a solution is part of designing it, not a detail to be discovered in testing."
+        ]
+      },
+      {
+        "id": "foundry-and-fabric-agents",
+        "heading": "Foundry agents, Fabric data agents, and A2A",
+        "paragraphs": [
+          "A Foundry agent is built in Microsoft Foundry with pro-code control over models, tools, and orchestration, and can be connected into a Copilot Studio solution as a participant. The split is one of control versus speed: Copilot Studio is where a maker assembles an agent quickly with governed connectors, and Foundry is where a developer needs a specific model, a custom orchestration, or evaluation tooling that the low-code surface does not expose.",
+          "A Fabric data agent answers questions over data in Microsoft Fabric — lakehouses, warehouses, semantic models — by generating and running queries rather than by retrieving text. That is the distinction worth holding: a knowledge source retrieves passages that were written down, while a data agent computes an answer that was never written down anywhere. \"What did we sell in the north-west last quarter\" is a data agent question.",
+          "Agent2Agent is the open protocol for agents to discover and call one another across platforms and vendors, using published agent cards that describe capabilities. It is what extends multi-agent collaboration beyond a single vendor's ecosystem, and it carries the same trust considerations as MCP: an agent you call is a system you are trusting with whatever you send it."
+        ]
+      },
+      {
+        "id": "azure-integration",
+        "heading": "Azure integration and telemetry",
+        "paragraphs": [
+          "Generative answers can be pointed at an Azure AI Search index used through Foundry, which puts retrieval under the organisation's direct control — its own chunking, its own hybrid or vector ranking, its own metadata filters. This is the configuration to reach for when the built-in knowledge retrieval returns the right documents but the wrong passages, because that is a chunking and ranking problem rather than a content problem.",
+          "Custom prompts can be configured to run against models from the Foundry model catalogue rather than the default, which turns model selection into an explicit choice about capability, latency, cost, and data residency. It is worth making deliberately: a reasoning-heavy classification step and a short summarisation step do not need the same model.",
+          "Application Insights receives agent telemetry — conversations, node execution, failures, latencies — and is the only route to correlating an agent's behaviour with the services behind it. Copilot Studio's built-in analytics answer \"how is the agent doing\"; Application Insights answers \"why\", and the difference matters as soon as an agent depends on several back-end systems."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "test-manage",
+    "sections": [
+      {
+        "id": "evaluate-agent-performance",
+        "heading": "Test sets and evaluation",
+        "paragraphs": [
+          "A test set is a collection of inputs with expected outcomes, run against the agent to produce a measurable result rather than an impression. The reason it matters more for an agent than for an app is that agent behaviour is not deterministic: a change to an instruction, a knowledge source, or a model can improve one class of question and quietly degrade another, and nothing about the change announces which.",
+          "Evaluation methods differ in what they can judge. Exact or similarity matching against an expected answer suits questions with one right answer. Model-graded evaluation — a model scoring the response against criteria such as groundedness, relevance, and completeness — is what scales to open-ended answers where no single expected string exists. Human review remains the arbiter for the cases that matter most, and the practical arrangement is automated evaluation on every change with human review of the disagreements.",
+          "Reviewing results is about comparison, not absolutes. A single run tells you little; the same test set run before and after a change tells you what the change did. Groundedness scores are the ones to watch when knowledge configuration changes, because a drop there is the measurable form of the agent starting to answer from the model instead of from your content."
+        ]
+      },
+      {
+        "id": "agent-solutions-and-alm",
+        "heading": "Solutions and lifecycle for agents",
+        "paragraphs": [
+          "An agent is a solution component like any other, and the same ALM rules apply: build inside a solution with a custom publisher prefix, keep the unmanaged copy in development, and deploy managed downstream. An agent built outside a solution has to be added retrospectively, which is where its dependent flows, connectors, and knowledge configurations get left behind.",
+          "Adding an existing agent to a solution brings the agent, but dependencies must be checked rather than assumed — agent flows, custom connectors, prompts, and any child agents it delegates to. A multi-agent solution that exports without its children imports into test as a parent that delegates to nothing, and the failure appears only when somebody asks the question that would have been delegated."
+        ]
+      },
+      {
+        "id": "environment-variables-and-pipelines",
+        "heading": "Environment variables and pipelines",
+        "paragraphs": [
+          "Environment variables hold the values that differ between environments — an endpoint, a site address, a model deployment name, a feature switch — outside the component that uses them, so one managed solution can be imported into test and production and behave differently by configuration rather than by editing. For agents this matters most for knowledge sources and API base addresses, which are precisely the things that must not point at production from a test environment.",
+          "Power Platform pipelines run the deployment from inside the product, so a maker can promote a solution through environments without a build server. They can be extended where more is needed — approvals before a stage, or a call out to Azure DevOps or GitHub Actions — which is the usual answer when governance requires a gate that the built-in pipeline does not provide.",
+          "The rule that catches teams out is that a connection reference or environment variable with no value supplied at import time does not fail loudly; the solution imports and the component behaves as though it were misconfigured, because it is. Supplying values as part of the pipeline rather than by hand afterwards is what makes a deployment repeatable."
+        ]
+      }
+    ]
+  }
+]

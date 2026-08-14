@@ -1,0 +1,201 @@
+{
+  "examCode": "ab-620",
+  "note": "Three paths, one per exam domain. Microsoft has published no learning paths for AB-620 — the 'Prepare for the exam' section of the credential page is empty, and the study guide's first 'Get trained' link points at AI-900's page, which is a defect on Microsoft's side recorded in outline.json. These links therefore point at the closest published Copilot Studio and Power Platform paths; revisit once Microsoft publishes a dedicated set. Module titles follow Microsoft Learn conventions; the sections and cards behind each are this site's own.",
+  "paths": [
+    {
+      "id": "plan-configure",
+      "title": "Plan and configure agent solutions",
+      "domainId": "plan-configure",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/copilot-studio-fundamentals/",
+      "modules": [
+        {
+          "id": "plan-configure-m1",
+          "title": "Plan an agent solution and its identity strategy",
+          "sectionIds": [
+            "plan-agent-solution"
+          ],
+          "cardIds": [
+            "fc-ab620-pc-01",
+            "fc-ab620-pc-02",
+            "fc-ab620-pc-03"
+          ]
+        },
+        {
+          "id": "plan-configure-m2",
+          "title": "Apply responsible AI, security, and governance",
+          "sectionIds": [
+            "responsible-ai-and-governance",
+            "reusable-agent-components"
+          ],
+          "cardIds": [
+            "fc-ab620-pc-04",
+            "fc-ab620-pc-05",
+            "fc-ab620-pc-06",
+            "fc-ab620-pc-07"
+          ]
+        },
+        {
+          "id": "plan-configure-m3",
+          "title": "Create and monitor agent flows",
+          "sectionIds": [
+            "agent-flows",
+            "human-in-the-loop-and-errors"
+          ],
+          "cardIds": [
+            "fc-ab620-pc-08",
+            "fc-ab620-pc-09",
+            "fc-ab620-pc-10",
+            "fc-ab620-pc-11",
+            "fc-ab620-pc-12"
+          ]
+        },
+        {
+          "id": "plan-configure-m4",
+          "title": "Configure topics, responses, and variables",
+          "sectionIds": [
+            "topics-and-responses",
+            "adaptive-cards-and-variables"
+          ],
+          "cardIds": [
+            "fc-ab620-pc-13",
+            "fc-ab620-pc-14",
+            "fc-ab620-pc-15",
+            "fc-ab620-pc-16",
+            "fc-ab620-pc-17"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "integrate-extend",
+      "title": "Integrate and extend agents in Copilot Studio",
+      "domainId": "integrate-extend",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/extend-copilot-studio/",
+      "modules": [
+        {
+          "id": "integrate-extend-m1",
+          "title": "Connect to enterprise knowledge sources",
+          "sectionIds": [
+            "enterprise-knowledge-sources"
+          ],
+          "cardIds": [
+            "fc-ab620-ie-01",
+            "fc-ab620-ie-02",
+            "fc-ab620-ie-03",
+            "fc-ab620-ie-22"
+          ]
+        },
+        {
+          "id": "integrate-extend-m2",
+          "title": "Configure and monitor computer use",
+          "sectionIds": [
+            "computer-use"
+          ],
+          "cardIds": [
+            "fc-ab620-ie-05",
+            "fc-ab620-ie-06",
+            "fc-ab620-ie-07"
+          ]
+        },
+        {
+          "id": "integrate-extend-m3",
+          "title": "Add MCP tools and custom connectors",
+          "sectionIds": [
+            "mcp-tools",
+            "custom-connectors-and-apis"
+          ],
+          "cardIds": [
+            "fc-ab620-ie-08",
+            "fc-ab620-ie-09",
+            "fc-ab620-ie-10",
+            "fc-ab620-ie-11",
+            "fc-ab620-ie-21"
+          ]
+        },
+        {
+          "id": "integrate-extend-m4",
+          "title": "Design multi-agent collaboration",
+          "sectionIds": [
+            "multi-agent-design"
+          ],
+          "cardIds": [
+            "fc-ab620-ie-12",
+            "fc-ab620-ie-13",
+            "fc-ab620-ie-14"
+          ]
+        },
+        {
+          "id": "integrate-extend-m5",
+          "title": "Integrate Foundry agents, Fabric data agents, and A2A",
+          "sectionIds": [
+            "foundry-and-fabric-agents"
+          ],
+          "cardIds": [
+            "fc-ab620-ie-15",
+            "fc-ab620-ie-16",
+            "fc-ab620-ie-17",
+            "fc-ab620-ie-18"
+          ]
+        },
+        {
+          "id": "integrate-extend-m6",
+          "title": "Integrate agents with Azure and monitor them",
+          "sectionIds": [
+            "azure-integration"
+          ],
+          "cardIds": [
+            "fc-ab620-ie-04",
+            "fc-ab620-ie-19",
+            "fc-ab620-ie-20"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "test-manage",
+      "title": "Test and manage agents",
+      "domainId": "test-manage",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/implement-application-lifecycle-management-power-platform/",
+      "modules": [
+        {
+          "id": "test-manage-m1",
+          "title": "Evaluate agent performance with test sets",
+          "sectionIds": [
+            "evaluate-agent-performance"
+          ],
+          "cardIds": [
+            "fc-ab620-tm-01",
+            "fc-ab620-tm-02",
+            "fc-ab620-tm-03",
+            "fc-ab620-tm-04",
+            "fc-ab620-tm-05",
+            "fc-ab620-tm-06"
+          ]
+        },
+        {
+          "id": "test-manage-m2",
+          "title": "Implement ALM for agents",
+          "sectionIds": [
+            "agent-solutions-and-alm"
+          ],
+          "cardIds": [
+            "fc-ab620-tm-07",
+            "fc-ab620-tm-08"
+          ]
+        },
+        {
+          "id": "test-manage-m3",
+          "title": "Use environment variables and pipelines",
+          "sectionIds": [
+            "environment-variables-and-pipelines"
+          ],
+          "cardIds": [
+            "fc-ab620-tm-09",
+            "fc-ab620-tm-10",
+            "fc-ab620-tm-11"
+          ]
+        }
+      ]
+    }
+  ]
+}
