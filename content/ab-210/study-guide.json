@@ -1,0 +1,177 @@
+[
+  {
+    "domainId": "core-features",
+    "sections": [
+      {
+        "id": "sales-deployment-and-mailboxes",
+        "heading": "Deploying Sales and wiring up mailboxes",
+        "paragraphs": [
+          "Dynamics 365 Sales runs on Dataverse in a Power Platform environment, so deploying it is an environment decision before it is an application one: the environment must have a Dataverse database, the right region, and licences assigned to the users who will use it. Sales Premium and Sales Enterprise differ in which AI capabilities are included rather than in the core record model, and several of the agents and intelligence features this exam covers are Premium or capacity-add-on territory. Assuming a feature is missing because it is misconfigured, when it is actually absent from the plan, is a common and expensive misdiagnosis.",
+          "Server-side synchronisation is what connects Exchange mailboxes to Dataverse so that email, appointments, contacts, and tasks flow both ways. A mailbox must be approved by an administrator and then tested and enabled; a mailbox that is configured but not approved simply does not sync, and the failure is reported on the mailbox record rather than to the user. Because conversational intelligence, activity timelines, and several Copilot summaries all read from synchronised activity, a broken mailbox presents as an AI feature producing thin or empty output — the cause is two layers below where the symptom appears.",
+          "Dynamics 365 App for Outlook is what puts Dataverse inside the seller's mail client, letting them track an email against a record without leaving Outlook. Tracking is the mechanism that turns correspondence into timeline activity, and an organisation that never establishes a tracking habit finds that its relationship intelligence has almost nothing to work from."
+        ]
+      },
+      {
+        "id": "sales-process-and-timeline",
+        "heading": "Business process flows, the timeline, and data movement",
+        "paragraphs": [
+          "A business process flow renders the sales methodology as stages a seller moves through — qualify, develop, propose, close on the out-of-the-box opportunity process. It is guidance and visibility rather than enforcement: it does not stop a record being written out of order by a flow, an import, or the API. Designing one is mostly a question of matching the organisation's actual stages rather than adding every field somebody wants visible.",
+          "The timeline aggregates activities, notes, and posts against a record and is the seller's view of what has happened. What appears there is configurable per form, and filtering it well matters more as volume grows. It is also the substrate several AI features summarise, so a timeline crowded with automated system posts produces summaries dominated by noise.",
+          "Data movement into Sales has several routes and they are not equivalent. Import from a file suits one-off loading with mapping and duplicate detection. Dataflows suit repeated ingestion from a source. The API suits integration. Duplicate detection rules are worth setting before any bulk load rather than after, because a lead and account estate polluted with duplicates degrades scoring, routing, and every agent that reasons over the records."
+        ]
+      },
+      {
+        "id": "sales-security-model",
+        "heading": "The Sales security model",
+        "paragraphs": [
+          "Sales inherits Dataverse security, so the model is roles, privileges, depths, business units, and teams, and it is additive with no deny. A seller who can see too much is holding a role that grants it, and the fix is always removal rather than the addition of something restrictive.",
+          "The depth on a privilege is what expresses the common sales requirements. User depth gives a seller their own records. Business Unit depth gives a team its territory. Parent-Child gives a manager their reports' records as well as their own. Organisation gives everything. Territory management in Sales is layered on top of this rather than replacing it, and sharing individual records is the escape hatch for the cases the hierarchy does not describe.",
+          "The point that matters when agents are introduced is that an agent acting on a seller's behalf should see what that seller sees. An agent configured with a shared connection or an elevated service identity will happily research and summarise records the requesting seller has no right to, and the resulting summary is a data leak that looks like a feature."
+        ]
+      },
+      {
+        "id": "product-catalog-and-pricing",
+        "heading": "The product catalogue and price lists",
+        "paragraphs": [
+          "The catalogue is built from unit groups, products, product families, and price lists, and the order matters: a unit group and its base unit must exist before a product can be priced, and a price list item ties a product to a currency and a price. Product families group products and can carry properties their children inherit, which is what makes a configurable product possible without one record per variant.",
+          "Products move through a lifecycle — draft, active, retired — and only an active product can be added to an opportunity, quote, or order. A retired product remains on historical records rather than disappearing from them, which is why retiring rather than deleting is the correct way to withdraw something from sale.",
+          "Opportunity products can be added from the catalogue or written in as a write-in product where the catalogue has no entry. Write-in products are the pragmatic escape hatch and the reporting problem: they carry no product id, so revenue against them cannot be analysed by product, and an organisation whose sellers rely on them has a catalogue that does not match what it sells."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "optimize-ai-sales",
+    "sections": [
+      {
+        "id": "ai-first-sales-strategy",
+        "heading": "Designing an AI-first seller workflow",
+        "paragraphs": [
+          "The design question is not which AI features to switch on but which part of the seller's day each one removes. Copilot features summarise and draft — a record summary, an email reply, a meeting recap — and reduce reading and typing. Agents act: they research, qualify, and progress work without a seller starting them. The distinction decides where each belongs, because a Copilot feature needs a seller present and an agent does not.",
+          "Every one of these features reads the Dataverse record estate, which makes data model design the foundation rather than a preliminary. Scoring, routing, forecasting, and agent research all degrade the same way when records are duplicated, when relationships are missing, or when the fields the organisation actually decides on are free text. Extending standard tables is preferable to parallel custom ones for exactly this reason: the first-party features understand the standard model.",
+          "Reporting divides along the same line as everywhere else in Power Platform. Dashboards and charts inside Sales answer \"what do I work on next\" against live records honouring row-level security. Power BI answers analytical questions across volume and across systems, and should be embedded rather than reimplemented as a chart. Sales plans differ in which of these capabilities are included, so a feature comparison is part of the design rather than an afterthought."
+        ]
+      },
+      {
+        "id": "agent-prerequisites-and-capacity",
+        "heading": "Agent prerequisites, capacity, and credits",
+        "paragraphs": [
+          "Agents in Sales are not simply toggles. They need the environment prepared, the underlying data available, the relevant Copilot and agent features enabled at tenant and environment level, and — the part most often missed — capacity. Agent work consumes messages or credits that must be provisioned and are consumed per action rather than per user, so an agent turned loose on a large lead estate consumes at a rate proportional to the records it touches.",
+          "That makes capacity planning an exercise in estimating volume rather than headcount. The failure mode is an agent that works perfectly in a pilot against 200 leads and exhausts a month's allocation in a week against 20,000. Billing models allow prepaid capacity and pay-as-you-go against an Azure subscription, and monitoring consumption from the start is what makes the difference between a controlled rollout and a surprise invoice.",
+          "Agents should also be scoped before they are enabled: which records they may act on, which actions they may take, and whether a human approves anything consequential. An agent that emails prospects is contacting customers on the organisation's behalf, which is precisely the class of action that warrants review before it is autonomous."
+        ]
+      },
+      {
+        "id": "sales-accelerator-and-assignment",
+        "heading": "The Sales accelerator and work assignment",
+        "paragraphs": [
+          "The Sales accelerator gives sellers a prioritised work list rather than a set of views to hunt through. Sequences attach a defined series of steps — a call, an email, a wait, a LinkedIn touch — to a lead or opportunity, and the work list surfaces the next step due. The value is that the methodology becomes the interface: a seller works the list rather than remembering the cadence.",
+          "Work assignment distributes records to sellers by rules, round robin, or load balancing, and can take capacity and skills into account. Assignment rules are evaluated in order, which is the detail that catches people out — a broad rule placed above a specific one absorbs everything and the specific rule never fires. Records that match no rule need a defined fallback, or they sit unassigned and invisible.",
+          "The accelerator and assignment together are what make agent-generated work actionable. An agent that qualifies leads produces a stream of qualified records, and without prioritisation and routing that stream arrives as an undifferentiated pile, which is the same problem the agent was bought to solve."
+        ]
+      },
+      {
+        "id": "intelligence-features",
+        "heading": "Conversational, predictive, and relationship intelligence",
+        "paragraphs": [
+          "Conversational intelligence analyses recorded calls — transcription, keywords, sentiment, talk-to-listen ratio, competitor mentions — and surfaces both coaching insight for managers and deal signal for sellers. Its prerequisites are the parts to remember: recording must be enabled and consented to, the language must be supported, and calls must actually be captured through a supported channel. A deployment where nothing appears is usually a recording or consent problem rather than a configuration one.",
+          "Predictive lead and opportunity scoring train models on the organisation's own historical outcomes, which means they need enough closed history of both kinds to learn from — a tenant with plentiful wins and no recorded losses cannot produce a useful model. Scores are recalculated on a schedule rather than instantly, and the model must be retrained as the business changes. Fine-tuning is about choosing which fields the model may consider and excluding those that leak the outcome, such as a field only ever populated after a deal closes.",
+          "Relationship intelligence computes a relationship health score and who-knows-whom from interaction history, which is why it depends entirely on mailbox synchronisation and activity tracking being in place. Copilot record summarisation reads across the record and its related rows and activities to produce a briefing, and inherits the same dependency: a record with a thin timeline summarises thinly, and the fix is upstream in tracking rather than in the summarisation setting.",
+          "Forecasting projects revenue from the pipeline against a defined hierarchy and period, with columns for committed, best case, and pipeline. Manual adjustments are recorded alongside the rolled-up figures rather than replacing them, which is the property that lets a manager's judgement be visible and auditable rather than silently overwriting what the data said. Goals and goal metrics are the simpler mechanism for tracking a target against an actual, and are configured independently of forecasting."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "qualify-leads",
+    "sections": [
+      {
+        "id": "lead-and-opportunity-experience",
+        "heading": "The lead and opportunity experience",
+        "paragraphs": [
+          "A lead represents interest and is disposable; an opportunity represents a deal being worked. Qualifying a lead creates the account, contact, and opportunity records the rest of the process needs, and the configuration decision is which of those the organisation wants created and whether the seller may choose. Disqualification is equally important and needs a reason recorded, because disqualified leads with reasons are training data for scoring while deleted leads are nothing at all.",
+          "The lead and opportunity forms are where the organisation's qualification criteria become visible, and the discipline that pays off is capturing the criteria as structured fields rather than notes. Budget, authority, need, and timeline recorded as choices are data that scoring, routing, and agents can reason over; the same information in a free-text note is invisible to all three."
+        ]
+      },
+      {
+        "id": "predictive-lead-scoring",
+        "heading": "Predictive scoring and how to fine-tune it",
+        "paragraphs": [
+          "A predictive lead score ranks leads by their modelled likelihood of qualifying, and an opportunity score by likelihood of closing. Both learn from the organisation's own closed history, so the quality ceiling is set by the data: enough records, both outcomes represented, and outcomes recorded honestly. A model trained where losses are deleted rather than marked lost will conclude that almost everything succeeds.",
+          "Fine-tuning means choosing which attributes the model may use. The trap is target leakage — including a field that is only populated once the outcome is known, which produces a model with excellent reported accuracy and no predictive value, because it is reading the answer. Excluding such fields usually lowers the reported score and raises the real one.",
+          "Scores are refreshed on a schedule and the model is retrained periodically, so a score is a recent estimate rather than a live calculation. Reading a score as though it updated the instant a field changed leads sellers to distrust it when it does not move, and the honest framing is that it ranks a queue rather than judging a record."
+        ]
+      },
+      {
+        "id": "sales-qualification-agent",
+        "heading": "The Sales Qualification Agent",
+        "paragraphs": [
+          "The Sales Qualification Agent works the top of the funnel autonomously: it researches leads against internal and external sources, assembles what it finds, and — depending on configuration — engages the prospect directly. It runs continuously against the leads in scope rather than being invoked by a seller, which is what makes it an agent rather than a Copilot feature.",
+          "Its central configuration choice is the mode. Research-only has the agent gather and summarise, leaving every outbound contact to a human; the agent's output is a briefing that shortens the seller's preparation. Research and engage additionally lets it contact the prospect and conduct an initial exchange. The decision is not primarily technical: engage mode means an autonomous system is corresponding with prospects in the organisation's name, so it belongs to whoever owns brand and compliance, and research-only is the right starting point while trust is established.",
+          "Interpreting and monitoring the agent are examinable in their own right. The agent records what it researched, what it concluded, and why, and that trail is what makes a disagreement resolvable — a seller who thinks a lead was wrongly deprioritised can see the basis. Monitoring covers both quality and consumption: whether the agent's conclusions hold up against what sellers find, and what it is costing in capacity as lead volume changes."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "develop-deals",
+    "sections": [
+      {
+        "id": "opportunity-management-and-products",
+        "heading": "Opportunity management, products, and the pipeline view",
+        "paragraphs": [
+          "An opportunity carries products, a value, a close date, and a stage, and the arithmetic behind the value has a configuration choice: revenue can be system-calculated from the opportunity products or entered by the seller. System-calculated keeps the total honest against the line items and is the right default; user-entered is chosen deliberately when the deal value is negotiated at a level the line items do not describe, and it is then the seller's number rather than the catalogue's.",
+          "Pricing on opportunity products comes from the price list, and the override behaviour is where mistakes hide: a line whose price has been overridden no longer follows the price list, so a price list update does not reach it. Discounts can be applied per line or to the whole opportunity, and knowing which the organisation uses is necessary before anybody reconciles a forecast.",
+          "The opportunity pipeline view presents the pipeline as a board by stage with inline editing and aggregate values, which is the surface most sales managers actually work in. Configuring it well means choosing the columns that support the next action rather than every field on the record."
+        ]
+      },
+      {
+        "id": "sales-opportunity-agent",
+        "heading": "The Sales Opportunity Agent",
+        "paragraphs": [
+          "The Sales Opportunity Agent works open opportunities rather than leads, watching for what has gone quiet, what is missing, and what should happen next. It surfaces prompts against specific deals — a stalled stage, an unanswered thread, an approaching close date with no recent activity — so that pipeline hygiene stops depending on a manager reading every record.",
+          "Its usefulness is a direct function of activity data quality, because 'nothing has happened on this deal for three weeks' is only true if the things that happened were tracked. In an organisation where sellers do not track email, the agent reports silence that is not real, and the resulting prompts train sellers to ignore it. Deploying this agent before mailbox synchronisation and tracking habits are established is the standard way to make it useless."
+        ]
+      },
+      {
+        "id": "sales-close-agent",
+        "heading": "The Sales Close Agent",
+        "paragraphs": [
+          "The Sales Close Agent supports the end of the cycle — assembling what a close requires, coordinating the steps, and driving the administrative work that otherwise delays a signature. Because it operates where money and commitments are, it is the agent whose actions most need to be reviewable, and collaboration rather than autonomy is the intended posture: the agent proposes and prepares, and a named human decides.",
+          "Interpreting its actions means reading the trail it leaves — what it did, against which records, and on what basis — and monitoring means watching both whether its interventions actually shorten cycles and what they consume. An agent that generates activity without moving deals is measurable as such, and the measurement is the argument for changing its configuration rather than an opinion about it."
+        ]
+      },
+      {
+        "id": "sales-research-agent",
+        "heading": "The Sales Research Agent and the research canvas",
+        "paragraphs": [
+          "The Sales Research Agent answers questions about accounts, markets, and deals by gathering from internal Dynamics data and external sources and assembling a briefing. Its use case is preparation: the hour a seller would spend before a meeting reading the account history, recent news, and the last three exchanges. It is a research tool rather than an actor, which is what distinguishes it from the qualification, opportunity, and close agents.",
+          "The research canvas is where that output is worked with — a surface for exploring findings, following a thread, and analysing sales performance rather than a static report. The reason it matters for the exam is the same reason it matters in practice: an agent that produces a wall of text nobody can interrogate has not saved anybody time.",
+          "Grounding applies here exactly as it does anywhere else. Research drawn from internal records is traceable to those records; research drawn from external sources is only as good as the sources and must be presented as such. A briefing that mixes the two without distinguishing them invites a seller to repeat an unverified external claim to a customer as though it came from the account record."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "extend-sales",
+    "sections": [
+      {
+        "id": "sales-mobile-and-channels",
+        "heading": "Mobile, Teams calling, and SMS",
+        "paragraphs": [
+          "The Dynamics 365 Sales mobile app is built for the moments around a meeting — preparation, notes, and quick updates — rather than for full record editing, and configuring it means deciding what a seller needs in those minutes rather than replicating the desktop app. Offline capability has to be planned deliberately: which tables are available offline is configured, and a seller expecting a record that was never in the offline profile finds it missing at exactly the wrong moment.",
+          "Teams calling inside Sales lets a seller call from a record and have the call logged against it, which is what makes call activity reliable enough for conversational intelligence to analyse. An SMS channel adds text as a supported outbound and inbound path, and it carries consent and record-keeping obligations that are configuration decisions rather than optional practices — an SMS to a customer is a contact from the organisation and belongs on the timeline like any other."
+        ]
+      },
+      {
+        "id": "power-platform-extensions",
+        "heading": "Extending Sales with Power Platform",
+        "paragraphs": [
+          "Sales sits on Power Platform, so extension follows the same ladder as everywhere else: configuration first, then Power Fx and declarative logic, then flows and components, then pro-code. Power Automate flows are the usual mechanism for automation Sales does not ship — routing a notification, integrating an external system, maintaining a value the platform does not compute — and the same trigger discipline applies, particularly the flow that updates the row that triggered it.",
+          "Power Apps components and custom controls can be embedded into Sales forms where the out-of-the-box control does not fit, and a canvas app can be embedded to provide a task-focused surface inside a model-driven form. This is powerful and easy to overuse: an embedded canvas app is a second application to maintain, license, and secure, and it should earn its place against configuring the form properly.",
+          "Power BI reports embedded into Sales dashboards are the right answer for analysis across volume or across systems, and they honour their own security model rather than Dataverse row-level security. That difference is the one to hold on to: a Power BI report embedded in Sales can show a seller aggregate figures their Dataverse role would never let them query directly, which is sometimes exactly what is wanted and sometimes a disclosure nobody intended."
+        ]
+      }
+    ]
+  }
+]

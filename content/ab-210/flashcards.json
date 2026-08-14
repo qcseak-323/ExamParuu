@@ -1,0 +1,352 @@
+[
+  {
+    "id": "fc-ab210-cf-01",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "front": "Feature missing, or feature not licensed?",
+    "back": "Sales Premium and Enterprise differ in which AI capabilities are included. Check the plan before debugging the configuration. Keyword: absent, not broken."
+  },
+  {
+    "id": "fc-ab210-cf-02",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "front": "A mailbox configured but not approved",
+    "back": "Does not sync at all, and the failure is reported on the mailbox record rather than to the user. Approve, test, then enable. Keyword: approval is a separate step."
+  },
+  {
+    "id": "fc-ab210-cf-03",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "front": "Why an AI feature produces empty output",
+    "back": "Conversational intelligence, timelines, and Copilot summaries all read synchronised activity. A broken mailbox surfaces two layers above as a thin summary. Keyword: check sync first."
+  },
+  {
+    "id": "fc-ab210-cf-04",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "front": "Does a business process flow enforce the sequence?",
+    "back": "No. It is guidance and visibility. A flow, an import, or the API can still write out of order. Keyword: guidance, not enforcement."
+  },
+  {
+    "id": "fc-ab210-cf-05",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "front": "Set duplicate detection before the bulk load",
+    "back": "A duplicated lead and account estate degrades scoring, routing, and every agent reasoning over the records. Keyword: duplicates poison the AI."
+  },
+  {
+    "id": "fc-ab210-cf-06",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "front": "Removing a seller's excess access",
+    "back": "Dataverse security is additive with no deny, so remove the role granting it. Adding a restrictive role can only widen. Keyword: remove, never add."
+  },
+  {
+    "id": "fc-ab210-cf-07",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "front": "An agent that sees more than its seller",
+    "back": "A shared connection or elevated service identity lets an agent summarise records the requester cannot see. The summary is a leak dressed as a feature. Keyword: agents inherit an identity."
+  },
+  {
+    "id": "fc-ab210-cf-08",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "front": "Retire a product, do not delete it",
+    "back": "Only active products can be added to new records, and a retired product stays on historical ones. Deleting breaks history. Keyword: withdraw by retiring."
+  },
+  {
+    "id": "fc-ab210-cf-09",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "front": "The cost of write-in products",
+    "back": "They carry no product id, so revenue against them cannot be analysed by product. Heavy use means the catalogue does not match what you sell. Keyword: unreportable revenue."
+  },
+  {
+    "id": "fc-ab210-oa-01",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "front": "Copilot feature or agent?",
+    "back": "Copilot summarises and drafts and needs a seller present. An agent acts without one being started. Keyword: assist, or act."
+  },
+  {
+    "id": "fc-ab210-oa-02",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "front": "Why the data model is the foundation",
+    "back": "Scoring, routing, forecasting, and agent research all degrade the same way on duplicates, missing relationships, and free-text decision fields. Keyword: AI reads your model."
+  },
+  {
+    "id": "fc-ab210-oa-03",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "front": "Extend standard tables, do not duplicate them",
+    "back": "First-party AI features understand the standard model. A parallel custom table is invisible to them. Keyword: stay on the standard schema."
+  },
+  {
+    "id": "fc-ab210-oa-04",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "front": "Sales dashboard or Power BI?",
+    "back": "Dashboards answer 'what next' against live records with row-level security. Power BI answers analytical questions across volume and systems — embed it. Keyword: operational vs analytical."
+  },
+  {
+    "id": "fc-ab210-oa-05",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "front": "What agent capacity is consumed by",
+    "back": "Actions, not users. An agent turned loose on a large estate consumes in proportion to the records it touches. Keyword: volume, not headcount."
+  },
+  {
+    "id": "fc-ab210-oa-06",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "front": "The pilot that lies about cost",
+    "back": "200 leads for a month, then a month's allocation gone in a week against 20,000. Estimate from volume before rollout. Keyword: pilots do not scale linearly in your favour."
+  },
+  {
+    "id": "fc-ab210-oa-07",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "front": "What sequences do in the Sales accelerator",
+    "back": "Attach a defined cadence of steps to a lead or opportunity and surface the next one due, so the methodology becomes the interface. Keyword: work the list."
+  },
+  {
+    "id": "fc-ab210-oa-08",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "front": "Assignment rule order",
+    "back": "Rules are evaluated in order, so a broad rule above a specific one absorbs everything. Define a fallback or records sit unassigned. Keyword: specific rules go first."
+  },
+  {
+    "id": "fc-ab210-oa-09",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "front": "Conversational intelligence produces nothing",
+    "back": "Usually recording, consent, or an unsupported language and channel — not configuration. Calls must actually be captured. Keyword: no recording, no insight."
+  },
+  {
+    "id": "fc-ab210-oa-10",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "front": "Why predictive scoring needs losses",
+    "back": "The model learns from closed history of both kinds. A tenant that deletes losses instead of marking them lost concludes everything succeeds. Keyword: record the losses."
+  },
+  {
+    "id": "fc-ab210-oa-11",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "front": "What relationship intelligence depends on",
+    "back": "Mailbox synchronisation and activity tracking. It computes health and who-knows-whom from interaction history that must exist. Keyword: no activity, no relationship."
+  },
+  {
+    "id": "fc-ab210-oa-12",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "front": "Forecast adjustments do not overwrite",
+    "back": "A manual adjustment is recorded alongside the rolled-up figure, so judgement stays visible and auditable rather than silently replacing the data. Keyword: adjustment is additive."
+  },
+  {
+    "id": "fc-ab210-ql-01",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "front": "Lead vs opportunity",
+    "back": "A lead is interest and is disposable. An opportunity is a deal being worked. Qualifying creates the account, contact, and opportunity. Keyword: interest becomes a deal."
+  },
+  {
+    "id": "fc-ab210-ql-02",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "front": "Why disqualify rather than delete",
+    "back": "A disqualified lead with a reason is training data for scoring. A deleted lead is nothing at all. Keyword: keep the negatives."
+  },
+  {
+    "id": "fc-ab210-ql-03",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "front": "Qualification criteria as fields, not notes",
+    "back": "Budget, authority, need, and timeline as structured choices are readable by scoring, routing, and agents. In a note they are invisible to all three. Keyword: structure it or lose it."
+  },
+  {
+    "id": "fc-ab210-ql-04",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "front": "Target leakage in a scoring model",
+    "back": "Including a field only populated once the outcome is known gives excellent reported accuracy and no predictive value — it is reading the answer. Keyword: exclude the tell."
+  },
+  {
+    "id": "fc-ab210-ql-05",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "front": "Why a score does not move when you edit a field",
+    "back": "Scores refresh on a schedule and models retrain periodically. A score ranks a queue; it does not judge a record live. Keyword: recent estimate, not live calculation."
+  },
+  {
+    "id": "fc-ab210-ql-06",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "front": "Research-only vs Research and engage",
+    "back": "Research-only gathers and briefs, leaving all contact to a human. Engage lets the agent correspond with the prospect itself. Keyword: does it talk to customers?"
+  },
+  {
+    "id": "fc-ab210-ql-07",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "front": "Who owns the engage-mode decision",
+    "back": "Whoever owns brand and compliance — an autonomous system is corresponding in the organisation's name. Not a technical choice. Keyword: engage is a business decision."
+  },
+  {
+    "id": "fc-ab210-ql-08",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "front": "Why the agent's trail matters",
+    "back": "It records what it researched and why, which is what makes a seller's disagreement resolvable rather than a matter of opinion. Keyword: show the basis."
+  },
+  {
+    "id": "fc-ab210-ql-09",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "front": "Two things to monitor on an agent",
+    "back": "Quality — do its conclusions hold up against what sellers find — and consumption as volume changes. Keyword: is it right, and what does it cost?"
+  },
+  {
+    "id": "fc-ab210-dd-01",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "front": "System-calculated vs user-entered revenue",
+    "back": "System-calculated keeps the total honest against the line items and is the right default. User-entered is the seller's number, chosen deliberately. Keyword: who owns the total?"
+  },
+  {
+    "id": "fc-ab210-dd-02",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "front": "An overridden price stops following the list",
+    "back": "A price list update never reaches an overridden line. That is where reconciliation surprises hide. Keyword: override breaks the link."
+  },
+  {
+    "id": "fc-ab210-dd-03",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "front": "What the pipeline view is for",
+    "back": "A board by stage with inline editing and aggregates — the surface managers work in. Choose columns supporting the next action, not every field. Keyword: next action, not everything."
+  },
+  {
+    "id": "fc-ab210-dd-04",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "front": "What the Sales Opportunity Agent watches",
+    "back": "Open opportunities: stalled stages, unanswered threads, close dates approaching with no activity. Keyword: pipeline hygiene without a manager reading everything."
+  },
+  {
+    "id": "fc-ab210-dd-05",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "front": "Why the Opportunity Agent reports false silence",
+    "back": "'Nothing has happened' is only true if what happened was tracked. Untracked email makes the agent cry wolf and sellers ignore it. Keyword: tracking before agents."
+  },
+  {
+    "id": "fc-ab210-dd-06",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "front": "The Sales Close Agent's intended posture",
+    "back": "Collaboration, not autonomy. It operates where money and commitments are, so it proposes and prepares and a named human decides. Keyword: propose, human disposes."
+  },
+  {
+    "id": "fc-ab210-dd-07",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "front": "How to tell if the Close Agent is working",
+    "back": "Measure whether its interventions shorten cycles, not whether it generates activity. Activity without movement is measurable as such. Keyword: cycle time, not volume."
+  },
+  {
+    "id": "fc-ab210-dd-08",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "front": "What the Sales Research Agent is for",
+    "back": "Preparation — the hour before a meeting spent on account history, recent news, and the last exchanges. It researches; it does not act. Keyword: brief, not act."
+  },
+  {
+    "id": "fc-ab210-dd-09",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "front": "Which Sales agent does not take action",
+    "back": "The Sales Research Agent. Qualification, Opportunity, and Close all act; Research assembles a briefing. Keyword: research is read-only."
+  },
+  {
+    "id": "fc-ab210-dd-10",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "front": "Why the research canvas matters",
+    "back": "A briefing nobody can interrogate has saved no time. The canvas is for exploring findings and following a thread, not reading a static report. Keyword: interrogable output."
+  },
+  {
+    "id": "fc-ab210-dd-11",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "front": "Internal and external research must be distinguished",
+    "back": "Internal findings trace to records; external ones are only as good as the source. Mixed without labels, a seller repeats an unverified claim to a customer. Keyword: label the provenance."
+  },
+  {
+    "id": "fc-ab210-dd-12",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "front": "Line discount or opportunity discount?",
+    "back": "Both exist and they reconcile differently. Know which the organisation uses before anyone reconciles a forecast. Keyword: agree the discount level."
+  },
+  {
+    "id": "fc-ab210-dd-13",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "front": "Interpreting an agent's actions",
+    "back": "Read the trail — what it did, against which records, on what basis. That is what turns a complaint into a configuration change. Keyword: evidence, then adjust."
+  },
+  {
+    "id": "fc-ab210-dd-14",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "front": "Which agent belongs to which stage",
+    "back": "Qualification at the top of the funnel, Opportunity through the middle, Close at the end, Research alongside all three. Keyword: funnel position picks the agent."
+  },
+  {
+    "id": "fc-ab210-es-01",
+    "examCode": "ab-210",
+    "domain": "extend-sales",
+    "front": "What the Sales mobile app is for",
+    "back": "The moments around a meeting — preparation, notes, quick updates — not full record editing. Keyword: before and after the meeting."
+  },
+  {
+    "id": "fc-ab210-es-02",
+    "examCode": "ab-210",
+    "domain": "extend-sales",
+    "front": "Offline needs planning",
+    "back": "Which tables are available offline is configured. A record outside the offline profile is missing at exactly the wrong moment. Keyword: choose the offline tables."
+  },
+  {
+    "id": "fc-ab210-es-03",
+    "examCode": "ab-210",
+    "domain": "extend-sales",
+    "front": "Why Teams calling matters for AI",
+    "back": "Calling from a record logs the call against it, which is what makes call activity reliable enough for conversational intelligence. Keyword: logged calls feed the analysis."
+  },
+  {
+    "id": "fc-ab210-es-04",
+    "examCode": "ab-210",
+    "domain": "extend-sales",
+    "front": "SMS is a contact from the organisation",
+    "back": "It carries consent and record-keeping obligations and belongs on the timeline like any other activity. Keyword: consent and timeline."
+  },
+  {
+    "id": "fc-ab210-es-05",
+    "examCode": "ab-210",
+    "domain": "extend-sales",
+    "front": "The cost of an embedded canvas app",
+    "back": "A second application to maintain, license, and secure. It must earn its place against configuring the form properly. Keyword: embedding is not free."
+  },
+  {
+    "id": "fc-ab210-es-06",
+    "examCode": "ab-210",
+    "domain": "extend-sales",
+    "front": "Embedded Power BI uses its own security",
+    "back": "It honours the Power BI model, not Dataverse row-level security, so it can show aggregates a seller could never query directly. Keyword: different security boundary."
+  }
+]

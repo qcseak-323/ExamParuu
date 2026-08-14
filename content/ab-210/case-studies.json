@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-brantwood-pipeline",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "title": "Brantwood Systems — agents working a pipeline nobody records",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Brantwood Systems sells building-management hardware through 60 sellers across three regions. It moved from a spreadsheet pipeline to Dynamics 365 Sales nine months ago and enabled the Sales Qualification, Opportunity, Close, and Research agents together at go-live.",
+          "Nine months on, the sales director's complaint is specific: the pipeline number in the forecast is not the number the regional managers believe, sellers have stopped reading the agents' prompts, and one prospect received an email from Brantwood that nobody at Brantwood wrote."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "Server-side synchronisation was configured for all 60 mailboxes but only 22 were ever approved. The remaining 38 sellers work entirely in Outlook without the Dynamics 365 App for Outlook and track nothing. Relationship health scores are blank for most accounts and Copilot record summaries for those sellers' opportunities are two lines long.",
+          "The Sales Opportunity Agent flags deals with no activity for 14 days. It currently flags roughly 80 per cent of the open pipeline every week. Sellers describe its prompts as noise and have stopped opening them.",
+          "The Sales Qualification Agent was configured in Research and engage mode at go-live because it was the default the implementation partner demonstrated. Nobody in marketing or compliance was consulted. Last month it opened an exchange with a procurement lead at a regulated customer who had previously asked to be contacted only through their framework portal.",
+          "Opportunity revenue is set to user-entered. Sellers type a headline number and add opportunity products later, often with prices overridden line by line after a negotiation. The forecast rolls up the user-entered value while the regional managers' own reports sum the opportunity products, and the two have diverged by about 11 per cent.",
+          "Predictive opportunity scoring was trained six months ago. Brantwood's process is to delete opportunities that go nowhere rather than closing them as lost. The model reports 94 per cent accuracy and scores almost every open deal above 80.",
+          "The Sales Research Agent produces briefings that blend Dynamics account history with material gathered from the public web, presented as a single narrative. A seller quoted a competitor displacement claim from one of these briefings to a customer last quarter; it came from a press article that had since been corrected."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "The Opportunity Agent's prompts must become trustworthy enough that sellers act on them, without changing its 14-day threshold.",
+          "No agent may contact a customer without a named human authorising that contact.",
+          "The forecast and the regional managers' reports must be reconciled to a single revenue figure that follows the line items.",
+          "Opportunity scoring must be made honest, even if the reported accuracy figure falls as a result.",
+          "A seller reading a research briefing must be able to tell which statements come from Brantwood's own records and which come from external sources.",
+          "The fixes must not require re-implementing Sales or moving off the standard tables."
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,80 @@
+{
+  "examCode": "AB-210",
+  "examName": "Accelerating Sales Pipelines with AI in Dynamics 365",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for AB-210. The exam name and the credential name differ, as they do for AB-410 and AB-620: the study guide heading reads 'Accelerating Sales Pipelines with AI in Dynamics 365' while the credential earned is 'Dynamics 365 Sales AI Consultant Associate', which is what catalog.json carries. The guide carries no 'Skills measured as of <date>' line — the seventh undated guide in the catalogue — and the exam is in beta, so the blueprint may move; re-check learn.microsoft.com before sitting it. AB-210 is the 2026 successor to the retired MB-280 and covers Dynamics 365 Sales rather than the Copilot administration the AB Fundamentals describe.",
+  "domains": [
+    {
+      "id": "core-features",
+      "name": "Configure Dynamics 365 Sales core features for AI",
+      "weight": "15-20%",
+      "subtopics": [
+        "Evaluate prerequisites for deploying Sales",
+        "Configure mailboxes",
+        "Set up and configure business process flows",
+        "Configure the timeline",
+        "Evaluate options for importing and exporting data",
+        "Examine the Sales security model",
+        "Configure Microsoft 365 functionality, including Teams, SharePoint, Outlook, and OneDrive",
+        "Configure products and product families",
+        "Create and manage price lists, including currencies"
+      ]
+    },
+    {
+      "id": "optimize-ai-sales",
+      "name": "Optimize AI-driven sales",
+      "weight": "20-25%",
+      "subtopics": [
+        "Augment seller workflows by using Copilot and agents",
+        "Design the sales data model in Dataverse",
+        "Evaluate options for reporting and visualisation, and differentiate features in Sales plans",
+        "Configure prerequisites for deploying agents, including capacity, billing, and credits",
+        "Configure the Sales accelerator and work assignment and distribution",
+        "Set up conversational intelligence and relationship intelligence",
+        "Configure predictive scoring",
+        "Configure Copilot features, including record summarisation",
+        "Configure and use forecasts, goals, and goal metrics"
+      ]
+    },
+    {
+      "id": "qualify-leads",
+      "name": "Qualify and prioritize leads by using AI",
+      "weight": "15-20%",
+      "subtopics": [
+        "Configure the lead and opportunity experience",
+        "Fine-tune the predictive scoring model",
+        "Evaluate use cases for Research-only mode versus Research and engage mode",
+        "Configure the Sales Qualification Agent",
+        "Interpret the actions of the Sales Qualification Agent",
+        "Monitor the Sales Qualification Agent"
+      ]
+    },
+    {
+      "id": "develop-deals",
+      "name": "Develop deals by using intelligent opportunity research",
+      "weight": "25-30%",
+      "subtopics": [
+        "Add Opportunity Products and configure pricing",
+        "Configure the opportunity pipeline view",
+        "Set up and configure the Sales Opportunity Agent",
+        "Set up and configure the Sales Close Agent, and coordinate opportunity management with it",
+        "Interpret the actions of the Sales Close Agent and collaborate with it",
+        "Monitor the Sales Close Agent",
+        "Evaluate use cases for the Sales Research Agent and configure it",
+        "Analyse sales performance by using the research canvas"
+      ]
+    },
+    {
+      "id": "extend-sales",
+      "name": "Extend and enhance Sales",
+      "weight": "10-15%",
+      "subtopics": [
+        "Deploy and configure the Sales mobile app",
+        "Set up Teams calling",
+        "Configure an SMS channel",
+        "Create Power Automate flows",
+        "Embed Power Apps components and controls",
+        "Embed Power BI reports"
+      ]
+    }
+  ]
+}

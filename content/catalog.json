@@ -20,12 +20,12 @@
     "series": "ab",
     "msLevel": "Associate",
     "status": "beta",
-    "durationMinutes": null,
+    "durationMinutes": 120,
     "passingScore": 700,
     "summary": "AI-first consulting for Dynamics 365 Sales — the 2026 successor to the retired MB-280.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
-    "sourceUrl": null
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-14",
+    "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ab-210"
   },
   {
     "code": "ab-250",

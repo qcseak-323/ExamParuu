@@ -1,0 +1,1053 @@
+[
+  {
+    "id": "cf-01",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "question": "An organisation reports that a Copilot feature described in Microsoft's documentation does not appear anywhere in its Sales environment. What should you check first?",
+    "options": [
+      "Whether the feature is included in the Sales plan they hold",
+      "Whether the feature has been enabled in the environment's app settings",
+      "Whether users have been assigned the correct security roles",
+      "Whether the environment is in a supported region"
+    ],
+    "correctIndex": 0,
+    "explanation": "Sales Premium and Sales Enterprise differ in which AI capabilities are included, so a feature can be absent rather than misconfigured. Debugging configuration for something the plan does not carry is the expensive misdiagnosis.",
+    "teaches": "sales-deployment-and-mailboxes"
+  },
+  {
+    "id": "cf-02",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "question": "A seller's emails are not appearing in Dynamics. Their mailbox record shows the mailbox configured for server-side synchronisation. What is most likely missing?",
+    "options": [
+      "The mailbox has not been approved by an administrator",
+      "The seller has not installed Dynamics 365 App for Outlook",
+      "The seller lacks a Sales licence",
+      "The timeline is filtered to exclude email"
+    ],
+    "correctIndex": 0,
+    "explanation": "Approval is a distinct administrative step before test and enable, and an unapproved mailbox simply does not sync. The failure is reported on the mailbox record rather than to the user, which is why it goes unnoticed.",
+    "teaches": "sales-deployment-and-mailboxes"
+  },
+  {
+    "id": "cf-03",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "question": "Copilot record summaries are consistently two lines long for one region's opportunities and detailed for another's. What is the most likely cause?",
+    "options": [
+      "That region's activity is not being tracked into Dataverse",
+      "The summarisation feature is disabled for that region's business unit",
+      "That region's users hold a lower Sales plan",
+      "The summary length setting differs per team"
+    ],
+    "correctIndex": 0,
+    "explanation": "Summarisation reads the record and its related activities, so a thin timeline summarises thinly. The cause sits two layers below the symptom, in mailbox synchronisation and tracking habits.",
+    "teaches": "sales-deployment-and-mailboxes"
+  },
+  {
+    "id": "cf-04",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "question": "A sales manager wants the business process flow to prevent an opportunity reaching Propose before a budget field is filled. What should you tell them?",
+    "options": [
+      "A business process flow guides but does not enforce; enforcement needs other logic",
+      "Set the stage's required fields and the flow will block progression everywhere",
+      "Scope the process flow to the table so it runs server-side",
+      "Add a business rule to the flow's stage with a validation action"
+    ],
+    "correctIndex": 0,
+    "explanation": "A business process flow is guidance and visibility. Records can still be written out of order by a cloud flow, an import, or the API, so any real enforcement has to sit on the data rather than on the process bar.",
+    "teaches": "sales-process-and-timeline"
+  },
+  {
+    "id": "cf-05",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "question": "Before a bulk load of 40,000 leads, which configuration matters most for the AI features that will run afterwards?",
+    "options": [
+      "Duplicate detection rules",
+      "Timeline filtering on the lead form",
+      "Currency and exchange rate configuration",
+      "The lead form's business process flow"
+    ],
+    "correctIndex": 0,
+    "explanation": "A duplicated estate degrades scoring, routing, and every agent that reasons over the records, and it is far cheaper to prevent than to clean afterwards.",
+    "teaches": "sales-process-and-timeline"
+  },
+  {
+    "id": "cf-06",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "question": "A regional manager must see their own records and those of the sellers reporting to them, and no others. Which privilege depth achieves this?",
+    "options": [
+      "Parent-Child Business Unit",
+      "User",
+      "Business Unit",
+      "Organisation"
+    ],
+    "correctIndex": 0,
+    "explanation": "Parent-Child extends the manager's view down the business unit hierarchy. User would give only their own records and Business Unit would stop at their own unit without including its children.",
+    "teaches": "sales-security-model"
+  },
+  {
+    "id": "cf-07",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "question": "An agent summarises accounts for whichever seller asks. What is the risk of configuring it with an elevated service identity?",
+    "options": [
+      "It will summarise records the requesting seller has no right to see",
+      "It will be unable to write activity back to the record",
+      "It will consume capacity against the service account's allocation only",
+      "It will bypass duplicate detection when creating records"
+    ],
+    "correctIndex": 0,
+    "explanation": "An agent acting on a seller's behalf should see what that seller sees. An elevated identity produces summaries containing data the requester was never entitled to, which is a leak that presents as a working feature.",
+    "teaches": "sales-security-model"
+  },
+  {
+    "id": "cf-08",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "question": "A product is being withdrawn from sale but appears on two years of closed opportunities. What should you do?",
+    "options": [
+      "Retire the product",
+      "Delete the product",
+      "Remove it from every price list",
+      "Set its quantity on hand to zero"
+    ],
+    "correctIndex": 0,
+    "explanation": "Retiring stops the product being added to new records while leaving it on historical ones. Deleting would damage the history, and removing it from price lists leaves it active and addable.",
+    "teaches": "product-catalog-and-pricing"
+  },
+  {
+    "id": "cf-09",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "question": "Analysis of revenue by product is impossible because most opportunity lines are write-in products. What does this indicate?",
+    "options": [
+      "The catalogue does not match what the organisation actually sells",
+      "The price lists are missing a currency",
+      "Opportunity revenue is set to system-calculated",
+      "The products are retired rather than active"
+    ],
+    "correctIndex": 0,
+    "explanation": "A write-in product carries no product id, so revenue against it cannot be analysed by product. Heavy reliance on write-ins is a symptom of a catalogue that does not cover the real portfolio.",
+    "teaches": "product-catalog-and-pricing"
+  },
+  {
+    "id": "cf-10",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "kind": "multi",
+    "question": "Which two must exist before a product can be given a price? Choose two.",
+    "options": [
+      "A unit group with a base unit",
+      "A price list with a currency",
+      "An active business process flow on the product table",
+      "A product family containing the product"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "A unit group and base unit come first, then a price list item ties the product to a currency and a price. Product families group products and carry inheritable properties but are not required for pricing.",
+    "teaches": "product-catalog-and-pricing"
+  },
+  {
+    "id": "cf-11",
+    "examCode": "ab-210",
+    "domain": "core-features",
+    "kind": "match",
+    "question": "Match each data movement option to the case it suits.",
+    "pairs": [
+      {
+        "term": "Import from file",
+        "definition": "A one-off load with column mapping and duplicate detection"
+      },
+      {
+        "term": "Dataflow",
+        "definition": "Repeated ingestion on a schedule from a source system"
+      },
+      {
+        "term": "The Dataverse API",
+        "definition": "Continuous integration from another application"
+      },
+      {
+        "term": "Export to Excel",
+        "definition": "Taking a working copy out for offline analysis or bulk edit"
+      }
+    ],
+    "explanation": "The four differ by frequency and direction. Choosing a one-off import for what is really a recurring feed is how an estate drifts out of step with its source system.",
+    "teaches": "sales-process-and-timeline"
+  },
+  {
+    "id": "oa-01",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "question": "Which requirement is best served by an agent rather than a Copilot feature?",
+    "options": [
+      "Researching new leads overnight and preparing briefings before sellers log in",
+      "Drafting a reply to an email the seller has open",
+      "Summarising an opportunity record the seller is reading",
+      "Generating a meeting recap after a call the seller attended"
+    ],
+    "correctIndex": 0,
+    "explanation": "Copilot features assist a seller who is present; agents act without one. Work that must happen when nobody is at the keyboard is the defining case for an agent.",
+    "teaches": "ai-first-sales-strategy"
+  },
+  {
+    "id": "oa-02",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "question": "A team proposes a custom Deal table alongside Opportunity to hold their own fields. Why should you object?",
+    "options": [
+      "First-party AI features understand the standard model and would ignore it",
+      "Custom tables cannot hold lookups to Account",
+      "Custom tables are excluded from Dataverse security",
+      "Custom tables cannot appear in a model-driven app"
+    ],
+    "correctIndex": 0,
+    "explanation": "Scoring, forecasting, the agents, and Copilot summarisation all read the standard tables. A parallel custom table is invisible to every one of them, which is why extending Opportunity is the correct move.",
+    "teaches": "ai-first-sales-strategy"
+  },
+  {
+    "id": "oa-03",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "question": "A sales director wants a cross-system analysis of win rates against marketing spend. Where does this belong?",
+    "options": [
+      "A Power BI report embedded into Sales",
+      "A Sales dashboard built on views",
+      "A model-driven chart on the opportunity table",
+      "A goal metric with a rollup query"
+    ],
+    "correctIndex": 0,
+    "explanation": "Analytical questions spanning volume and other systems are Power BI's job, embedded rather than reimplemented. Sales dashboards and charts answer operational questions against live records.",
+    "teaches": "ai-first-sales-strategy"
+  },
+  {
+    "id": "oa-04",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "question": "An agent pilot against 200 leads cost very little. Rolling it out across 20,000 leads exhausted the monthly allocation in a week. Why?",
+    "options": [
+      "Agent capacity is consumed per action, so it scales with record volume",
+      "Capacity is charged per user once an agent is enabled",
+      "Pilot environments do not consume production capacity",
+      "The agent switched to a more expensive model at scale"
+    ],
+    "correctIndex": 0,
+    "explanation": "Consumption is proportional to the records the agent touches rather than to headcount, so capacity planning is an exercise in estimating volume. A pilot's cost does not extrapolate by user count.",
+    "teaches": "agent-prerequisites-and-capacity"
+  },
+  {
+    "id": "oa-05",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "question": "Which agent capability most clearly warrants human review before it is made autonomous?",
+    "options": [
+      "Emailing prospects on the organisation's behalf",
+      "Summarising an account's recent activity",
+      "Ranking leads for a seller's work list",
+      "Drafting internal notes on an opportunity"
+    ],
+    "correctIndex": 0,
+    "explanation": "Contacting customers is an outward-facing, hard-to-reverse action taken in the organisation's name. The other three produce internal output a human reads before anything leaves the building.",
+    "teaches": "agent-prerequisites-and-capacity"
+  },
+  {
+    "id": "oa-06",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "question": "A specific assignment rule for enterprise leads never fires, although matching leads exist. What should you check?",
+    "options": [
+      "Whether a broader rule sits above it in the evaluation order",
+      "Whether the sellers have capacity configured",
+      "Whether the leads have a predictive score",
+      "Whether the rule's business unit matches the leads' owner"
+    ],
+    "correctIndex": 0,
+    "explanation": "Assignment rules are evaluated in order, so a broad rule placed above a specific one absorbs everything and the specific rule is unreachable. Ordering is the first thing to inspect.",
+    "teaches": "sales-accelerator-and-assignment"
+  },
+  {
+    "id": "oa-07",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "question": "What does a sequence in the Sales accelerator provide?",
+    "options": [
+      "A defined cadence of steps surfaced to the seller as the next action due",
+      "A rule that routes records to the right seller",
+      "A model that scores leads by likelihood to qualify",
+      "A dashboard showing pipeline by stage"
+    ],
+    "correctIndex": 0,
+    "explanation": "A sequence attaches a methodology to a record and the work list surfaces the next step, so the cadence becomes the interface rather than something a seller must remember.",
+    "teaches": "sales-accelerator-and-assignment"
+  },
+  {
+    "id": "oa-08",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "question": "Conversational intelligence shows no insights at all after deployment. What is the most likely cause?",
+    "options": [
+      "Calls are not being recorded through a supported channel",
+      "The predictive scoring model has not been trained",
+      "Sellers lack the Sales accelerator work list",
+      "The opportunity forecast has not been configured"
+    ],
+    "correctIndex": 0,
+    "explanation": "Conversational intelligence analyses recorded calls, so no recordings means no analysis. Recording, consent, and channel support are the prerequisites to check before configuration.",
+    "teaches": "intelligence-features"
+  },
+  {
+    "id": "oa-09",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "question": "Relationship health scores are blank for most accounts. What is the underlying cause?",
+    "options": [
+      "Interaction history is not being synchronised or tracked",
+      "The accounts lack a primary contact",
+      "Relationship intelligence requires a Power BI licence",
+      "The accounts are owned by teams rather than users"
+    ],
+    "correctIndex": 0,
+    "explanation": "Relationship intelligence computes health and who-knows-whom from interaction history. With no synchronised, tracked activity there is nothing to compute from.",
+    "teaches": "intelligence-features"
+  },
+  {
+    "id": "oa-10",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "question": "A regional manager adjusts a forecast figure upward. What happens to the rolled-up value?",
+    "options": [
+      "It is retained, with the adjustment recorded alongside it",
+      "It is overwritten by the adjusted figure",
+      "It is recalculated to match the adjustment",
+      "It is locked until the forecast period closes"
+    ],
+    "correctIndex": 0,
+    "explanation": "Adjustments sit alongside the rolled-up numbers rather than replacing them, which keeps a manager's judgement visible and auditable against what the pipeline actually said.",
+    "teaches": "intelligence-features"
+  },
+  {
+    "id": "oa-11",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "question": "A seller complains that a lead's predictive score did not change after they updated several fields. What should you explain?",
+    "options": [
+      "Scores are refreshed on a schedule rather than recalculated on edit",
+      "The fields they edited are excluded from the model by design",
+      "Scores only update when the lead's owner changes",
+      "The model must be retrained manually after every edit"
+    ],
+    "correctIndex": 0,
+    "explanation": "Scoring runs on a schedule and models retrain periodically, so a score is a recent estimate that ranks a queue rather than a live judgement of one record.",
+    "teaches": "intelligence-features"
+  },
+  {
+    "id": "oa-12",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "kind": "multi",
+    "question": "Which two prerequisites must be in place before deploying agents in Sales? Choose two.",
+    "options": [
+      "Capacity or credits provisioned for agent consumption",
+      "The underlying record data the agents will reason over",
+      "A Power BI workspace for agent telemetry",
+      "A separate environment dedicated to agents"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Agents consume provisioned capacity and reason over the Dataverse estate, so both must exist. Neither a Power BI workspace nor a dedicated environment is required.",
+    "teaches": "agent-prerequisites-and-capacity"
+  },
+  {
+    "id": "oa-13",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "kind": "order",
+    "question": "Put these steps in order for making agent-generated work actionable for sellers.",
+    "items": [
+      "Ensure the record data the agent reasons over is complete",
+      "Provision capacity for the agent's expected volume",
+      "Configure work assignment so agent output is routed to a seller",
+      "Configure the accelerator work list so the next action is surfaced"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Data comes before capacity because an agent reasoning over poor data wastes whatever it is given. Routing then assignment ordering matters because agent output without prioritisation arrives as an undifferentiated pile.",
+    "teaches": "sales-accelerator-and-assignment"
+  },
+  {
+    "id": "oa-14",
+    "examCode": "ab-210",
+    "domain": "optimize-ai-sales",
+    "kind": "yesno",
+    "question": "An organisation is planning predictive opportunity scoring. Judge each statement.",
+    "statements": [
+      {
+        "text": "The model needs closed history containing both wins and losses.",
+        "correct": true
+      },
+      {
+        "text": "A field only populated after a deal closes should be excluded from the model.",
+        "correct": true
+      },
+      {
+        "text": "Excluding a leaking field can lower reported accuracy while improving real predictive value.",
+        "correct": true
+      },
+      {
+        "text": "Scores are recalculated immediately whenever a contributing field changes.",
+        "correct": false
+      }
+    ],
+    "explanation": "Target leakage produces a model with excellent reported accuracy and no predictive value, because it is reading the answer. Scores refresh on a schedule, which is why sellers who expect live movement come to distrust them.",
+    "teaches": "predictive-lead-scoring"
+  },
+  {
+    "id": "ql-01",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "question": "Why should leads that go nowhere be disqualified with a reason rather than deleted?",
+    "options": [
+      "Disqualified leads with reasons are training data for predictive scoring",
+      "Deleted leads cannot be recreated with the same email address",
+      "Disqualification is required before an account can be created",
+      "Deleting a lead removes its associated account and contact"
+    ],
+    "correctIndex": 0,
+    "explanation": "A model learns from both outcomes. Deleting the negatives leaves the model with only successes to learn from, which is how it concludes almost everything succeeds.",
+    "teaches": "lead-and-opportunity-experience"
+  },
+  {
+    "id": "ql-02",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "question": "Sellers record budget, authority, need, and timeline in the lead's notes field. What should you change?",
+    "options": [
+      "Capture each as a structured column so scoring, routing, and agents can read it",
+      "Add a business rule that requires the notes field to be filled",
+      "Move the notes to the timeline as a post",
+      "Add the notes field to the quick find view"
+    ],
+    "correctIndex": 0,
+    "explanation": "Information in free text is invisible to scoring, routing, and every agent. The same content as structured fields becomes data all three can reason over.",
+    "teaches": "lead-and-opportunity-experience"
+  },
+  {
+    "id": "ql-03",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "question": "A predictive lead scoring model reports 96 per cent accuracy but its scores do not distinguish leads that go on to qualify. What is the most likely cause?",
+    "options": [
+      "Target leakage from a field populated only after the outcome is known",
+      "Too few attributes were included in the model",
+      "The model was trained on too much history",
+      "The scores are being refreshed too frequently"
+    ],
+    "correctIndex": 0,
+    "explanation": "A leaking field lets the model read the answer, which produces a high reported score and no predictive value. Removing it usually lowers the reported number and raises the real one.",
+    "teaches": "predictive-lead-scoring"
+  },
+  {
+    "id": "ql-04",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "question": "In which mode does the Sales Qualification Agent gather and summarise without contacting the prospect?",
+    "options": [
+      "Research-only",
+      "Research and engage",
+      "Monitor-only",
+      "Assisted qualification"
+    ],
+    "correctIndex": 0,
+    "explanation": "Research-only leaves every outbound contact to a human and produces a briefing that shortens the seller's preparation. Research and engage additionally lets the agent conduct an initial exchange.",
+    "teaches": "sales-qualification-agent"
+  },
+  {
+    "id": "ql-05",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "question": "Who should decide whether the Sales Qualification Agent runs in Research and engage mode?",
+    "options": [
+      "The stakeholders who own brand and compliance",
+      "The Dataverse system administrator",
+      "The sellers whose leads it will work",
+      "The implementation partner configuring the agent"
+    ],
+    "correctIndex": 0,
+    "explanation": "Engage mode means an autonomous system corresponds with prospects in the organisation's name, which makes it a brand and compliance decision rather than a technical one.",
+    "teaches": "sales-qualification-agent"
+  },
+  {
+    "id": "ql-06",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "question": "A seller disputes the Sales Qualification Agent's decision to deprioritise a lead. What allows the disagreement to be resolved?",
+    "options": [
+      "The trail recording what the agent researched and why it concluded what it did",
+      "The lead's predictive score history",
+      "The agent's capacity consumption report",
+      "The sequence attached to the lead in the accelerator"
+    ],
+    "correctIndex": 0,
+    "explanation": "The agent records its research and its reasoning, which turns a matter of opinion into something checkable. Without that trail the dispute cannot be settled on evidence.",
+    "teaches": "sales-qualification-agent"
+  },
+  {
+    "id": "ql-07",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "question": "What should be monitored on a deployed Sales Qualification Agent?",
+    "options": [
+      "Whether its conclusions hold up against what sellers find, and its capacity consumption",
+      "Only its capacity consumption, since quality is subjective",
+      "Only the number of leads it processes each day",
+      "Only whether sellers open its briefings"
+    ],
+    "correctIndex": 0,
+    "explanation": "Both halves matter: an agent that is cheap and wrong is worse than useless, and one that is right and unaffordable cannot be kept. Quality is measurable against seller outcomes.",
+    "teaches": "sales-qualification-agent"
+  },
+  {
+    "id": "ql-08",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "question": "When a lead is qualified, which records can Dynamics 365 Sales create?",
+    "options": [
+      "An account, a contact, and an opportunity",
+      "An opportunity and a quote",
+      "A contact and an order",
+      "An account and a price list"
+    ],
+    "correctIndex": 0,
+    "explanation": "Qualification converts interest into the records the rest of the process needs, and which of the three are created is configurable. Quotes and orders come later in the cycle.",
+    "teaches": "lead-and-opportunity-experience"
+  },
+  {
+    "id": "ql-09",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "kind": "multi",
+    "question": "Which two conditions must hold for predictive lead scoring to produce useful results? Choose two.",
+    "options": [
+      "Enough closed history to learn from",
+      "Both qualified and disqualified outcomes represented",
+      "A business process flow applied to the lead table",
+      "Conversational intelligence enabled on the environment"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Volume and both outcomes are what a model learns from. A process flow is presentation and conversational intelligence analyses calls; neither feeds lead scoring.",
+    "teaches": "predictive-lead-scoring"
+  },
+  {
+    "id": "ql-10",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "kind": "order",
+    "question": "Put these steps in order for introducing the Sales Qualification Agent responsibly.",
+    "items": [
+      "Confirm lead data quality and duplicate detection",
+      "Deploy the agent in Research-only mode",
+      "Compare the agent's conclusions against seller outcomes",
+      "Obtain brand and compliance sign-off before enabling engage mode"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Data first, because an agent reasoning over a duplicated estate produces confident nonsense. Research-only establishes trust, measurement provides the evidence, and only then is customer contact a decision anybody can make responsibly.",
+    "teaches": "sales-qualification-agent"
+  },
+  {
+    "id": "ql-11",
+    "examCode": "ab-210",
+    "domain": "qualify-leads",
+    "kind": "dropdown",
+    "question": "Complete the statement about predictive scoring behaviour.",
+    "segments": [
+      {
+        "text": "A predictive lead score is refreshed "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "on a schedule, so it ranks a queue rather than judging a record live",
+          "whenever a contributing column is edited",
+          "only when the model is retrained"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", and fine-tuning the model chiefly means "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "choosing which attributes it may consider and excluding those that leak the outcome",
+          "adjusting the numeric threshold at which a lead counts as hot",
+          "increasing the volume of history it is trained on"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "Scheduled refresh is why a score does not move when a seller edits a field, and attribute selection — particularly removing fields that reveal the outcome — is what actually improves the model. Thresholds change reporting, not the model.",
+    "teaches": "predictive-lead-scoring"
+  },
+  {
+    "id": "dd-01",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "caseStudyId": "cs-brantwood-pipeline",
+    "question": "The Sales Opportunity Agent flags 80 per cent of the open pipeline every week and sellers have stopped reading its prompts. The 14-day threshold must not change. What should you do?",
+    "options": [
+      "Approve the 38 outstanding mailboxes and establish tracking through Dynamics 365 App for Outlook",
+      "Restrict the agent to opportunities above a minimum value",
+      "Reduce how often the agent runs so fewer prompts are generated",
+      "Disable the agent until sellers ask for it to be re-enabled"
+    ],
+    "correctIndex": 0,
+    "explanation": "\"No activity for 14 days\" is only true if activity is being recorded, and 38 of 60 sellers track nothing — the agent is reporting silence that is not real. Filtering or throttling reduces the volume of wrong prompts without making any of them right, which is why the threshold does not need to move.",
+    "teaches": "sales-opportunity-agent"
+  },
+  {
+    "id": "dd-02",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "caseStudyId": "cs-brantwood-pipeline",
+    "question": "The forecast and the regional reports differ by about 11 per cent. Which change reconciles them to a figure that follows the line items?",
+    "options": [
+      "Set opportunity revenue to system-calculated so the total derives from opportunity products",
+      "Have regional managers report on the user-entered value instead",
+      "Add a rollup column on the opportunity summing its products",
+      "Rebuild the regional reports in Power BI against the same dataset"
+    ],
+    "correctIndex": 0,
+    "explanation": "The two numbers diverge because the forecast reads a typed headline value while the regional reports sum the products. The requirement is a single figure that follows the line items, which is exactly what system-calculated revenue produces. A rollup would add a third number and recalculate on a schedule rather than on read.",
+    "teaches": "opportunity-management-and-products"
+  },
+  {
+    "id": "dd-03",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "caseStudyId": "cs-brantwood-pipeline",
+    "question": "The opportunity scoring model reports 94 per cent accuracy and scores nearly every open deal above 80. What must change, accepting that the reported accuracy will fall?",
+    "options": [
+      "Close unsuccessful opportunities as lost instead of deleting them, then retrain",
+      "Retrain the model more frequently against the existing history",
+      "Raise the threshold at which a score counts as high",
+      "Exclude open opportunities from the training data"
+    ],
+    "correctIndex": 0,
+    "explanation": "Brantwood deletes the deals that go nowhere, so the model has been trained almost entirely on wins and has correctly learned that everything succeeds. Retraining against the same one-sided history changes nothing, and moving the threshold relabels the output without making it informative.",
+    "teaches": "predictive-lead-scoring"
+  },
+  {
+    "id": "dd-04",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "kind": "dropdown",
+    "caseStudyId": "cs-brantwood-pipeline",
+    "question": "Complete the assessment of the Sales Qualification Agent's contact with the regulated customer.",
+    "segments": [
+      {
+        "text": "The exchange happened because the agent was left in "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "Research and engage mode, which lets it correspond with prospects itself",
+          "Research-only mode, which permits automated follow-up email",
+          "monitor mode, which forwards prospect replies automatically"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", so to meet the requirement that no agent contacts a customer without named human authorisation you should "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "move it to Research-only and route its briefings to a seller who decides on contact",
+          "add the customer to a suppression list and leave the mode unchanged",
+          "reduce the agent's capacity so it sends fewer messages"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "Research-only is the mode in which every outbound contact stays with a human, which is what the requirement asks for across all customers rather than one. Suppressing a single customer leaves the same autonomous contact running against everyone else, and capacity limits how much it sends rather than whether it may.",
+    "teaches": "sales-qualification-agent"
+  },
+  {
+    "id": "dd-05",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "kind": "yesno",
+    "caseStudyId": "cs-brantwood-pipeline",
+    "question": "Consider the Sales Research Agent briefing that led a seller to quote a corrected press article. Judge each statement.",
+    "statements": [
+      {
+        "text": "Findings drawn from Dynamics records and findings drawn from the public web should be distinguishable in the briefing.",
+        "correct": true
+      },
+      {
+        "text": "Presenting both as one narrative invites a seller to repeat an unverified external claim as though it came from the account record.",
+        "correct": true
+      },
+      {
+        "text": "External findings are only as reliable as the sources behind them and should be attributed.",
+        "correct": true
+      },
+      {
+        "text": "Restricting the agent to internal records only would satisfy the requirement as stated.",
+        "correct": false
+      }
+    ],
+    "explanation": "The requirement is that a seller can tell which statements come from Brantwood's records and which come outside — that is a provenance requirement, not a request to remove external research. Removing external sources would satisfy it trivially by discarding the capability the agent was deployed for.",
+    "teaches": "sales-research-agent"
+  },
+  {
+    "id": "dd-06",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "question": "A price list is updated but several opportunity lines keep their old prices. Why?",
+    "options": [
+      "Those lines have overridden prices and no longer follow the price list",
+      "The price list update has not been published",
+      "The opportunities are in a closed state",
+      "The products on those lines have been retired"
+    ],
+    "correctIndex": 0,
+    "explanation": "Overriding a line's price detaches it from the price list, so subsequent list updates do not reach it. This is where reconciliation surprises come from.",
+    "teaches": "opportunity-management-and-products"
+  },
+  {
+    "id": "dd-07",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "question": "Which Sales agent gathers information and produces a briefing without taking action on records?",
+    "options": [
+      "The Sales Research Agent",
+      "The Sales Qualification Agent",
+      "The Sales Opportunity Agent",
+      "The Sales Close Agent"
+    ],
+    "correctIndex": 0,
+    "explanation": "Research assembles and reports; qualification, opportunity, and close all act. That distinction is what decides which agent a requirement calls for.",
+    "teaches": "sales-research-agent"
+  },
+  {
+    "id": "dd-08",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "question": "What is the intended posture for the Sales Close Agent?",
+    "options": [
+      "Collaboration, with the agent preparing and a named human deciding",
+      "Full autonomy, with review only when it escalates",
+      "Read-only analysis of closed deals",
+      "Scheduled batch processing outside working hours"
+    ],
+    "correctIndex": 0,
+    "explanation": "The close is where money and commitments are, so its actions most need to be reviewable. The agent assembles and coordinates; the decision stays with a person.",
+    "teaches": "sales-close-agent"
+  },
+  {
+    "id": "dd-09",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "question": "How should the value of the Sales Close Agent be measured?",
+    "options": [
+      "By whether its interventions shorten sales cycles",
+      "By how many actions it performs each week",
+      "By how much capacity it consumes",
+      "By how many opportunities it touches"
+    ],
+    "correctIndex": 0,
+    "explanation": "An agent that generates activity without moving deals is measurable as such, and cycle time is the outcome it exists to change. Action counts measure effort rather than effect.",
+    "teaches": "sales-close-agent"
+  },
+  {
+    "id": "dd-10",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "question": "What does the research canvas add over a static briefing document?",
+    "options": [
+      "A surface for exploring findings and following a thread",
+      "Automatic scheduling of follow-up activities",
+      "Enforcement of the opportunity's business process flow",
+      "Offline availability of the briefing in the mobile app"
+    ],
+    "correctIndex": 0,
+    "explanation": "A wall of text nobody can interrogate has saved no time. The canvas exists so findings can be pursued rather than only read.",
+    "teaches": "sales-research-agent"
+  },
+  {
+    "id": "dd-11",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "question": "Which condition most limits the usefulness of the Sales Opportunity Agent?",
+    "options": [
+      "Sellers not tracking email and meetings into Dataverse",
+      "Opportunities lacking a business process flow",
+      "The absence of a predictive opportunity score",
+      "Opportunity revenue being system-calculated"
+    ],
+    "correctIndex": 0,
+    "explanation": "The agent reasons about what has and has not happened, and untracked activity looks identical to no activity. Deploying it before tracking habits exist is the standard way to make it useless.",
+    "teaches": "sales-opportunity-agent"
+  },
+  {
+    "id": "dd-12",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "question": "Which setting keeps an opportunity's total honest against its line items?",
+    "options": [
+      "System-calculated revenue",
+      "User-entered revenue",
+      "A rollup column over opportunity products",
+      "A business rule validating the total"
+    ],
+    "correctIndex": 0,
+    "explanation": "System-calculated derives the total from the opportunity products on read. User-entered is the seller's negotiated number, chosen deliberately when the line items do not describe the deal.",
+    "teaches": "opportunity-management-and-products"
+  },
+  {
+    "id": "dd-13",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "question": "A sales manager wants to work the pipeline as a board by stage with inline editing. What should you configure?",
+    "options": [
+      "The opportunity pipeline view",
+      "An interactive dashboard on the opportunity table",
+      "A Power BI report embedded in the Sales app",
+      "A goal metric with a rollup query"
+    ],
+    "correctIndex": 0,
+    "explanation": "The pipeline view is the board-by-stage surface with inline editing and aggregates. Dashboards and Power BI reports present information without being the working surface.",
+    "teaches": "opportunity-management-and-products"
+  },
+  {
+    "id": "dd-14",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "kind": "multi",
+    "question": "Which two are true of the Sales Close Agent? Choose two.",
+    "options": [
+      "It leaves a trail of what it did and on what basis",
+      "It is intended to operate alongside a human decision-maker",
+      "It closes opportunities automatically once all products are priced",
+      "It replaces the opportunity business process flow"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Its actions are reviewable and its posture is collaborative, because it works where money and commitments are. It neither closes deals unilaterally nor replaces the process flow.",
+    "teaches": "sales-close-agent"
+  },
+  {
+    "id": "dd-15",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "kind": "order",
+    "question": "Put these opportunity steps in the order the platform requires.",
+    "items": [
+      "Ensure the product is active in the catalogue",
+      "Ensure a price list item exists for the product in the opportunity's currency",
+      "Add the product as an opportunity product",
+      "Apply a line-level discount if one has been negotiated"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Only an active product can be added, and it needs a price in the opportunity's currency before it can be priced. Discounting is the last step and detaches the line from the price list.",
+    "teaches": "opportunity-management-and-products"
+  },
+  {
+    "id": "dd-16",
+    "examCode": "ab-210",
+    "domain": "develop-deals",
+    "kind": "match",
+    "question": "Match each Sales agent to the work it does.",
+    "pairs": [
+      {
+        "term": "Sales Qualification Agent",
+        "definition": "Researches and, if configured, engages new leads"
+      },
+      {
+        "term": "Sales Opportunity Agent",
+        "definition": "Watches open deals for stalls and missing next steps"
+      },
+      {
+        "term": "Sales Close Agent",
+        "definition": "Prepares and coordinates the work a close requires"
+      },
+      {
+        "term": "Sales Research Agent",
+        "definition": "Assembles a briefing from internal and external sources"
+      }
+    ],
+    "explanation": "The four map onto funnel position — top, middle, end — with research running alongside all three. Only the research agent takes no action on records.",
+    "teaches": "sales-research-agent"
+  },
+  {
+    "id": "es-01",
+    "examCode": "ab-210",
+    "domain": "extend-sales",
+    "question": "A seller finds a record missing when working offline in the Sales mobile app. What is the most likely cause?",
+    "options": [
+      "The record's table is not in the configured offline profile",
+      "The seller's licence does not cover mobile use",
+      "The record was created after the app was installed",
+      "Offline mode requires the record to be assigned to the seller"
+    ],
+    "correctIndex": 0,
+    "explanation": "Which tables are available offline is a deliberate configuration. A table outside the profile simply is not there, and the seller discovers it at exactly the wrong moment.",
+    "teaches": "sales-mobile-and-channels"
+  },
+  {
+    "id": "es-02",
+    "examCode": "ab-210",
+    "domain": "extend-sales",
+    "question": "Why does configuring Teams calling inside Sales matter for conversational intelligence?",
+    "options": [
+      "Calling from a record logs the call, giving the analysis something to work from",
+      "Teams calling transcribes calls in place of conversational intelligence",
+      "It is a licensing prerequisite for the Sales accelerator",
+      "It replaces the need for server-side synchronisation"
+    ],
+    "correctIndex": 0,
+    "explanation": "Conversational intelligence analyses captured calls, so a calling path that reliably logs against the record is what makes the data exist. It does not replace the analysis or the mailbox sync.",
+    "teaches": "sales-mobile-and-channels"
+  },
+  {
+    "id": "es-03",
+    "examCode": "ab-210",
+    "domain": "extend-sales",
+    "question": "An organisation adds an SMS channel for seller outreach. Which requirement follows?",
+    "options": [
+      "Consent and record-keeping must be configured, and messages logged on the timeline",
+      "Sellers must be licensed for Dynamics 365 Customer Insights",
+      "SMS must be routed through the Sales accelerator work list",
+      "Conversational intelligence must be enabled for SMS analysis"
+    ],
+    "correctIndex": 0,
+    "explanation": "An SMS is a contact from the organisation and carries consent and record-keeping obligations. Logging it on the timeline keeps the customer record complete like any other activity.",
+    "teaches": "sales-mobile-and-channels"
+  },
+  {
+    "id": "es-04",
+    "examCode": "ab-210",
+    "domain": "extend-sales",
+    "question": "A maker proposes embedding a canvas app into an opportunity form to replace three fields with a custom layout. What should you weigh against it?",
+    "options": [
+      "It becomes a second application to maintain, license, and secure",
+      "Canvas apps cannot read Dataverse from inside a model-driven form",
+      "Embedding a canvas app disables the form's business rules",
+      "Canvas apps cannot be included in a solution"
+    ],
+    "correctIndex": 0,
+    "explanation": "Embedding is powerful and easy to overuse. A canvas app inside a form must earn its place against configuring the form properly, because it carries its own lifecycle cost.",
+    "teaches": "power-platform-extensions"
+  },
+  {
+    "id": "es-05",
+    "examCode": "ab-210",
+    "domain": "extend-sales",
+    "question": "A Power BI report embedded in a Sales dashboard shows a seller aggregate figures they cannot query in Dynamics. Why?",
+    "options": [
+      "Power BI applies its own security model rather than Dataverse row-level security",
+      "Embedded reports run as the dashboard's owner by design",
+      "Dataverse row-level security does not apply to aggregate queries",
+      "The report is reading a cached export rather than live data"
+    ],
+    "correctIndex": 0,
+    "explanation": "The two security boundaries are different, which is sometimes exactly what is wanted and sometimes a disclosure nobody intended. It is worth deciding which before embedding.",
+    "teaches": "power-platform-extensions"
+  },
+  {
+    "id": "es-06",
+    "examCode": "ab-210",
+    "domain": "extend-sales",
+    "question": "A cloud flow updating an opportunity is triggered by changes to that same opportunity and runs thousands of times a day. What should you configure?",
+    "options": [
+      "A select-columns filter and a trigger condition on the trigger",
+      "A Condition as the flow's first action",
+      "A lower concurrency setting on the flow",
+      "A Terminate action at the end of the flow"
+    ],
+    "correctIndex": 0,
+    "explanation": "Trigger-side filters are evaluated before a run starts, so the flow's own write never fires it. Anything inside the flow has already consumed the run.",
+    "teaches": "power-platform-extensions"
+  },
+  {
+    "id": "es-07",
+    "examCode": "ab-210",
+    "domain": "extend-sales",
+    "kind": "order",
+    "question": "Put these extension options in the order you should evaluate them for a Sales requirement.",
+    "items": [
+      "Configure the standard form, view, or business rule",
+      "Add a Power Automate flow for the automation",
+      "Embed a Power Apps component or custom control",
+      "Build a pro-code extension outside the platform"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Sales sits on Power Platform, so it follows the same ladder: configuration, then declarative automation, then embedded components, then pro-code. Each rung adds lifecycle cost.",
+    "teaches": "power-platform-extensions"
+  },
+  {
+    "id": "es-08",
+    "examCode": "ab-210",
+    "domain": "extend-sales",
+    "kind": "match",
+    "question": "Match each supporting capability to what it provides.",
+    "pairs": [
+      {
+        "term": "Sales mobile app",
+        "definition": "Preparation, notes, and quick updates around a meeting"
+      },
+      {
+        "term": "Teams calling",
+        "definition": "Calling from a record so the call is logged against it"
+      },
+      {
+        "term": "SMS channel",
+        "definition": "Text as a tracked inbound and outbound path with consent"
+      },
+      {
+        "term": "Embedded Power BI",
+        "definition": "Analysis across volume and systems, under its own security"
+      }
+    ],
+    "explanation": "The first three extend where and how a seller works; the last extends what can be analysed, and is the only one that brings a different security boundary with it.",
+    "teaches": "sales-mobile-and-channels"
+  }
+]

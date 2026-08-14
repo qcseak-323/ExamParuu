@@ -1,0 +1,233 @@
+{
+  "examCode": "ab-210",
+  "note": "Five paths, one per exam domain. Microsoft has published no learning paths for AB-210 — the 'Prepare for the exam' section of the credential page is empty and the exam is in beta — although an instructor-led course, AB-210T00-A 'Accelerate sales pipelines with AI in Dynamics 365', does exist. These links therefore point at the closest published Dynamics 365 Sales and Power Platform paths; revisit once Microsoft publishes a dedicated set. Module titles follow Microsoft Learn conventions; the sections and cards behind each are this site's own.",
+  "paths": [
+    {
+      "id": "core-features",
+      "title": "Configure Dynamics 365 Sales core features for AI",
+      "domainId": "core-features",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/get-started-dynamics-365-sales/",
+      "modules": [
+        {
+          "id": "core-features-m1",
+          "title": "Deploy Sales and configure mailboxes",
+          "sectionIds": [
+            "sales-deployment-and-mailboxes"
+          ],
+          "cardIds": [
+            "fc-ab210-cf-01",
+            "fc-ab210-cf-02",
+            "fc-ab210-cf-03"
+          ]
+        },
+        {
+          "id": "core-features-m2",
+          "title": "Configure processes, the timeline, and data movement",
+          "sectionIds": [
+            "sales-process-and-timeline"
+          ],
+          "cardIds": [
+            "fc-ab210-cf-04",
+            "fc-ab210-cf-05"
+          ]
+        },
+        {
+          "id": "core-features-m3",
+          "title": "Apply the Sales security model",
+          "sectionIds": [
+            "sales-security-model"
+          ],
+          "cardIds": [
+            "fc-ab210-cf-06",
+            "fc-ab210-cf-07"
+          ]
+        },
+        {
+          "id": "core-features-m4",
+          "title": "Create and manage the product catalogue",
+          "sectionIds": [
+            "product-catalog-and-pricing"
+          ],
+          "cardIds": [
+            "fc-ab210-cf-08",
+            "fc-ab210-cf-09"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "optimize-ai-sales",
+      "title": "Optimize AI-driven sales",
+      "domainId": "optimize-ai-sales",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/work-dynamics-365-sales-insights/",
+      "modules": [
+        {
+          "id": "optimize-ai-sales-m1",
+          "title": "Design an AI-first sales strategy",
+          "sectionIds": [
+            "ai-first-sales-strategy"
+          ],
+          "cardIds": [
+            "fc-ab210-oa-01",
+            "fc-ab210-oa-02",
+            "fc-ab210-oa-03",
+            "fc-ab210-oa-04"
+          ]
+        },
+        {
+          "id": "optimize-ai-sales-m2",
+          "title": "Prepare to deploy agents",
+          "sectionIds": [
+            "agent-prerequisites-and-capacity"
+          ],
+          "cardIds": [
+            "fc-ab210-oa-05",
+            "fc-ab210-oa-06"
+          ]
+        },
+        {
+          "id": "optimize-ai-sales-m3",
+          "title": "Configure the Sales accelerator and work assignment",
+          "sectionIds": [
+            "sales-accelerator-and-assignment"
+          ],
+          "cardIds": [
+            "fc-ab210-oa-07",
+            "fc-ab210-oa-08"
+          ]
+        },
+        {
+          "id": "optimize-ai-sales-m4",
+          "title": "Configure AI-powered intelligence and insights",
+          "sectionIds": [
+            "intelligence-features"
+          ],
+          "cardIds": [
+            "fc-ab210-oa-09",
+            "fc-ab210-oa-10",
+            "fc-ab210-oa-11",
+            "fc-ab210-oa-12"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qualify-leads",
+      "title": "Qualify and prioritize leads by using AI",
+      "domainId": "qualify-leads",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/manage-leads-dynamics-365-sales/",
+      "modules": [
+        {
+          "id": "qualify-leads-m1",
+          "title": "Generate, nurture, and score leads",
+          "sectionIds": [
+            "lead-and-opportunity-experience",
+            "predictive-lead-scoring"
+          ],
+          "cardIds": [
+            "fc-ab210-ql-01",
+            "fc-ab210-ql-02",
+            "fc-ab210-ql-03",
+            "fc-ab210-ql-04",
+            "fc-ab210-ql-05"
+          ]
+        },
+        {
+          "id": "qualify-leads-m2",
+          "title": "Automate qualification with the Sales Qualification Agent",
+          "sectionIds": [
+            "sales-qualification-agent"
+          ],
+          "cardIds": [
+            "fc-ab210-ql-06",
+            "fc-ab210-ql-07",
+            "fc-ab210-ql-08",
+            "fc-ab210-ql-09"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "develop-deals",
+      "title": "Develop deals by using intelligent opportunity research",
+      "domainId": "develop-deals",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/manage-opportunities-dynamics-365-sales/",
+      "modules": [
+        {
+          "id": "develop-deals-m1",
+          "title": "Optimize opportunity management and pricing",
+          "sectionIds": [
+            "opportunity-management-and-products"
+          ],
+          "cardIds": [
+            "fc-ab210-dd-01",
+            "fc-ab210-dd-02",
+            "fc-ab210-dd-03",
+            "fc-ab210-dd-12"
+          ]
+        },
+        {
+          "id": "develop-deals-m2",
+          "title": "Work deals with the Opportunity and Close agents",
+          "sectionIds": [
+            "sales-opportunity-agent",
+            "sales-close-agent"
+          ],
+          "cardIds": [
+            "fc-ab210-dd-04",
+            "fc-ab210-dd-05",
+            "fc-ab210-dd-06",
+            "fc-ab210-dd-07",
+            "fc-ab210-dd-13",
+            "fc-ab210-dd-14"
+          ]
+        },
+        {
+          "id": "develop-deals-m3",
+          "title": "Gather intelligence with the Sales Research Agent",
+          "sectionIds": [
+            "sales-research-agent"
+          ],
+          "cardIds": [
+            "fc-ab210-dd-08",
+            "fc-ab210-dd-09",
+            "fc-ab210-dd-10",
+            "fc-ab210-dd-11"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "extend-sales",
+      "title": "Extend and enhance Sales",
+      "domainId": "extend-sales",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/automate-process-power-automate/",
+      "modules": [
+        {
+          "id": "extend-sales-m1",
+          "title": "Configure supporting apps and channels",
+          "sectionIds": [
+            "sales-mobile-and-channels"
+          ],
+          "cardIds": [
+            "fc-ab210-es-01",
+            "fc-ab210-es-02",
+            "fc-ab210-es-03"
+          ]
+        },
+        {
+          "id": "extend-sales-m2",
+          "title": "Expand the sales footprint with Power Platform",
+          "sectionIds": [
+            "power-platform-extensions"
+          ],
+          "cardIds": [
+            "fc-ab210-es-04",
+            "fc-ab210-es-05",
+            "fc-ab210-es-06"
+          ]
+        }
+      ]
+    }
+  ]
+}
