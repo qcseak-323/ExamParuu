@@ -1,0 +1,63 @@
+{
+  "examCode": "AI-200",
+  "examName": "Developing AI Cloud Solutions on Azure",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for AI-200. Like SC-500, AI-300 and AZ-802, this study guide carries no 'Skills measured as of <date>' line — Microsoft publishes a single undated skills list for it, and the exam is in beta. Re-check learn.microsoft.com before the exam.",
+  "domains": [
+    {
+      "id": "containerized-solutions",
+      "name": "Develop containerized solutions on Azure",
+      "weight": "20-25%",
+      "subtopics": [
+        "Build, store, version, and manage container images by using Azure Container Registry",
+        "Build and run images by using Azure Container Registry Tasks",
+        "Deploy containers to Azure App Service, including environment variables and secrets",
+        "Deploy applications to Azure Container Apps, including environment configuration and revision management",
+        "Implement event-driven scaling by using KEDA in Container Apps",
+        "Deploy and manage applications to Azure Kubernetes Service by using manifest files",
+        "Monitor and troubleshoot solutions on AKS and Container Apps by inspecting logs, events, and connectivity"
+      ]
+    },
+    {
+      "id": "ai-data-services",
+      "name": "Develop AI solutions by using Azure data management services",
+      "weight": "25-30%",
+      "subtopics": [
+        "Connect to Azure Cosmos DB for NoSQL by using the SDK and run queries",
+        "Optimise query performance and request unit consumption with indexing policies and consistency levels",
+        "Store and retrieve embeddings and execute vector similarity search in Cosmos DB",
+        "Implement a change feed processor to detect and handle new or updated items",
+        "Connect and query Azure Database for PostgreSQL by using SDKs",
+        "Model schemas and implement indexing strategies, including reducing pgvector compute overhead",
+        "Configure compute, memory, and storage resources to support vector workloads",
+        "Run vector similarity search and implement RAG patterns with metadata filtering",
+        "Implement connection optimisation to improve throughput and minimise latency",
+        "Implement Azure Managed Redis data operations including caching, expiration, invalidation, and vector indexing"
+      ]
+    },
+    {
+      "id": "connect-consume",
+      "name": "Connect to and consume Azure services",
+      "weight": "20-25%",
+      "subtopics": [
+        "Queue and process back-end operations by using Azure Service Bus",
+        "Handle dead-letter queues, messages, topics, and subscriptions",
+        "Implement event-driven workflows by using Azure Event Grid",
+        "Configure Event Grid filters, custom events, and retries",
+        "Build serverless APIs by implementing triggers and bindings in Azure Functions",
+        "Configure and deploy function apps"
+      ]
+    },
+    {
+      "id": "secure-monitor",
+      "name": "Secure, monitor, and troubleshoot Azure solutions",
+      "weight": "20-25%",
+      "subtopics": [
+        "Secure secrets by using Azure Key Vault, including rotation and retrieval",
+        "Store and retrieve application configuration by using Azure App Configuration",
+        "Trace distributed systems by using OpenTelemetry SDKs",
+        "Write KQL queries to analyse logs and metrics",
+        "Diagnose container and platform failures from logs and events"
+      ]
+    }
+  ]
+}

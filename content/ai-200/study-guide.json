@@ -1,0 +1,135 @@
+[
+  {
+    "domainId": "containerized-solutions",
+    "sections": [
+      {
+        "id": "container-registry-and-images",
+        "heading": "Container Registry and images",
+        "paragraphs": [
+          "Azure Container Registry stores images with tags, and the practice that matters is tagging by immutable version rather than relying on `latest` — a deployment referencing `latest` is not reproducible, because the tag moves. Enabling tag immutability prevents an existing tag being overwritten at all. The registry admin account is a shared credential and should stay disabled; access belongs to Microsoft Entra with the `AcrPull` role for consumers and `AcrPush` for builders, or to a managed identity for a service.",
+          "ACR Tasks build images inside Azure rather than on a developer machine, and they can trigger on a source commit, on a base image update, or on a schedule. The base image trigger is the one worth knowing: when the underlying image is patched, every image built on it is rebuilt automatically, which is how a fleet of containers stays patched without anybody remembering. Registry geo-replication places copies near the regions that pull them, reducing pull latency and egress."
+        ]
+      },
+      {
+        "id": "container-apps-and-aks",
+        "heading": "Container Apps, AKS, and KEDA",
+        "paragraphs": [
+          "Azure Container Apps is the serverless container platform: it runs containers without exposing Kubernetes, handles ingress and certificates, and scales to zero. Revisions are immutable snapshots of a container app's configuration, and traffic can be split across them by percentage — which is what makes blue-green and canary releases a configuration change rather than a deployment. AKS gives full Kubernetes with manifest files, node pools, and the operational responsibility that comes with them, and is the answer when a workload needs Kubernetes primitives that Container Apps abstracts away.",
+          "KEDA drives event-driven scaling in Container Apps, adding replicas based on a scaler — queue length in Service Bus or Storage, a Kafka lag, an HTTP concurrency figure, or a cron schedule — rather than on CPU alone. That distinction is the point: a worker consuming a queue should scale on queue depth, because CPU stays low while a backlog builds. Scaling to zero is what makes an intermittent workload cheap, at the cost of a cold start on the next request."
+        ]
+      },
+      {
+        "id": "app-service-containers",
+        "heading": "App Service containers and configuration",
+        "paragraphs": [
+          "App Service runs a container as a web app with managed TLS, custom domains, and deployment slots. Slots are the App Service equivalent of revisions: a slot is warmed with the new version and then swapped, so the swap is near-instantaneous and reversible. Application settings are injected as environment variables, and settings can be marked slot-specific so a connection string does not follow the swap.",
+          "Secrets should not be application settings holding literal values. A Key Vault reference in an app setting resolves at runtime through the app's managed identity, so the secret exists in one place and rotates without a redeployment. The same principle applies to Container Apps, which supports secrets and Key Vault-backed secret references, and to AKS, where a CSI driver mounts Key Vault secrets into pods. Across all three the ranking is the same: managed identity first, Key Vault reference second, literal value never."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "ai-data-services",
+    "sections": [
+      {
+        "id": "cosmos-for-ai",
+        "heading": "Cosmos DB for AI workloads",
+        "paragraphs": [
+          "The client should be created once and reused as a singleton, in direct connectivity mode where the network allows, with preferred regions set so reads are served locally. Request charge is returned on every response and is the direct measure of a design. Point reads by id and partition key are the cheapest operation available; supplying the partition key confines a query to one partition, and omitting it fans out across all of them.",
+          "For AI workloads the container holds documents alongside their embeddings, and vector similarity search retrieves the closest by distance. Two tuning levers dominate. The indexing policy indexes every property by default, which is good for reads and expensive for writes — excluding paths never filtered on reduces the RU cost of every insert, and that matters when embeddings are written in bulk. Consistency level affects read cost and latency: session is the default and usually correct, and reaching for strong consistency raises RU cost and constrains availability for a guarantee most retrieval workloads do not need."
+        ]
+      },
+      {
+        "id": "cosmos-change-feed",
+        "heading": "Change feed for derived data",
+        "paragraphs": [
+          "The change feed is a persistent, ordered record of creates and updates within each logical partition, and it is how derived data is kept in step. In an AI solution its usual job is re-embedding: when a source document changes, its embedding is stale, and the change feed is what notices. Nothing errors when an embedding no longer matches its document, so without this the system returns confident wrong results.",
+          "The change feed processor distributes work using a lease container, and each lease covers a range of partitions, so parallelism is bounded by the number of ranges — adding more instances than ranges leaves them idle. The lease container is a real container needing its own throughput. Delivery is at-least-once, so processing must be idempotent, and the feed records no deletes: a delete has to be expressed as a soft-delete update if a consumer must see it."
+        ]
+      },
+      {
+        "id": "postgres-pgvector",
+        "heading": "PostgreSQL and pgvector",
+        "paragraphs": [
+          "Azure Database for PostgreSQL with the `pgvector` extension stores embeddings in a `vector` column whose declared dimension must match the producing model. Distance operators cover cosine, inner product, and L2, and cosine is conventional for text embeddings. Without an index a similarity query performs an exact scan of every row, which is correct and does not scale.",
+          "Two index types matter. IVFFlat partitions vectors into lists and searches a subset, is quick to build, and must be built on a table that already holds representative data because the lists are derived from it — building on an empty table produces a useless index. HNSW builds a graph, gives better recall and query speed, and costs more to build and more memory to hold. Both are approximate, and their tuning parameters trade recall against latency: `lists` and `probes` for IVFFlat, `m` and `ef_construction` at build time with `ef_search` at query time for HNSW.",
+          "Metadata filtering alongside vector search is the pattern that makes RAG useful — restricting to a tenant, a document type, or a date range before or during the similarity search. The compute configuration matters more than for ordinary workloads because index building and searching are memory-hungry: an index that does not fit in memory is read from disk on every query, which is the usual explanation for vector search that is inexplicably slow on adequate hardware."
+        ]
+      },
+      {
+        "id": "managed-redis",
+        "heading": "Azure Managed Redis",
+        "paragraphs": [
+          "Redis serves two jobs in an AI solution. The first is ordinary caching, where the decisions are the expiry policy and the invalidation strategy: time-based expiry is simple and tolerates staleness, while explicit invalidation on write is precise and requires the writer to know what to invalidate. A cache without an expiry or an invalidation path is a correctness bug that appears weeks later.",
+          "The second is semantic caching and vector indexing. Redis can index vectors and perform similarity search, which supports caching model responses by the meaning of the question rather than its exact text — so two differently worded but equivalent questions hit the same cached answer. That saves both latency and model cost, and the trade to state is that a semantic cache can return an answer to a question that is similar but not the same, which is why the similarity threshold is a correctness setting rather than a tuning knob."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "connect-consume",
+    "sections": [
+      {
+        "id": "service-bus",
+        "heading": "Service Bus",
+        "paragraphs": [
+          "Service Bus is the durable broker for back-end work. A queue delivers each message to one consumer; a topic with subscriptions delivers a copy to each interested subscriber, with subscription filters deciding which messages each receives. Sessions provide ordered, related message groups handled by one consumer at a time, which is how per-entity ordering is preserved without serialising everything.",
+          "The receive mode is the detail that decides correctness. Peek-lock takes a lock, lets the consumer complete or abandon, and redelivers if the lock expires — which is what makes at-least-once processing safe. Receive-and-delete is faster and loses the message if the consumer fails. The dead-letter queue receives messages that exceed the maximum delivery count or expire, and it exists so poison messages do not block the queue forever; a system with no dead-letter monitoring simply loses those messages quietly. Duplicate detection and scheduled delivery cover the remaining common needs."
+        ]
+      },
+      {
+        "id": "event-grid",
+        "heading": "Event Grid",
+        "paragraphs": [
+          "Event Grid distributes discrete events to subscribers at high scale, and the distinction from Service Bus is worth stating plainly: Event Grid announces that something happened and is push-based with retries, while Service Bus hands over work that must be processed. A scenario describing reliable back-end processing wants a queue; one describing reacting to a state change wants events.",
+          "Subscriptions carry filters — by event type, by subject prefix and suffix, or advanced filters on the payload — so a handler receives only what concerns it, which is cheaper and simpler than filtering in code. Delivery is retried with exponential backoff over a retry policy, and undeliverable events go to a dead-letter destination in storage, which must be configured or those events are lost. Custom topics carry an application's own events in the same model."
+        ]
+      },
+      {
+        "id": "azure-functions",
+        "heading": "Azure Functions",
+        "paragraphs": [
+          "A function is a trigger plus optional bindings. The trigger decides when it runs — HTTP, timer, queue, Service Bus, Event Grid, Cosmos DB change feed, Blob — and input and output bindings connect to data without connection-handling code. The Cosmos DB trigger is a change feed processor with the lease container managed for you, which is why it is the usual way to react to document changes.",
+          "The hosting plan is the decision that shapes behaviour. Consumption scales to zero and bills per execution, at the cost of cold starts. Premium removes cold starts with pre-warmed instances and adds virtual network integration. Dedicated runs on an App Service plan. The Flex Consumption plan combines scale-to-zero with virtual network support. Durable Functions add orchestration for workflows needing state — fan-out and fan-in, human approval, and long-running sequences — which plain functions cannot express because they are stateless by design."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "secure-monitor",
+    "sections": [
+      {
+        "id": "key-vault-and-appconfig",
+        "heading": "Key Vault and App Configuration",
+        "paragraphs": [
+          "Key Vault holds secrets, keys, and certificates, reached with a managed identity so nothing is stored by the caller. Access is granted with Azure RBAC rather than the legacy access policy model, because RBAC scopes to an individual secret and is managed like every other Azure permission. Soft delete is always on and purge protection prevents even a privileged user destroying a vault before its retention expires. Rotation is configured with a policy and an expiry, and applications should read the secret rather than caching it indefinitely, or a rotated secret breaks them.",
+          "App Configuration holds non-secret settings, which keeps configuration out of the deployment artifact and lets several services share one source. Labels separate environments, so the same key resolves differently in development and production. Feature flags are first-class, allowing behaviour to be switched without redeploying. Its integration with Key Vault is the part worth remembering: a configuration value can be a Key Vault reference, so an application reads everything from one place while secrets remain in the vault."
+        ]
+      },
+      {
+        "id": "opentelemetry",
+        "heading": "Distributed tracing",
+        "paragraphs": [
+          "OpenTelemetry is the vendor-neutral standard for traces, metrics, and logs, and the Azure Monitor OpenTelemetry distro exports it to Application Insights. A trace is a set of spans, each a unit of work, linked by a trace context propagated across service boundaries in headers — which is what allows one request through a web app, a queue, a function, and a database to be seen as one thing.",
+          "The failure to recognise is a broken trace: if a service does not propagate context, the downstream work appears as an unrelated trace and the picture is lost precisely where a distributed system is hardest to reason about. Asynchronous boundaries such as a queue are where propagation is most often dropped. Sampling controls volume and cost, and the trade to state is that aggressive sampling can lose the rare slow request that was the reason for tracing."
+        ]
+      },
+      {
+        "id": "kql-queries",
+        "heading": "Querying logs with KQL",
+        "paragraphs": [
+          "KQL queries in Log Analytics follow a pipeline: a table, then operators separated by pipes. The order that matters for cost is filtering early with `where` before `summarize`, because filtering after aggregation means aggregating data that is then discarded. `project` narrows columns, `summarize` aggregates with `by` for grouping, `bin` buckets time for charts, `join` combines tables, and `render` produces a visualisation.",
+          "For an AI or container workload the tables worth knowing are `requests`, `dependencies`, `traces`, and `exceptions` in Application Insights, and `ContainerLogV2` and `KubeEvents` for AKS. A dependency failure is usually more informative than the request failure it caused, because it names the downstream service. Alerts are built on saved queries with a threshold and an evaluation frequency, which is what turns a query somebody runs occasionally into something that notices on its own."
+        ]
+      },
+      {
+        "id": "troubleshooting-containers",
+        "heading": "Diagnosing container failures",
+        "paragraphs": [
+          "Container platform failures have recognisable signatures. `ImagePullBackOff` means the image could not be pulled — a wrong tag, a private registry with no credential, or a missing `AcrPull` role assignment. `CrashLoopBackOff` means the container starts and exits repeatedly, and the cause is in the container's own logs rather than in the platform's events. `OOMKilled` means the container exceeded its memory limit, which is a limit or a leak rather than a bug in the platform.",
+          "The order of investigation is logs, then events, then connectivity. Logs show what the application said, events show what the platform did to it, and connectivity checks — DNS resolution, service endpoints, network policy — cover the cases where the container is healthy and cannot reach what it needs. In Container Apps the equivalent surfaces are the console and system logs, and a revision that fails to become healthy is diagnosed the same way. Reaching for a cluster restart before reading logs is the standard way to lose the evidence."
+        ]
+      }
+    ]
+  }
+]

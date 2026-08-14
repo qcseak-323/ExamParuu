@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-mirefield-assistant",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "title": "Mirefield Legal — an assistant that is slow, stale, and expensive",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Mirefield Legal runs a research assistant over 900,000 case summaries for 350 fee earners. It retrieves relevant summaries and passes them to a language model, and it is used heavily between 09:00 and 11:00.",
+          "The platform team has been asked to fix three complaints — it is slow, it sometimes cites summaries that say something different, and its bill has doubled — before the firm rolls it out to a second office."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "Case summaries and their embeddings sit in Azure Cosmos DB for NoSQL. Every property is indexed, including the embedding array and several long text fields that no query ever filters on. Embeddings are written in nightly bulk batches, and the write RU charge has become the largest single cost on the account.",
+          "The API creates a new CosmosClient per incoming HTTP request. Latency traces show a consistent overhead on every call before any query runs.",
+          "Summaries are edited by the knowledge team through a separate tool that writes directly to Cosmos. Embeddings are regenerated only when someone remembers, and the assistant has begun citing summaries whose text no longer matches what the vector represents. Nothing in the logs indicates a problem.",
+          "A parallel pilot stores the same data in Azure Database for PostgreSQL with pgvector. Similarity queries take eleven seconds. No index was created on the vector column because the team read that pgvector supports exact search.",
+          "Fee earners ask the same handful of questions in slightly different wording all morning. Each is embedded and sent to the model afresh, and the model spend during those two hours is roughly eight times the rest of the day combined.",
+          "A proposal exists to move the whole workload to strong consistency, on the grounds that the assistant must never return an out-of-date summary."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Write cost on the Cosmos container must come down without changing how many embeddings are written.",
+          "The per-request latency overhead in the API must be removed.",
+          "Embeddings must be regenerated automatically whenever a summary is edited, rather than when somebody remembers.",
+          "The PostgreSQL pilot's eleven-second similarity queries must be brought down to interactive speed, accepting a small loss of recall.",
+          "Repeated, differently worded questions must stop costing a fresh model call each time.",
+          "The team wants an assessment of the proposal to move to strong consistency."
+        ]
+      }
+    ]
+  }
+]

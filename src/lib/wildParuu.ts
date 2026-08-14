@@ -45,6 +45,7 @@ export const WILD_PARUU: Record<string, WildParuu> = {
   // with AI-901.
   "ai-103": { sheet: "wild-pufferfish" },
   "ai-300": { sheet: "wild-pufferfish" },
+  "ai-200": { sheet: "wild-pufferfish" },
   "dp-900": { sheet: "wild-otter" },
   // DP-700 and DP-300 share the Datastream Delta with DP-900.
   "dp-700": { sheet: "wild-otter" },

@@ -146,11 +146,11 @@
     "series": "ai",
     "msLevel": "Associate",
     "status": "beta",
-    "durationMinutes": null,
+    "durationMinutes": 100,
     "passingScore": 700,
     "summary": "Cloud development with AI embedded throughout — the 2026 successor to the retired AZ-204 developer path.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-12",
     "sourceUrl": null
   },
   {

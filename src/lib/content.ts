@@ -166,6 +166,13 @@ import dp800StudyGuide from "../../content/dp-800/study-guide.json";
 import dp800Path from "../../content/dp-800/learning-path.json";
 import dp800CaseStudies from "../../content/dp-800/case-studies.json";
 
+import ai200Outline from "../../content/ai-200/outline.json";
+import ai200Questions from "../../content/ai-200/questions.json";
+import ai200Flashcards from "../../content/ai-200/flashcards.json";
+import ai200StudyGuide from "../../content/ai-200/study-guide.json";
+import ai200Path from "../../content/ai-200/learning-path.json";
+import ai200CaseStudies from "../../content/ai-200/case-studies.json";
+
 import pl900Outline from "../../content/pl-900/outline.json";
 import pl900Questions from "../../content/pl-900/questions.json";
 import pl900Flashcards from "../../content/pl-900/flashcards.json";
@@ -388,6 +395,14 @@ const examRegistry: Record<string, ExamContent> = {
     studyGuide: dp800StudyGuide as StudyGuideDomain[],
     learningPath: dp800Path as ExamLearningPath,
     caseStudies: dp800CaseStudies as CaseStudy[],
+  },
+  "ai-200": {
+    outline: ai200Outline as Outline,
+    questions: ai200Questions as Question[],
+    flashcards: ai200Flashcards as Flashcard[],
+    studyGuide: ai200StudyGuide as StudyGuideDomain[],
+    learningPath: ai200Path as ExamLearningPath,
+    caseStudies: ai200CaseStudies as CaseStudy[],
   },
   "pl-900": {
     outline: pl900Outline as Outline,

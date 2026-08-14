@@ -1,0 +1,933 @@
+[
+  {
+    "id": "ds-01",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "caseStudyId": "cs-mirefield-assistant",
+    "question": "Write RU charge is the largest cost on the Cosmos container, every property is indexed, and several indexed fields are never filtered on. What should you change?",
+    "options": [
+      "Exclude the unused paths, including the embedding array, from the indexing policy",
+      "Move the container to serverless throughput",
+      "Switch the account to eventual consistency",
+      "Increase provisioned throughput to absorb the writes"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cosmos indexes every property by default and each indexed path adds cost to every write, so a write-heavy container with unused indexed paths is paying for nothing. Raising throughput pays the same cost faster rather than reducing it.",
+    "teaches": "cosmos-for-ai"
+  },
+  {
+    "id": "ds-02",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "caseStudyId": "cs-mirefield-assistant",
+    "question": "The API creates a new CosmosClient per HTTP request and traces show a consistent overhead before any query runs. What should you change?",
+    "options": [
+      "Create the client once and reuse it as a singleton",
+      "Switch the client to gateway connectivity mode",
+      "Reduce the client's maximum retry attempts",
+      "Enable bulk mode on the client"
+    ],
+    "correctIndex": 0,
+    "explanation": "The client is designed to be long-lived, maintaining connections and routing caches. Creating one per request discards all of that and adds connection setup to every call, which is exactly the overhead described.",
+    "teaches": "cosmos-for-ai"
+  },
+  {
+    "id": "ds-03",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "caseStudyId": "cs-mirefield-assistant",
+    "question": "Summaries are edited by a separate tool and embeddings are regenerated only when somebody remembers, with nothing in the logs indicating a problem. What should you implement?",
+    "options": [
+      "A change feed processor that re-embeds updated documents",
+      "A nightly job that regenerates every embedding",
+      "A unique key policy on the summary text",
+      "A stricter consistency level on the account"
+    ],
+    "correctIndex": 0,
+    "explanation": "The change feed notices updates wherever they originate, which matters because the edits come from another tool. A full nightly rebuild is wasteful and still leaves up to a day of staleness, and nothing about consistency addresses derived data.",
+    "teaches": "cosmos-change-feed"
+  },
+  {
+    "id": "ds-04",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "caseStudyId": "cs-mirefield-assistant",
+    "question": "The PostgreSQL pilot takes eleven seconds per similarity query with no index on the vector column, and a small loss of recall is acceptable. What should you do?",
+    "options": [
+      "Create an approximate vector index such as HNSW or IVFFlat",
+      "Increase the statement timeout so the query completes",
+      "Reduce the embedding dimension count",
+      "Add a B-tree index on the vector column"
+    ],
+    "correctIndex": 0,
+    "explanation": "Without a vector index every query scans every row, which is exact and does not scale. HNSW and IVFFlat are approximate and trade a little recall for a large speed gain — the trade the requirement explicitly accepts. A B-tree cannot serve similarity search.",
+    "teaches": "postgres-pgvector"
+  },
+  {
+    "id": "ds-05",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "caseStudyId": "cs-mirefield-assistant",
+    "question": "Fee earners ask the same questions in slightly different wording all morning, and each is sent to the model afresh. What should you implement?",
+    "options": [
+      "Semantic caching in Azure Managed Redis, keyed by embedding similarity",
+      "An exact-match response cache keyed by the question string",
+      "A longer time to live on the Cosmos documents",
+      "A second model deployment to spread the load"
+    ],
+    "correctIndex": 0,
+    "explanation": "An exact-match cache misses when the wording differs, which is precisely the pattern described. Semantic caching matches by meaning so equivalent questions hit the same cached answer, and the similarity threshold becomes a correctness setting.",
+    "teaches": "managed-redis"
+  },
+  {
+    "id": "ds-06",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "question": "A team proposes moving a retrieval workload to strong consistency so it never returns an out-of-date document. What should you tell them?",
+    "options": [
+      "Strong consistency raises RU cost and constrains availability, and session already guarantees read-your-own-writes",
+      "Strong consistency is required for vector search to work correctly",
+      "Strong consistency reduces RU cost by avoiding retries",
+      "Strong consistency is the default and no change is needed"
+    ],
+    "correctIndex": 0,
+    "explanation": "Session is the default and covers the case most applications actually mean. Strong is available only with a single write region and costs latency, RUs, and availability for a guarantee a retrieval workload rarely needs.",
+    "teaches": "cosmos-for-ai"
+  },
+  {
+    "id": "ds-07",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "question": "An IVFFlat index built immediately after creating an empty table performs no better than a sequential scan. Why?",
+    "options": [
+      "Its lists are derived from existing data, so building on an empty table produces a useless index",
+      "IVFFlat only supports L2 distance",
+      "IVFFlat requires the vectors to be normalised first",
+      "IVFFlat cannot be created on a table with a primary key"
+    ],
+    "correctIndex": 0,
+    "explanation": "IVFFlat partitions vectors into lists learned from the data present at build time. Loading representative data before building the index is a prerequisite rather than an optimisation.",
+    "teaches": "postgres-pgvector"
+  },
+  {
+    "id": "ds-08",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "question": "Vector search on a well-sized PostgreSQL instance is slower than expected and disk reads are high during queries. What is the likely cause?",
+    "options": [
+      "The vector index does not fit in memory and is read from disk on each query",
+      "The distance operator is set to cosine rather than L2",
+      "The embeddings were generated by more than one model",
+      "Connection pooling is disabled"
+    ],
+    "correctIndex": 0,
+    "explanation": "Vector indexes are memory-hungry, and an index that does not fit is paged from disk every time. It is the standard explanation for vector search that is slow on hardware that looks adequate on paper.",
+    "teaches": "postgres-pgvector"
+  },
+  {
+    "id": "ds-09",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "question": "A RAG query must return only documents belonging to the current tenant, alongside similarity ranking. What should you implement?",
+    "options": [
+      "Metadata filtering combined with the vector search",
+      "A separate vector index per tenant",
+      "Post-filtering the results in application code",
+      "A stricter similarity threshold"
+    ],
+    "correctIndex": 0,
+    "explanation": "Filtering by metadata alongside similarity is what makes retrieval correct as well as close. Post-filtering in code discards results after paying to retrieve them and can return an empty page when the top matches all belong to other tenants.",
+    "teaches": "postgres-pgvector"
+  },
+  {
+    "id": "ds-10",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "question": "Why must change feed processing be idempotent?",
+    "options": [
+      "Delivery is at-least-once, so a change can be delivered more than once when leases move",
+      "The change feed delivers changes out of order within a partition",
+      "The change feed includes deletes that may already have been applied",
+      "The lease container loses its state on restart"
+    ],
+    "correctIndex": 0,
+    "explanation": "Rebalancing leases between instances can replay a change. The feed is ordered within a logical partition and does not include deletes, so both of those distractors describe things it does not do.",
+    "teaches": "cosmos-change-feed"
+  },
+  {
+    "id": "ds-11",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "question": "A cache holds computed results with no expiry and no invalidation on write. What is the consequence?",
+    "options": [
+      "It becomes a correctness bug that surfaces weeks later",
+      "It raises memory cost but remains correct",
+      "It prevents the underlying store from being updated",
+      "It causes cache misses to fail rather than fall through"
+    ],
+    "correctIndex": 0,
+    "explanation": "Without either mechanism the cache eventually serves data that no longer reflects the source, and nothing signals it. Deciding how a cached value goes stale is part of designing the cache, not an operational afterthought.",
+    "teaches": "managed-redis"
+  },
+  {
+    "id": "ds-12",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "question": "Which Cosmos DB operation is cheapest when the application knows both the id and the partition key?",
+    "options": [
+      "A point read",
+      "A single-partition query",
+      "A cross-partition query",
+      "A stored procedure that reads the item"
+    ],
+    "correctIndex": 0,
+    "explanation": "A point read bypasses the query engine entirely and costs about one RU for a small document. Any query costs more, however precisely it is filtered.",
+    "teaches": "cosmos-for-ai"
+  },
+  {
+    "id": "ds-13",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "question": "A semantic cache begins returning answers to questions that are similar but not equivalent. What should you adjust?",
+    "options": [
+      "The similarity threshold, which is a correctness setting rather than a tuning knob",
+      "The cache expiry, to evict entries sooner",
+      "The embedding dimension count",
+      "The Redis eviction policy"
+    ],
+    "correctIndex": 0,
+    "explanation": "A semantic cache decides equivalence by distance, so the threshold determines whether a hit is genuinely the same question. Treating it as a performance dial is how a cache starts answering the wrong question quickly.",
+    "teaches": "managed-redis"
+  },
+  {
+    "id": "ds-14",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "kind": "multi",
+    "question": "Which two reduce request unit consumption in Azure Cosmos DB? Choose two.",
+    "options": [
+      "Excluding never-queried paths from the indexing policy",
+      "Supplying the partition key so a query targets one partition",
+      "Raising provisioned throughput",
+      "Enabling strong consistency"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Both reduce the work performed per operation. Raising throughput buys capacity at the same unit cost, and strong consistency increases read cost rather than reducing it.",
+    "teaches": "cosmos-for-ai"
+  },
+  {
+    "id": "ds-15",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "kind": "order",
+    "question": "Put the steps of keeping embeddings current with a change feed in order.",
+    "items": [
+      "Write the regenerated embedding back to the document",
+      "A source document is created or updated",
+      "Generate a new embedding for the changed text",
+      "The change feed processor receives the change"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "The change happens, the processor notices, the embedding is regenerated, and the document is updated. Because the write itself produces another change, the handler must recognise its own updates or it will loop.",
+    "teaches": "cosmos-change-feed"
+  },
+  {
+    "id": "ds-16",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "kind": "match",
+    "question": "Match each data service to the job it does in an AI solution.",
+    "pairs": [
+      { "term": "Azure Cosmos DB for NoSQL", "definition": "Documents with embeddings, plus a change feed for derived data" },
+      { "term": "Azure Database for PostgreSQL", "definition": "Relational data with pgvector similarity search and metadata filters" },
+      { "term": "Azure Managed Redis", "definition": "Caching, including semantic caching of model responses" },
+      { "term": "Change feed processor", "definition": "Detecting changes so derived data can be rebuilt" }
+    ],
+    "explanation": "Three stores with different shapes and one mechanism that keeps derived data honest. Choosing the store is a modelling decision; the change feed is what stops any of them drifting.",
+    "teaches": "cosmos-change-feed"
+  },
+  {
+    "id": "ds-17",
+    "examCode": "ai-200",
+    "domain": "ai-data-services",
+    "kind": "dropdown",
+    "question": "Complete the statement about vector search in PostgreSQL.",
+    "segments": [
+      { "text": "A similarity query with no vector index performs " },
+      {
+        "blankId": "b1",
+        "options": ["an exact scan of every row", "an approximate graph traversal", "a partitioned list search"],
+        "correctIndex": 0
+      },
+      { "text": ", and the index type giving the best recall and query speed at higher build cost is " },
+      {
+        "blankId": "b2",
+        "options": ["HNSW", "IVFFlat", "B-tree"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "No index means exact and unscalable. HNSW builds a graph that searches quickly with good recall, paying for it in build time and memory, while IVFFlat is cheaper to build and generally less accurate.",
+    "teaches": "postgres-pgvector"
+  },
+  {
+    "id": "cs-01",
+    "examCode": "ai-200",
+    "domain": "containerized-solutions",
+    "question": "A container app must scale on the depth of a Service Bus queue rather than on CPU. What should you configure?",
+    "options": [
+      "A KEDA scaler for Service Bus in Azure Container Apps",
+      "An autoscale rule on CPU percentage",
+      "A horizontal pod autoscaler on memory",
+      "A scheduled scaling rule for working hours"
+    ],
+    "correctIndex": 0,
+    "explanation": "A queue worker's CPU stays low while a backlog builds, so CPU-based scaling never fires when it is needed. KEDA scales on the signal that actually indicates demand.",
+    "teaches": "container-apps-and-aks"
+  },
+  {
+    "id": "cs-02",
+    "examCode": "ai-200",
+    "domain": "containerized-solutions",
+    "question": "A new version must receive 10% of production traffic before full rollout, without a separate deployment. What should you use?",
+    "options": [
+      "Container Apps revisions with traffic splitting",
+      "A second container app behind a load balancer",
+      "An AKS deployment with a rolling update strategy",
+      "App Service deployment slots with an immediate swap"
+    ],
+    "correctIndex": 0,
+    "explanation": "Revisions are immutable snapshots and traffic can be split across them by percentage, which makes a canary a configuration change. A rolling update replaces instances rather than splitting traffic by proportion.",
+    "teaches": "container-apps-and-aks"
+  },
+  {
+    "id": "cs-03",
+    "examCode": "ai-200",
+    "domain": "containerized-solutions",
+    "question": "Pods fail to start with ImagePullBackOff after a registry was locked down. What is the most likely cause?",
+    "options": [
+      "The workload's identity lacks the AcrPull role on the registry",
+      "The container exceeded its memory limit",
+      "The application crashes immediately on startup",
+      "The image entrypoint is misconfigured"
+    ],
+    "correctIndex": 0,
+    "explanation": "ImagePullBackOff means the image could never be retrieved, which points at credentials, a wrong tag, or a missing role — not at anything the container does once running. Memory limits and crashes produce different signatures entirely.",
+    "teaches": "container-registry-and-images"
+  },
+  {
+    "id": "cs-04",
+    "examCode": "ai-200",
+    "domain": "containerized-solutions",
+    "question": "Every image built on a shared base must be rebuilt automatically when that base is patched. What should you configure?",
+    "options": [
+      "An ACR Task with a base image update trigger",
+      "A scheduled pipeline that rebuilds all images nightly",
+      "Registry geo-replication to the build region",
+      "Tag immutability on the base image"
+    ],
+    "correctIndex": 0,
+    "explanation": "The base image trigger rebuilds dependent images when the base changes, which is how a fleet stays patched without anyone tracking dependencies. A nightly rebuild does the same work regardless of whether anything changed.",
+    "teaches": "container-registry-and-images"
+  },
+  {
+    "id": "cs-05",
+    "examCode": "ai-200",
+    "domain": "containerized-solutions",
+    "question": "A deployment references an image by the :latest tag. What is the problem?",
+    "options": [
+      "The tag moves, so the deployment is not reproducible",
+      "The tag cannot be pulled by a managed identity",
+      "The tag prevents geo-replication of the image",
+      "The tag disables vulnerability scanning"
+    ],
+    "correctIndex": 0,
+    "explanation": "Two deployments of the same manifest can produce different running code, which makes an incident impossible to reason about. Tagging by immutable version, with tag immutability enabled on the registry, removes the ambiguity.",
+    "teaches": "container-registry-and-images"
+  },
+  {
+    "id": "cs-06",
+    "examCode": "ai-200",
+    "domain": "containerized-solutions",
+    "question": "A containerised web app on App Service needs a database password. How should it be supplied?",
+    "options": [
+      "As a Key Vault reference in an application setting, resolved by the app's managed identity",
+      "As a plain application setting containing the password",
+      "Baked into the container image as an environment variable",
+      "Passed as a command-line argument in the startup command"
+    ],
+    "correctIndex": 0,
+    "explanation": "A Key Vault reference keeps the secret in one place and lets it rotate without redeploying. Every other option copies the secret into somewhere it must then be rotated by hand, and baking it into the image distributes it to anyone who can pull.",
+    "teaches": "app-service-containers"
+  },
+  {
+    "id": "cs-07",
+    "examCode": "ai-200",
+    "domain": "containerized-solutions",
+    "question": "A container repeatedly restarts with CrashLoopBackOff. Where should you look first?",
+    "options": [
+      "The container's own logs, which show why the process exited",
+      "The cluster's node metrics",
+      "The registry's pull history",
+      "The ingress controller configuration"
+    ],
+    "correctIndex": 0,
+    "explanation": "CrashLoopBackOff means the container starts and exits, so the reason is in what the application printed before dying. The platform events describe the restart loop rather than its cause.",
+    "teaches": "app-service-containers"
+  },
+  {
+    "id": "cs-08",
+    "examCode": "ai-200",
+    "domain": "containerized-solutions",
+    "question": "A workload needs Kubernetes primitives such as custom resource definitions and DaemonSets. Which platform should you choose?",
+    "options": [
+      "Azure Kubernetes Service",
+      "Azure Container Apps",
+      "Azure App Service for Containers",
+      "Azure Container Instances"
+    ],
+    "correctIndex": 0,
+    "explanation": "Container Apps deliberately abstracts Kubernetes away, so a workload needing its primitives needs AKS. The trade is that AKS also hands over the operational responsibility Container Apps absorbs.",
+    "teaches": "container-apps-and-aks"
+  },
+  {
+    "id": "cs-09",
+    "examCode": "ai-200",
+    "domain": "containerized-solutions",
+    "question": "A connection string must remain with the staging slot and not follow a swap into production. What should you configure?",
+    "options": [
+      "Mark the setting as slot-specific",
+      "Store the setting in the container image",
+      "Use the same value in both slots",
+      "Disable auto-swap on the slot"
+    ],
+    "correctIndex": 0,
+    "explanation": "Slot-specific settings stay with the slot rather than moving with the swapped content, which is what keeps staging pointed at staging. Without it, a swap sends production traffic to the staging database.",
+    "teaches": "app-service-containers"
+  },
+  {
+    "id": "cs-10",
+    "examCode": "ai-200",
+    "domain": "containerized-solutions",
+    "question": "An intermittent workload should cost nothing when idle, and an occasional slow first request is acceptable. What should you configure?",
+    "options": [
+      "Scale to zero on the container app",
+      "A minimum replica count of two",
+      "A dedicated App Service plan",
+      "An AKS node pool with autoscaling from one node"
+    ],
+    "correctIndex": 0,
+    "explanation": "Scaling to zero removes idle cost entirely, and the cold start is precisely the trade the requirement accepts. A minimum replica count or a dedicated plan pays for capacity that is idle by definition.",
+    "teaches": "container-apps-and-aks"
+  },
+  {
+    "id": "cs-11",
+    "examCode": "ai-200",
+    "domain": "containerized-solutions",
+    "question": "A container is terminated with OOMKilled. What does this indicate?",
+    "options": [
+      "It exceeded its configured memory limit",
+      "The image could not be pulled from the registry",
+      "The readiness probe failed repeatedly",
+      "The node ran out of disk space"
+    ],
+    "correctIndex": 0,
+    "explanation": "OOMKilled is the platform enforcing a memory limit, so the fix is either a higher limit or a leak in the application. It is not a platform fault, which is what the name is often misread as.",
+    "teaches": "app-service-containers"
+  },
+  {
+    "id": "cs-12",
+    "examCode": "ai-200",
+    "domain": "containerized-solutions",
+    "kind": "multi",
+    "question": "Which two improve the security of an Azure Container Registry? Choose two.",
+    "options": [
+      "Disabling the admin account",
+      "Granting AcrPull to a workload's managed identity",
+      "Tagging every image as latest",
+      "Enabling geo-replication"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Removing the shared credential and granting scoped, attributable access are the two security measures. Geo-replication is a performance feature and the latest tag is a reproducibility problem rather than a security one.",
+    "teaches": "container-registry-and-images"
+  },
+  {
+    "id": "cs-13",
+    "examCode": "ai-200",
+    "domain": "containerized-solutions",
+    "kind": "order",
+    "question": "Put the steps of diagnosing a failing container in order.",
+    "items": [
+      "Check connectivity — DNS, service endpoints, and network policy",
+      "Read the container's own logs",
+      "Apply the fix and confirm the container becomes healthy",
+      "Read the platform events for the pod or revision"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "Logs say what the application did, events say what the platform did to it, and connectivity covers a healthy container that cannot reach what it needs. Restarting before reading destroys the evidence.",
+    "teaches": "app-service-containers"
+  },
+  {
+    "id": "cs-14",
+    "examCode": "ai-200",
+    "domain": "containerized-solutions",
+    "kind": "match",
+    "question": "Match each container failure signature to its cause.",
+    "pairs": [
+      { "term": "ImagePullBackOff", "definition": "The image could not be retrieved from the registry" },
+      { "term": "CrashLoopBackOff", "definition": "The container starts and exits repeatedly" },
+      { "term": "OOMKilled", "definition": "The container exceeded its memory limit" },
+      { "term": "Readiness probe failure", "definition": "The container runs but reports itself not ready to serve" }
+    ],
+    "explanation": "Four distinct signatures with four different investigations. Recognising which one you have is most of the diagnosis, and each points at a different place to look.",
+    "teaches": "app-service-containers"
+  },
+  {
+    "id": "cc-01",
+    "examCode": "ai-200",
+    "domain": "connect-consume",
+    "question": "A back-end operation must be processed exactly once even if a consumer crashes mid-processing. Which receive mode should you use?",
+    "options": [
+      "Peek-lock, completing the message after successful processing",
+      "Receive-and-delete, for lower latency",
+      "Peek-lock with the lock duration set to zero",
+      "Receive-and-delete with duplicate detection enabled"
+    ],
+    "correctIndex": 0,
+    "explanation": "Peek-lock leaves the message available for redelivery if the consumer fails before completing it. Receive-and-delete removes the message on receipt, so a crash loses the work entirely.",
+    "teaches": "service-bus"
+  },
+  {
+    "id": "cc-02",
+    "examCode": "ai-200",
+    "domain": "connect-consume",
+    "question": "A malformed message is repeatedly delivered and blocks processing of everything behind it. What handles this?",
+    "options": [
+      "The dead-letter queue, once the maximum delivery count is exceeded",
+      "Duplicate detection on the queue",
+      "A session on the queue",
+      "Scheduled delivery of the message"
+    ],
+    "correctIndex": 0,
+    "explanation": "Dead-lettering exists so a poison message is moved aside rather than blocking the queue forever. A system that never monitors its dead-letter queue simply loses those messages quietly, which is the other half of the same lesson.",
+    "teaches": "service-bus"
+  },
+  {
+    "id": "cc-03",
+    "examCode": "ai-200",
+    "domain": "connect-consume",
+    "question": "Messages for one customer must be processed in order, while different customers are processed in parallel. What should you use?",
+    "options": [
+      "Service Bus sessions keyed by customer",
+      "A single-consumer queue",
+      "Duplicate detection on the queue",
+      "An Event Grid topic with subject filters"
+    ],
+    "correctIndex": 0,
+    "explanation": "Sessions give ordered handling within a session while sessions themselves are processed concurrently, which is per-entity ordering without serialising the whole queue. A single consumer would order everything and lose the parallelism.",
+    "teaches": "service-bus"
+  },
+  {
+    "id": "cc-04",
+    "examCode": "ai-200",
+    "domain": "connect-consume",
+    "question": "Several independent systems must each react to a resource state change. Which service fits?",
+    "options": [
+      "Azure Event Grid",
+      "Azure Service Bus queue",
+      "Azure Storage queue",
+      "Azure Functions timer trigger"
+    ],
+    "correctIndex": 0,
+    "explanation": "Event Grid announces that something happened and pushes to many subscribers with filtering and retries. A queue hands work to one consumer, which is the opposite distribution model.",
+    "teaches": "event-grid"
+  },
+  {
+    "id": "cc-05",
+    "examCode": "ai-200",
+    "domain": "connect-consume",
+    "question": "An Event Grid handler should receive only events whose subject begins with /blobs/images/. What should you configure?",
+    "options": [
+      "A subject prefix filter on the subscription",
+      "A custom topic per image folder",
+      "Filtering inside the handler code",
+      "A retry policy on the subscription"
+    ],
+    "correctIndex": 0,
+    "explanation": "Filtering at the subscription means the handler is never invoked for irrelevant events, which is cheaper and simpler than receiving everything and discarding most of it.",
+    "teaches": "event-grid"
+  },
+  {
+    "id": "cc-06",
+    "examCode": "ai-200",
+    "domain": "connect-consume",
+    "question": "Events that cannot be delivered after all retries must be retained for investigation. What must you configure?",
+    "options": [
+      "A dead-letter destination in a storage account",
+      "A longer retry policy",
+      "A higher event time to live",
+      "A second subscription as a backup"
+    ],
+    "correctIndex": 0,
+    "explanation": "Without a dead-letter destination, undeliverable events are dropped. Extending retries delays the loss rather than preventing it, and a second subscription would face the same delivery failure.",
+    "teaches": "event-grid"
+  },
+  {
+    "id": "cc-07",
+    "examCode": "ai-200",
+    "domain": "connect-consume",
+    "question": "A function must run whenever documents change in a Cosmos DB container. Which trigger should you use?",
+    "options": [
+      "The Cosmos DB trigger, which manages the lease container for you",
+      "A timer trigger polling the container",
+      "An HTTP trigger called by the writing application",
+      "A Blob trigger on the account's storage"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Cosmos DB trigger is a change feed processor with lease management handled by the platform. Polling on a timer costs RUs continuously and adds latency, and requiring the writer to call an endpoint couples them.",
+    "teaches": "azure-functions"
+  },
+  {
+    "id": "cc-08",
+    "examCode": "ai-200",
+    "domain": "connect-consume",
+    "question": "A function app must have no cold starts and reach resources over a virtual network. Which hosting plan fits?",
+    "options": [
+      "Premium",
+      "Consumption",
+      "A shared App Service plan",
+      "Consumption with a warm-up trigger"
+    ],
+    "correctIndex": 0,
+    "explanation": "Premium keeps pre-warmed instances and supports virtual network integration, which is exactly the pair of requirements. Consumption scales to zero and therefore has cold starts by design.",
+    "teaches": "azure-functions"
+  },
+  {
+    "id": "cc-09",
+    "examCode": "ai-200",
+    "domain": "connect-consume",
+    "question": "A workflow must fan out to many parallel tasks, wait for all of them, then continue — and survive a restart. What should you use?",
+    "options": [
+      "Durable Functions with a fan-out and fan-in orchestration",
+      "A queue-triggered function per task",
+      "A timer-triggered function that polls for completion",
+      "An Event Grid subscription per task"
+    ],
+    "correctIndex": 0,
+    "explanation": "Ordinary functions are stateless and cannot remember that they are waiting on twenty tasks. Durable Functions hold that state as part of the orchestration and resume it after a restart.",
+    "teaches": "azure-functions"
+  },
+  {
+    "id": "cc-10",
+    "examCode": "ai-200",
+    "domain": "connect-consume",
+    "question": "One published message must reach three different consumers with different interests. What should you use?",
+    "options": [
+      "A Service Bus topic with three subscriptions and filters",
+      "Three Service Bus queues written to by the publisher",
+      "A single queue with three competing consumers",
+      "A Service Bus session per consumer"
+    ],
+    "correctIndex": 0,
+    "explanation": "A topic delivers a copy to each subscription, with filters deciding what each receives. Three competing consumers on one queue split the messages rather than each receiving all of them.",
+    "teaches": "service-bus"
+  },
+  {
+    "id": "cc-11",
+    "examCode": "ai-200",
+    "domain": "connect-consume",
+    "question": "What is the difference between a function trigger and a binding?",
+    "options": [
+      "A trigger decides when the function runs; bindings connect it to data without connection code",
+      "A trigger reads data; a binding writes data",
+      "A trigger is synchronous; a binding is asynchronous",
+      "A trigger is configured in code; a binding is configured in the portal"
+    ],
+    "correctIndex": 0,
+    "explanation": "Every function has exactly one trigger and may have any number of input and output bindings. Bindings work in both directions, which is why describing them as read versus write is wrong.",
+    "teaches": "azure-functions"
+  },
+  {
+    "id": "cc-12",
+    "examCode": "ai-200",
+    "domain": "connect-consume",
+    "kind": "multi",
+    "question": "Which two are true of Azure Service Bus compared with Event Grid? Choose two.",
+    "options": [
+      "It is designed for work that must be reliably processed",
+      "It supports dead-lettering of messages that exceed the delivery count",
+      "It pushes events to subscribers with retries and no consumer state",
+      "It is intended primarily for announcing resource state changes"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Service Bus hands over work with delivery guarantees and dead-lettering. Pushing announcements to many subscribers is Event Grid's model, and choosing between them starts with whether the message is work or news.",
+    "teaches": "service-bus"
+  },
+  {
+    "id": "cc-13",
+    "examCode": "ai-200",
+    "domain": "connect-consume",
+    "kind": "order",
+    "question": "Put the lifecycle of a peek-lock message in order.",
+    "items": [
+      "The consumer completes the message, removing it from the queue",
+      "The consumer receives the message and a lock is taken",
+      "The message is dead-lettered if the delivery count is exceeded",
+      "Processing fails and the lock expires, making the message visible again"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "Lock, fail and redeliver, dead-letter after enough failures, or complete on success. The redelivery path is what makes at-least-once processing safe, and dead-lettering is what stops it looping forever.",
+    "teaches": "service-bus"
+  },
+  {
+    "id": "cc-14",
+    "examCode": "ai-200",
+    "domain": "connect-consume",
+    "kind": "yesno",
+    "question": "An Azure Function on the Consumption plan is being considered for a latency-sensitive API. Judge each statement.",
+    "statements": [
+      { "text": "It scales to zero when idle and bills per execution.", "correct": true },
+      { "text": "It can experience cold starts after a period of inactivity.", "correct": true },
+      { "text": "The Premium plan removes cold starts with pre-warmed instances.", "correct": true },
+      { "text": "Consumption supports virtual network integration in the same way as Premium.", "correct": false }
+    ],
+    "explanation": "Virtual network integration is one of the main reasons to move to Premium or Flex Consumption. Assuming Consumption offers it is how a design reaches the network-isolation requirement and then has to change plan.",
+    "teaches": "azure-functions"
+  },
+  {
+    "id": "sm-01",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "question": "An application caches a secret from Key Vault at startup and holds it for the process lifetime. What breaks?",
+    "options": [
+      "Rotation — the application keeps using the old secret after it is rotated",
+      "Soft delete — the vault cannot be recovered",
+      "RBAC — the application loses its role assignment",
+      "Purge protection — the secret cannot be deleted"
+    ],
+    "correctIndex": 0,
+    "explanation": "A cached secret survives the rotation that was supposed to replace it, and the failure appears when the old value is finally revoked. Reading the secret rather than holding it indefinitely is what makes rotation a non-event.",
+    "teaches": "key-vault-and-appconfig"
+  },
+  {
+    "id": "sm-02",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "question": "A principal must be able to read one specific secret in a Key Vault and nothing else. Which access model supports this?",
+    "options": [
+      "Azure RBAC, with a role assignment scoped to the secret",
+      "A vault access policy granting Get on secrets",
+      "A vault access policy granting List and Get",
+      "A managed identity with Key Vault Contributor"
+    ],
+    "correctIndex": 0,
+    "explanation": "Access policies apply to the whole vault, so any secret permission covers every secret in it. RBAC scopes to an individual secret, which is one of the main reasons it is now recommended.",
+    "teaches": "key-vault-and-appconfig"
+  },
+  {
+    "id": "sm-03",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "question": "The same configuration key must resolve to different values in development and production, from one store. What should you use?",
+    "options": [
+      "Labels in Azure App Configuration",
+      "A separate App Configuration store per environment",
+      "Application settings on each app service",
+      "A Key Vault secret per environment"
+    ],
+    "correctIndex": 0,
+    "explanation": "Labels are exactly this mechanism, letting one key carry per-environment values in one store. Separate stores work but multiply the places configuration lives, which is what App Configuration exists to reduce.",
+    "teaches": "key-vault-and-appconfig"
+  },
+  {
+    "id": "sm-04",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "question": "A request passes through a web app, a queue, and a function, and the function's work appears as an unrelated trace. What is wrong?",
+    "options": [
+      "Trace context is not being propagated across the queue boundary",
+      "Sampling is discarding the function's telemetry",
+      "The function is on the wrong Application Insights resource",
+      "The queue is using receive-and-delete mode"
+    ],
+    "correctIndex": 0,
+    "explanation": "Asynchronous boundaries are where trace context is most often dropped, because it must be carried in the message rather than in an HTTP header. The result is a broken picture exactly where a distributed system is hardest to reason about.",
+    "teaches": "opentelemetry"
+  },
+  {
+    "id": "sm-05",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "question": "A KQL query aggregates a large table and then filters the result. How should it be rewritten?",
+    "options": [
+      "Filter with where before summarize",
+      "Replace summarize with project",
+      "Add a render operator at the end",
+      "Join the table to itself to reduce rows"
+    ],
+    "correctIndex": 0,
+    "explanation": "Filtering after aggregation means aggregating rows that are then discarded. Moving the filter earlier reduces the data the expensive operator has to process, which is the main cost lever in KQL.",
+    "teaches": "kql-queries"
+  },
+  {
+    "id": "sm-06",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "question": "Requests to an API are failing intermittently. Which Application Insights table most often names the actual cause?",
+    "options": [
+      "dependencies",
+      "requests",
+      "traces",
+      "customEvents"
+    ],
+    "correctIndex": 0,
+    "explanation": "A dependency failure identifies the downstream service that failed, which is usually why the request failed. The requests table records that the request failed without saying what it was waiting on.",
+    "teaches": "kql-queries"
+  },
+  {
+    "id": "sm-07",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "question": "Aggressive sampling has been enabled to control telemetry cost. What is the risk?",
+    "options": [
+      "The rare slow request that motivated tracing may not be captured",
+      "Trace context stops being propagated between services",
+      "Metrics stop being aggregated correctly",
+      "Log Analytics rejects the ingested data"
+    ],
+    "correctIndex": 0,
+    "explanation": "Sampling reduces volume by discarding representative telemetry, and the outlier is by definition unrepresentative. That is the trade to state explicitly when proposing it.",
+    "teaches": "opentelemetry"
+  },
+  {
+    "id": "sm-08",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "question": "An application should read both configuration and secrets through one client. What should you configure?",
+    "options": [
+      "Key Vault references stored in App Configuration",
+      "Secrets copied into App Configuration as plain values",
+      "Configuration values duplicated into Key Vault",
+      "Both read directly from application settings"
+    ],
+    "correctIndex": 0,
+    "explanation": "A Key Vault reference in App Configuration gives the application one read path while the secret stays in the vault. Copying secrets into App Configuration puts them somewhere not designed to protect them.",
+    "teaches": "key-vault-and-appconfig"
+  },
+  {
+    "id": "sm-09",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "question": "Which Key Vault setting prevents even a privileged user destroying a vault before its retention period expires?",
+    "options": [
+      "Purge protection",
+      "Soft delete",
+      "A resource lock",
+      "RBAC role assignment"
+    ],
+    "correctIndex": 0,
+    "explanation": "Soft delete is always on and allows recovery, but a privileged user can still purge. Purge protection removes that ability, and a resource lock can be removed by whoever manages locks.",
+    "teaches": "key-vault-and-appconfig"
+  },
+  {
+    "id": "sm-10",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "question": "A behaviour must be switched on for a subset of users without redeploying the application. What should you use?",
+    "options": [
+      "Feature flags in Azure App Configuration",
+      "A new deployment slot with the behaviour enabled",
+      "An environment variable changed in the portal",
+      "A Key Vault secret read at startup"
+    ],
+    "correctIndex": 0,
+    "explanation": "Feature flags are first-class in App Configuration and are evaluated at runtime, which is what allows a behaviour change without a deployment. Changing an environment variable typically restarts the app.",
+    "teaches": "key-vault-and-appconfig"
+  },
+  {
+    "id": "sm-11",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "kind": "multi",
+    "question": "Which two describe OpenTelemetry in an Azure solution? Choose two.",
+    "options": [
+      "It is a vendor-neutral standard for traces, metrics, and logs",
+      "The Azure Monitor distro exports its data to Application Insights",
+      "It replaces the need for structured application logging",
+      "It automatically propagates context across message queues"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Vendor neutrality and the Azure Monitor exporter are what make it the standard choice. Context across an asynchronous boundary must be carried deliberately, which is precisely where traces break.",
+    "teaches": "opentelemetry"
+  },
+  {
+    "id": "sm-12",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "kind": "order",
+    "question": "Put the clauses of a cost-efficient KQL query in the order they should appear.",
+    "items": [
+      "summarize the aggregate by a grouping column",
+      "The source table",
+      "render a chart of the result",
+      "where filters to the time range and conditions of interest"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "Table, filter, aggregate, visualise. Filtering before aggregating is the single largest cost lever, because everything downstream then processes less data.",
+    "teaches": "kql-queries"
+  },
+  {
+    "id": "sm-13",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "kind": "match",
+    "question": "Match each observability concept to what it provides.",
+    "pairs": [
+      { "term": "Span", "definition": "A single unit of work within a trace" },
+      { "term": "Trace context", "definition": "The identifiers propagated across service boundaries" },
+      { "term": "Sampling", "definition": "Reducing telemetry volume, at the risk of losing outliers" },
+      { "term": "Dependency telemetry", "definition": "A record of a call to a downstream service and its outcome" }
+    ],
+    "explanation": "Spans compose into traces, context links them across services, sampling decides how much is kept, and dependency telemetry is usually where the cause of a failure is named.",
+    "teaches": "opentelemetry"
+  },
+  {
+    "id": "sm-14",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "kind": "yesno",
+    "question": "Azure Key Vault is being configured for a production application. Judge each statement.",
+    "statements": [
+      { "text": "RBAC can scope access to an individual secret.", "correct": true },
+      { "text": "Soft delete is always enabled and cannot be turned off.", "correct": true },
+      { "text": "A managed identity removes the need for the application to hold a credential.", "correct": true },
+      { "text": "Purge protection can be disabled once enabled.", "correct": false }
+    ],
+    "explanation": "Purge protection is a one-way switch, which is the point of it — a setting an attacker could turn off before destroying a vault would protect nothing.",
+    "teaches": "key-vault-and-appconfig"
+  },
+  {
+    "id": "sm-15",
+    "examCode": "ai-200",
+    "domain": "secure-monitor",
+    "kind": "dropdown",
+    "question": "Complete the statement about investigating a failing container.",
+    "segments": [
+      { "text": "A container repeatedly starting and exiting is reported as " },
+      {
+        "blankId": "b1",
+        "options": ["CrashLoopBackOff", "ImagePullBackOff", "OOMKilled"],
+        "correctIndex": 0
+      },
+      { "text": ", and the first place to look for the cause is " },
+      {
+        "blankId": "b2",
+        "options": ["the container's own logs", "the node metrics", "the ingress configuration"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "The platform reports the loop; the application explains it. Reaching for a restart before reading the logs destroys the only evidence of why it exited.",
+    "teaches": "troubleshooting-containers"
+  }
+]
