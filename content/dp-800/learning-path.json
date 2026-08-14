@@ -1,0 +1,96 @@
+{
+  "examCode": "dp-800",
+  "note": "Three paths, one per exam domain. DP-800 is newly published and Microsoft has not settled a dedicated learning path set for it, so these point at the closest published SQL and AI paths; revisit the links as the training content stabilises.",
+  "paths": [
+    {
+      "id": "database-solutions",
+      "title": "Design and develop database solutions",
+      "domainId": "database-solutions",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/get-started-querying-with-transact-sql/",
+      "modules": [
+        {
+          "id": "database-solutions-m1",
+          "title": "Design tables, indexes, and constraints",
+          "sectionIds": ["table-design"],
+          "cardIds": ["fc-dp800-db-01", "fc-dp800-db-02", "fc-dp800-db-03", "fc-dp800-db-04", "fc-dp800-db-09"]
+        },
+        {
+          "id": "database-solutions-m2",
+          "title": "Implement specialised table types",
+          "sectionIds": ["specialized-tables"],
+          "cardIds": ["fc-dp800-db-05", "fc-dp800-db-06", "fc-dp800-db-07", "fc-dp800-db-08", "fc-dp800-db-14"]
+        },
+        {
+          "id": "database-solutions-m3",
+          "title": "Implement programmability objects",
+          "sectionIds": ["programmability-objects"],
+          "cardIds": ["fc-dp800-db-10", "fc-dp800-db-11", "fc-dp800-db-16"]
+        },
+        {
+          "id": "database-solutions-m4",
+          "title": "Write advanced T-SQL and use AI-assisted tools",
+          "sectionIds": ["advanced-tsql", "ai-assisted-dev"],
+          "cardIds": ["fc-dp800-db-12", "fc-dp800-db-13", "fc-dp800-db-15", "fc-dp800-db-17", "fc-dp800-db-18"]
+        }
+      ]
+    },
+    {
+      "id": "secure-optimize-deploy",
+      "title": "Secure, optimize, and deploy database solutions",
+      "domainId": "secure-optimize-deploy",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/secure-azure-sql-database/",
+      "modules": [
+        {
+          "id": "secure-optimize-deploy-m1",
+          "title": "Implement data security and compliance",
+          "sectionIds": ["data-security-dp800"],
+          "cardIds": ["fc-dp800-so-01", "fc-dp800-so-02", "fc-dp800-so-03", "fc-dp800-so-04", "fc-dp800-so-05"]
+        },
+        {
+          "id": "secure-optimize-deploy-m2",
+          "title": "Optimize database performance",
+          "sectionIds": ["performance-optimisation"],
+          "cardIds": ["fc-dp800-so-06", "fc-dp800-so-07", "fc-dp800-so-08", "fc-dp800-so-09", "fc-dp800-so-10"]
+        },
+        {
+          "id": "secure-optimize-deploy-m3",
+          "title": "Implement CI/CD with SQL Database Projects",
+          "sectionIds": ["cicd-sql-projects"],
+          "cardIds": ["fc-dp800-so-11", "fc-dp800-so-12", "fc-dp800-so-13", "fc-dp800-so-14"]
+        },
+        {
+          "id": "secure-optimize-deploy-m4",
+          "title": "Integrate SQL solutions with Azure services",
+          "sectionIds": ["azure-integration", "dab-endpoints"],
+          "cardIds": ["fc-dp800-so-15", "fc-dp800-so-16", "fc-dp800-so-17", "fc-dp800-so-18"]
+        }
+      ]
+    },
+    {
+      "id": "ai-capabilities",
+      "title": "Implement AI capabilities in database solutions",
+      "domainId": "ai-capabilities",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/develop-ai-solutions-azure-sql/",
+      "modules": [
+        {
+          "id": "ai-capabilities-m1",
+          "title": "Design and implement models and embeddings",
+          "sectionIds": ["models-and-embeddings", "embedding-maintenance"],
+          "cardIds": ["fc-dp800-ai-01", "fc-dp800-ai-02", "fc-dp800-ai-03", "fc-dp800-ai-04", "fc-dp800-ai-05"]
+        },
+        {
+          "id": "ai-capabilities-m2",
+          "title": "Design and implement intelligent search",
+          "sectionIds": ["intelligent-search"],
+          "cardIds": ["fc-dp800-ai-06", "fc-dp800-ai-07", "fc-dp800-ai-08", "fc-dp800-ai-09", "fc-dp800-ai-12"]
+        },
+        {
+          "id": "ai-capabilities-m3",
+          "title": "Implement vector search and RAG",
+          "sectionIds": ["vector-indexes-and-rag"],
+          "cardIds": ["fc-dp800-ai-10", "fc-dp800-ai-11", "fc-dp800-ai-13", "fc-dp800-ai-14"]
+        }
+      ]
+    }
+  ]
+}

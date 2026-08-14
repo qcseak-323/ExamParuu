@@ -1,0 +1,933 @@
+[
+  {
+    "id": "ai-01",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "caseStudyId": "cs-penhale-parts",
+    "question": "Embeddings were generated from the manufacturer code column alone and results are close to random. What should you change?",
+    "options": [
+      "Embed the description and fitment note, which carry the meaning a customer searches on",
+      "Switch to a larger embedding model",
+      "Increase the vector dimension count",
+      "Normalise the vectors before storing them"
+    ],
+    "correctIndex": 0,
+    "explanation": "A manufacturer code carries almost no semantic content, so no model will produce useful vectors from it. The developer's conclusion that the model is at fault is the wrong diagnosis — the input is.",
+    "teaches": "models-and-embeddings"
+  },
+  {
+    "id": "ai-02",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "caseStudyId": "cs-penhale-parts",
+    "question": "Embeddings must stay current as descriptions are edited, without adding model-call latency to every write. What should you implement?",
+    "options": [
+      "Change Tracking, with a process re-embedding changed rows out of band",
+      "A trigger that regenerates the embedding within the transaction",
+      "A full regeneration of all embeddings each quarter",
+      "A CHECK constraint requiring the embedding to be supplied on update"
+    ],
+    "correctIndex": 0,
+    "explanation": "A trigger is immediate but puts a model call inside every write, which is exactly the latency the requirement excludes. Change Tracking identifies changed rows for a process running out of band, and a quarterly rebuild leaves months of silent staleness.",
+    "teaches": "embedding-maintenance"
+  },
+  {
+    "id": "ai-03",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "caseStudyId": "cs-penhale-parts",
+    "question": "Staff search both by exact manufacturer code and by descriptive phrases. What should the search implement?",
+    "options": [
+      "Hybrid search, combining full-text and vector results",
+      "Vector search with a lower distance threshold",
+      "Full-text search with a thesaurus",
+      "A LIKE predicate over the description column"
+    ],
+    "correctIndex": 0,
+    "explanation": "A manufacturer code carries no semantic signal for vector search, and a paraphrase shares no terms with full-text search. Each method fails precisely where the other succeeds, which is the whole argument for hybrid.",
+    "teaches": "intelligent-search"
+  },
+  {
+    "id": "ai-04",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "caseStudyId": "cs-penhale-parts",
+    "question": "Normalising the full-text relevance score and the vector distance onto one scale and averaging them produces unstable rankings. What should you use instead?",
+    "options": [
+      "Reciprocal rank fusion, which combines by rank rather than by score",
+      "A weighted average with the weights tuned per query",
+      "The vector distance alone, discarding the full-text score",
+      "The full-text score alone, discarding the vector distance"
+    ],
+    "correctIndex": 0,
+    "explanation": "A relevance score and a distance are not comparable quantities, so normalising them is guesswork that shifts whenever the corpus changes. Rank is meaningful in both lists, which is why RRF fuses on rank.",
+    "teaches": "intelligent-search"
+  },
+  {
+    "id": "ai-05",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "caseStudyId": "cs-penhale-parts",
+    "question": "Vector search over 1.4 million rows takes seconds, and occasionally missing a marginally relevant result is acceptable. What should you use?",
+    "options": [
+      "Approximate nearest neighbour search with a vector index",
+      "Exhaustive nearest neighbour search",
+      "A smaller embedding dimension with exhaustive search",
+      "A filtered exhaustive search limited to one manufacturer"
+    ],
+    "correctIndex": 0,
+    "explanation": "Exhaustive search compares against every vector, which is exact and does not scale to this size. Approximate search trades a small loss of recall for a large gain in speed, and the requirement explicitly accepts that trade.",
+    "teaches": "vector-indexes-and-rag"
+  },
+  {
+    "id": "ai-06",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "question": "Vector operations fail with an error as soon as embeddings from a new model are inserted. What should you check first?",
+    "options": [
+      "That the column's declared vector dimension matches the new model's output",
+      "That the vectors have been normalised",
+      "That an approximate index exists on the column",
+      "That the distance metric is set to cosine"
+    ],
+    "correctIndex": 0,
+    "explanation": "The VECTOR type declares a dimension count and a mismatch is a hard error, so changing embedding model without changing the column is the immediate suspect. Metrics and indexes affect results and speed rather than causing a type error.",
+    "teaches": "vector-indexes-and-rag"
+  },
+  {
+    "id": "ai-07",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "question": "Which distance metric is conventionally used with text embeddings?",
+    "options": [
+      "Cosine",
+      "Manhattan",
+      "Hamming",
+      "Jaccard"
+    ],
+    "correctIndex": 0,
+    "explanation": "Cosine distance compares direction rather than magnitude, which is what text embedding models are trained to make meaningful. The others suit different data shapes entirely.",
+    "teaches": "vector-indexes-and-rag"
+  },
+  {
+    "id": "ai-08",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "question": "Long documents are embedded whole and searches return almost nothing above the similarity threshold. What is the likely cause?",
+    "options": [
+      "The chunks are too large, diluting the vector so nothing matches strongly",
+      "The chunks are too small to carry meaning",
+      "The embedding model has too many dimensions",
+      "The vector index is approximate rather than exhaustive"
+    ],
+    "correctIndex": 0,
+    "explanation": "A vector over a whole long document averages many topics, so no specific query is close to it. Chunking to passage size, with overlap so sentences are not severed, is the remedy.",
+    "teaches": "models-and-embeddings"
+  },
+  {
+    "id": "ai-09",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "question": "A model endpoint is called from T-SQL. How should the call authenticate?",
+    "options": [
+      "With a managed identity",
+      "With an API key stored in a table",
+      "With an API key embedded in the stored procedure",
+      "With the credentials of the calling user"
+    ],
+    "correctIndex": 0,
+    "explanation": "A managed identity removes the stored credential entirely, which is the same ranking applied to every other Azure dependency. A key in a procedure or a table is visible to anyone who can read either.",
+    "teaches": "models-and-embeddings"
+  },
+  {
+    "id": "ai-10",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "question": "Which stored procedure calls an external REST endpoint from T-SQL to invoke a language model?",
+    "options": [
+      "sp_invoke_external_rest_endpoint",
+      "sp_execute_external_script",
+      "sp_send_dbmail",
+      "sp_executesql"
+    ],
+    "correctIndex": 0,
+    "explanation": "sp_invoke_external_rest_endpoint is the mechanism for outbound REST calls from the database. sp_execute_external_script runs R or Python in-engine, which is a different integration entirely.",
+    "teaches": "vector-indexes-and-rag"
+  },
+  {
+    "id": "ai-11",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "question": "A search must find documents containing an exact phrase with stemming and proximity support. Which approach fits?",
+    "options": [
+      "Full-text search",
+      "Vector search",
+      "Hybrid search with RRF",
+      "A LIKE predicate with wildcards"
+    ],
+    "correctIndex": 0,
+    "explanation": "Full-text search provides linguistic processing — stemming, thesaurus, proximity — over the literal words. Vector search matches meaning and would not honour an exact phrase requirement.",
+    "teaches": "intelligent-search"
+  },
+  {
+    "id": "ai-12",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "question": "Embeddings were generated once and never refreshed, and search now returns wrong results. What makes this failure dangerous?",
+    "options": [
+      "Nothing errors — search returns confident, incorrect results",
+      "The vector index becomes invalid and queries fail",
+      "The database refuses further inserts to the table",
+      "The embedding column reverts to NULL"
+    ],
+    "correctIndex": 0,
+    "explanation": "A stale embedding is still a valid vector, so every layer behaves normally while the answers are wrong. That silence is why embedding maintenance is a design decision rather than an operational afterthought.",
+    "teaches": "embedding-maintenance"
+  },
+  {
+    "id": "ai-13",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "kind": "multi",
+    "question": "Which two are valid ways to keep embeddings current as source rows change? Choose two.",
+    "options": [
+      "Change Data Capture feeding a re-embedding process",
+      "An Azure Function with a SQL trigger binding",
+      "A CHECK constraint on the embedding column",
+      "Increasing the vector dimension count"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Both detect change and re-embed out of band. A constraint cannot generate anything, and dimension count describes the vector's shape rather than its freshness.",
+    "teaches": "embedding-maintenance"
+  },
+  {
+    "id": "ai-14",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "kind": "order",
+    "question": "Put the steps of a retrieval-augmented generation loop implemented in T-SQL in order.",
+    "items": [
+      "Call the language model with the prompt",
+      "Generate an embedding for the user's question",
+      "Extract the model's response and return it",
+      "Retrieve the closest passages and build a prompt containing them"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "Embed the question, retrieve context, prompt the model, parse the answer. The retrieval step is what makes the answer grounded, and a loop that skips it is simply asking a model to guess.",
+    "teaches": "vector-indexes-and-rag"
+  },
+  {
+    "id": "ai-15",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "kind": "match",
+    "question": "Match each search approach to what it is best at.",
+    "pairs": [
+      { "term": "Full-text search", "definition": "Exact terms, codes, and names with linguistic processing" },
+      { "term": "Vector search", "definition": "Paraphrases that share no vocabulary with the query" },
+      { "term": "Hybrid search", "definition": "Workloads containing both kinds of query" },
+      { "term": "Reciprocal rank fusion", "definition": "Combining two result lists without comparing their scores" }
+    ],
+    "explanation": "Three retrieval strategies and one fusion method. Treating RRF as a search technique rather than a combination step is the confusion this set is built around.",
+    "teaches": "intelligent-search"
+  },
+  {
+    "id": "ai-16",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "kind": "yesno",
+    "question": "A retrieval-and-generation loop is being moved from the application tier into the database. Judge each statement.",
+    "statements": [
+      { "text": "The database will make outbound REST calls that must be secured and monitored.", "correct": true },
+      { "text": "sp_invoke_external_rest_endpoint is the mechanism for the model call.", "correct": true },
+      { "text": "Structured results must be converted to JSON for the model.", "correct": true },
+      { "text": "Moving the loop into the database removes the need to keep embeddings current.", "correct": false }
+    ],
+    "explanation": "Where the loop runs changes nothing about the data it depends on. Embeddings remain derived data that goes stale when the source changes, wherever the retrieval happens.",
+    "teaches": "vector-indexes-and-rag"
+  },
+  {
+    "id": "db-01",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "A table must automatically retain a full history of every row change, queryable as at a past date. What should you implement?",
+    "options": [
+      "A temporal table",
+      "A ledger table",
+      "A trigger writing to an audit table",
+      "Change Data Capture on the table"
+    ],
+    "correctIndex": 0,
+    "explanation": "System-versioned temporal tables maintain history automatically and are queried with FOR SYSTEM_TIME. A ledger table proves data was not tampered with, and CDC feeds a downstream consumer rather than supporting as-at queries in place.",
+    "teaches": "specialized-tables"
+  },
+  {
+    "id": "db-02",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "A regulator requires proof that historical financial rows have not been altered. What should you implement?",
+    "options": [
+      "A ledger table",
+      "A temporal table",
+      "Transparent data encryption",
+      "Row-level security"
+    ],
+    "correctIndex": 0,
+    "explanation": "Ledger provides cryptographic tamper evidence, which is what makes non-alteration demonstrable rather than asserted. Temporal tables record history but do not prove the history itself was not rewritten.",
+    "teaches": "specialized-tables"
+  },
+  {
+    "id": "db-03",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "Several tables must draw their identifiers from one shared, gap-tolerant number series. What should you use?",
+    "options": [
+      "A SEQUENCE object",
+      "An IDENTITY column on each table",
+      "A UNIQUEIDENTIFIER default",
+      "A trigger reading MAX(id) on insert"
+    ],
+    "correctIndex": 0,
+    "explanation": "A SEQUENCE is independent of any table and can be consumed by several, which IDENTITY cannot do. A trigger reading MAX is a concurrency defect waiting to happen.",
+    "teaches": "table-design"
+  },
+  {
+    "id": "db-04",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "An analytical table is scanned in full for aggregates over hundreds of millions of rows. What index type suits it?",
+    "options": [
+      "A clustered columnstore index",
+      "A clustered rowstore index on the date column",
+      "A non-clustered index with included columns",
+      "A memory-optimised hash index"
+    ],
+    "correctIndex": 0,
+    "explanation": "Columnstore stores data by column with high compression and is built for large analytical scans. Rowstore indexes serve point lookups and small ranges, which is the opposite access pattern.",
+    "teaches": "table-design"
+  },
+  {
+    "id": "db-05",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "A query shows a key lookup consuming most of its cost. What is the usual remedy?",
+    "options": [
+      "Add the missing columns as included columns on the non-clustered index",
+      "Rebuild the clustered index",
+      "Convert the table to a columnstore index",
+      "Add a CHECK constraint on the filtered column"
+    ],
+    "correctIndex": 0,
+    "explanation": "A key lookup means the index located the rows but not every column needed, so the engine returns to the base table per row. Including those columns makes the index cover the query.",
+    "teaches": "table-design"
+  },
+  {
+    "id": "db-06",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "A many-hop relationship must be traversed and expressed clearly in a query. What should you use?",
+    "options": [
+      "Graph tables with the MATCH operator",
+      "A recursive common table expression over a self-referencing table",
+      "A series of nested inline table-valued functions",
+      "A JSON column containing the relationships"
+    ],
+    "correctIndex": 0,
+    "explanation": "Graph tables model nodes and edges natively and MATCH expresses traversal directly. A recursive CTE can produce the same result and becomes hard to read and tune as the number of hops grows.",
+    "teaches": "specialized-tables"
+  },
+  {
+    "id": "db-07",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "A hot-path query calls a scalar user-defined function per row and performs badly. What should you do?",
+    "options": [
+      "Rewrite it as an inline table-valued function",
+      "Rewrite it as a multi-statement table-valued function",
+      "Wrap the call in a stored procedure",
+      "Add a trigger that precomputes the value"
+    ],
+    "correctIndex": 0,
+    "explanation": "Inline table-valued functions expand into the calling query and are optimised with it. Multi-statement functions return a table variable the optimiser estimates poorly, which trades one problem for another.",
+    "teaches": "programmability-objects"
+  },
+  {
+    "id": "db-08",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "Semi-structured attributes vary between rows and must be stored and queried without adding dozens of sparse columns. What should you use?",
+    "options": [
+      "A JSON column with indexes on the queried properties",
+      "An XML column with a primary XML index",
+      "A wide table with nullable columns for every possible attribute",
+      "A key-value child table with one row per attribute"
+    ],
+    "correctIndex": 0,
+    "explanation": "JSON columns hold the document and JSON indexes make properties inside it queryable without shredding it into columns. A key-value child table works but makes every query a pivot.",
+    "teaches": "specialized-tables"
+  },
+  {
+    "id": "db-09",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "A report must compare each month's total with the previous month's in a single pass. Which function should you use?",
+    "options": [
+      "LAG",
+      "ROW_NUMBER",
+      "RANK",
+      "NTILE"
+    ],
+    "correctIndex": 0,
+    "explanation": "LAG reaches the previous row in the window, which turns a period-over-period comparison into one pass instead of a self-join. The ranking functions number rows rather than reaching across them.",
+    "teaches": "advanced-tsql"
+  },
+  {
+    "id": "db-10",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "Customer names must be matched approximately to deduplicate records. Which function family applies?",
+    "options": [
+      "Fuzzy string matching, such as EDIT_DISTANCE and JARO_WINKLER_DISTANCE",
+      "Regular expression functions such as REGEXP_LIKE",
+      "JSON functions such as JSON_VALUE",
+      "Window functions such as DENSE_RANK"
+    ],
+    "correctIndex": 0,
+    "explanation": "Fuzzy matching functions quantify how close two strings are, which is what record linkage needs. Regular expressions match patterns exactly and cannot express approximate similarity.",
+    "teaches": "advanced-tsql"
+  },
+  {
+    "id": "db-11",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "Inside a CATCH block, what must you check before attempting to commit a transaction?",
+    "options": [
+      "XACT_STATE, because the transaction may be uncommittable",
+      "@@ROWCOUNT, to confirm rows were affected",
+      "ERROR_NUMBER, to identify the failure",
+      "@@TRANCOUNT alone, to confirm a transaction is open"
+    ],
+    "correctIndex": 0,
+    "explanation": "XACT_STATE reports whether the transaction is committable, doomed, or absent. A doomed transaction must be rolled back, and committing without checking is the classic error-handling defect.",
+    "teaches": "advanced-tsql"
+  },
+  {
+    "id": "db-12",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "A JSON document stored in a column must be turned into rows and columns for relational querying. Which function should you use?",
+    "options": [
+      "OPENJSON",
+      "JSON_OBJECT",
+      "JSON_ARRAYAGG",
+      "FOR JSON PATH"
+    ],
+    "correctIndex": 0,
+    "explanation": "OPENJSON shreds a document into a rowset. The other three construct JSON rather than consuming it, which is the direction this question separates.",
+    "teaches": "advanced-tsql"
+  },
+  {
+    "id": "db-13",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "A GitHub Copilot session must produce suggestions that follow the project's naming and formatting conventions. What should you configure?",
+    "options": [
+      "Copilot instruction files, versioned with the code",
+      "A stricter model in the chat session",
+      "An MCP server endpoint for the database",
+      "A larger context window setting"
+    ],
+    "correctIndex": 0,
+    "explanation": "Instruction files record project conventions so suggestions match the codebase, and versioning them makes the guidance reviewable. An MCP endpoint supplies schema context, which is a different problem.",
+    "teaches": "ai-assisted-dev"
+  },
+  {
+    "id": "db-14",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "A Copilot session is being connected to a SQL Server MCP endpoint. What is the main security consideration?",
+    "options": [
+      "The assistant inherits whatever the connection's identity can do, so it must be least-privileged",
+      "MCP connections cannot be encrypted in transit",
+      "MCP endpoints bypass row-level security",
+      "MCP requires the sysadmin server role"
+    ],
+    "correctIndex": 0,
+    "explanation": "Connecting an assistant to a database gives it the connection's rights, so a production administrator identity would let a suggestion do real damage. Least privilege is the control, and it is examined directly.",
+    "teaches": "ai-assisted-dev"
+  },
+  {
+    "id": "db-15",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "Which table type suits an OLTP workload where latch contention on a hot table is the bottleneck?",
+    "options": [
+      "A memory-optimised table",
+      "A clustered columnstore table",
+      "An external table",
+      "A temporal table"
+    ],
+    "correctIndex": 0,
+    "explanation": "Memory-optimised tables use lock-free and latch-free structures, which is precisely what removes contention. The other types address analytics, remote data, and history respectively.",
+    "teaches": "specialized-tables"
+  },
+  {
+    "id": "db-16",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "question": "A rule that no order may have a negative quantity must hold regardless of which application writes the row. Where should it be enforced?",
+    "options": [
+      "A CHECK constraint on the table",
+      "Validation in the application layer",
+      "A trigger that corrects negative values",
+      "A view that filters negative rows out"
+    ],
+    "correctIndex": 0,
+    "explanation": "A constraint is enforced by the engine for every writer, which is what makes the invariant true rather than usually true. Application validation is bypassed by the next application, and a view hides rather than prevents.",
+    "teaches": "table-design"
+  },
+  {
+    "id": "db-17",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "kind": "multi",
+    "question": "Which two are true of a clustered index key? Choose two.",
+    "options": [
+      "It determines the table's physical row order",
+      "It is carried in every non-clustered index on the table",
+      "It must be unique across the database",
+      "It is required for a columnstore index to be created"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Physical ordering and propagation into every non-clustered index are why a narrow, static key is preferred. Uniqueness is table-scoped rather than database-wide, and columnstore indexes do not require one.",
+    "teaches": "table-design"
+  },
+  {
+    "id": "db-18",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "kind": "multi",
+    "question": "Which two describe temporal tables? Choose two.",
+    "options": [
+      "History is maintained automatically by the engine",
+      "Past states are queried with FOR SYSTEM_TIME",
+      "They provide cryptographic proof against tampering",
+      "They require Change Data Capture to be enabled"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Automatic versioning and FOR SYSTEM_TIME querying define temporal tables. Tamper proof is ledger, and CDC is an independent change feed mechanism.",
+    "teaches": "specialized-tables"
+  },
+  {
+    "id": "db-19",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "kind": "order",
+    "question": "Put the steps of covering a slow query with an index in order.",
+    "items": [
+      "Add the required columns as included columns",
+      "Examine the execution plan and find the dominant operator",
+      "Re-measure the query to confirm the lookup is gone",
+      "Identify the key lookup and which columns it fetches"
+    ],
+    "correctOrder": [1, 3, 0, 2],
+    "explanation": "Read the plan, identify what the lookup needs, include those columns, and confirm. Adding an index before reading the plan is how tables acquire more indexes than columns.",
+    "teaches": "table-design"
+  },
+  {
+    "id": "db-20",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "kind": "match",
+    "question": "Match each specialised table type to what it is for.",
+    "pairs": [
+      { "term": "Temporal", "definition": "Automatic system-versioned history of every row change" },
+      { "term": "Ledger", "definition": "Cryptographic evidence that data was not tampered with" },
+      { "term": "Memory-optimised", "definition": "High-contention OLTP where latching is the bottleneck" },
+      { "term": "External", "definition": "Querying data held outside the database without copying it" }
+    ],
+    "explanation": "History, integrity proof, contention, and remote data. Temporal and ledger are the pair most often confused, and the difference is whether the history is merely recorded or provably unaltered.",
+    "teaches": "specialized-tables"
+  },
+  {
+    "id": "db-21",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "kind": "yesno",
+    "question": "A scalar user-defined function is used in the WHERE clause of a hot query. Judge each statement.",
+    "statements": [
+      { "text": "It has historically forced row-by-row evaluation.", "correct": true },
+      { "text": "An inline table-valued function is generally preferable on a hot path.", "correct": true },
+      { "text": "Modern SQL Server can inline eligible scalar functions automatically.", "correct": true },
+      { "text": "Wrapping it in a view removes the per-row cost.", "correct": false }
+    ],
+    "explanation": "A view is a named query, not an optimisation — the function is still evaluated per row. The design instinct remains to prefer inline table-valued functions rather than relying on automatic inlining.",
+    "teaches": "programmability-objects"
+  },
+  {
+    "id": "db-22",
+    "examCode": "dp-800",
+    "domain": "database-solutions",
+    "kind": "dropdown",
+    "question": "Complete the statement about recording change over time.",
+    "segments": [
+      { "text": "To query what a row looked like at a past date you would use " },
+      {
+        "blankId": "b1",
+        "options": ["a temporal table", "a ledger table", "Change Data Capture"],
+        "correctIndex": 0
+      },
+      { "text": ", and to prove to an auditor that the history was not rewritten you would use " },
+      {
+        "blankId": "b2",
+        "options": ["a ledger table", "a temporal table", "an audit specification"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "Recording history and proving its integrity are different requirements met by different features, and a scenario mentioning an auditor and tampering is asking for the second.",
+    "teaches": "specialized-tables"
+  },
+  {
+    "id": "so-01",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "A database administrator must be unable to read a salary column in plain text while continuing to administer the database. What should you implement?",
+    "options": [
+      "Always Encrypted with the keys held by the client",
+      "Transparent data encryption with a customer-managed key",
+      "Dynamic data masking on the column",
+      "Column-level encryption using EncryptByKey"
+    ],
+    "correctIndex": 0,
+    "explanation": "Only Always Encrypted keeps the keys outside the engine, so the administrator sees ciphertext. TDE is transparent to anyone querying, masking is a presentation control, and in-database column encryption uses keys the administrator can reach.",
+    "teaches": "data-security-dp800"
+  },
+  {
+    "id": "so-02",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "Readers are being blocked by writers on a busy OLTP database. Which change most directly addresses it?",
+    "options": [
+      "Enable read committed snapshot isolation",
+      "Switch to the serialisable isolation level",
+      "Add NOLOCK hints to the reading queries",
+      "Increase the lock timeout setting"
+    ],
+    "correctIndex": 0,
+    "explanation": "RCSI uses row versioning so readers see a consistent snapshot without taking shared locks. Serialisable blocks more, and NOLOCK trades blocking for dirty reads, which is a correctness change disguised as a performance fix.",
+    "teaches": "performance-optimisation"
+  },
+  {
+    "id": "so-03",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "A query regressed after a statistics update and nothing else changed. What should you use to restore performance quickly?",
+    "options": [
+      "Query Store, forcing the previous plan",
+      "A recompile hint on every execution",
+      "An index rebuild on the largest table",
+      "Resource Governor limits on the workload"
+    ],
+    "correctIndex": 0,
+    "explanation": "Query Store retains the previous plan and can force it, which is the direct remedy for a regression. A recompile hint produces a fresh plan each time without guaranteeing the good one.",
+    "teaches": "performance-optimisation"
+  },
+  {
+    "id": "so-04",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "A deployed database has been changed by hand and differs from its SQL Database Project. What detects this?",
+    "options": [
+      "A schema comparison between the project and the target",
+      "A DACPAC deployment with the drift-tolerant option",
+      "Query Store forced plans",
+      "An audit specification on DDL events"
+    ],
+    "correctIndex": 0,
+    "explanation": "The project holds the desired state, so comparing it with the target reports exactly what drifted. An audit would show DDL happening but only if it was enabled before the change.",
+    "teaches": "cicd-sql-projects"
+  },
+  {
+    "id": "so-05",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "REST and GraphQL endpoints must be exposed over database objects without writing an API layer. What should you use?",
+    "options": [
+      "Data API builder with a configuration file",
+      "A set of stored procedures called by the application",
+      "SQL Server Reporting Services",
+      "An Azure Function per table"
+    ],
+    "correctIndex": 0,
+    "explanation": "Data API builder generates both endpoint styles from configuration, with per-entity and per-role permissions. Writing a Function per table is exactly the API layer this removes.",
+    "teaches": "dab-endpoints"
+  },
+  {
+    "id": "so-06",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "A downstream store must be synchronised with only the keys of rows that changed, as cheaply as possible. What should you enable?",
+    "options": [
+      "Change Tracking",
+      "Change Data Capture",
+      "A temporal table",
+      "An audit specification"
+    ],
+    "correctIndex": 0,
+    "explanation": "Change Tracking records that a row changed and its key at low cost, which is enough to synchronise. CDC captures full before and after images and costs more, which is only justified when those images are needed.",
+    "teaches": "azure-integration"
+  },
+  {
+    "id": "so-07",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "Each sales representative must see only their own customers, enforced regardless of how they query. What should you implement?",
+    "options": [
+      "Row-level security with a predicate function",
+      "A view filtered by the current user",
+      "Dynamic data masking on the customer name",
+      "Object-level DENY on the customers table"
+    ],
+    "correctIndex": 0,
+    "explanation": "Row-level security is enforced by the engine on every query, so it cannot be bypassed by querying the table directly. A view protects only those who use it.",
+    "teaches": "data-security-dp800"
+  },
+  {
+    "id": "so-08",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "An application must connect to Azure SQL with no credential in its configuration. What should it use?",
+    "options": [
+      "A managed identity with Microsoft Entra authentication",
+      "A SQL login with the password in an environment variable",
+      "A SQL login with the password retrieved from Key Vault at startup",
+      "A shared service account used by all applications"
+    ],
+    "correctIndex": 0,
+    "explanation": "A managed identity removes the credential entirely. Retrieving a password from Key Vault is an improvement over embedding it but still leaves a credential that exists and can be taken.",
+    "teaches": "data-security-dp800"
+  },
+  {
+    "id": "so-09",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "Two sessions each hold a lock the other needs. What happens, and where is it recorded?",
+    "options": [
+      "A deadlock — the engine kills a victim, and it is captured by the system health Extended Events session",
+      "Blocking — the sessions wait until the lock timeout expires",
+      "A latch contention event recorded in Query Store",
+      "A transaction rollback recorded in the error log only"
+    ],
+    "correctIndex": 0,
+    "explanation": "Mutual dependency is a deadlock, resolved by the engine choosing a victim, and the system health session captures the graph by default with no trace flag needed.",
+    "teaches": "performance-optimisation"
+  },
+  {
+    "id": "so-10",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "Static lookup data must be reproducible in every environment. Where should it live?",
+    "options": [
+      "In source control alongside the SQL Database Project",
+      "In a spreadsheet maintained by the data team",
+      "Only in the production database, copied downward",
+      "In a one-off script run manually after deployment"
+    ],
+    "correctIndex": 0,
+    "explanation": "Reference data is part of the schema's meaning, so versioning it makes a rebuilt environment correct rather than approximately correct. Copying from production carries whatever drift production has.",
+    "teaches": "cicd-sql-projects"
+  },
+  {
+    "id": "so-11",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "A GraphQL endpoint should return a customer with their orders in one request. What makes this possible in Data API builder?",
+    "options": [
+      "Configuring relationships between the entities",
+      "Enabling caching on the customer entity",
+      "Enabling pagination on the orders entity",
+      "Exposing a stored procedure that joins them"
+    ],
+    "correctIndex": 0,
+    "explanation": "Relationships produce nested GraphQL queries, which is the main reason to prefer GraphQL over REST here. A joining procedure works but gives up the graph shape the client asked for.",
+    "teaches": "dab-endpoints"
+  },
+  {
+    "id": "so-12",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "Behaviour must be exposed through an API without publishing the underlying table structure. What should you configure in Data API builder?",
+    "options": [
+      "An entity mapping a stored procedure",
+      "An entity mapping the base table with read-only permissions",
+      "A view over the table exposed as an entity",
+      "A GraphQL relationship between the tables"
+    ],
+    "correctIndex": 0,
+    "explanation": "Exposing a stored procedure publishes an operation rather than a schema, so the tables behind it can change freely. A view still exposes a shape derived directly from the tables.",
+    "teaches": "dab-endpoints"
+  },
+  {
+    "id": "so-13",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "A plan shows a hash match spilling to tempdb. What does this usually indicate?",
+    "options": [
+      "Cardinality estimates were too low, often from stale statistics",
+      "The table needs a columnstore index",
+      "The isolation level is too strict",
+      "The query is being blocked by another session"
+    ],
+    "correctIndex": 0,
+    "explanation": "A spill means the memory grant was too small for the actual data, which follows from an under-estimate. Stale statistics and parameter-sensitive plans are the two usual causes.",
+    "teaches": "performance-optimisation"
+  },
+  {
+    "id": "so-14",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "Support staff must see a masked form of a national insurance number while the stored value stays usable. What should you implement?",
+    "options": [
+      "Dynamic data masking",
+      "Always Encrypted with randomised encryption",
+      "Column-level encryption",
+      "A DENY on the column for the support role"
+    ],
+    "correctIndex": 0,
+    "explanation": "Masking obscures the value in results while leaving the data unchanged for legitimate processing. Encryption would break that processing, and a DENY removes the column from their results rather than obscuring it.",
+    "teaches": "data-security-dp800"
+  },
+  {
+    "id": "so-15",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "Why do deployment gates matter more for database changes than for application code?",
+    "options": [
+      "A bad schema deployment is far harder to roll back than a bad binary",
+      "Database deployments cannot be automated",
+      "Schema changes bypass source control by design",
+      "Databases have no equivalent of a build step"
+    ],
+    "correctIndex": 0,
+    "explanation": "Rolling back a binary is redeploying the previous one; rolling back a schema change that has already transformed data may be impossible. That asymmetry is why approvals and branch policies carry more weight here.",
+    "teaches": "cicd-sql-projects"
+  },
+  {
+    "id": "so-16",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "Database telemetry must be correlated with application behaviour to diagnose a slowdown. What should you recommend?",
+    "options": [
+      "Azure Monitor with Application Insights and a Log Analytics workspace",
+      "Query Store alone on the database",
+      "An audit specification writing to a storage account",
+      "Extended Events sessions on the server"
+    ],
+    "correctIndex": 0,
+    "explanation": "Correlation requires both sides in one place, which is what Application Insights and Log Analytics provide. Query Store and Extended Events see the database only, however good they are at that.",
+    "teaches": "azure-integration"
+  },
+  {
+    "id": "so-17",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "question": "Which change feed mechanism provides the full before and after images of each changed row?",
+    "options": [
+      "Change Data Capture",
+      "Change Tracking",
+      "Change Event Streaming",
+      "A temporal table's history"
+    ],
+    "correctIndex": 0,
+    "explanation": "CDC captures both images, which is what audit and replication scenarios need. Change Tracking records only that a row changed and its key, at lower cost.",
+    "teaches": "azure-integration"
+  },
+  {
+    "id": "so-18",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "kind": "multi",
+    "question": "Which two are true of a SQL Database Project? Choose two.",
+    "options": [
+      "It holds the desired schema state declaratively",
+      "Building it produces a DACPAC used to generate a change script",
+      "It stores row-level production data",
+      "It replaces the need for a deployment pipeline"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "State-based definition and DACPAC output are what make drift detectable and deployments repeatable. Production data belongs in the database, and a project still needs a pipeline to deploy it.",
+    "teaches": "cicd-sql-projects"
+  },
+  {
+    "id": "so-19",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "kind": "order",
+    "question": "Put the steps of deploying a schema change through a SQL Database Project in order.",
+    "items": [
+      "Deploy the generated change script to production behind an approval",
+      "Commit the schema change to the project on a branch",
+      "Build the project to produce a DACPAC",
+      "Compare the DACPAC against the target and review the change script"
+    ],
+    "correctOrder": [1, 2, 3, 0],
+    "explanation": "The change is captured, built, compared, reviewed, and only then applied behind a gate. Reviewing the generated script before production is what catches a change that would drop a column rather than rename it.",
+    "teaches": "cicd-sql-projects"
+  },
+  {
+    "id": "so-20",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "kind": "order",
+    "question": "Put the steps of diagnosing a slow query in order.",
+    "items": [
+      "Apply the fix — an index change, a plan force, or a query rewrite",
+      "Confirm the query is slow and find it in Query Store",
+      "Examine the execution plan for scans, lookups, and spills",
+      "Check whether the plan changed and when"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "Locate the query, establish whether this is a regression or has always been slow, then read the plan. Those two cases have different fixes, and skipping the distinction usually means indexing around a plan problem.",
+    "teaches": "performance-optimisation"
+  },
+  {
+    "id": "so-21",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "kind": "match",
+    "question": "Match each data protection control to what it achieves.",
+    "pairs": [
+      { "term": "Transparent data encryption", "definition": "Protects the files at rest, transparent to anyone querying" },
+      { "term": "Always Encrypted", "definition": "Hides values from anyone with database access, including administrators" },
+      { "term": "Dynamic data masking", "definition": "Obscures values in results without changing the stored data" },
+      { "term": "Row-level security", "definition": "Limits which rows a user sees, enforced on every query" }
+    ],
+    "explanation": "Four controls at four different threat models. Offering TDE as protection against a privileged insider is the specific error this set is built to catch.",
+    "teaches": "data-security-dp800"
+  },
+  {
+    "id": "so-22",
+    "examCode": "dp-800",
+    "domain": "secure-optimize-deploy",
+    "kind": "dropdown",
+    "question": "Complete the statement about change feeds.",
+    "segments": [
+      { "text": "To synchronise a downstream store as cheaply as possible you would enable " },
+      {
+        "blankId": "b1",
+        "options": ["Change Tracking", "Change Data Capture", "an audit specification"],
+        "correctIndex": 0
+      },
+      { "text": ", and to feed an audit trail needing before and after values you would enable " },
+      {
+        "blankId": "b2",
+        "options": ["Change Data Capture", "Change Tracking", "a temporal table"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "The two differ by how much detail they capture and therefore by cost. Choosing CDC where Change Tracking would do is a common and expensive over-specification.",
+    "teaches": "azure-integration"
+  }
+]

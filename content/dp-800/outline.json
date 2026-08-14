@@ -1,0 +1,58 @@
+{
+  "examCode": "DP-800",
+  "examName": "Developing AI-Enabled Database Solutions",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for DP-800, 'Skills measured as of March 12, 2026'. CAUTION: as of 2026-08-12 the DP-800 study guide page carries the WRONG TITLE — its heading reads 'Study Guide for Exam DP-700: Implementing Data Engineering Solutions Using Azure Databricks', which is DP-700's title with DP-750's subtitle, while the canonical URL, asset id, and the entire body are DP-800's SQL AI Developer content. The body was used. Do not 'correct' this exam's name from that page heading. Always check learn.microsoft.com for the current official breakdown before your exam.",
+  "domains": [
+    {
+      "id": "database-solutions",
+      "name": "Design and develop database solutions",
+      "weight": "35-40%",
+      "subtopics": [
+        "Design and implement tables including data types, indexes, and columnstore indexes",
+        "Design and implement specialised tables including in-memory, temporal, external, ledger, and graph",
+        "Design and implement JSON columns and indexes",
+        "Design and implement constraints including PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK, and DEFAULT",
+        "Design and implement SEQUENCES and partitioning for tables and indexes",
+        "Create views, scalar and table-valued functions, stored procedures, and triggers",
+        "Write common table expressions and queries using window functions",
+        "Write queries using JSON functions, regular expressions, and fuzzy string matching functions",
+        "Write graph queries using the MATCH operator, correlated queries, and error handling",
+        "Enable and configure GitHub Copilot and Copilot in Fabric, including MCP tool options and instruction files"
+      ]
+    },
+    {
+      "id": "secure-optimize-deploy",
+      "name": "Secure, optimize, and deploy database solutions",
+      "weight": "35-40%",
+      "subtopics": [
+        "Design and implement data encryption including Always Encrypted and column-level encryption",
+        "Design and implement dynamic data masking, row-level security, and object-level permissions",
+        "Implement secure database access including passwordless, and implement auditing",
+        "Secure model endpoints with managed identity, and secure GraphQL, REST, and MCP endpoints",
+        "Recommend database configurations and preserve integrity with isolation levels and concurrency controls",
+        "Evaluate query performance using execution plans, DMVs, Query Store, and Query Performance Insight",
+        "Identify and resolve query performance issues including blocking and deadlocks",
+        "Design a testing strategy and manage reference data, source control, and secrets for SQL Database Projects",
+        "Detect schema drift, deploy changes, and implement deployment pipeline controls",
+        "Configure Data API builder entities and endpoints, and integrate with Azure Monitor, CDC, Change Tracking, and Functions"
+      ]
+    },
+    {
+      "id": "ai-capabilities",
+      "name": "Implement AI capabilities in database solutions",
+      "weight": "25-30%",
+      "subtopics": [
+        "Evaluate external models including multimodal, multilanguage, size, and structured output",
+        "Create and manage external models",
+        "Choose an embedding maintenance method including triggers, Change Tracking, Functions, Logic Apps, CDC, and CES",
+        "Identify which columns to include in embeddings and design chunking",
+        "Generate embeddings",
+        "Choose between full-text, semantic vector, and hybrid search, and implement full-text search",
+        "Design for vector data including the vector data type, vector indexes, and size",
+        "Use vector functions including VECTOR_NORMALIZE, VECTOR_DISTANCE, VECTORPROPERTY, and VECTOR_SEARCH",
+        "Choose between ANN and ENN, evaluate index types and metrics, and implement vector and hybrid search",
+        "Implement reciprocal rank fusion and retrieval-augmented generation using sp_invoke_external_rest_endpoint"
+      ]
+    }
+  ]
+}

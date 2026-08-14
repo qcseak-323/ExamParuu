@@ -1,0 +1,130 @@
+[
+  {
+    "domainId": "database-solutions",
+    "sections": [
+      {
+        "id": "table-design",
+        "heading": "Tables, indexes, and constraints",
+        "paragraphs": [
+          "Data type choice is a performance decision before it is a modelling one: a narrower type means more rows per page, less IO, and smaller indexes, and choosing `NVARCHAR(MAX)` where `NVARCHAR(100)` would do costs on every read. The clustered index determines physical order and every non-clustered index carries its key, so a wide clustered key inflates every other index on the table — which is why a narrow, static, ever-increasing clustered key is the conventional choice. Non-clustered indexes with included columns cover queries so the engine need not return to the base table, and a key lookup in a plan is the signal that a column is missing from the include list.",
+          "Columnstore indexes store data by column with high compression and are built for analytical scans over large tables, while rowstore serves point lookups and small ranges — a clustered columnstore on a table serving single-row lookups is as wrong as a rowstore on a fact table scanned in full. Constraints are correctness rather than decoration: PRIMARY KEY and UNIQUE enforce identity, FOREIGN KEY enforces referential integrity, CHECK enforces domain rules, and DEFAULT supplies values. Enforcing rules in the database rather than only in the application is what stops the second application breaking the invariant. SEQUENCE objects generate numbers independently of any table, which is what IDENTITY cannot do when several tables must share a series."
+        ]
+      },
+      {
+        "id": "specialized-tables",
+        "heading": "Specialised table types",
+        "paragraphs": [
+          "Several table types exist for problems ordinary tables handle badly. Memory-optimised tables hold rows in memory with lock-free structures, suiting high-contention OLTP where latching is the bottleneck. Temporal tables maintain a system-versioned history automatically, recording every change with validity periods, and are queried with `FOR SYSTEM_TIME` — the built-in answer to 'what did this row look like last March'. External tables expose data held elsewhere through PolyBase or a data source, so it is queried without being copied.",
+          "Ledger tables provide cryptographic tamper evidence: updates are recorded so alteration can be detected and proven, which answers an integrity requirement rather than a confidentiality one — and it is distinct from temporal tables, which record history but do not prove it was not rewritten. Graph tables model nodes and edges natively and are queried with the `MATCH` operator, which expresses traversal far more clearly than recursive joins for many-hop relationships. JSON columns store semi-structured documents, and JSON indexes make properties inside them queryable without shredding the document into columns."
+        ]
+      },
+      {
+        "id": "programmability-objects",
+        "heading": "Views, functions, procedures, and triggers",
+        "paragraphs": [
+          "Views name a query and can simplify access or restrict columns, but a view over a view over a view is a common cause of plans nobody can reason about. Stored procedures encapsulate logic, are compiled and cached, and are the natural unit for a database API. Triggers run automatically on data change and are powerful and easily abused — a trigger doing significant work extends every transaction that touches the table, and a chain of triggers is the hardest kind of database logic to debug.",
+          "Function type matters more than it appears. A scalar function called per row historically forced row-by-row execution and destroyed parallelism, which is why inline table-valued functions are preferred — they are expanded into the calling query and optimised with it. Multi-statement table-valued functions return a table variable and are estimated poorly by the optimiser. Modern versions of SQL Server can inline eligible scalar functions automatically, but the design instinct remains to prefer inline table-valued functions for anything on a hot path."
+        ]
+      },
+      {
+        "id": "advanced-tsql",
+        "heading": "Advanced T-SQL",
+        "paragraphs": [
+          "Common table expressions name a subquery for readability and support recursion, which is how hierarchies are walked. Window functions compute across a set of rows related to the current row without collapsing them — `ROW_NUMBER`, `RANK`, and `DENSE_RANK` differ in how they handle ties, and `LAG` and `LEAD` reach adjacent rows, which is what makes period-over-period comparison a single pass rather than a self-join. The `OVER` clause with `PARTITION BY` and a frame specification is where most of the expressive power sits.",
+          "Newer function families broaden what can be done in the engine. JSON functions — `OPENJSON`, `JSON_VALUE`, `JSON_OBJECT`, `JSON_ARRAY`, `JSON_ARRAYAGG` — read and construct documents in place. Regular expression functions such as `REGEXP_LIKE`, `REGEXP_REPLACE`, and `REGEXP_SUBSTR` bring pattern matching that `LIKE` cannot express. Fuzzy matching functions — `EDIT_DISTANCE`, `EDIT_DISTANCE_SIMILARITY`, `JARO_WINKLER_DISTANCE` — support approximate string comparison for deduplication and record linkage. Error handling uses `TRY...CATCH` with `THROW`, and a transaction inside a `CATCH` must check `XACT_STATE` before deciding whether it can commit."
+        ]
+      },
+      {
+        "id": "ai-assisted-dev",
+        "heading": "AI-assisted development",
+        "paragraphs": [
+          "GitHub Copilot and Copilot in Fabric assist with authoring T-SQL, and the exam's angle is governance rather than novelty. Copilot instruction files record project conventions — naming, formatting, preferred patterns — so suggestions match the codebase rather than a generic style, and they are versioned with the code so the guidance is reviewable.",
+          "Model Context Protocol servers let a Copilot session reach real context: a SQL Server MCP endpoint exposes schema and query capability, so a suggestion is grounded in the actual database rather than guessed from the prompt. The security consequence follows directly and is examined — connecting an assistant to a database gives it whatever that connection can do, so the identity used should be scoped to least privilege and should never be a production administrator. Suggestions must also be reviewed rather than accepted: generated SQL can be syntactically valid, semantically wrong, and quietly expensive."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "secure-optimize-deploy",
+    "sections": [
+      {
+        "id": "data-security-dp800",
+        "heading": "Encryption, masking, and row-level security",
+        "paragraphs": [
+          "The controls form a ladder and are examined by their differences. Transparent data encryption protects files at rest and is transparent to anyone querying, so it does not hide values from a database administrator. Column-level encryption using the built-in functions encrypts specific values with keys held in the database, which protects against file theft but not against someone who can use those keys. Always Encrypted moves the keys to the client so the engine only ever sees ciphertext — the only option that hides data from an administrator — with deterministic encryption allowing equality comparison and randomised allowing none, and secure enclaves lifting that restriction for richer operations.",
+          "Dynamic data masking obscures values in results for unprivileged users and is explicitly a presentation control, not a security boundary. Row-level security binds a predicate function to a table so users see only permitted rows, enforced by the engine on every query. Object-level permissions remain the foundation, granted through roles rather than to individuals. Passwordless access with Microsoft Entra and managed identities removes the connection-string secret, which is generally the weakest link in an otherwise careful design, and auditing records who did what for the questions that come afterwards."
+        ]
+      },
+      {
+        "id": "performance-optimisation",
+        "heading": "Performance, concurrency, and plans",
+        "paragraphs": [
+          "Isolation levels trade consistency against concurrency. Read committed is the default; read committed snapshot isolation uses row versioning so readers do not block writers and is usually the right change when blocking dominates; snapshot isolation gives a transaction-consistent view at the cost of tempdb; serialisable prevents phantoms and blocks most. Blocking is one session waiting on another's lock and is normal in short bursts, while a deadlock is mutual and resolved by the engine killing a victim — captured by default in the system health Extended Events session.",
+          "Diagnosis follows a familiar order. Query Store holds plans and runtime statistics over time and answers 'this was fast last week' by identifying and allowing a forced plan on regression. Dynamic management views give the live picture — `sys.dm_exec_requests` for what is running and what blocks it, `sys.dm_exec_query_stats` for aggregate cost. Query Performance Insight is the portal view for Azure SQL. In an execution plan the things worth finding are scans where a seek was expected, key lookups implying a missing included column, and spills implying bad estimates, usually from stale statistics or a parameter-sensitive plan."
+        ]
+      },
+      {
+        "id": "cicd-sql-projects",
+        "heading": "SQL Database Projects and CI/CD",
+        "paragraphs": [
+          "A SQL Database Project holds the schema as declarative source — the desired state — and building it produces a DACPAC that is compared against the target to generate the change script. That state-based model is what makes schema drift detectable: comparing the project against a deployed database reports what somebody changed by hand, which is precisely the change nobody documented. SDK-style projects are the modern format and build cross-platform.",
+          "Around the project sits ordinary engineering practice. Reference and static data belongs in source control so a lookup table is reproducible rather than remembered. Branching, pull requests, and code owners make a schema change reviewable by the people who understand the consequences. Secrets belong in a secret store rather than in a pipeline definition. Deployment controls — branch policies, approvals before production, and gated triggers — are what stop an unreviewed change reaching a database, and they matter more here than in application code because a bad schema deployment is far harder to roll back than a bad binary."
+        ]
+      },
+      {
+        "id": "azure-integration",
+        "heading": "Change feeds and Azure integration",
+        "paragraphs": [
+          "Four mechanisms surface change and they are chosen by how much detail is needed. Change Tracking records that a row changed and its key, cheaply — enough to synchronise a downstream store. Change Data Capture records the full before and after images, which is what an audit or a replication feed needs, at higher cost. Change Event Streaming publishes changes outward as events for near-real-time consumers. An Azure Function with a SQL trigger binding reacts to changes in code, and Logic Apps do the same in a low-code workflow.",
+          "Azure Monitor with Application Insights and Log Analytics is where telemetry lands so that database behaviour can be correlated with application behaviour, which is what turns 'the app is slow' into a specific query. The recommendation to make is usually about what to collect and how long to keep it, since collecting everything indefinitely is the expensive way to answer questions nobody asked."
+        ]
+      },
+      {
+        "id": "dab-endpoints",
+        "heading": "Data API builder",
+        "paragraphs": [
+          "Data API builder generates REST and GraphQL endpoints over database objects from a configuration file, without writing an API layer. Entities map tables, views, and stored procedures to endpoints, with per-entity permissions by role and per-action, so exposure is deliberate rather than wholesale. Relationships between entities produce GraphQL nested queries, which is the main reason to prefer GraphQL here — one request returning a graph rather than several REST calls.",
+          "The configuration also carries the operational settings: caching to reduce database load, pagination to bound result size, and filtering and searching options. Security follows the endpoints rather than being assumed — the API authenticates callers and maps them to roles, and the database connection itself should use a managed identity rather than a stored credential. Exposing a stored procedure through DAB is the controlled way to publish behaviour without publishing the underlying tables."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "ai-capabilities",
+    "sections": [
+      {
+        "id": "models-and-embeddings",
+        "heading": "External models and embeddings",
+        "paragraphs": [
+          "An external model is registered in the database so T-SQL can call it, and choosing one is a practical decision: an embedding model for vectorisation, a chat model for generation, a multimodal model where inputs are not only text, and a smaller model where latency and cost matter more than breadth. The endpoint should be secured with a managed identity rather than a key, which is the same ranking applied everywhere else.",
+          "Embeddings turn text into vectors whose distance approximates semantic similarity. Two design decisions dominate quality. Which columns to embed: the text a user would actually search against, concatenated where several columns together form the meaning — embedding an identifier column produces vectors with no semantic content. And chunking: a chunk too large dilutes the vector so nothing matches strongly, while a chunk too small loses the context that made the passage meaningful, and overlap between chunks preserves sentences that would otherwise be cut. These are the same trade-offs as any RAG pipeline, made inside the database."
+        ]
+      },
+      {
+        "id": "embedding-maintenance",
+        "heading": "Keeping embeddings current",
+        "paragraphs": [
+          "An embedding is derived data and goes stale the moment its source row changes, which makes maintenance a first-class design question rather than an afterthought. The options differ in latency and coupling. A trigger regenerates the embedding inside the transaction, which is immediate and adds the model call's latency to every write — usually the wrong trade. Change Tracking or Change Data Capture lets a scheduled or continuous process pick up changed rows and re-embed them out of band, which is the common answer. An Azure Function with a SQL trigger binding or a Logic App does the same in a service, and change event streaming suits near-real-time propagation to several consumers.",
+          "The failure to recognise is silent: nothing errors when an embedding no longer matches its row, and search simply returns the wrong thing with full confidence. That is why the maintenance mechanism is chosen deliberately, and why a design that generates embeddings once during a migration and never again is a defect rather than a simplification."
+        ]
+      },
+      {
+        "id": "intelligent-search",
+        "heading": "Full-text, vector, and hybrid search",
+        "paragraphs": [
+          "Three search styles answer different questions. Full-text search matches words and phrases with linguistic processing — stemming, thesaurus, proximity — and is strong on exact terms, product codes, and names. Vector search matches meaning through embedding distance and finds paraphrases sharing no vocabulary. Hybrid search runs both and fuses the results, and it is the recommended default for the same reason as everywhere else: each fails where the other succeeds, and a product code carries almost no semantic signal while a paraphrase carries almost no shared terms.",
+          "Reciprocal rank fusion is the standard method for combining the two result sets. It scores each document by its rank in each list rather than by the raw scores, which matters because a full-text relevance score and a vector distance are not comparable quantities — normalising them is guesswork, whereas rank is meaningful in both. Understanding why RRF uses ranks rather than scores is the point the exam tests, not the formula."
+        ]
+      },
+      {
+        "id": "vector-indexes-and-rag",
+        "heading": "Vector indexes, ANN, and RAG in the database",
+        "paragraphs": [
+          "The `VECTOR` data type stores embeddings with a declared dimension count that must match the model producing them — a mismatch is a hard error and is the first thing to check when vector operations fail. `VECTOR_DISTANCE` computes distance under a chosen metric, usually cosine for text embeddings, `VECTOR_NORMALIZE` scales a vector to unit length, and `VECTORPROPERTY` reports properties such as dimension. `VECTOR_SEARCH` performs an indexed search.",
+          "Exhaustive nearest neighbour compares against every vector: exact, and acceptable only at modest scale. Approximate nearest neighbour uses an index to search a fraction of the space, trading a small loss of recall for a large gain in speed, and is what makes vector search viable over millions of rows. The trade is explicit and is chosen by whether perfect recall or latency matters more.",
+          "Retrieval-augmented generation inside the database follows the same shape as anywhere else: embed the question, retrieve the closest passages, build a prompt containing them, call the model, and extract the answer. `sp_invoke_external_rest_endpoint` is the mechanism for the call, structured results are converted to JSON for the model, and the response is parsed back out. Keeping the whole loop in T-SQL suits an application already centred on the database, and its limits — latency, and the fact that the database is now making outbound calls that must be secured and monitored — are the design considerations worth stating."
+        ]
+      }
+    ]
+  }
+]

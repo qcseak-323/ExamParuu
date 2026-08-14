@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-penhale-parts",
+    "examCode": "dp-800",
+    "domain": "ai-capabilities",
+    "title": "Penhale Marine — semantic search over a parts catalogue",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Penhale Marine distributes engine parts to boatyards. Its catalogue holds 1.4 million parts in Azure SQL, each with a manufacturer code, a short name, a long description, and a fitment note describing which engines it suits.",
+          "Counter staff currently search by exact code and give up when a customer describes a part in their own words. A first attempt at semantic search was built and is being reviewed before it goes further."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "The prototype generates embeddings from the manufacturer code column alone. Results are close to random, and the developer has concluded that the embedding model is unsuitable.",
+          "Embeddings were generated once during a migration eighteen months ago. Descriptions and fitment notes have been edited many thousands of times since. Nothing errors, and search quietly returns parts whose descriptions no longer say what the vector says they say.",
+          "Counter staff search two ways. Sometimes they type an exact manufacturer code such as VP-3812234, which the current vector search frequently fails to find. Sometimes they type a phrase such as \"rubber impeller for an older Volvo saildrive\", which exact code search cannot help with at all.",
+          "The developer combined the two result sets by normalising the full-text relevance score and the vector distance onto a 0-1 scale and averaging them. Rankings are unstable and change unpredictably when the catalogue is reindexed.",
+          "Vector search over the full 1.4 million rows takes several seconds per query. The team has been told counter staff will not wait more than about half a second, and that occasionally missing a marginally relevant result is acceptable.",
+          "A proposal exists to have the assistant answer questions in prose using the retrieved parts, called from the application tier, with the database returning only rows."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Semantic search must actually work, which means embedding the right content rather than replacing the model.",
+          "Embeddings must stay current as descriptions and fitment notes are edited, without adding model-call latency to every write.",
+          "A search must find an exact manufacturer code and also find parts described in the customer's own words.",
+          "The two result sets must be combined in a way that is stable and does not depend on comparing incomparable scores.",
+          "Query latency must come down to roughly half a second, accepting that a marginally relevant result may occasionally be missed.",
+          "The team wants to understand what changes if the retrieval-and-generation loop runs inside the database instead of the application tier."
+        ]
+      }
+    ]
+  }
+]
