@@ -1,0 +1,251 @@
+{
+  "examCode": "ab-250",
+  "note": "Six paths, one per exam domain. Microsoft has published no learning paths for AB-250 — the 'Prepare for the exam' section of the credential page is empty and the exam is in beta — so these point at the closest published Dynamics 365 Customer Service, Contact Center, and Copilot Studio paths. Revisit once Microsoft publishes a dedicated set. Module titles follow Microsoft Learn conventions; the sections and cards behind each are this site's own.",
+  "paths": [
+    {
+      "id": "deploy",
+      "title": "Deploy Dynamics 365 Contact Center",
+      "domainId": "deploy",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/get-started-omnichannel-customer-service/",
+      "modules": [
+        {
+          "id": "deploy-m1",
+          "title": "Implement Contact Center and the Copilot Service workspace",
+          "sectionIds": [
+            "contact-center-deployment"
+          ],
+          "cardIds": [
+            "fc-ab250-dc-01",
+            "fc-ab250-dc-02",
+            "fc-ab250-dc-03",
+            "fc-ab250-dc-04"
+          ]
+        },
+        {
+          "id": "deploy-m2",
+          "title": "Manage agents, solutions, users, and capacity",
+          "sectionIds": [
+            "agent-hub-and-alm",
+            "users-roles-and-capacity"
+          ],
+          "cardIds": [
+            "fc-ab250-dc-05",
+            "fc-ab250-dc-06",
+            "fc-ab250-dc-07",
+            "fc-ab250-dc-08"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "channels",
+      "title": "Implement channels",
+      "domainId": "channels",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/configure-channels-omnichannel/",
+      "modules": [
+        {
+          "id": "channels-m1",
+          "title": "Configure chat and digital channels",
+          "sectionIds": [
+            "chat-and-digital-channels"
+          ],
+          "cardIds": [
+            "fc-ab250-ch-01",
+            "fc-ab250-ch-02",
+            "fc-ab250-ch-03",
+            "fc-ab250-ch-04"
+          ]
+        },
+        {
+          "id": "channels-m2",
+          "title": "Provision and manage the voice channel",
+          "sectionIds": [
+            "voice-channel"
+          ],
+          "cardIds": [
+            "fc-ab250-ch-05",
+            "fc-ab250-ch-06",
+            "fc-ab250-ch-07"
+          ]
+        },
+        {
+          "id": "channels-m3",
+          "title": "Configure context, identification, and masking",
+          "sectionIds": [
+            "channel-features-and-context"
+          ],
+          "cardIds": [
+            "fc-ab250-ch-08",
+            "fc-ab250-ch-09",
+            "fc-ab250-ch-10",
+            "fc-ab250-ch-11"
+          ]
+        },
+        {
+          "id": "channels-m4",
+          "title": "Manage proactive outbound engagement",
+          "sectionIds": [
+            "proactive-outbound"
+          ],
+          "cardIds": [
+            "fc-ab250-ch-12",
+            "fc-ab250-ch-13",
+            "fc-ab250-ch-14"
+          ]
+        },
+        {
+          "id": "channels-m5",
+          "title": "Configure workforce management",
+          "sectionIds": [
+            "workforce-management"
+          ],
+          "cardIds": [
+            "fc-ab250-ch-15",
+            "fc-ab250-ch-16"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "agents-ai",
+      "title": "Configure agents and AI capabilities",
+      "domainId": "agents-ai",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/copilot-studio-fundamentals/",
+      "modules": [
+        {
+          "id": "agents-ai-m1",
+          "title": "Configure Copilot agent assist",
+          "sectionIds": [
+            "copilot-agent-assist"
+          ],
+          "cardIds": [
+            "fc-ab250-ag-01",
+            "fc-ab250-ag-02",
+            "fc-ab250-ag-03"
+          ]
+        },
+        {
+          "id": "agents-ai-m2",
+          "title": "Configure and secure voice agents",
+          "sectionIds": [
+            "voice-agents-and-ivr",
+            "voice-agent-security"
+          ],
+          "cardIds": [
+            "fc-ab250-ag-04",
+            "fc-ab250-ag-05",
+            "fc-ab250-ag-06"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "work-distribution",
+      "title": "Configure work distribution",
+      "domainId": "work-distribution",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/route-work-unified-routing/",
+      "modules": [
+        {
+          "id": "work-distribution-m1",
+          "title": "Configure queues, overflow, and operating hours",
+          "sectionIds": [
+            "queues-and-operating-hours",
+            "unified-routing-and-classification"
+          ],
+          "cardIds": [
+            "fc-ab250-wd-01",
+            "fc-ab250-wd-02",
+            "fc-ab250-wd-04"
+          ]
+        },
+        {
+          "id": "work-distribution-m2",
+          "title": "Configure skills, intent, and preferred routing",
+          "sectionIds": [
+            "skills-intent-and-diagnostics"
+          ],
+          "cardIds": [
+            "fc-ab250-wd-03",
+            "fc-ab250-wd-05",
+            "fc-ab250-wd-06"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rep-experience",
+      "title": "Configure the representative experience",
+      "domainId": "rep-experience",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/configure-agent-experience-omnichannel/",
+      "modules": [
+        {
+          "id": "rep-experience-m1",
+          "title": "Configure experience profiles and sessions",
+          "sectionIds": [
+            "experience-profiles"
+          ],
+          "cardIds": [
+            "fc-ab250-rx-01",
+            "fc-ab250-rx-02",
+            "fc-ab250-rx-03"
+          ]
+        },
+        {
+          "id": "rep-experience-m2",
+          "title": "Configure productivity tools, scripts, and macros",
+          "sectionIds": [
+            "productivity-tools"
+          ],
+          "cardIds": [
+            "fc-ab250-rx-04",
+            "fc-ab250-rx-05",
+            "fc-ab250-rx-06"
+          ]
+        },
+        {
+          "id": "rep-experience-m3",
+          "title": "Create and administer knowledge management",
+          "sectionIds": [
+            "knowledge-management"
+          ],
+          "cardIds": [
+            "fc-ab250-rx-07",
+            "fc-ab250-rx-08"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "analytics",
+      "title": "Manage analytics for the Contact Center",
+      "domainId": "analytics",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/analyze-customer-service-data/",
+      "modules": [
+        {
+          "id": "analytics-m1",
+          "title": "Configure the supervisor experience",
+          "sectionIds": [
+            "supervisor-experience"
+          ],
+          "cardIds": [
+            "fc-ab250-an-01",
+            "fc-ab250-an-02",
+            "fc-ab250-an-03"
+          ]
+        },
+        {
+          "id": "analytics-m2",
+          "title": "Customise analytics, reporting, and telemetry",
+          "sectionIds": [
+            "analytics-customisation"
+          ],
+          "cardIds": [
+            "fc-ab250-an-04",
+            "fc-ab250-an-05",
+            "fc-ab250-an-06"
+          ]
+        }
+      ]
+    }
+  ]
+}

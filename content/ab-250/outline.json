@@ -1,0 +1,105 @@
+{
+  "examCode": "AB-250",
+  "examName": "Transforming Contact Center Experiences with AI in Dynamics 365",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for AB-250. As for AB-410, AB-620 and AB-210, the exam name and the credential name differ: the study guide heading reads 'Transforming Contact Center Experiences with AI in Dynamics 365' while the credential earned is 'Dynamics 365 Contact Center AI Engineer Associate', which is what catalog.json carries. The guide is undated — the eighth in the catalogue with no 'Skills measured as of <date>' line — and the exam is in beta, so expect the blueprint to move. One structural oddity is worth recording: the 'Configure channel features' subsection of the Implement channels domain also carries proactive outbound campaigns, workforce management, voice best practices, and total cost of ownership, none of which is a channel feature in any ordinary reading. They are authored here under the domain Microsoft places them in rather than the domain they belong to. At six domains this is the second-widest blueprint in the catalogue after AZ-802's seven.",
+  "domains": [
+    {
+      "id": "deploy",
+      "name": "Deploy Dynamics 365 Contact Center",
+      "weight": "15-20%",
+      "subtopics": [
+        "Configure the Copilot Service workspace and embedded Contact Center mode",
+        "Configure and extend connectors, including Copilot for third-party CCaaS solutions",
+        "Enable agent simulation to evaluate journeys",
+        "Enable the Health Agent to proactively investigate issues",
+        "Manage and roll out agents by using the Agent hub",
+        "Create solutions and configure ALM for Contact Center deployments",
+        "Manage an omnichannel environment",
+        "Configure user settings and create user accounts",
+        "Manage security roles, including custom roles and personas",
+        "Manage capacity profiles"
+      ]
+    },
+    {
+      "id": "channels",
+      "name": "Implement channels",
+      "weight": "30-35%",
+      "subtopics": [
+        "Configure the chat, record-based, and digital channels",
+        "Configure and embed a chat widget, proactive chat, pre-chat surveys, and quick replies",
+        "Configure authentication settings for chat and extend it with the live chat SDK",
+        "Configure a custom messaging channel and enable real-time translation",
+        "Configure the voice channel, phone numbers, and inbound and outbound calling profiles",
+        "Integrate a non-Microsoft IVR system with the voice channel",
+        "Configure call recording, transcription, and real-time translation",
+        "Manage context variables, automatic customer identification, and automatic conversation closure",
+        "Configure sensitive data masking, custom presences, templates, and automated messages",
+        "Enable consult and transfer, manage attachments, and configure the channel integration framework",
+        "Configure proactive outbound campaigns, workstreams, triggers, dialling methods, and the dashboard",
+        "Configure workforce management, including shift management, scheduling, and forecasting",
+        "Evaluate the total cost of ownership of a Contact Center implementation"
+      ]
+    },
+    {
+      "id": "agents-ai",
+      "name": "Configure agents and AI capabilities",
+      "weight": "10-15%",
+      "subtopics": [
+        "Configure Copilot summaries and the Ask a question feature",
+        "Configure knowledge sources for Copilot and extend it with prompt plugins and tools",
+        "Interpret the Copilot analytics report and create a smart assist bot",
+        "Configure IVR with voice agents by using generative AI or classic orchestration",
+        "Manage variables in Copilot Studio and configure voice triggers",
+        "Secure the voice channel and configure compliant call recording in Copilot Studio",
+        "Configure SIP header transfers and the Real-time Speech agent",
+        "Configure DTMF, natural language understanding, and speech-based IVR",
+        "Configure multilingual voice agents"
+      ]
+    },
+    {
+      "id": "work-distribution",
+      "name": "Configure work distribution",
+      "weight": "10-15%",
+      "subtopics": [
+        "Create and manage queues, and configure queue prioritisation",
+        "Configure overflow and fallback, and work assignment methods",
+        "Set up operating hours",
+        "Configure workstreams, including context variables and associating agents in Copilot Studio",
+        "Configure work classification rules and the engagement agent",
+        "Configure skills-based, AI-enabled skills-based, intent-based, and preferred representative routing",
+        "Configure routing for records and basic routing rule sets",
+        "Diagnose unified routing by using conversation diagnostics"
+      ]
+    },
+    {
+      "id": "rep-experience",
+      "name": "Configure the representative experience",
+      "weight": "15-20%",
+      "subtopics": [
+        "Create experience profiles and configure application tab templates",
+        "Configure the agent inbox, including custom views",
+        "Configure session and notification templates",
+        "Enable custom productivity panels and configure scripts, including slugs",
+        "Create macros and enable Teams collaboration",
+        "Extend the productivity panel and representative experience by using the JavaScript APIs",
+        "Configure internal knowledge search and integrate external knowledge sources",
+        "Configure tables for knowledge management and the Customer Knowledge Management agent",
+        "Integrate knowledge into portals"
+      ]
+    },
+    {
+      "id": "analytics",
+      "name": "Manage analytics for the Contact Center",
+      "weight": "10-15%",
+      "subtopics": [
+        "Configure supervisor settings and the supervisor app",
+        "Configure the Quality Evaluation agent",
+        "Configure access to analytics and dashboards, and perform supervisor actions",
+        "Customise KPIs in analytics reports by using the embedded Power BI editor",
+        "Embed out-of-the-box reports in the Copilot Service workspace app",
+        "Customise and extend historical and real-time analytics reports by using Power BI",
+        "Configure conversation diagnostics and telemetry in Application Insights"
+      ]
+    }
+  ]
+}

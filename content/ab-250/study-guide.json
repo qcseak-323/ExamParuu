@@ -1,0 +1,203 @@
+[
+  {
+    "domainId": "deploy",
+    "sections": [
+      {
+        "id": "contact-center-deployment",
+        "heading": "Deploying Contact Center and the Copilot Service workspace",
+        "paragraphs": [
+          "Dynamics 365 Contact Center is Microsoft's contact-centre-as-a-service layer, and it deploys in two shapes that the exam distinguishes carefully. Standalone runs the whole contact centre in the Copilot Service workspace, with Dynamics 365 as the system of record. Embedded mode puts Contact Center's channels, routing, and AI on top of an existing CRM or CCaaS platform that stays the system of record, which is what lets an organisation adopt the AI capabilities without replacing what it already runs. Choosing between them is a first-session decision because it determines where cases and customer records actually live.",
+          "The Copilot Service workspace is the representative's application: a session-based shell where each conversation is a session, with tabs inside it and a productivity pane beside it. It is fundamentally different from an ordinary model-driven app in that a representative holds several concurrent sessions and moves between them, which is why session and tab templates rather than site maps are what configure it.",
+          "Connectors extend the reach of the deployment, and Copilot can be configured against third-party CCaaS solutions so that agent assist and summarisation work over conversations the Microsoft channels never carried. Agent simulation lets a journey be evaluated before it is exposed to customers by having simulated interactions run through it, which is the closest thing the platform offers to a test suite for a conversational flow. The Health Agent runs against the deployment itself, investigating operational issues proactively rather than waiting for a supervisor to report them."
+        ]
+      },
+      {
+        "id": "agent-hub-and-alm",
+        "heading": "The Agent hub, solutions, and ALM",
+        "paragraphs": [
+          "The Agent hub is where the agents in a contact centre are managed as a fleet rather than one at a time: which exist, which are published, which channels they serve, and how they are rolled out. In a contact centre with self-service agents, a voice agent, an engagement agent, a quality evaluation agent, and a knowledge management agent, that inventory view is the difference between a governed estate and a collection of things somebody switched on.",
+          "ALM follows Power Platform's rules because Contact Center sits on Dataverse: build in a solution with a custom publisher prefix, unmanaged in development, managed downstream, and environment variables and connection references for anything that differs per environment. Phone numbers, endpoints, and knowledge source addresses are exactly the values that must not be carried from a test environment into production, and they are also the ones most often forgotten.",
+          "Managing an omnichannel environment adds provisioning concerns the ordinary Power Platform ALM story does not cover — channels have to be provisioned in the target, phone numbers acquired and assigned, and workstreams pointed at the right queues. A solution import gives the configuration, not the telephony, which is why a promoted environment can look complete and route nothing."
+        ]
+      },
+      {
+        "id": "users-roles-and-capacity",
+        "heading": "Users, roles, personas, and capacity profiles",
+        "paragraphs": [
+          "Contact Center layers its own personas over Dataverse security. Representative, supervisor, and administrator personas bundle the roles each needs, and custom personas exist for organisations whose structure does not match the three. Underneath, it is still additive Dataverse security with no deny, so a representative who can see too much holds a role granting it.",
+          "Capacity profiles are the mechanism that decides how much concurrent work a representative can be given, and they are what makes routing to a human sensible. A profile defines units and how many units each conversation on a channel consumes, so a representative can be configured to hold, say, three chats or one voice call but not both simultaneously. Getting these wrong produces either representatives sitting idle while a queue backs up, or representatives assigned six concurrent chats they cannot serve.",
+          "Presence interacts with capacity and is worth understanding as a separate axis. Presence says whether a representative is available at all; capacity says how much they can take while available. A queue with representatives present but at capacity behaves identically to one with nobody present, and distinguishing the two is a routine diagnostic question."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "channels",
+    "sections": [
+      {
+        "id": "chat-and-digital-channels",
+        "heading": "Chat and digital channels",
+        "paragraphs": [
+          "A channel is provisioned, attached to a workstream, and then surfaced — for chat, through a widget embedded in a site. The widget carries its own configuration: appearance, pre-chat survey, proactive chat rules, and authentication. Authenticated chat is the setting that matters most for anything transactional, because without it the customer is anonymous and the conversation cannot be tied to a record or trusted with account detail.",
+          "Pre-chat surveys collect what routing needs before a representative is involved, and their answers become context variables the workstream can classify and route on. That is the connection worth holding: a pre-chat question is not merely politeness, it is the input to a routing rule. Quick replies give representatives reusable snippets, and real-time translation lets a representative and a customer converse in different languages with the platform translating both directions.",
+          "Record-based channels handle asynchronous work that arrives as a record rather than a live conversation — an email or a case — and route it through the same unified routing engine as live channels. That unification is the point of the architecture: one routing configuration serves live chat, voice, and asynchronous records, so a supervisor sees one queue estate rather than several. The live chat SDK and the Messaging SDK exist for the cases the widget cannot cover, notably chat inside a native mobile application."
+        ]
+      },
+      {
+        "id": "voice-channel",
+        "heading": "The voice channel",
+        "paragraphs": [
+          "The voice channel is built on Azure Communication Services, and provisioning it means acquiring phone numbers and assigning them to inbound calling profiles. Numbers are a real-world resource with regulatory requirements that vary by country, which makes them the part of a deployment with the longest lead time and the part most likely to delay a go-live. Outbound calling profiles are configured separately from inbound, including the number presented to the customer.",
+          "Call recording and transcription are configured together and are what everything downstream depends on: real-time transcription feeds agent assist, and the stored transcript feeds summarisation, sentiment, and quality evaluation. Recording carries consent and jurisdictional obligations, and compliant recording — where the recording behaviour itself is enforced and auditable — is a distinct configuration rather than a stricter version of the ordinary one.",
+          "An existing non-Microsoft IVR can be integrated in front of the voice channel rather than replaced, which is the migration path for an organisation with substantial investment in one. The design question is where the handover happens and what context crosses it: an IVR that collects an account number and then hands over without passing it makes the customer repeat themselves, which is the single most common complaint about badly integrated telephony."
+        ]
+      },
+      {
+        "id": "channel-features-and-context",
+        "heading": "Context, identification, masking, and transfer",
+        "paragraphs": [
+          "Context variables carry what is known about a conversation — from a pre-chat survey, from an IVR, from the page the customer was on — and are what routing rules classify against and what a representative sees on arrival. Designing them is designing the routing, because a rule can only act on a variable that was captured.",
+          "Automatic customer identification matches an inbound conversation to a contact or account so the representative opens with the record already loaded. It works from what the channel provides — a phone number, an authenticated identity, a pre-chat field — and its accuracy is a data quality question: a duplicated contact estate produces ambiguous matches, and an unauthenticated channel produces guesses.",
+          "Sensitive data masking removes card numbers, national identifiers, and similar patterns from transcripts and the representative's view. It is configured with the patterns to detect and applies as the conversation happens, which is the property that matters — masking configured after an incident does nothing about the transcripts already stored, and those have to be dealt with separately. Consult and transfer are the two ways a representative brings in a colleague: consult adds a second person to the conversation while the first stays, and transfer hands it over entirely, with context following in both cases."
+        ]
+      },
+      {
+        "id": "proactive-outbound",
+        "heading": "Proactive outbound engagement",
+        "paragraphs": [
+          "Proactive outbound turns the contact centre from reactive to initiating: campaigns defined against a list, driven by triggers, and delivered through voice or messaging. A campaign has its own workstream and queue so outbound work is routed and measured like inbound work rather than existing alongside it.",
+          "Dialling method is the configuration with the most operational consequence. Preview gives the representative the record before the call is placed and is the right choice where preparation matters. Progressive dials when a representative is free, one call per representative. Predictive dials ahead of availability, on the assumption that a proportion will not answer, and it is the mode that maximises talk time and the mode that abandons calls when the assumption is wrong. Running predictive dialling into a queue with too few available representatives produces exactly the abandonment that regulators and customers object to, and the fix is the dial mode or the staffing rather than the campaign list.",
+          "The proactive outbound dashboard is where campaign performance is watched — contact rates, abandonment, outcomes — and it is what makes the dialling decision reviewable rather than a setting somebody chose once."
+        ]
+      },
+      {
+        "id": "workforce-management",
+        "heading": "Workforce management",
+        "paragraphs": [
+          "Workforce management is demand forecasting, scheduling, and skills alignment: predicting the volume by interval and channel, building shifts that cover it, and ensuring the people on those shifts hold the skills the forecast volume requires. Forecasting draws on historical volume, so its quality depends on the same interaction history everything else in the contact centre depends on.",
+          "The alignment between workforce management and routing is the part that is easy to miss. Skills-based routing can only send work to representatives who hold the skill, so a schedule that covers the headcount but not the skill mix produces queues that back up while representatives sit available. A forecast expressed only in headcount hides this entirely.",
+          "Third-party workforce management systems can be integrated where an organisation already runs one, and the integration is generally bidirectional — the contact centre supplies volume and adherence data, the workforce system supplies schedules. Deciding which system owns the schedule is a governance decision that should be made before the integration is built."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "agents-ai",
+    "sections": [
+      {
+        "id": "copilot-agent-assist",
+        "heading": "Copilot agent assist",
+        "paragraphs": [
+          "Agent assist is the set of Copilot capabilities that help a representative during and after a conversation: a summary of what has happened so far, an answer drafted from knowledge, and a wrap-up when it ends. Summaries are the feature most immediately felt on a transfer, because they replace a colleague reading a transcript.",
+          "Ask a question searches the configured knowledge sources and returns an answer with its citations. The citations are the load-bearing part: a representative repeating an answer to a customer needs to know where it came from, and an answer without a source cannot be checked. Knowledge sources must be configured deliberately — internal knowledge articles, external sites, connected repositories — and a Copilot with no knowledge sources configured answers from the model's general training, which for a contact centre means confidently telling customers things the organisation never published.",
+          "Copilot can be extended with prompt plugins and tools for organisation-specific work, and a smart assist bot is the older mechanism for surfacing suggestions into the productivity pane. The Copilot analytics report is what turns any of this from an impression into a measurement: usage, acceptance of suggestions, and the effect on handling time, which is what a decision to keep or reconfigure the feature should rest on."
+        ]
+      },
+      {
+        "id": "voice-agents-and-ivr",
+        "heading": "Voice agents and IVR",
+        "paragraphs": [
+          "A voice agent built in Copilot Studio serves the IVR role, and it can run with classic or generative orchestration. Classic matches an utterance to a topic's trigger phrases and follows an authored path, which is predictable and requires every intent to be anticipated and phrased. Generative orchestration lets the model choose among topics, tools, and knowledge, which handles the phrasing nobody anticipated and makes topic and tool descriptions load-bearing. A large classic IVR with hundreds of trigger phrases is the usual symptom of an organisation trying to enumerate language, and it is precisely the case generative orchestration exists for.",
+          "Input in a voice channel arrives three ways and all three are configured. DTMF is the keypad and remains the most reliable for account numbers, digits, and anything a caller must get exactly right. Speech recognition handles natural utterances. Natural language understanding maps those utterances to intent. A well-designed voice agent uses DTMF for precise data and speech for intent rather than insisting on one everywhere.",
+          "Multilingual voice agents serve callers in several languages from one configuration, and the Real-time Speech agent handles live speech interaction. Copilot Studio voice triggers are what let a conversation enter a topic on a spoken cue. Variables in Copilot Studio behave as they do anywhere in the product: topic-scoped unless promoted to global, which is what carries an account number collected at the start through to the transfer at the end."
+        ]
+      },
+      {
+        "id": "voice-agent-security",
+        "heading": "Securing voice and compliant recording",
+        "paragraphs": [
+          "Securing the voice channel covers who may configure it, what the agent may access, and how the call's contents are handled. An agent that can reach account data on behalf of a caller must be certain who the caller is, which makes authentication in the voice flow a security control rather than a convenience — and caller line identity alone is not authentication.",
+          "Compliant call recording configured in Copilot Studio enforces the recording policy rather than leaving it to a representative or a setting somebody can change, and it produces the auditable record a regulated organisation needs to demonstrate. It sits alongside sensitive data masking: recording captures the call, masking keeps what should never be stored out of the transcript, and an organisation generally needs both.",
+          "SIP header transfers pass context in the telephony signalling when a call moves between systems, which is what stops a customer repeating an account number to the human they are transferred to. It is the technical answer to the most common complaint about handover between an IVR and a person."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "work-distribution",
+    "sections": [
+      {
+        "id": "queues-and-operating-hours",
+        "heading": "Queues, prioritisation, overflow, and hours",
+        "paragraphs": [
+          "A queue holds work waiting for a representative, and a workstream routes into it. Prioritisation decides which queue is served first when a representative becomes free, and assignment method decides which representative within it — highest capacity, round robin, or advanced rules considering skills and priority.",
+          "Overflow and fallback handle the cases the happy path does not. Overflow triggers when a queue exceeds a threshold — wait time or queue length — and can divert to another queue, offer a callback, or close the conversation with a message. Fallback catches work that matches no routing rule at all, and a routing configuration with no fallback queue loses that work silently, which is the failure that produces conversations nobody ever answered and nobody knew about.",
+          "Operating hours define when a queue is staffed, and configuring them is what lets the contact centre answer outside hours with something other than silence. Time zones and holidays are part of that configuration and are a routine source of error in a contact centre spanning regions."
+        ]
+      },
+      {
+        "id": "unified-routing-and-classification",
+        "heading": "Unified routing, workstreams, and classification",
+        "paragraphs": [
+          "Unified routing is the modern engine and it works in two stages that are worth keeping distinct. Classification examines the incoming work and enriches it — setting context variables, identifying the customer, determining intent. Assignment then matches the classified work to a queue and a representative. A routing problem is nearly always one stage or the other, and diagnosing which comes first saves most of the time.",
+          "A workstream is the unit of configuration: it binds a channel to a routing configuration, carries the classification rules, and points at queues. Context variables set during classification are what subsequent rules act on, and an agent associated in Copilot Studio can participate in the workstream — handling the conversation for self-service before, or instead of, a human.",
+          "Basic routing rule sets remain for simple record routing and are the older mechanism. Unified routing is the one that serves live channels, skills, and intent, and the distinction matters because guidance written for one does not apply to the other. Conversation diagnostics is the tool for unified routing: it shows, for a specific conversation, which rules evaluated, what they matched, and where it went — which turns \"routing is broken\" into a specific rule and a specific condition."
+        ]
+      },
+      {
+        "id": "skills-intent-and-diagnostics",
+        "heading": "Skills, intent, and preferred representative routing",
+        "paragraphs": [
+          "Skills-based routing attaches skills to work and to representatives and matches them. Its most common failure is structural rather than logical: skills defined in the model but attached to no representative means every skills-based rule matches nobody and the work falls to overflow or fallback. The symptom is a queue backing up while representatives sit idle, and adding routing rules makes it worse rather than better.",
+          "AI-enabled skills-based routing derives the skills a conversation needs from its content rather than requiring them to be set explicitly, which removes the burden of classifying every incoming item by hand. Intent-based routing works on what the customer is trying to achieve, which is often a better match for how customers actually describe problems than a taxonomy somebody designed.",
+          "Preferred representative routing sends a returning customer to whoever handled them before where that person is available, and falls back when they are not. It is the mechanism behind relationship continuity, and its cost is that it constrains assignment: a heavily used preference makes queues less fungible and can lengthen waits, which is a trade the organisation should make deliberately."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "rep-experience",
+    "sections": [
+      {
+        "id": "experience-profiles",
+        "heading": "Experience profiles, sessions, and the inbox",
+        "paragraphs": [
+          "An experience profile bundles what a representative sees: which channels they serve, which session and tab templates apply, which productivity tools are available, and which notification templates fire. Profiles are assigned to users, which is how one deployment serves a tier-one team, a specialist team, and a supervisor without three applications.",
+          "Session templates decide what opens when a conversation arrives — which tabs, in which order, showing which record — and application tab templates define each of those tabs. Configuring these well is most of the perceived quality of the representative experience, because it decides whether the representative starts with the customer's record open or has to go and find it.",
+          "The agent inbox gives a representative a single prioritised list of everything assigned to them across channels, with custom views for the cuts a team actually works. Notification templates control what a representative sees when work arrives and how long they have to accept it, and the timeout behaviour matters: an unaccepted notification returns the work to the queue, so a timeout set too short produces work that bounces between representatives."
+        ]
+      },
+      {
+        "id": "productivity-tools",
+        "heading": "Productivity tools, scripts, and macros",
+        "paragraphs": [
+          "Agent scripts guide a representative through a defined procedure step by step, and their steps can be text instructions, macros, or links. Slugs are the substitution tokens that pull live values — the customer's name, the case number — into script text and macros, which is what makes a script specific to the conversation rather than generic.",
+          "Macros automate the repetitive parts of handling a conversation: opening a form with fields pre-filled, updating a record, sending a message. A macro invoked from a script step is the pattern that turns a written procedure into something a representative executes with one action, and it is where most of the measurable handling-time reduction in a contact centre comes from.",
+          "Teams collaboration embeds a chat with colleagues alongside the conversation, linked to the record so the discussion is retained with it rather than lost in a direct message. Custom productivity panels and the JavaScript APIs — the app profile manager API and the Omnichannel API — are the extension points for anything the configuration surfaces do not cover, and they carry the usual obligation of anything pro-code: they must be maintained against platform updates."
+        ]
+      },
+      {
+        "id": "knowledge-management",
+        "heading": "Knowledge management",
+        "paragraphs": [
+          "Knowledge is what agent assist and self-service agents both draw on, which makes it the highest-leverage content in a contact centre: one article improves the human answer, the Copilot answer, and the self-service answer simultaneously. Internal knowledge search covers the organisation's own articles, and external sources can be integrated and searched alongside them.",
+          "Configuring tables for knowledge management decides which records knowledge can be associated with and searched from, so a representative on a case sees the articles relevant to it. Integrating knowledge into portals extends the same content to customers directly, which deflects contacts that never need to reach the centre at all.",
+          "The Customer Knowledge Management agent works on the knowledge base itself rather than on conversations — identifying gaps where customers ask what no article answers, and drafting or updating articles. That closes the loop that otherwise depends on somebody noticing a pattern in a queue, and it is the mechanism by which a contact centre's knowledge improves rather than decays."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "analytics",
+    "sections": [
+      {
+        "id": "supervisor-experience",
+        "heading": "The supervisor experience and quality evaluation",
+        "paragraphs": [
+          "The supervisor app gives real-time visibility of queues, conversations, and representatives, together with the actions a supervisor takes on a live conversation: monitor, whisper to the representative, join, or take over. Configuring supervisor settings decides which of these are available and to whom, and they are genuinely intrusive capabilities that warrant a deliberate decision rather than a default.",
+          "The Quality Evaluation agent scores conversations against defined criteria automatically, which changes quality management from sampling a few conversations per representative per month to evaluating all of them. The consequence worth understanding is what that does to the supervisor's job: it moves from finding problems to acting on them, and the criteria become the thing that must be got right because they now apply at scale.",
+          "Real-time and historical analytics answer different questions and disagreeing figures between them are usually not a fault. Real-time reports the state now, at the granularity of the current interval; historical aggregates completed conversations after processing. A conversation in progress counts in one and not the other, which is the ordinary explanation for a discrepancy a supervisor raises."
+        ]
+      },
+      {
+        "id": "analytics-customisation",
+        "heading": "Customising analytics and telemetry",
+        "paragraphs": [
+          "The out-of-the-box analytics reports are Power BI reports, and the embedded editor allows KPIs and visuals to be customised in place without leaving the workspace — the right level of intervention when the standard report is nearly right. Deeper changes are made in Power BI Desktop against the underlying model, which gives full control and takes on the obligation to maintain the report through platform updates.",
+          "Embedding out-of-the-box reports into the Copilot Service workspace app puts the analysis where the work happens rather than in a separate tool, which is what makes supervisors actually use it. The security consideration from Power BI applies here as everywhere: an embedded report honours the Power BI security model rather than Dataverse row-level security, so what a supervisor can see in a report is not automatically what they can see in the application.",
+          "Application Insights receives conversation diagnostics and telemetry, and is what allows contact centre behaviour to be correlated with the systems behind it — a spike in handling time against a slow back-end service, a routing failure against a connector outage. The built-in analytics answer how the contact centre is performing; Application Insights answers why, and a deployment integrated with several external systems needs both."
+        ]
+      }
+    ]
+  }
+]

@@ -34,12 +34,12 @@
     "series": "ab",
     "msLevel": "Associate",
     "status": "beta",
-    "durationMinutes": null,
+    "durationMinutes": 120,
     "passingScore": 700,
     "summary": "Engineer AI-powered contact-centre solutions on Dynamics 365 — new in 2026.",
-    "hasContent": false,
-    "catalogVerifiedAt": null,
-    "sourceUrl": null
+    "hasContent": true,
+    "catalogVerifiedAt": "2026-08-14",
+    "sourceUrl": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/ab-250"
   },
   {
     "code": "ab-410",

@@ -1,0 +1,352 @@
+[
+  {
+    "id": "fc-ab250-dc-01",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "front": "Standalone vs embedded Contact Center",
+    "back": "Standalone makes Dynamics the system of record. Embedded layers channels, routing, and AI onto an existing CRM or CCaaS that stays the system of record. Keyword: who owns the record?"
+  },
+  {
+    "id": "fc-ab250-dc-02",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "front": "Why the workspace is session-based",
+    "back": "A representative holds several concurrent conversations as sessions. That is why session and tab templates configure it, not a site map. Keyword: sessions, not pages."
+  },
+  {
+    "id": "fc-ab250-dc-03",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "front": "What agent simulation is for",
+    "back": "Running simulated interactions through a journey before customers see it — the closest thing to a test suite for a conversational flow. Keyword: test before exposure."
+  },
+  {
+    "id": "fc-ab250-dc-04",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "front": "What the Health Agent watches",
+    "back": "The deployment itself, investigating operational issues proactively rather than waiting for a supervisor to report them. Keyword: it monitors the platform."
+  },
+  {
+    "id": "fc-ab250-dc-05",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "front": "The Agent hub",
+    "back": "Manages the agents as a fleet — which exist, which are published, which channels they serve. Inventory is what separates an estate from a pile. Keyword: fleet view."
+  },
+  {
+    "id": "fc-ab250-dc-06",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "front": "A promoted environment that routes nothing",
+    "back": "A solution import carries configuration, not telephony. Channels must be provisioned and numbers acquired and assigned in the target. Keyword: ALM does not move phone numbers."
+  },
+  {
+    "id": "fc-ab250-dc-07",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "front": "What a capacity profile decides",
+    "back": "How much concurrent work a representative can hold — units per channel per conversation. Three chats or one voice call, not both. Keyword: concurrency, in units."
+  },
+  {
+    "id": "fc-ab250-dc-08",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "front": "Presence vs capacity",
+    "back": "Presence says whether they are available at all; capacity says how much they can take while available. A full queue looks the same either way. Keyword: two different axes."
+  },
+  {
+    "id": "fc-ab250-ch-01",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "Why authenticated chat matters",
+    "back": "Without it the customer is anonymous, so the conversation cannot be tied to a record or trusted with account detail. Keyword: anonymous means untrusted."
+  },
+  {
+    "id": "fc-ab250-ch-02",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "A pre-chat survey is a routing input",
+    "back": "Its answers become context variables that classification and routing rules act on. It is not merely politeness. Keyword: questions feed the rules."
+  },
+  {
+    "id": "fc-ab250-ch-03",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "What a record-based channel is",
+    "back": "Asynchronous work arriving as a record — an email or case — routed through the same unified routing as live channels. Keyword: one routing engine for everything."
+  },
+  {
+    "id": "fc-ab250-ch-04",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "Chat inside a native mobile app",
+    "back": "The widget cannot cover it. Use the Messaging SDK; the live chat SDK extends the web chat experience. Keyword: SDK where the widget cannot reach."
+  },
+  {
+    "id": "fc-ab250-ch-05",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "The longest lead time in a voice deployment",
+    "back": "Phone numbers. They are a regulated real-world resource with country-specific requirements, and they delay more go-lives than configuration does. Keyword: acquire numbers early."
+  },
+  {
+    "id": "fc-ab250-ch-06",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "What depends on transcription",
+    "back": "Real-time transcription feeds agent assist; the stored transcript feeds summarisation, sentiment, and quality evaluation. Keyword: no transcript, no AI."
+  },
+  {
+    "id": "fc-ab250-ch-07",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "The most common complaint about IVR handover",
+    "back": "The customer repeats an account number they already gave. The fix is passing context across the handover, not shortening the IVR. Keyword: carry the context."
+  },
+  {
+    "id": "fc-ab250-ch-08",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "Designing context variables is designing routing",
+    "back": "A rule can only act on a variable that was captured. Decide what to capture before writing the rules. Keyword: capture first, route second."
+  },
+  {
+    "id": "fc-ab250-ch-09",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "Why automatic identification misfires",
+    "back": "It matches on what the channel provides. A duplicated contact estate gives ambiguous matches and an unauthenticated channel gives guesses. Keyword: data quality decides accuracy."
+  },
+  {
+    "id": "fc-ab250-ch-10",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "Masking applies going forward only",
+    "back": "It removes patterns as the conversation happens. Transcripts already stored are a separate remediation problem. Keyword: it does not clean history."
+  },
+  {
+    "id": "fc-ab250-ch-11",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "Consult vs transfer",
+    "back": "Consult adds a second person while the first stays. Transfer hands the conversation over entirely. Context follows in both. Keyword: stay, or hand over."
+  },
+  {
+    "id": "fc-ab250-ch-12",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "Preview, progressive, predictive",
+    "back": "Preview shows the record before dialling. Progressive dials when a rep is free. Predictive dials ahead of availability. Keyword: increasing talk time, increasing risk."
+  },
+  {
+    "id": "fc-ab250-ch-13",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "Why predictive dialling abandons calls",
+    "back": "It dials ahead assuming a proportion will not answer. Too few available reps and the assumption fails. Fix the mode or the staffing, not the list. Keyword: the assumption breaks."
+  },
+  {
+    "id": "fc-ab250-ch-14",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "Why outbound gets its own workstream",
+    "back": "So campaign work is routed and measured like inbound rather than existing alongside it unmeasured. Keyword: same machinery, both directions."
+  },
+  {
+    "id": "fc-ab250-ch-15",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "The gap a headcount forecast hides",
+    "back": "Skills. Skills-based routing can only reach reps holding the skill, so a shift covering headcount but not skill mix backs queues up while reps sit available. Keyword: forecast the skills."
+  },
+  {
+    "id": "fc-ab250-ch-16",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "front": "Integrating a third-party WFM system",
+    "back": "Generally bidirectional — the centre supplies volume and adherence, the WFM supplies schedules. Decide which system owns the schedule first. Keyword: agree the owner."
+  },
+  {
+    "id": "fc-ab250-ag-01",
+    "examCode": "ab-250",
+    "domain": "agents-ai",
+    "front": "Copilot with no knowledge sources configured",
+    "back": "Answers from the model's general training — confidently telling customers things the organisation never published. Keyword: configure the sources."
+  },
+  {
+    "id": "fc-ab250-ag-02",
+    "examCode": "ab-250",
+    "domain": "agents-ai",
+    "front": "Why citations are load-bearing",
+    "back": "A representative repeating an answer to a customer must be able to check where it came from. An uncited answer cannot be verified. Keyword: cite or do not use."
+  },
+  {
+    "id": "fc-ab250-ag-03",
+    "examCode": "ab-250",
+    "domain": "agents-ai",
+    "front": "What the Copilot analytics report is for",
+    "back": "Turning an impression into a measurement — usage, suggestion acceptance, effect on handling time. Keep-or-reconfigure decisions rest on it. Keyword: measure the assist."
+  },
+  {
+    "id": "fc-ab250-ag-04",
+    "examCode": "ab-250",
+    "domain": "agents-ai",
+    "front": "Hundreds of IVR trigger phrases",
+    "back": "The symptom of trying to enumerate language under classic orchestration. Generative orchestration exists for exactly this. Keyword: stop enumerating phrasings."
+  },
+  {
+    "id": "fc-ab250-ag-05",
+    "examCode": "ab-250",
+    "domain": "agents-ai",
+    "front": "DTMF or speech?",
+    "back": "DTMF for precise data — account numbers, digits. Speech and NLU for intent. A good voice agent uses both rather than insisting on one. Keyword: keypad for digits."
+  },
+  {
+    "id": "fc-ab250-ag-06",
+    "examCode": "ab-250",
+    "domain": "agents-ai",
+    "front": "What SIP header transfers solve",
+    "back": "Passing context in telephony signalling when a call moves between systems, so the customer does not repeat their account number to the human. Keyword: context in the signalling."
+  },
+  {
+    "id": "fc-ab250-wd-01",
+    "examCode": "ab-250",
+    "domain": "work-distribution",
+    "front": "Classification then assignment",
+    "back": "Classification enriches the work — variables, identity, intent. Assignment matches it to a queue and a rep. Diagnose which stage first. Keyword: two stages, always."
+  },
+  {
+    "id": "fc-ab250-wd-02",
+    "examCode": "ab-250",
+    "domain": "work-distribution",
+    "front": "No fallback queue",
+    "back": "Work matching no rule is lost silently — conversations nobody answered and nobody knew about. Always define a fallback. Keyword: catch the unmatched."
+  },
+  {
+    "id": "fc-ab250-wd-03",
+    "examCode": "ab-250",
+    "domain": "work-distribution",
+    "front": "Skills attached to nobody",
+    "back": "Every skills-based rule matches zero reps and work falls to overflow. Queues back up while reps sit idle, and more rules make it worse. Keyword: attach skills to people."
+  },
+  {
+    "id": "fc-ab250-wd-04",
+    "examCode": "ab-250",
+    "domain": "work-distribution",
+    "front": "What conversation diagnostics gives you",
+    "back": "For one conversation: which rules evaluated, what matched, where it went. It turns 'routing is broken' into a rule and a condition. Keyword: trace one conversation."
+  },
+  {
+    "id": "fc-ab250-wd-05",
+    "examCode": "ab-250",
+    "domain": "work-distribution",
+    "front": "AI-enabled skills-based routing",
+    "back": "Derives the required skills from the conversation's content instead of requiring them to be set by hand on every item. Keyword: infer the skill."
+  },
+  {
+    "id": "fc-ab250-wd-06",
+    "examCode": "ab-250",
+    "domain": "work-distribution",
+    "front": "The cost of preferred representative routing",
+    "back": "It constrains assignment. Heavy use makes queues less fungible and lengthens waits — a trade to make deliberately. Keyword: continuity costs flexibility."
+  },
+  {
+    "id": "fc-ab250-rx-01",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "front": "What an experience profile bundles",
+    "back": "Channels served, session and tab templates, productivity tools, notification templates — assigned to users. Keyword: one deployment, several teams."
+  },
+  {
+    "id": "fc-ab250-rx-02",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "front": "Where perceived quality actually comes from",
+    "back": "Session and tab templates — whether the rep starts with the customer's record open or has to go and find it. Keyword: what opens on arrival."
+  },
+  {
+    "id": "fc-ab250-rx-03",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "front": "Work bouncing between representatives",
+    "back": "The notification timeout is too short. An unaccepted notification returns the work to the queue. Keyword: timeout causes the bounce."
+  },
+  {
+    "id": "fc-ab250-rx-04",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "front": "What slugs do",
+    "back": "Substitute live values — customer name, case number — into script text and macros, making a generic procedure specific to this conversation. Keyword: tokens for live values."
+  },
+  {
+    "id": "fc-ab250-rx-05",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "front": "Where handling-time reduction comes from",
+    "back": "Macros invoked from script steps — turning a written procedure into one action. Keyword: automate the repetitive steps."
+  },
+  {
+    "id": "fc-ab250-rx-06",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "front": "Why link Teams collaboration to the record",
+    "back": "The discussion is retained with the record instead of being lost in a direct message. Keyword: keep the context with the case."
+  },
+  {
+    "id": "fc-ab250-rx-07",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "front": "Why knowledge is the highest-leverage content",
+    "back": "One article improves the human answer, the Copilot answer, and the self-service answer at once. Keyword: write once, three surfaces."
+  },
+  {
+    "id": "fc-ab250-rx-08",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "front": "The Customer Knowledge Management agent",
+    "back": "Works on the knowledge base, not conversations — finds gaps where customers ask what no article answers, and drafts updates. Keyword: it closes the loop."
+  },
+  {
+    "id": "fc-ab250-an-01",
+    "examCode": "ab-250",
+    "domain": "analytics",
+    "front": "Monitor, whisper, join, take over",
+    "back": "The supervisor's live-conversation actions. Genuinely intrusive, so which are available warrants a deliberate decision. Keyword: configure the intrusion."
+  },
+  {
+    "id": "fc-ab250-an-02",
+    "examCode": "ab-250",
+    "domain": "analytics",
+    "front": "What the Quality Evaluation agent changes",
+    "back": "From sampling a few conversations per rep per month to evaluating all of them. The criteria now apply at scale, so they must be right. Keyword: criteria matter more."
+  },
+  {
+    "id": "fc-ab250-an-03",
+    "examCode": "ab-250",
+    "domain": "analytics",
+    "front": "Real-time and historical disagree",
+    "back": "Usually not a fault. Real-time reports the current state; historical aggregates completed conversations after processing. Keyword: in-progress counts once."
+  },
+  {
+    "id": "fc-ab250-an-04",
+    "examCode": "ab-250",
+    "domain": "analytics",
+    "front": "Embedded editor or Power BI Desktop?",
+    "back": "The embedded editor when the standard report is nearly right. Desktop for deeper change, taking on maintenance through platform updates. Keyword: depth costs maintenance."
+  },
+  {
+    "id": "fc-ab250-an-05",
+    "examCode": "ab-250",
+    "domain": "analytics",
+    "front": "Embedded reports use Power BI security",
+    "back": "Not Dataverse row-level security, so what a supervisor sees in a report is not automatically what they see in the app. Keyword: different boundary."
+  },
+  {
+    "id": "fc-ab250-an-06",
+    "examCode": "ab-250",
+    "domain": "analytics",
+    "front": "Built-in analytics vs Application Insights",
+    "back": "Analytics says how the centre is performing. Application Insights says why, by correlating with the systems behind it. Keyword: performance or cause."
+  }
+]

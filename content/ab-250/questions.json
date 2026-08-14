@@ -1,0 +1,1053 @@
+[
+  {
+    "id": "dc-01",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "question": "An organisation wants Contact Center's channels, routing, and AI but must keep its existing CRM as the system of record. Which deployment shape applies?",
+    "options": [
+      "Embedded Contact Center mode",
+      "Standalone Contact Center",
+      "Copilot Service workspace with a custom connector",
+      "Contact Center provisioned in a separate environment"
+    ],
+    "correctIndex": 0,
+    "explanation": "Embedded mode layers Contact Center onto an existing CRM or CCaaS platform that remains the system of record, which is how an organisation adopts the AI capabilities without replacing what it runs. Standalone makes Dynamics the system of record.",
+    "teaches": "contact-center-deployment"
+  },
+  {
+    "id": "dc-02",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "question": "Why is the Copilot Service workspace configured with session and application tab templates rather than a site map?",
+    "options": [
+      "A representative holds several concurrent conversations, each as its own session",
+      "The workspace does not support model-driven navigation",
+      "Site maps cannot reference the case table",
+      "Session templates are required for Dataverse security to apply"
+    ],
+    "correctIndex": 0,
+    "explanation": "The workspace is session-based because a representative moves between concurrent conversations. Templates decide what opens inside each session, which is a different problem from navigating an application.",
+    "teaches": "contact-center-deployment"
+  },
+  {
+    "id": "dc-03",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "question": "A team wants to validate a customer journey before customers are exposed to it. Which capability should they use?",
+    "options": [
+      "Agent simulation",
+      "The Health Agent",
+      "Conversation diagnostics",
+      "The Copilot analytics report"
+    ],
+    "correctIndex": 0,
+    "explanation": "Agent simulation runs simulated interactions through a journey, which is the nearest thing the platform offers to a test suite for a conversational flow. The other three examine what has already happened.",
+    "teaches": "contact-center-deployment"
+  },
+  {
+    "id": "dc-04",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "question": "What does the Health Agent do?",
+    "options": [
+      "Proactively investigates operational issues in the deployment itself",
+      "Evaluates the quality of representatives' conversations",
+      "Summarises conversations for the representative",
+      "Routes conversations that match no classification rule"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Health Agent watches the platform rather than the conversations, surfacing operational problems before a supervisor reports them. Quality evaluation and summarisation are separate capabilities.",
+    "teaches": "contact-center-deployment"
+  },
+  {
+    "id": "dc-05",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "question": "A managed solution containing the full Contact Center configuration was imported into production, but no conversation routes. What is the most likely cause?",
+    "options": [
+      "Channels and phone numbers have not been provisioned in the target environment",
+      "The solution was imported as unmanaged",
+      "The publisher prefix does not match the source environment",
+      "The security roles were not included in the solution"
+    ],
+    "correctIndex": 0,
+    "explanation": "A solution import carries configuration but not telephony. Channels must be provisioned in the target and numbers acquired and assigned, which is why a promoted environment can look complete and route nothing.",
+    "teaches": "agent-hub-and-alm"
+  },
+  {
+    "id": "dc-06",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "question": "Where should a phone number that differs between test and production be held so one managed solution serves both?",
+    "options": [
+      "In an environment variable",
+      "In the workstream's configuration in each environment",
+      "In a connection reference",
+      "In a custom table read at run time"
+    ],
+    "correctIndex": 0,
+    "explanation": "Environment variables hold values that must differ per environment and are supplied at import. Connection references bind connections rather than configuration values.",
+    "teaches": "agent-hub-and-alm"
+  },
+  {
+    "id": "dc-07",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "question": "A representative should handle up to three concurrent chats but only one voice call at a time. What configures this?",
+    "options": [
+      "A capacity profile defining units per channel",
+      "A custom presence for voice",
+      "A queue assignment method",
+      "An experience profile limiting channels"
+    ],
+    "correctIndex": 0,
+    "explanation": "Capacity profiles define units and how many each conversation consumes per channel, which is exactly how concurrency limits are expressed. Presence governs availability rather than volume.",
+    "teaches": "users-roles-and-capacity"
+  },
+  {
+    "id": "dc-08",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "question": "A queue is not being served although representatives are signed in. What are the two states to distinguish?",
+    "options": [
+      "Whether they are present, and whether they are already at capacity",
+      "Whether they hold a licence, and whether the queue has operating hours",
+      "Whether the workstream is published, and whether the channel is provisioned",
+      "Whether they hold a security role, and whether the queue has a fallback"
+    ],
+    "correctIndex": 0,
+    "explanation": "Presence and capacity are separate axes, and a queue whose representatives are all at capacity behaves identically to one where nobody is present. Distinguishing them is the first diagnostic step.",
+    "teaches": "users-roles-and-capacity"
+  },
+  {
+    "id": "dc-09",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "kind": "multi",
+    "question": "Which two does the Agent hub provide in a contact centre running several agents? Choose two.",
+    "options": [
+      "An inventory of which agents exist and which are published",
+      "Control over rollout of agents across the deployment",
+      "Real-time monitoring of representative capacity",
+      "Automatic authoring of new agent topics"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "The Agent hub manages agents as a fleet — what exists, what is published, and how it is rolled out. Capacity monitoring belongs to the supervisor surfaces and authoring belongs to Copilot Studio.",
+    "teaches": "agent-hub-and-alm"
+  },
+  {
+    "id": "dc-10",
+    "examCode": "ab-250",
+    "domain": "deploy",
+    "kind": "match",
+    "question": "Match each deployment concept to what it governs.",
+    "pairs": [
+      {
+        "term": "Capacity profile",
+        "definition": "How much concurrent work a representative may hold"
+      },
+      {
+        "term": "Presence",
+        "definition": "Whether a representative is available to receive work at all"
+      },
+      {
+        "term": "Persona",
+        "definition": "The bundle of security roles a contact centre role needs"
+      },
+      {
+        "term": "Experience profile",
+        "definition": "Which channels, templates, and tools a representative gets"
+      }
+    ],
+    "explanation": "The four are commonly confused because all four affect what a representative experiences. Only capacity and presence decide whether work reaches them; personas govern permissions and experience profiles govern the interface.",
+    "teaches": "users-roles-and-capacity"
+  },
+  {
+    "id": "ch-01",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "caseStudyId": "cs-kelbrook-contact-centre",
+    "question": "Seventy per cent of Kelbrook's conversations reach the fallback queue and representatives sit idle while waits rise. Three routing rules have already been added. What should you do?",
+    "options": [
+      "Attach the 14 skills to representative records",
+      "Add a further routing rule matching the fallback queue's traffic",
+      "Raise the priority of the skills-based queues above the fallback queue",
+      "Switch the workstreams from skills-based to intent-based routing"
+    ],
+    "correctIndex": 0,
+    "explanation": "The skills exist in the model and are attached to nobody, so every skills-based rule matches zero representatives and the work falls through. Rules are not the problem — three more were already added and made it worse — which is why the requirement forbids adding any. Reprioritising queues nobody qualifies for changes nothing, and replacing the routing style abandons a configuration that is correct apart from the missing data.",
+    "teaches": "skills-intent-and-diagnostics"
+  },
+  {
+    "id": "ch-02",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "caseStudyId": "cs-kelbrook-contact-centre",
+    "question": "Card numbers appear in full in transcripts retained for 24 months. Which response matches the requirement as stated?",
+    "options": [
+      "Enable sensitive data masking for future calls and remediate the existing transcripts separately",
+      "Enable sensitive data masking, which will redact the stored transcripts on its next run",
+      "Shorten the transcript retention period to 30 days",
+      "Disable call transcription until the audit closes"
+    ],
+    "correctIndex": 0,
+    "explanation": "Masking applies as a conversation happens and does nothing to transcripts already stored, which is exactly why the requirement names the existing 24 months as a separate action. Shortening retention still leaves card numbers present until they age out, and disabling transcription would take agent assist, summarisation, and quality evaluation down with it.",
+    "teaches": "channel-features-and-context"
+  },
+  {
+    "id": "ch-03",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "caseStudyId": "cs-kelbrook-contact-centre",
+    "question": "Outbound abandonment is at 14 per cent on a predictive campaign, and the number of customers contacted per day must not fall. What should you do?",
+    "options": [
+      "Forecast the required staffing and schedule the queue to match the dial rate",
+      "Switch the campaign to progressive dialling",
+      "Reduce the daily target below 4,000 customers",
+      "Move the campaign to a messaging channel instead of voice"
+    ],
+    "correctIndex": 0,
+    "explanation": "Predictive dialling abandons calls when it dials ahead of availability and too few representatives are free, so the two levers are the dial mode and the staffing. The requirement rules out reducing contact volume, and progressive dialling — one call per free representative — would do exactly that with 12 representatives. Aligning the schedule to the dial rate is what preserves throughput.",
+    "teaches": "proactive-outbound"
+  },
+  {
+    "id": "ch-04",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "kind": "dropdown",
+    "caseStudyId": "cs-kelbrook-contact-centre",
+    "question": "Complete the assessment of Kelbrook's IVR voice agent.",
+    "segments": [
+      {
+        "text": "The 214 trigger phrases accumulated because the agent uses "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "classic orchestration, which matches an utterance to an authored topic",
+          "generative orchestration, which needs a phrase for each intent",
+          "DTMF collection, which cannot interpret speech"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", so to meet the requirement you should move it to "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "generative orchestration, letting the model choose among topics, tools, and knowledge",
+          "a non-Microsoft IVR integrated in front of the voice channel",
+          "a classic flow with a broader fallback topic"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "Enumerating phrasings is what classic orchestration forces, and adding a 215th phrase after every miss is the pattern generative orchestration exists to end. A broader fallback catches the miss without answering it, and replacing the IVR wholesale solves a problem Kelbrook does not have.",
+    "teaches": "voice-agents-and-ivr"
+  },
+  {
+    "id": "ch-05",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "kind": "yesno",
+    "caseStudyId": "cs-kelbrook-contact-centre",
+    "question": "Consider Copilot Ask a question describing a tariff Kelbrook does not offer. Judge each statement.",
+    "statements": [
+      {
+        "text": "With no knowledge sources configured, answers come from the model's general training rather than Kelbrook's content.",
+        "correct": true
+      },
+      {
+        "text": "Configuring Kelbrook's published tariff content as a knowledge source is what makes answers traceable to a source.",
+        "correct": true
+      },
+      {
+        "text": "The absence of citations is itself the signal that the answer was not grounded in configured content.",
+        "correct": true
+      },
+      {
+        "text": "Choosing a more capable model would satisfy the requirement that answers come from Kelbrook's own content.",
+        "correct": false
+      }
+    ],
+    "explanation": "A Copilot with no knowledge sources answers fluently from general training, which is how a tariff nobody offers gets described to a customer. Model capability affects how well an answer reads, not where it comes from; only grounding does that, and citations are the visible evidence of it.",
+    "teaches": "copilot-agent-assist"
+  },
+  {
+    "id": "ch-06",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "question": "A chat channel will handle account queries and payments. Which setting is essential?",
+    "options": [
+      "Authenticated chat",
+      "Proactive chat rules",
+      "Quick replies",
+      "Real-time translation"
+    ],
+    "correctIndex": 0,
+    "explanation": "Without authentication the customer is anonymous, so the conversation cannot be tied to a record or trusted with account detail. The other three improve the experience without establishing who is talking.",
+    "teaches": "chat-and-digital-channels"
+  },
+  {
+    "id": "ch-07",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "question": "What is the relationship between a pre-chat survey and unified routing?",
+    "options": [
+      "Its answers become context variables that classification and routing rules act on",
+      "It determines which representative accepts the chat directly",
+      "It sets the customer's capacity profile for the session",
+      "It selects the experience profile applied to the conversation"
+    ],
+    "correctIndex": 0,
+    "explanation": "Pre-chat answers are routing input rather than politeness. A rule can only act on a variable that was captured, which makes survey design part of routing design.",
+    "teaches": "chat-and-digital-channels"
+  },
+  {
+    "id": "ch-08",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "question": "Chat must be embedded inside the organisation's native mobile application. What should you use?",
+    "options": [
+      "The Messaging SDK for Dynamics 365 Contact Center",
+      "The chat widget with a mobile-optimised theme",
+      "A custom messaging channel built on messaging APIs",
+      "The live chat SDK"
+    ],
+    "correctIndex": 0,
+    "explanation": "The Messaging SDK exists specifically for chat inside a native mobile app. The live chat SDK extends the web chat experience, and a custom messaging channel is for integrating a channel the platform does not ship.",
+    "teaches": "chat-and-digital-channels"
+  },
+  {
+    "id": "ch-09",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "question": "Which part of a voice deployment typically has the longest lead time?",
+    "options": [
+      "Acquiring and assigning phone numbers",
+      "Configuring inbound calling profiles",
+      "Enabling call transcription",
+      "Creating the voice workstream"
+    ],
+    "correctIndex": 0,
+    "explanation": "Numbers are a regulated real-world resource with country-specific requirements, which makes them the item most likely to delay a go-live. The rest is configuration that can be done in an afternoon.",
+    "teaches": "voice-channel"
+  },
+  {
+    "id": "ch-10",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "question": "Call transcription is disabled to save cost. Which capabilities stop working?",
+    "options": [
+      "Real-time agent assist, summarisation, sentiment, and quality evaluation",
+      "Call recording and phone number assignment",
+      "Inbound routing and queue prioritisation",
+      "Consult and transfer between representatives"
+    ],
+    "correctIndex": 0,
+    "explanation": "Transcription is what turns speech into the text everything downstream reads. Routing and telephony are unaffected, which is why the loss is discovered later rather than immediately.",
+    "teaches": "voice-channel"
+  },
+  {
+    "id": "ch-11",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "question": "Customers complain that after the IVR collects their account number they are asked for it again by the representative. What should you address?",
+    "options": [
+      "Passing the collected context across the handover",
+      "The length of the IVR menu",
+      "The representative's session template",
+      "The queue's assignment method"
+    ],
+    "correctIndex": 0,
+    "explanation": "This is a context handover problem, and it is the most common complaint about badly integrated telephony. Shortening the IVR reduces the annoyance without preventing the repetition.",
+    "teaches": "voice-channel"
+  },
+  {
+    "id": "ch-12",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "question": "Automatic customer identification frequently returns ambiguous matches. What is the most likely underlying cause?",
+    "options": [
+      "Duplicate contact records in the customer estate",
+      "The chat widget's theme configuration",
+      "Missing quick replies on the workstream",
+      "Operating hours not set on the queue"
+    ],
+    "correctIndex": 0,
+    "explanation": "Identification matches on what the channel provides, so its accuracy is a data quality question. A duplicated estate produces several plausible matches for the same caller.",
+    "teaches": "channel-features-and-context"
+  },
+  {
+    "id": "ch-13",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "question": "A representative needs a colleague's advice while staying on the conversation with the customer. What should they use?",
+    "options": [
+      "Consult",
+      "Transfer",
+      "A custom presence",
+      "A macro"
+    ],
+    "correctIndex": 0,
+    "explanation": "Consult brings a second person in while the first remains. Transfer hands the conversation over entirely, which is not what is wanted here.",
+    "teaches": "channel-features-and-context"
+  },
+  {
+    "id": "ch-14",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "question": "A campaign must let representatives review each customer's record before the call is placed. Which dialling method applies?",
+    "options": [
+      "Preview",
+      "Progressive",
+      "Predictive",
+      "Power"
+    ],
+    "correctIndex": 0,
+    "explanation": "Preview gives the representative the record before dialling, which is the right choice where preparation matters. Progressive dials when a representative is free and predictive dials ahead of availability.",
+    "teaches": "proactive-outbound"
+  },
+  {
+    "id": "ch-15",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "question": "Queues back up while representatives sit available, and the workforce forecast shows headcount fully covered. What has the forecast missed?",
+    "options": [
+      "The skill mix the volume requires",
+      "The number of channels each representative serves",
+      "The operating hours of the queues",
+      "The average handling time per conversation"
+    ],
+    "correctIndex": 0,
+    "explanation": "Skills-based routing can only reach representatives holding the skill, so a schedule covering headcount but not the skill mix produces exactly this. A forecast expressed only in headcount hides it entirely.",
+    "teaches": "workforce-management"
+  },
+  {
+    "id": "ch-16",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "question": "An organisation integrates its existing third-party workforce management system. What should be decided before the integration is built?",
+    "options": [
+      "Which system owns the schedule",
+      "Which channels are provisioned first",
+      "Whether representatives use custom presences",
+      "How many capacity units a chat consumes"
+    ],
+    "correctIndex": 0,
+    "explanation": "The integration is generally bidirectional, so schedule ownership is a governance decision rather than a technical detail. Leaving it undecided produces two systems that each believe they are authoritative.",
+    "teaches": "workforce-management"
+  },
+  {
+    "id": "ch-17",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "kind": "multi",
+    "question": "Which two are true of sensitive data masking? Choose two.",
+    "options": [
+      "It applies as the conversation happens rather than retrospectively",
+      "It is configured with the patterns to be detected",
+      "It redacts transcripts that were stored before it was enabled",
+      "It replaces the need for compliant call recording"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Masking is forward-looking and pattern-driven. Existing transcripts need separate remediation, and masking and compliant recording solve different problems — what is stored, and how the recording policy is enforced.",
+    "teaches": "channel-features-and-context"
+  },
+  {
+    "id": "ch-18",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "kind": "order",
+    "question": "Put these steps in order for bringing a new chat channel into service.",
+    "items": [
+      "Provision the chat channel in the environment",
+      "Attach the channel to a workstream with routing rules",
+      "Configure the widget, including authentication and the pre-chat survey",
+      "Embed the widget in the customer-facing site"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "The channel exists first, the workstream decides where its conversations go, the widget decides what is captured and whether the customer is authenticated, and embedding is what exposes it to customers.",
+    "teaches": "chat-and-digital-channels"
+  },
+  {
+    "id": "ch-19",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "kind": "dropdown",
+    "question": "Complete the statement about outbound dialling.",
+    "segments": [
+      {
+        "text": "Progressive dialling places a call "
+      },
+      {
+        "blankId": "b1",
+        "options": [
+          "when a representative becomes free, one call per representative",
+          "ahead of representative availability, expecting some not to answer",
+          "only after a representative has reviewed the record"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": ", whereas predictive dialling abandons calls when "
+      },
+      {
+        "blankId": "b2",
+        "options": [
+          "more customers answer than there are representatives free",
+          "the campaign list contains invalid numbers",
+          "the queue's operating hours have ended"
+        ],
+        "correctIndex": 0
+      },
+      {
+        "text": "."
+      }
+    ],
+    "explanation": "Progressive is one call per free representative and cannot abandon. Predictive dials ahead on an assumption about answer rates, and abandonment is what happens when that assumption is wrong.",
+    "teaches": "proactive-outbound"
+  },
+  {
+    "id": "ag-01",
+    "examCode": "ab-250",
+    "domain": "agents-ai",
+    "question": "Copilot Ask a question returns answers with no citations. What does that indicate?",
+    "options": [
+      "The answer was not grounded in a configured knowledge source",
+      "The knowledge articles are missing their titles",
+      "The representative lacks read access to the knowledge table",
+      "Citations are only shown for external knowledge sources"
+    ],
+    "correctIndex": 0,
+    "explanation": "Citations are the visible evidence that the answer came from configured content. Their absence is the signal that the model answered from general training instead.",
+    "teaches": "copilot-agent-assist"
+  },
+  {
+    "id": "ag-02",
+    "examCode": "ab-250",
+    "domain": "agents-ai",
+    "question": "Which capability most immediately helps a representative receiving a transferred conversation?",
+    "options": [
+      "A Copilot summary of the conversation so far",
+      "A macro that opens the customer's record",
+      "A quick reply set for common questions",
+      "A custom presence indicating the transfer"
+    ],
+    "correctIndex": 0,
+    "explanation": "The summary replaces a colleague reading a transcript, which is where the time goes on a transfer. The others help with the work after the context has been established.",
+    "teaches": "copilot-agent-assist"
+  },
+  {
+    "id": "ag-03",
+    "examCode": "ab-250",
+    "domain": "agents-ai",
+    "question": "A voice agent must collect a 12-digit account number reliably. Which input method should you use?",
+    "options": [
+      "DTMF keypad entry",
+      "Speech recognition with natural language understanding",
+      "A Copilot Studio voice trigger",
+      "A generative answers node"
+    ],
+    "correctIndex": 0,
+    "explanation": "DTMF remains the most reliable for digits and anything the caller must get exactly right. Speech and NLU are for intent, and a well-designed voice agent uses both for their own purposes.",
+    "teaches": "voice-agents-and-ivr"
+  },
+  {
+    "id": "ag-04",
+    "examCode": "ab-250",
+    "domain": "agents-ai",
+    "question": "A regulated organisation must demonstrate that its call recording policy is enforced and auditable. What should you configure?",
+    "options": [
+      "Compliant call recording in Copilot Studio",
+      "Standard call recording on the voice channel",
+      "Sensitive data masking on the transcript",
+      "Application Insights telemetry for the voice channel"
+    ],
+    "correctIndex": 0,
+    "explanation": "Compliant recording enforces the policy itself and produces the auditable record, which ordinary recording does not. Masking solves the adjacent problem of what ends up in the transcript.",
+    "teaches": "voice-agent-security"
+  },
+  {
+    "id": "ag-05",
+    "examCode": "ab-250",
+    "domain": "agents-ai",
+    "question": "A voice agent will act on a caller's account. Why is caller line identity insufficient?",
+    "options": [
+      "It identifies the line, not the person, so it is not authentication",
+      "It is unavailable on calls arriving through a third-party IVR",
+      "It cannot be stored as a context variable",
+      "It is masked by sensitive data masking"
+    ],
+    "correctIndex": 0,
+    "explanation": "An agent reaching account data must be certain who the caller is, and a number is a weak, spoofable signal about a line rather than a person. Authentication in the voice flow is a security control.",
+    "teaches": "voice-agent-security"
+  },
+  {
+    "id": "ag-06",
+    "examCode": "ab-250",
+    "domain": "agents-ai",
+    "kind": "multi",
+    "question": "Which two follow from choosing generative orchestration for a voice agent? Choose two.",
+    "options": [
+      "Caller phrasings that were never authored can still be handled",
+      "Topic and tool descriptions become functional rather than documentation",
+      "Trigger phrases must be authored for every anticipated intent",
+      "The agent can no longer use DTMF input"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "Generative orchestration ends the enumeration of phrasings and makes the model's tool selection depend on descriptions. Trigger phrases belong to classic orchestration, and DTMF is an input method independent of orchestration style.",
+    "teaches": "voice-agents-and-ivr"
+  },
+  {
+    "id": "ag-07",
+    "examCode": "ab-250",
+    "domain": "agents-ai",
+    "kind": "yesno",
+    "question": "An organisation is configuring Copilot agent assist for its representatives. Judge each statement.",
+    "statements": [
+      {
+        "text": "Knowledge sources must be configured explicitly or answers come from the model's general training.",
+        "correct": true
+      },
+      {
+        "text": "The Copilot analytics report is what turns the feature's value from an impression into a measurement.",
+        "correct": true
+      },
+      {
+        "text": "Prompt plugins and tools extend Copilot for organisation-specific work.",
+        "correct": true
+      },
+      {
+        "text": "A smart assist bot is required before Ask a question can be enabled.",
+        "correct": false
+      }
+    ],
+    "explanation": "A smart assist bot is the older mechanism for surfacing suggestions into the productivity pane and is independent of Ask a question. The other three are the core of deploying agent assist responsibly: ground it, extend it where needed, and measure whether it helps.",
+    "teaches": "copilot-agent-assist"
+  },
+  {
+    "id": "wd-01",
+    "examCode": "ab-250",
+    "domain": "work-distribution",
+    "question": "Conversations exist that no representative ever received and no supervisor knew about. What is missing?",
+    "options": [
+      "A fallback queue for work matching no routing rule",
+      "Operating hours on the primary queue",
+      "A capacity profile for the channel",
+      "A notification template for the workstream"
+    ],
+    "correctIndex": 0,
+    "explanation": "Work matching no rule is lost silently without a fallback, which is precisely the failure that produces conversations nobody answered. Every routing configuration needs one.",
+    "teaches": "queues-and-operating-hours"
+  },
+  {
+    "id": "wd-02",
+    "examCode": "ab-250",
+    "domain": "work-distribution",
+    "question": "A queue must divert conversations elsewhere once its wait time passes a threshold. What should you configure?",
+    "options": [
+      "Overflow handling on the queue",
+      "A fallback queue on the workstream",
+      "Queue prioritisation",
+      "A work classification rule"
+    ],
+    "correctIndex": 0,
+    "explanation": "Overflow triggers on a threshold such as wait time or queue length and can divert, offer a callback, or close with a message. Fallback catches work that matched no rule at all, which is a different condition.",
+    "teaches": "queues-and-operating-hours"
+  },
+  {
+    "id": "wd-03",
+    "examCode": "ab-250",
+    "domain": "work-distribution",
+    "question": "A routing problem is reported. Which distinction should you establish first?",
+    "options": [
+      "Whether classification or assignment is at fault",
+      "Whether the channel is chat or voice",
+      "Whether the queue has operating hours configured",
+      "Whether the representative holds an experience profile"
+    ],
+    "correctIndex": 0,
+    "explanation": "Unified routing works in two stages — classification enriches the work, assignment matches it to a queue and representative. Establishing which stage failed removes most of the search space.",
+    "teaches": "unified-routing-and-classification"
+  },
+  {
+    "id": "wd-04",
+    "examCode": "ab-250",
+    "domain": "work-distribution",
+    "question": "Which tool shows, for one specific conversation, which routing rules evaluated and what they matched?",
+    "options": [
+      "Conversation diagnostics",
+      "The Copilot analytics report",
+      "The real-time analytics dashboard",
+      "Agent simulation"
+    ],
+    "correctIndex": 0,
+    "explanation": "Conversation diagnostics traces a single conversation through the routing engine, which turns \"routing is broken\" into a specific rule and condition. The others report aggregate behaviour or test journeys.",
+    "teaches": "unified-routing-and-classification"
+  },
+  {
+    "id": "wd-05",
+    "examCode": "ab-250",
+    "domain": "work-distribution",
+    "question": "What does AI-enabled skills-based routing change compared with ordinary skills-based routing?",
+    "options": [
+      "It derives the required skills from the conversation's content",
+      "It attaches skills to representatives automatically",
+      "It removes the need for queues",
+      "It replaces the fallback queue with an agent"
+    ],
+    "correctIndex": 0,
+    "explanation": "The AI-enabled variant infers what skills a conversation needs rather than requiring each item to be classified by hand. Representatives' own skills still have to be maintained.",
+    "teaches": "skills-intent-and-diagnostics"
+  },
+  {
+    "id": "wd-06",
+    "examCode": "ab-250",
+    "domain": "work-distribution",
+    "kind": "order",
+    "question": "Put these steps in order for diagnosing work that is not reaching the intended representatives.",
+    "items": [
+      "Confirm the conversation was classified as expected",
+      "Confirm the assignment rules match the intended queue",
+      "Confirm representatives hold the skills the rules require",
+      "Confirm those representatives are present and below capacity"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Work outward through the pipeline: classification, then assignment, then whether anybody qualifies, then whether they can take it. Checking availability first tells you nothing if the work never reached the queue.",
+    "teaches": "skills-intent-and-diagnostics"
+  },
+  {
+    "id": "wd-07",
+    "examCode": "ab-250",
+    "domain": "work-distribution",
+    "kind": "match",
+    "question": "Match each routing style to what it matches on.",
+    "pairs": [
+      {
+        "term": "Skills-based routing",
+        "definition": "Skills attached to the work and to representatives"
+      },
+      {
+        "term": "Intent-based routing",
+        "definition": "What the customer is trying to achieve"
+      },
+      {
+        "term": "Preferred representative routing",
+        "definition": "Whoever handled this customer previously"
+      },
+      {
+        "term": "Basic routing rule sets",
+        "definition": "Simple record routing under the older mechanism"
+      }
+    ],
+    "explanation": "The first three are unified routing and serve live channels; basic rule sets are the older record-routing mechanism. Guidance written for one does not apply to the other.",
+    "teaches": "unified-routing-and-classification"
+  },
+  {
+    "id": "rx-01",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "question": "A tier-one team and a specialist team need different channels, tools, and templates in the same deployment. What should you configure?",
+    "options": [
+      "Separate experience profiles assigned to each team",
+      "Two Copilot Service workspace applications",
+      "Separate capacity profiles for each team",
+      "Custom personas for each team"
+    ],
+    "correctIndex": 0,
+    "explanation": "An experience profile bundles channels, templates, and tools and is assigned to users, which is how one deployment serves several teams. Personas govern permissions and capacity governs concurrency.",
+    "teaches": "experience-profiles"
+  },
+  {
+    "id": "rx-02",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "question": "Representatives complain they must search for the customer's record every time a conversation arrives. What should you configure?",
+    "options": [
+      "The session template, so the record opens with the session",
+      "The agent inbox's default view",
+      "The notification template's timeout",
+      "A macro the representative runs on arrival"
+    ],
+    "correctIndex": 0,
+    "explanation": "Session and tab templates decide what opens when a conversation arrives, and getting them right is most of the perceived quality of the representative experience. A macro would work but asks the representative to do something the platform can do for them.",
+    "teaches": "experience-profiles"
+  },
+  {
+    "id": "rx-03",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "question": "Conversations are bouncing between representatives without being accepted. What should you check?",
+    "options": [
+      "The notification template's timeout",
+      "The queue's assignment method",
+      "The workstream's classification rules",
+      "The representatives' capacity profiles"
+    ],
+    "correctIndex": 0,
+    "explanation": "An unaccepted notification returns the work to the queue, so a timeout set too short produces exactly this bouncing. Assignment decides who is offered the work rather than how long they have.",
+    "teaches": "experience-profiles"
+  },
+  {
+    "id": "rx-04",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "question": "What do slugs provide in an agent script?",
+    "options": [
+      "Substitution of live values such as the customer's name into script text and macros",
+      "Conditional branching between script steps",
+      "Access control over which representatives see a step",
+      "Translation of script text into the customer's language"
+    ],
+    "correctIndex": 0,
+    "explanation": "Slugs are what make a generic written procedure specific to the conversation in front of the representative. Without them a script is a static document.",
+    "teaches": "productivity-tools"
+  },
+  {
+    "id": "rx-05",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "question": "Where does most measurable handling-time reduction in a contact centre come from?",
+    "options": [
+      "Macros invoked from script steps",
+      "Custom presences reflecting representative state",
+      "Additional application tab templates",
+      "Increasing capacity profile units"
+    ],
+    "correctIndex": 0,
+    "explanation": "A macro turns a written procedure into one action, automating the opening, filling, and updating that otherwise consumes the representative's time. Raising capacity increases concurrency rather than speed.",
+    "teaches": "productivity-tools"
+  },
+  {
+    "id": "rx-06",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "question": "Why should Teams collaboration be used from within the conversation rather than a direct message?",
+    "options": [
+      "The discussion is retained with the record instead of being lost",
+      "Direct messages are blocked by data loss prevention policies",
+      "Teams calls cannot be transcribed outside the workspace",
+      "It is required before a conversation can be transferred"
+    ],
+    "correctIndex": 0,
+    "explanation": "Linking the collaboration to the record keeps the reasoning behind an outcome with the case. A direct message is invisible to everybody who reads the record afterwards.",
+    "teaches": "productivity-tools"
+  },
+  {
+    "id": "rx-07",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "question": "Why is a knowledge article the highest-leverage content in a contact centre?",
+    "options": [
+      "It improves the human answer, the Copilot answer, and the self-service answer at once",
+      "It is the only content that can be searched by representatives",
+      "It is required before a case can be resolved",
+      "It determines how conversations are classified"
+    ],
+    "correctIndex": 0,
+    "explanation": "Agent assist and self-service agents both draw on knowledge, so one article improves three surfaces simultaneously. That multiplier is why knowledge quality dominates contact centre AI outcomes.",
+    "teaches": "knowledge-management"
+  },
+  {
+    "id": "rx-08",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "question": "What does the Customer Knowledge Management agent do?",
+    "options": [
+      "Identifies knowledge gaps and drafts or updates articles",
+      "Answers customer questions in the self-service channel",
+      "Evaluates the quality of representatives' conversations",
+      "Routes knowledge-related conversations to specialists"
+    ],
+    "correctIndex": 0,
+    "explanation": "It works on the knowledge base rather than on conversations, closing the loop that otherwise depends on somebody noticing a pattern in a queue. That is how a knowledge base improves rather than decays.",
+    "teaches": "knowledge-management"
+  },
+  {
+    "id": "rx-09",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "kind": "multi",
+    "question": "Which two extend the representative experience beyond what configuration provides? Choose two.",
+    "options": [
+      "The app profile manager JavaScript API",
+      "The Omnichannel JavaScript API",
+      "Application tab templates",
+      "Notification templates"
+    ],
+    "correctIndexes": [
+      0,
+      1
+    ],
+    "explanation": "The two JavaScript APIs are the pro-code extension points and carry the obligation to be maintained against platform updates. Tab and notification templates are configuration surfaces.",
+    "teaches": "productivity-tools"
+  },
+  {
+    "id": "rx-10",
+    "examCode": "ab-250",
+    "domain": "rep-experience",
+    "kind": "order",
+    "question": "Put these steps in order for giving a team a guided procedure they execute in one action.",
+    "items": [
+      "Write the procedure as an agent script",
+      "Add slugs so the script reflects the current conversation",
+      "Create a macro performing the repetitive steps",
+      "Attach the macro to a script step"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "The procedure exists first, slugs make it specific, the macro automates the repetitive part, and attaching it to a step is what turns reading into doing.",
+    "teaches": "productivity-tools"
+  },
+  {
+    "id": "an-01",
+    "examCode": "ab-250",
+    "domain": "analytics",
+    "question": "A supervisor reports that real-time and historical analytics disagree on handled volume by two to three per cent. What should you tell them?",
+    "options": [
+      "This is expected — real-time reports current state and historical aggregates completed conversations after processing",
+      "The historical report needs to be refreshed manually",
+      "The real-time dashboard is reading a cached dataset",
+      "The two use different security models, so figures differ per supervisor"
+    ],
+    "correctIndex": 0,
+    "explanation": "A conversation in progress counts in one and not the other, which is the ordinary explanation for a small persistent discrepancy. Treating it as a fault leads to a long investigation of correct behaviour.",
+    "teaches": "supervisor-experience"
+  },
+  {
+    "id": "an-02",
+    "examCode": "ab-250",
+    "domain": "analytics",
+    "question": "What changes when the Quality Evaluation agent is introduced?",
+    "options": [
+      "Evaluation moves from sampling to covering every conversation, so the criteria matter more",
+      "Supervisors no longer need access to conversation transcripts",
+      "Representatives receive scores instead of coaching",
+      "Historical analytics replaces real-time analytics"
+    ],
+    "correctIndex": 0,
+    "explanation": "Automatic scoring changes the supervisor's job from finding problems to acting on them, and the criteria now apply at scale rather than to a monthly sample — which is why getting them right becomes the priority.",
+    "teaches": "supervisor-experience"
+  },
+  {
+    "id": "an-03",
+    "examCode": "ab-250",
+    "domain": "analytics",
+    "question": "Which supervisor action lets a supervisor speak to the representative without the customer hearing?",
+    "options": [
+      "Whisper",
+      "Monitor",
+      "Join",
+      "Take over"
+    ],
+    "correctIndex": 0,
+    "explanation": "Whisper addresses the representative privately during a live conversation. Monitor is passive, join adds the supervisor visibly, and take over transfers the conversation to them.",
+    "teaches": "supervisor-experience"
+  },
+  {
+    "id": "an-04",
+    "examCode": "ab-250",
+    "domain": "analytics",
+    "question": "A standard analytics report needs one KPI changed and is otherwise correct. What is the appropriate level of intervention?",
+    "options": [
+      "The embedded Power BI editor",
+      "Power BI Desktop against the underlying model",
+      "A new report built from scratch",
+      "Application Insights telemetry"
+    ],
+    "correctIndex": 0,
+    "explanation": "The embedded editor customises in place without taking on the maintenance obligation that a Desktop-authored report carries through platform updates.",
+    "teaches": "analytics-customisation"
+  },
+  {
+    "id": "an-05",
+    "examCode": "ab-250",
+    "domain": "analytics",
+    "question": "A supervisor sees aggregate figures in an embedded report that they cannot query in the application. Why?",
+    "options": [
+      "The report honours the Power BI security model rather than Dataverse row-level security",
+      "Embedded reports run with elevated permissions by design",
+      "Aggregates are exempt from Dataverse security",
+      "The report is showing cached data from before their role changed"
+    ],
+    "correctIndex": 0,
+    "explanation": "The two security boundaries are different, which is sometimes intended and sometimes a disclosure nobody planned. It should be a decision rather than a discovery.",
+    "teaches": "analytics-customisation"
+  },
+  {
+    "id": "an-06",
+    "examCode": "ab-250",
+    "domain": "analytics",
+    "kind": "order",
+    "question": "Put these in order of increasing effort and maintenance obligation.",
+    "items": [
+      "Use the out-of-the-box analytics report unchanged",
+      "Adjust a KPI with the embedded Power BI editor",
+      "Customise the report in Power BI Desktop",
+      "Build reporting on Application Insights telemetry"
+    ],
+    "correctOrder": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "explanation": "Each step takes on more control and more obligation to maintain through platform updates. Application Insights is the furthest out because it reports on telemetry rather than the product's own model.",
+    "teaches": "analytics-customisation"
+  },
+  {
+    "id": "an-07",
+    "examCode": "ab-250",
+    "domain": "analytics",
+    "kind": "match",
+    "question": "Match each analytics surface to the question it answers.",
+    "pairs": [
+      {
+        "term": "Real-time dashboard",
+        "definition": "What is happening in the contact centre right now"
+      },
+      {
+        "term": "Historical analytics",
+        "definition": "How the contact centre performed over a completed period"
+      },
+      {
+        "term": "Quality Evaluation agent",
+        "definition": "How well individual conversations were handled"
+      },
+      {
+        "term": "Application Insights",
+        "definition": "Why behaviour correlates with the systems behind it"
+      }
+    ],
+    "explanation": "The first two differ only in time horizon, which is why they legitimately disagree. Quality evaluation judges conversations rather than volumes, and Application Insights is the only one that reaches outside the contact centre.",
+    "teaches": "analytics-customisation"
+  }
+]

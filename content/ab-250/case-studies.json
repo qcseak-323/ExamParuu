@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-kelbrook-contact-centre",
+    "examCode": "ab-250",
+    "domain": "channels",
+    "title": "Kelbrook Utilities — queues backing up while representatives sit idle",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Kelbrook Utilities serves 1.4 million domestic customers with a 240-seat contact centre across two sites. It moved to Dynamics 365 Contact Center five months ago, running voice, web chat, and an email record-based channel through unified routing.",
+          "The operations director has three complaints and a regulatory deadline. Average wait time has risen since go-live even though headcount has not fallen, the regulator has queried the abandonment rate on an outbound campaign, and an internal audit found card numbers in stored call transcripts."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "Skills-based routing was configured at go-live with 14 skills covering meter types, tariffs, and vulnerable-customer handling. The skills exist in the model and every workstream's assignment rules reference them. No skill has ever been attached to a representative record; the migration script that was to do so was never run. Roughly 70 per cent of conversations reach the fallback queue, where they are handed to whoever is free. Wait times have risen and representatives report long idle periods. Three further routing rules have been added since go-live in an attempt to fix it.",
+          "The IVR is a Copilot Studio voice agent built with classic orchestration. It carries 214 trigger phrases across 31 topics, added incrementally whenever a caller phrasing was found not to match. Containment has fallen steadily and callers increasingly press zero.",
+          "Sensitive data masking has never been enabled. Card numbers are read aloud by customers during payment calls and appear in full in transcripts retained for 24 months. The audit covers those existing transcripts as well as future calls.",
+          "A proactive outbound campaign for tariff renewals runs in predictive dialling mode against a queue staffed by 12 representatives, targeting 4,000 customers a day. Abandonment is running at about 14 per cent. The campaign list, the dial mode, and the staffing have not changed since it was configured.",
+          "Copilot Ask a question is enabled for representatives. No knowledge sources have been configured. Representatives report that its answers sound authoritative, carry no citations, and have twice described a tariff Kelbrook does not offer.",
+          "Supervisors report that the real-time dashboard and the historical report disagree on handled volume by two to three per cent throughout the day."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Work must reach representatives with the relevant skill, and the fix must not involve adding further routing rules.",
+          "The IVR must handle caller phrasings nobody anticipated without a trigger phrase being authored for each.",
+          "Card numbers must stop entering transcripts, and the 24 months of existing transcripts must be addressed as a separate action.",
+          "Outbound abandonment must be brought within the regulator's tolerance without reducing the number of customers contacted per day.",
+          "Copilot answers must come from Kelbrook's own published content and be traceable to a source.",
+          "Supervisors need an explanation of the real-time and historical discrepancy, or a fix if it is a fault."
+        ]
+      }
+    ]
+  }
+]
