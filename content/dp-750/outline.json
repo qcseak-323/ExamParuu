@@ -1,0 +1,75 @@
+{
+  "examCode": "DP-750",
+  "examName": "Implementing Data Engineering Solutions Using Azure Databricks",
+  "note": "Domains and weights follow Microsoft's published skills-measured outline for DP-750, 'Skills measured as of March 11, 2026'. Always check learn.microsoft.com for the current official breakdown before your exam, as Microsoft periodically revises exam blueprints.",
+  "domains": [
+    {
+      "id": "databricks-environment",
+      "name": "Set up and configure an Azure Databricks environment",
+      "weight": "15-20%",
+      "subtopics": [
+        "Choose an appropriate compute type, including job, serverless, warehouse, classic, and shared compute",
+        "Configure compute performance settings including node count, autoscaling, termination, node type, and pooling",
+        "Configure Photon acceleration, runtime and Spark version, and machine learning settings",
+        "Install libraries for a compute resource and configure access permissions to it",
+        "Apply naming conventions for isolation, development environment, and external sharing",
+        "Create catalogs, schemas, and volumes based on requirements",
+        "Create tables, views, and materialised views",
+        "Implement a foreign catalog by configuring connections",
+        "Implement DDL operations on managed and external tables",
+        "Configure AI/BI Genie instructions for data discovery"
+      ]
+    },
+    {
+      "id": "unity-catalog-governance",
+      "name": "Secure and govern Unity Catalog objects",
+      "weight": "15-20%",
+      "subtopics": [
+        "Grant privileges to users, service principals, and groups for securable objects",
+        "Implement table-, column-, and row-level access control",
+        "Access Azure Key Vault secrets from within Azure Databricks",
+        "Authenticate data access with service principals and resource access with managed identities",
+        "Create and preserve table and column definitions and descriptions for discovery",
+        "Configure attribute-based access control using tags and policies",
+        "Configure row filters and column masks",
+        "Apply data retention policies",
+        "Set up data lineage tracking with Catalog Explorer, including owner, history, and dependencies",
+        "Configure audit logging and design a secure strategy for Delta Sharing"
+      ]
+    },
+    {
+      "id": "prepare-process-data",
+      "name": "Prepare and process data",
+      "weight": "30-35%",
+      "subtopics": [
+        "Design ingestion logic and choose an ingestion tool, including Lakeflow Connect, notebooks, and Data Factory",
+        "Choose a loading method and a table format, including Delta, Parquet, and Iceberg",
+        "Design a partitioning scheme and choose a slowly changing dimension type",
+        "Design temporal history tables and a clustering strategy including liquid clustering and Z-ordering",
+        "Choose between managed and unmanaged tables",
+        "Ingest data with Lakeflow Connect, notebooks, SQL methods, CDC feeds, and Spark Structured Streaming",
+        "Ingest streaming data from Azure Event Hubs and with Lakeflow Spark Declarative Pipelines and Auto Loader",
+        "Profile data, resolve duplicate, missing, and null values, and choose column data types",
+        "Transform data by filtering, grouping, joining, denormalising, pivoting, and unpivoting",
+        "Implement validation checks, schema enforcement, schema drift handling, and pipeline expectations"
+      ]
+    },
+    {
+      "id": "pipelines-workloads",
+      "name": "Deploy and maintain data pipelines and workloads",
+      "weight": "30-35%",
+      "subtopics": [
+        "Design order of operations and choose between notebooks and Lakeflow Spark Declarative Pipelines",
+        "Design task logic for Lakeflow Jobs and implement error handling in pipelines and notebooks",
+        "Create jobs with triggers, schedules, alerts, and automatic restarts",
+        "Apply version control best practices with Git, including branching, pull requests, and conflict resolution",
+        "Implement a testing strategy including unit, integration, end-to-end, and user acceptance tests",
+        "Configure and package Databricks Asset Bundles and deploy them by CLI and REST API",
+        "Monitor and manage cluster consumption to optimise performance and cost",
+        "Troubleshoot and repair Lakeflow Jobs, Spark jobs, and notebooks",
+        "Investigate caching, skew, spill, and shuffle issues using the DAG, the Spark UI, and query profile",
+        "Optimise Delta tables with OPTIMIZE and VACUUM, and configure log streaming and alerts in Azure Monitor"
+      ]
+    }
+  ]
+}

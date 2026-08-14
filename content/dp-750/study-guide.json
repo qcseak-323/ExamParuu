@@ -1,0 +1,151 @@
+[
+  {
+    "domainId": "databricks-environment",
+    "sections": [
+      {
+        "id": "compute-selection",
+        "heading": "Choosing and configuring compute",
+        "paragraphs": [
+          "Compute type is a cost decision as much as a capability one. All-purpose (classic) compute is interactive, shared between users, and stays up until it terminates — right for development and exploration, wrong for scheduled work because it is billed at a higher rate and often left running. Job compute is created for a job run and torn down afterwards, which makes it the correct and cheaper choice for anything scheduled. SQL warehouses serve BI and SQL workloads, with serverless warehouses starting in seconds rather than minutes. Serverless compute removes cluster management entirely and is the default recommendation where it is available.",
+          "The settings that matter are autoscaling, which sets minimum and maximum workers so a cluster grows under load and shrinks after it; auto-termination, whose absence is the single largest source of wasted spend in a Databricks estate; node type, chosen for memory-heavy, compute-heavy, or storage-optimised work; and pools, which keep warm instances ready so cluster start-up drops from minutes to seconds. Photon is a vectorised execution engine that accelerates SQL and DataFrame operations at a higher DBU rate — worth it for large scans and aggregations, wasted on small jobs. The runtime version determines available features, and ML runtimes carry the machine learning libraries that the standard runtime does not."
+        ]
+      },
+      {
+        "id": "unity-catalog-objects",
+        "heading": "Unity Catalog object model",
+        "paragraphs": [
+          "Unity Catalog imposes a three-level namespace — catalog, schema, table — so an object is addressed as `catalog.schema.table`. The metastore sits above catalogs and is assigned to workspaces, which is what makes governance central rather than per-workspace. Catalogs are the usual isolation boundary: separating development, test, and production as catalogs rather than as workspaces is the standard pattern, because it keeps one metastore and one set of permissions while still preventing accidental cross-environment access.",
+          "Volumes govern non-tabular files — the Unity Catalog answer to a mount point — and come as managed volumes, where Databricks owns the storage location, or external volumes over a location you provide. The same managed-versus-external distinction applies to tables and is the most consequential choice in this area: dropping a managed table deletes the underlying data, while dropping an external table removes only the metadata and leaves the files. A foreign catalog goes further and surfaces another system entirely — a SQL Server or Snowflake database — through a connection, so it can be queried without being copied."
+        ]
+      },
+      {
+        "id": "foreign-catalogs-and-genie",
+        "heading": "Views, materialised views, and discovery",
+        "paragraphs": [
+          "A view is a stored query evaluated at read time and costs nothing to maintain. A materialised view stores results and refreshes them incrementally, which trades storage and refresh cost for query speed — the right choice when an expensive aggregation is read far more often than the underlying data changes. Streaming tables ingest continuously and are the declarative counterpart for incremental sources.",
+          "Discovery is a governance feature rather than a nicety. Table and column comments are what make a catalog searchable and are the input to AI/BI Genie, which answers natural-language questions over the data; Genie instructions add context the schema alone does not carry — how a business term maps to a column, which tables to prefer, what a code value means. A catalog with no descriptions produces confident and wrong answers, which is why maintaining definitions appears in the exam under governance rather than documentation."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "unity-catalog-governance",
+    "sections": [
+      {
+        "id": "securing-uc-objects",
+        "heading": "Privileges and identities",
+        "paragraphs": [
+          "Unity Catalog privileges are granted to users, groups, or service principals on securable objects, and they inherit down the namespace — a grant on a catalog reaches its schemas and their tables. Reaching an object also requires `USE CATALOG` and `USE SCHEMA` on the containers above it, which is the most common cause of a grant that appears correct and produces access denied. Object ownership carries implicit rights, and granting to groups rather than individuals is what keeps the model maintainable.",
+          "Identity for automation follows the usual Azure ranking. A service principal is the identity a job or an external tool authenticates as, so a pipeline does not depend on a person's account. A managed identity is used for the workspace to reach Azure resources such as storage without a stored credential. Secrets that must exist — a third-party API key, a JDBC password — belong in Azure Key Vault and are reached through a secret scope backed by the vault, so the secret is never written into a notebook. A credential in notebook source is the failure this arrangement exists to prevent, and it is visible to everyone with read access to the repository."
+        ]
+      },
+      {
+        "id": "governance-and-abac",
+        "heading": "Row filters, column masks, and ABAC",
+        "paragraphs": [
+          "Fine-grained access is expressed as functions bound to a table. A row filter is a function returning a boolean, applied so each querying user sees only permitted rows. A column mask is a function applied to a column that returns the value or a masked form depending on who is asking. Both are enforced by the engine on every query, so they cannot be bypassed by querying the table directly — which is what distinguishes them from a view the user could simply not use.",
+          "Attribute-based access control extends this by driving policy from tags rather than from object names. Tagging columns as containing personal data and writing one policy over that tag means a new table inherits the protection automatically, whereas naming individual columns in individual grants means the next table is unprotected until somebody remembers. That difference — protection that scales with the estate versus protection maintained by hand — is the reason ABAC appears in the blueprint. Data retention policies then bound how long data is kept, which is governance in the other direction."
+        ]
+      },
+      {
+        "id": "lineage-and-delta-sharing",
+        "heading": "Lineage, auditing, and Delta Sharing",
+        "paragraphs": [
+          "Unity Catalog captures lineage automatically at table and column level, recording which queries and jobs produced and consumed each object. It answers two questions that are otherwise expensive: what breaks if this column changes, and where did this number come from. Catalog Explorer surfaces it alongside owner, history, and dependencies, and it is the first place to look before altering a table anyone else uses.",
+          "Audit logging records who did what, and configuring delivery to a Log Analytics workspace or storage account is what makes it durable and queryable. Delta Sharing shares live data with recipients outside the workspace — and outside Databricks entirely, through the open protocol — without copying it. The security design points are that shares are read-only, recipients are managed objects with their own credentials, and access is revoked by revoking the recipient rather than by chasing copies, which is precisely the advantage over sending files."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "prepare-process-data",
+    "sections": [
+      {
+        "id": "ingestion-design",
+        "heading": "Choosing an ingestion approach",
+        "paragraphs": [
+          "The first decision is batch or streaming, and it follows the latency requirement rather than the shape of the source: a requirement measured in seconds is streaming, one measured in hours is batch, and most of what people call real time is neither. The second is the tool. Lakeflow Connect provides managed connectors for common sources with the least code. Auto Loader incrementally processes files as they arrive in cloud storage, tracking what it has seen so a directory listing is not repeated — it is the answer whenever files land continuously in a folder. Notebooks with Spark Structured Streaming cover sources needing custom logic, and Azure Data Factory orchestrates movement where the pipeline spans systems beyond Databricks.",
+          "`COPY INTO` is the idempotent SQL command for loading files, skipping those already loaded, and suits periodic loads of a known set. `CREATE TABLE AS SELECT` materialises a query as a new table. Change data capture feeds carry inserts, updates, and deletes from a source system, and `APPLY CHANGES INTO` in a declarative pipeline is what applies them correctly, including out-of-order events — writing that logic by hand is where hand-rolled CDC pipelines usually go wrong."
+        ]
+      },
+      {
+        "id": "data-modelling-and-clustering",
+        "heading": "Table format, layout, and history",
+        "paragraphs": [
+          "Delta is the default table format and the reason most of the platform's guarantees exist: ACID transactions, schema enforcement, and time travel through the transaction log. Parquet is the underlying columnar format without those guarantees, and Iceberg is supported for interoperability with other engines. Choosing anything but Delta for a managed pipeline needs a reason.",
+          "Physical layout decides scan cost. Traditional Hive-style partitioning by a low-cardinality column still works but over-partitioning produces many small files and worse performance, which is the classic mistake. Z-ordering co-locates related data within files to improve filtering on high-cardinality columns. Liquid clustering supersedes both for new tables: clustering keys can be changed without rewriting the table, it handles skew, and it removes the partitioning decision from being permanent. Deletion vectors mark rows as deleted without rewriting data files, making deletes and updates far cheaper, with the cost reclaimed later during optimisation.",
+          "Slowly changing dimensions record how attributes change: type 1 overwrites and keeps no history, type 2 adds a new row with validity dates and is what an auditable dimension needs, and type 3 keeps a previous-value column. Delta's time travel is not a substitute — it is bounded by retention and is a table-level facility, not a modelled history."
+        ]
+      },
+      {
+        "id": "ingestion-methods",
+        "heading": "Streaming and incremental ingestion",
+        "paragraphs": [
+          "Spark Structured Streaming treats a stream as an unbounded table, with checkpointing recording progress so a restarted stream resumes rather than reprocessing. The checkpoint location is part of the design: sharing one between two streams, or deleting it to 'reset', are both ways to lose or duplicate data. Output modes — append, update, complete — decide what is written each trigger, and trigger settings decide how often, including AvailableNow for processing everything outstanding and stopping, which is how a streaming source is consumed on a schedule.",
+          "Auto Loader builds on this for file sources, with schema inference and schema evolution options that decide what happens when a new column appears — evolve and restart, rescue into a dedicated column, or fail. Ingesting from Azure Event Hubs uses the Kafka-compatible endpoint. Watermarking bounds how long late-arriving data is accepted so that state does not grow without limit, which is the setting that separates a streaming job that runs for months from one that eventually exhausts memory."
+        ]
+      },
+      {
+        "id": "transform-and-load",
+        "heading": "Transforming and loading",
+        "paragraphs": [
+          "Transformation work is ordinary SQL and DataFrame logic — filtering, grouping, joining, pivoting — with two Databricks-specific concerns. `MERGE INTO` performs an upsert against a Delta table and is the workhorse for applying changes; its performance depends on the merge condition being selective enough to prune files, and a merge that matches on a non-clustered column rewrites far more than it needs to. Append is cheap, overwrite replaces the table atomically, and `INSERT OVERWRITE` on a partition replaces only that partition.",
+          "Data profiling before writing transformation logic is worth the time: summary statistics reveal the null rates, cardinalities, and distributions that determine whether a join will explode or a column can be trusted. Null and duplicate handling belongs in the pipeline rather than in the consuming query, because a duplicate that reaches a gold table is discovered by a business user rather than by an engineer."
+        ]
+      },
+      {
+        "id": "data-quality",
+        "heading": "Data quality and schema evolution",
+        "paragraphs": [
+          "Delta enforces schema on write by default, so a write with a mismatched schema fails rather than corrupting the table. Schema evolution can be enabled deliberately to allow new columns, and the distinction that matters is between allowing additive change and allowing anything — a widened type or a dropped column is a breaking change that enforcement exists to catch. `mergeSchema` and `overwriteSchema` do different things and confusing them replaces a table's schema when the intention was to extend it.",
+          "Expectations in Lakeflow Spark Declarative Pipelines express quality as part of the pipeline definition rather than as a separate test suite. Each expectation has an action: warn records the violation and lets the row through, drop removes the offending rows, and fail stops the pipeline. Choosing between them is a business decision — a pipeline that fails on one bad row stops the business, and one that warns on everything protects nothing. Expectations also produce metrics, which is what makes data quality trendable rather than anecdotal."
+        ]
+      }
+    ]
+  },
+  {
+    "domainId": "pipelines-workloads",
+    "sections": [
+      {
+        "id": "pipeline-design",
+        "heading": "Designing pipelines",
+        "paragraphs": [
+          "The medallion architecture is the organising pattern: bronze holds raw ingested data as it arrived, silver holds cleansed and conformed data, and gold holds business-level aggregates. Its value is that reprocessing is possible because the raw layer was kept, and that a quality problem can be located to a layer.",
+          "The choice between notebooks orchestrated as job tasks and Lakeflow Spark Declarative Pipelines is the recurring design question. Declarative pipelines describe the tables and their dependencies, and the runtime works out the execution order, manages incremental processing, and applies expectations — which suits a set of dependent tables refreshed together. Notebooks in a job give explicit control over sequence, branching, and arbitrary logic, which suits work that is procedural rather than a dataset graph. Error handling differs accordingly: a job defines retries and task dependencies including run-if conditions, while a declarative pipeline expresses failure policy through expectations."
+        ]
+      },
+      {
+        "id": "lakeflow-jobs",
+        "heading": "Jobs, triggers, and alerts",
+        "paragraphs": [
+          "A Lakeflow Job is a set of tasks with dependencies, each running a notebook, a pipeline, a script, or a query, on compute the job defines. Task dependencies form a graph, so independent tasks run in parallel and a failure stops only the branch that needed it. Triggers are scheduled on a cron expression, continuous, or file-arrival based, and the last of those replaces polling for new data.",
+          "Operational settings are what separate a job that is monitored from one that fails quietly. Alerts on start, success, failure, and duration threshold notify by email or webhook — a duration alert catching a job that runs but takes four times as long, which a failure alert never fires for. Retries with a backoff handle transient failures, maximum concurrent runs prevents overlapping executions of a job whose previous run has not finished, and timeouts stop a hung task consuming compute indefinitely."
+        ]
+      },
+      {
+        "id": "dev-lifecycle-bundles",
+        "heading": "Git, testing, and asset bundles",
+        "paragraphs": [
+          "Databricks Git folders connect a workspace to a repository so notebooks and pipeline definitions are versioned, reviewed as diffs, and promoted by branch. The practice is the same as any codebase: feature branches, pull requests, and no direct edits in a production workspace, because a change made there is invisible afterwards.",
+          "Testing splits by scope. Unit tests cover transformation functions in isolation and should be plain Python or Scala tests runnable without a cluster where possible. Integration tests exercise a pipeline against known input data. End-to-end tests run the whole job in a test environment. Databricks Asset Bundles are the deployment unit — a YAML definition of jobs, pipelines, and their configuration, parameterised per target environment, deployed with the Databricks CLI or the REST API. Bundles are what make development, staging, and production identical by construction rather than by hand, which is the same argument made for Bicep in Azure."
+        ]
+      },
+      {
+        "id": "monitoring-and-troubleshooting",
+        "heading": "Diagnosing Spark workloads",
+        "paragraphs": [
+          "Four Spark pathologies account for most performance problems and each has a signature in the Spark UI. Skew is an uneven distribution of data across partitions, visible as one task taking far longer than its peers in the same stage; adaptive query execution handles much of it automatically, and salting the key handles the rest. Spill is data written to disk because it did not fit in memory, visible as spill metrics on a stage, and is addressed with more memory, more partitions, or less data per task. Shuffle is data moved across the network for joins and aggregations, and is reduced by broadcasting a small side of a join rather than shuffling both. The small file problem slows every read and is created by frequent small writes.",
+          "The Spark UI's DAG shows how a query was executed and where time went; query profile in SQL warehouses gives the same picture for SQL. Cluster metrics answer whether the cluster was saturated or idle, which distinguishes an under-provisioned cluster from an inefficient query — and resizing an inefficient query's cluster is the expensive way to not fix it. Delta table maintenance is the routine counterpart: `OPTIMIZE` compacts small files and applies clustering, and `VACUUM` removes files no longer referenced, subject to a retention threshold that exists to protect readers and time travel. Lowering that threshold to reclaim space is how time travel and in-flight readers get broken."
+        ]
+      },
+      {
+        "id": "delta-optimisation",
+        "heading": "Cost, consumption, and platform monitoring",
+        "paragraphs": [
+          "Cost in Databricks is DBUs multiplied by the compute they run on, so the levers are compute type, size, and how long it runs. Job compute over all-purpose compute for scheduled work, aggressive auto-termination, pools to avoid repeatedly paying start-up, and Photon only where it earns its higher rate are the standard measures. Serverless removes idle cost entirely for the workloads it supports.",
+          "Beyond the workspace, log delivery to Azure Monitor and a Log Analytics workspace makes cluster and job telemetry queryable with KQL alongside everything else in the estate, and alerts can then be raised on it centrally. System tables in Unity Catalog provide billing, audit, and lineage data as queryable tables, which is what allows chargeback and unused-resource reporting to be built rather than estimated."
+        ]
+      }
+    ]
+  }
+]

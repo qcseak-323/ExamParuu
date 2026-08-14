@@ -1,0 +1,932 @@
+[
+  {
+    "id": "pp-01",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "caseStudyId": "cs-holbeck-lakehouse",
+    "question": "Order files land continuously and the current notebook lists the whole directory each run, missing and duplicating files. What should you use?",
+    "options": [
+      "Auto Loader, which tracks which files it has already processed",
+      "COPY INTO on a schedule against the same directory",
+      "A directory listing filtered on a modified-date window",
+      "Spark Structured Streaming reading the directory without checkpointing"
+    ],
+    "correctIndex": 0,
+    "explanation": "Auto Loader maintains its own record of processed files, so it neither re-lists the directory nor depends on modified dates — which is precisely what is failing here. Streaming without a checkpoint has no memory of progress at all.",
+    "teaches": "ingestion-design"
+  },
+  {
+    "id": "pp-02",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "caseStudyId": "cs-holbeck-lakehouse",
+    "question": "The silver orders table is partitioned by order_id with 14 million distinct values, and its directory holds an enormous number of tiny files. What is the cause?",
+    "options": [
+      "Partitioning on a high-cardinality column, which creates one directory per value",
+      "Deletion vectors accumulating without compaction",
+      "The table being external rather than managed",
+      "Schema evolution having been enabled on the table"
+    ],
+    "correctIndex": 0,
+    "explanation": "A partition column with millions of distinct values produces millions of tiny partitions, which is the small file problem in its purest form. Partitioning is only useful on low-cardinality columns that queries actually filter on.",
+    "teaches": "data-modelling-and-clustering"
+  },
+  {
+    "id": "pp-03",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "caseStudyId": "cs-holbeck-lakehouse",
+    "question": "The orders table must be laid out so filters on distribution centre and date are fast, without committing to a scheme that cannot later be changed. What should you implement?",
+    "options": [
+      "Liquid clustering on distribution centre and date",
+      "Hive-style partitioning by distribution centre and date",
+      "Z-ordering on order_id",
+      "A materialised view per distribution centre"
+    ],
+    "correctIndex": 0,
+    "explanation": "Liquid clustering improves data skipping on the chosen columns and its keys can be changed later without rewriting the table — which is exactly the reversibility the requirement asks for. Partitioning is the decision that cannot be undone cheaply.",
+    "teaches": "data-modelling-and-clustering"
+  },
+  {
+    "id": "pp-04",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "caseStudyId": "cs-holbeck-lakehouse",
+    "question": "The supplier dimension is overwritten on every run and historical attribute values no longer exist. What should you implement?",
+    "options": [
+      "A slowly changing dimension type 2, adding a new row with validity dates on each change",
+      "A slowly changing dimension type 1, overwriting in place",
+      "Delta time travel on the existing dimension table",
+      "A materialised view refreshed nightly"
+    ],
+    "correctIndex": 0,
+    "explanation": "Type 2 records history as rows with validity dates, which is what lets a past order be joined to the attributes that applied at the time. Time travel is bounded by retention and is a table-level facility, not a modelled history — a distinction the exam draws deliberately.",
+    "teaches": "data-modelling-and-clustering"
+  },
+  {
+    "id": "pp-05",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "caseStudyId": "cs-holbeck-lakehouse",
+    "question": "Rows with null quantities must be kept out of the gold layer, and the pipeline must report how many were rejected. What should you implement?",
+    "options": [
+      "A pipeline expectation with a drop action, which also emits metrics",
+      "A pipeline expectation with a warn action",
+      "A CHECK constraint on the gold table",
+      "A separate validation notebook run after the pipeline"
+    ],
+    "correctIndex": 0,
+    "explanation": "Drop removes the offending rows while recording the count as a metric, satisfying both halves of the requirement. Warn lets the rows through, which is the failure being fixed, and a separate notebook finds the problem after it has already propagated.",
+    "teaches": "data-quality"
+  },
+  {
+    "id": "pp-06",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "question": "Which table format provides ACID transactions, schema enforcement, and time travel in Azure Databricks?",
+    "options": [
+      "Delta",
+      "Parquet",
+      "CSV",
+      "JSON"
+    ],
+    "correctIndex": 0,
+    "explanation": "Delta adds a transaction log over Parquet files, which is where those guarantees come from. Parquet alone is the columnar storage format with none of them.",
+    "teaches": "data-modelling-and-clustering"
+  },
+  {
+    "id": "pp-07",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "question": "A change data capture feed delivers inserts, updates, and deletes, sometimes out of order. What should you use to apply them?",
+    "options": [
+      "APPLY CHANGES INTO in a Lakeflow Spark Declarative Pipeline",
+      "A MERGE INTO statement written by hand",
+      "An INSERT OVERWRITE of the target table",
+      "COPY INTO with schema evolution enabled"
+    ],
+    "correctIndex": 0,
+    "explanation": "APPLY CHANGES INTO handles ordering and delete semantics correctly, which is where hand-written merge logic for CDC usually goes wrong. A manual MERGE can be made to work but has to reimplement all of that.",
+    "teaches": "ingestion-design"
+  },
+  {
+    "id": "pp-08",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "question": "A streaming job is restarted and reprocesses data it had already handled. What is the most likely cause?",
+    "options": [
+      "The checkpoint location was deleted or changed",
+      "The trigger interval was set too short",
+      "Watermarking was not configured",
+      "The output mode was set to append"
+    ],
+    "correctIndex": 0,
+    "explanation": "The checkpoint records progress, so removing or repointing it makes the stream believe it has processed nothing. Deleting a checkpoint to 'reset' a stream is the standard way duplicates are introduced.",
+    "teaches": "ingestion-methods"
+  },
+  {
+    "id": "pp-09",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "question": "A streaming aggregation's state grows continuously until the job runs out of memory. What should you configure?",
+    "options": [
+      "A watermark bounding how long late data is accepted",
+      "A shorter trigger interval",
+      "Complete output mode",
+      "A larger checkpoint location"
+    ],
+    "correctIndex": 0,
+    "explanation": "Without a watermark the engine must keep state indefinitely in case a late record arrives. A watermark is what allows old state to be discarded, and its absence is the standard cause of a streaming job that runs for weeks and then dies.",
+    "teaches": "ingestion-methods"
+  },
+  {
+    "id": "pp-10",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "question": "A load must be re-runnable without duplicating rows for files it has already processed, using SQL. What should you use?",
+    "options": [
+      "COPY INTO",
+      "INSERT INTO with a SELECT over the directory",
+      "CREATE TABLE AS SELECT",
+      "INSERT OVERWRITE"
+    ],
+    "correctIndex": 0,
+    "explanation": "COPY INTO tracks the files it has loaded and skips them on subsequent runs, which makes it idempotent. INSERT INTO would append the same rows again, and CTAS and INSERT OVERWRITE replace rather than incrementally load.",
+    "teaches": "ingestion-design"
+  },
+  {
+    "id": "pp-11",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "question": "A MERGE INTO against a large Delta table rewrites far more data than expected. What is the most likely cause?",
+    "options": [
+      "The merge condition does not allow files to be pruned",
+      "Deletion vectors are enabled on the table",
+      "The table uses liquid clustering",
+      "Schema enforcement is rejecting rows"
+    ],
+    "correctIndex": 0,
+    "explanation": "A merge can only skip files whose contents cannot match, so a condition on a column the table is not laid out by forces it to read and rewrite broadly. Deletion vectors and liquid clustering both reduce rewrite cost rather than increasing it.",
+    "teaches": "transform-and-load"
+  },
+  {
+    "id": "pp-12",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "question": "A write to a Delta table fails because the incoming data has an extra column. What is happening, and what allows the write?",
+    "options": [
+      "Schema enforcement rejected it; enabling mergeSchema allows the column to be added",
+      "Schema enforcement rejected it; enabling overwriteSchema is the correct fix",
+      "Liquid clustering rejected it; re-clustering allows the write",
+      "The table is external; converting it to managed allows the write"
+    ],
+    "correctIndex": 0,
+    "explanation": "Delta enforces schema on write, and mergeSchema permits additive evolution. overwriteSchema replaces the schema entirely, which is a much larger change than the situation calls for and is the standard confusion between the two options.",
+    "teaches": "data-quality"
+  },
+  {
+    "id": "pp-13",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "question": "Files arrive continuously and must be ingested with a job that runs on a schedule rather than continuously. Which trigger should the stream use?",
+    "options": [
+      "AvailableNow, which processes everything outstanding and stops",
+      "A processing-time trigger of one second",
+      "Continuous processing mode",
+      "No trigger, using the default micro-batch behaviour"
+    ],
+    "correctIndex": 0,
+    "explanation": "AvailableNow consumes all outstanding data and terminates, which is how a streaming source is drained by a scheduled job while keeping streaming's exactly-once progress tracking. Every other option leaves the stream running.",
+    "teaches": "ingestion-methods"
+  },
+  {
+    "id": "pp-14",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "question": "A team wants to know null rates and value distributions before writing transformation logic. What should they do?",
+    "options": [
+      "Profile the data to generate summary statistics",
+      "Enable schema enforcement on the source table",
+      "Add expectations to the pipeline and observe failures",
+      "Run OPTIMIZE on the source table"
+    ],
+    "correctIndex": 0,
+    "explanation": "Profiling reveals the null rates, cardinalities, and distributions that determine whether a join will explode or a column can be trusted. Discovering them through pipeline failures is the expensive route to the same information.",
+    "teaches": "transform-and-load"
+  },
+  {
+    "id": "pp-15",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "question": "Which pipeline expectation action stops the pipeline when a record violates the rule?",
+    "options": [
+      "Fail",
+      "Drop",
+      "Warn",
+      "Quarantine"
+    ],
+    "correctIndex": 0,
+    "explanation": "Fail halts the pipeline, drop removes the offending rows, and warn records the violation and lets them through. Choosing between them is a business decision, because a pipeline that fails on one bad row stops the business.",
+    "teaches": "data-quality"
+  },
+  {
+    "id": "pp-16",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "kind": "multi",
+    "question": "Which two are true of liquid clustering? Choose two.",
+    "options": [
+      "Clustering keys can be changed without rewriting the whole table",
+      "It handles skewed data distributions better than static partitioning",
+      "It requires the table to be partitioned first",
+      "It replaces the need for OPTIMIZE entirely"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Reversibility and skew tolerance are the two reasons liquid clustering supersedes partitioning and Z-order for new tables. It is an alternative to partitioning rather than an addition, and OPTIMIZE is still what applies it.",
+    "teaches": "data-modelling-and-clustering"
+  },
+  {
+    "id": "pp-17",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "kind": "multi",
+    "question": "Which two describe Auto Loader? Choose two.",
+    "options": [
+      "It incrementally processes new files as they arrive in cloud storage",
+      "It tracks which files it has already processed",
+      "It requires a full directory listing on every run",
+      "It only supports batch ingestion"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Incremental discovery and its own progress tracking are what make Auto Loader scale to directories with millions of files. Avoiding the repeated full listing is precisely the problem it solves.",
+    "teaches": "ingestion-design"
+  },
+  {
+    "id": "pp-18",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "kind": "order",
+    "question": "Put the layers of a medallion architecture in the order data flows through them.",
+    "items": [
+      "Gold — business-level aggregates",
+      "Bronze — raw data as it arrived",
+      "Silver — cleansed and conformed data"
+    ],
+    "correctOrder": [1, 2, 0],
+    "explanation": "Keeping bronze as it arrived is what makes reprocessing possible when a downstream bug is found, and it is why the pattern survives a change of team.",
+    "teaches": "ingestion-design"
+  },
+  {
+    "id": "pp-19",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "kind": "match",
+    "question": "Match each slowly changing dimension type to what it does.",
+    "pairs": [
+      { "term": "Type 1", "definition": "Overwrites the attribute and keeps no history" },
+      { "term": "Type 2", "definition": "Adds a new row with validity dates for each change" },
+      { "term": "Type 3", "definition": "Keeps a previous-value column alongside the current one" },
+      { "term": "Delta time travel", "definition": "Table-level versioning bounded by retention, not a modelled history" }
+    ],
+    "explanation": "The first three are modelling decisions and the fourth is a platform facility. Offering time travel as a substitute for a type 2 dimension is the mistake this pairing exists to catch.",
+    "teaches": "data-modelling-and-clustering"
+  },
+  {
+    "id": "pp-20",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "kind": "dropdown",
+    "question": "Complete the statement about Delta table layout.",
+    "segments": [
+      { "text": "Partitioning on a column with millions of distinct values produces " },
+      {
+        "blankId": "b1",
+        "options": ["the small file problem", "faster data skipping", "better schema enforcement"],
+        "correctIndex": 0
+      },
+      { "text": ", and the modern remedy that can be changed later is " },
+      {
+        "blankId": "b2",
+        "options": ["liquid clustering", "Z-ordering", "a materialised view"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "Partitioning is only useful on low-cardinality columns and is effectively permanent once chosen. Liquid clustering achieves the skipping benefit while remaining a decision you can revisit.",
+    "teaches": "data-modelling-and-clustering"
+  },
+  {
+    "id": "de-01",
+    "examCode": "dp-750",
+    "domain": "databricks-environment",
+    "question": "Scheduled nightly jobs currently run on an all-purpose cluster left permanently running. What should you change?",
+    "options": [
+      "Run them on job compute, created per run and terminated afterwards",
+      "Keep the all-purpose cluster but reduce its node count",
+      "Move the jobs to a SQL warehouse",
+      "Enable Photon on the existing cluster"
+    ],
+    "correctIndex": 0,
+    "explanation": "Job compute exists for scheduled work, is billed at a lower rate, and disappears when the run finishes. A permanently running interactive cluster pays for every idle hour, which is the single largest source of wasted Databricks spend.",
+    "teaches": "compute-selection"
+  },
+  {
+    "id": "de-02",
+    "examCode": "dp-750",
+    "domain": "databricks-environment",
+    "question": "Cluster start-up time of several minutes is delaying short jobs. What should you configure?",
+    "options": [
+      "An instance pool holding warm instances",
+      "Autoscaling with a higher maximum",
+      "Photon acceleration",
+      "A larger node type"
+    ],
+    "correctIndex": 0,
+    "explanation": "Pools keep instances ready so a cluster acquires them in seconds rather than provisioning from scratch. Autoscaling and node size affect how the cluster performs once running, not how long it takes to exist.",
+    "teaches": "compute-selection"
+  },
+  {
+    "id": "de-03",
+    "examCode": "dp-750",
+    "domain": "databricks-environment",
+    "question": "Dropping a table also deleted the underlying files, which was not intended. What kind of table was it?",
+    "options": [
+      "A managed table",
+      "An external table",
+      "A streaming table",
+      "A materialised view"
+    ],
+    "correctIndex": 0,
+    "explanation": "Unity Catalog owns the storage for a managed table, so dropping it removes the data. An external table's drop removes only the metadata and leaves the files in place — the most consequential distinction in the object model.",
+    "teaches": "unity-catalog-objects"
+  },
+  {
+    "id": "de-04",
+    "examCode": "dp-750",
+    "domain": "databricks-environment",
+    "question": "Development, test, and production must be isolated within one Unity Catalog metastore. What is the standard approach?",
+    "options": [
+      "A separate catalog per environment",
+      "A separate metastore per environment",
+      "A separate schema per environment within one catalog",
+      "A separate workspace per environment with no shared metastore"
+    ],
+    "correctIndex": 0,
+    "explanation": "Catalogs are the usual isolation boundary, which keeps one metastore and one permission model while preventing accidental cross-environment access. Separate metastores fragment governance, which is what Unity Catalog exists to centralise.",
+    "teaches": "unity-catalog-objects"
+  },
+  {
+    "id": "de-05",
+    "examCode": "dp-750",
+    "domain": "databricks-environment",
+    "question": "Data in an external SQL Server must be queryable from Databricks without being copied. What should you configure?",
+    "options": [
+      "A foreign catalog backed by a connection",
+      "An external volume over the database files",
+      "A Delta Sharing recipient",
+      "A materialised view over an ingestion pipeline"
+    ],
+    "correctIndex": 0,
+    "explanation": "A foreign catalog surfaces another system through a connection so it is queried in place. Delta Sharing shares data outward rather than reading another system inward, and a materialised view would imply copying.",
+    "teaches": "foreign-catalogs-and-genie"
+  },
+  {
+    "id": "de-06",
+    "examCode": "dp-750",
+    "domain": "databricks-environment",
+    "question": "An expensive aggregation is queried hundreds of times a day over data that changes hourly. What should you create?",
+    "options": [
+      "A materialised view",
+      "A standard view",
+      "A temporary view in each notebook",
+      "A streaming table"
+    ],
+    "correctIndex": 0,
+    "explanation": "A materialised view stores results and refreshes incrementally, which is the right trade when reads far outnumber changes. A standard view recomputes the aggregation on every read.",
+    "teaches": "foreign-catalogs-and-genie"
+  },
+  {
+    "id": "de-07",
+    "examCode": "dp-750",
+    "domain": "databricks-environment",
+    "question": "Which compute option should you choose for a BI tool issuing many concurrent SQL queries?",
+    "options": [
+      "A SQL warehouse",
+      "An all-purpose cluster",
+      "Job compute",
+      "A single-node cluster"
+    ],
+    "correctIndex": 0,
+    "explanation": "SQL warehouses are built for concurrent SQL and BI workloads, with serverless warehouses starting in seconds. All-purpose and job compute serve notebooks and pipelines respectively.",
+    "teaches": "compute-selection"
+  },
+  {
+    "id": "de-08",
+    "examCode": "dp-750",
+    "domain": "databricks-environment",
+    "question": "Non-tabular files must be governed by Unity Catalog alongside tables. What should you create?",
+    "options": [
+      "A volume",
+      "An external table",
+      "A schema",
+      "A foreign catalog"
+    ],
+    "correctIndex": 0,
+    "explanation": "Volumes govern non-tabular data — the Unity Catalog replacement for a mount point — and come as managed or external in the same way tables do.",
+    "teaches": "unity-catalog-objects"
+  },
+  {
+    "id": "de-09",
+    "examCode": "dp-750",
+    "domain": "databricks-environment",
+    "kind": "multi",
+    "question": "Which two settings most directly reduce Azure Databricks compute cost? Choose two.",
+    "options": [
+      "Auto-termination on interactive clusters",
+      "Job compute for scheduled workloads",
+      "Photon acceleration on every cluster",
+      "A larger node type to finish jobs sooner"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Not paying for idle clusters and using the cheaper compute type for scheduled work are the two reliable levers. Photon costs a higher DBU rate and only pays back on large scans, and a bigger node is not automatically cheaper.",
+    "teaches": "compute-selection"
+  },
+  {
+    "id": "de-10",
+    "examCode": "dp-750",
+    "domain": "databricks-environment",
+    "kind": "order",
+    "question": "Put the Unity Catalog objects in order from broadest to narrowest.",
+    "items": [
+      "Table",
+      "Metastore",
+      "Schema",
+      "Catalog"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "The metastore is assigned to workspaces and holds catalogs, and an object is addressed as catalog.schema.table. Privileges inherit down that chain, which is why traversal rights on the containers are required.",
+    "teaches": "unity-catalog-objects"
+  },
+  {
+    "id": "ug-01",
+    "examCode": "dp-750",
+    "domain": "unity-catalog-governance",
+    "question": "A user has SELECT on a table but still receives an access denied error. What is most likely missing?",
+    "options": [
+      "USE CATALOG and USE SCHEMA on the containers above the table",
+      "Ownership of the table",
+      "Membership of the metastore admin group",
+      "A row filter permitting their rows"
+    ],
+    "correctIndex": 0,
+    "explanation": "Reaching an object requires traversal rights on the catalog and schema containing it. A grant that looks correct producing access denied is almost always this, and it is the most common Unity Catalog support question.",
+    "teaches": "securing-uc-objects"
+  },
+  {
+    "id": "ug-02",
+    "examCode": "dp-750",
+    "domain": "unity-catalog-governance",
+    "question": "Each analyst must see only rows for their own region, enforced however they query the table. What should you implement?",
+    "options": [
+      "A row filter function bound to the table",
+      "A view per region with grants on each",
+      "A column mask on the region column",
+      "Separate tables per region"
+    ],
+    "correctIndex": 0,
+    "explanation": "A row filter is enforced by the engine on every query, so it cannot be bypassed by querying the base table. Views only protect users who use them, which is the weakness row filters exist to remove.",
+    "teaches": "governance-and-abac"
+  },
+  {
+    "id": "ug-03",
+    "examCode": "dp-750",
+    "domain": "unity-catalog-governance",
+    "question": "New tables containing personal data must be protected automatically as they are created, without editing grants each time. What should you implement?",
+    "options": [
+      "Attribute-based access control driven by tags",
+      "A grant on each new table as it is created",
+      "A column mask applied to each named column",
+      "Ownership transfer to a governance group"
+    ],
+    "correctIndex": 0,
+    "explanation": "Tag-driven policy protects anything carrying the tag, so a new table inherits protection. Naming columns or tables individually means the next one is unprotected until somebody remembers, which is the failure ABAC addresses.",
+    "teaches": "governance-and-abac"
+  },
+  {
+    "id": "ug-04",
+    "examCode": "dp-750",
+    "domain": "unity-catalog-governance",
+    "question": "A notebook needs a third-party API key. Where should it be stored?",
+    "options": [
+      "In Azure Key Vault, reached through a secret scope",
+      "In a widget parameter on the notebook",
+      "In a configuration cell at the top of the notebook",
+      "In a table in the bronze schema"
+    ],
+    "correctIndex": 0,
+    "explanation": "A Key Vault-backed secret scope keeps the value out of the notebook source, which is otherwise visible to everyone who can read the repository. A configuration cell is the specific failure this arrangement prevents.",
+    "teaches": "securing-uc-objects"
+  },
+  {
+    "id": "ug-05",
+    "examCode": "dp-750",
+    "domain": "unity-catalog-governance",
+    "question": "You must determine which downstream tables would break if a column were removed. What should you use?",
+    "options": [
+      "Column-level lineage in Catalog Explorer",
+      "The audit log",
+      "Delta time travel on the table",
+      "A Delta Sharing recipient report"
+    ],
+    "correctIndex": 0,
+    "explanation": "Lineage is captured automatically and answers what consumes a column. Audit logs record who did what, and time travel shows previous versions of the data rather than its dependents.",
+    "teaches": "lineage-and-delta-sharing"
+  },
+  {
+    "id": "ug-06",
+    "examCode": "dp-750",
+    "domain": "unity-catalog-governance",
+    "question": "Live data must be shared with an external partner who does not use Databricks, without sending copies. What should you use?",
+    "options": [
+      "Delta Sharing with the open protocol",
+      "A Delta Sharing share to another Databricks workspace only",
+      "An external volume the partner can mount",
+      "A nightly export to a storage account the partner reads"
+    ],
+    "correctIndex": 0,
+    "explanation": "The open protocol is what allows recipients outside Databricks to consume a share. An export creates copies that cannot be revoked, which is the problem Delta Sharing is designed to remove.",
+    "teaches": "lineage-and-delta-sharing"
+  },
+  {
+    "id": "ug-07",
+    "examCode": "dp-750",
+    "domain": "unity-catalog-governance",
+    "question": "A scheduled job authenticates as an engineer's personal account and fails when they leave. What should it use instead?",
+    "options": [
+      "A service principal",
+      "A shared team account with a documented password",
+      "A managed identity assigned to the notebook",
+      "The workspace admin account"
+    ],
+    "correctIndex": 0,
+    "explanation": "A service principal is an identity for automation, so the job does not depend on a person. Managed identities are how the workspace reaches Azure resources rather than how a job authenticates to Databricks.",
+    "teaches": "securing-uc-objects"
+  },
+  {
+    "id": "ug-08",
+    "examCode": "dp-750",
+    "domain": "unity-catalog-governance",
+    "kind": "match",
+    "question": "Match each governance control to what it does.",
+    "pairs": [
+      { "term": "Row filter", "definition": "Limits which rows a querying user sees" },
+      { "term": "Column mask", "definition": "Returns a masked form of a value depending on who asks" },
+      { "term": "Tag-based policy", "definition": "Protects any object carrying a tag, including new ones" },
+      { "term": "Lineage", "definition": "Records which jobs produced and consumed each object" }
+    ],
+    "explanation": "Three restrict access at different granularities and one records provenance. All four are enforced or captured by the platform rather than by the query author, which is what makes them governance rather than convention.",
+    "teaches": "governance-and-abac"
+  },
+  {
+    "id": "ug-09",
+    "examCode": "dp-750",
+    "domain": "unity-catalog-governance",
+    "kind": "yesno",
+    "question": "Unity Catalog privileges have been granted on a catalog. Judge each statement.",
+    "statements": [
+      { "text": "Privileges inherit down to schemas and tables within it.", "correct": true },
+      { "text": "Granting to groups rather than individuals keeps the model maintainable.", "correct": true },
+      { "text": "Row filters can be bypassed by querying the base table directly.", "correct": false },
+      { "text": "Table and column comments feed data discovery and AI/BI Genie.", "correct": true }
+    ],
+    "explanation": "Row filters are enforced by the engine on every query, which is exactly what distinguishes them from a view somebody could choose not to use.",
+    "teaches": "securing-uc-objects"
+  },
+  {
+    "id": "ug-10",
+    "examCode": "dp-750",
+    "domain": "unity-catalog-governance",
+    "kind": "dropdown",
+    "question": "Complete the statement about identities in Azure Databricks.",
+    "segments": [
+      { "text": "A scheduled job should authenticate as " },
+      {
+        "blankId": "b1",
+        "options": ["a service principal", "the engineer who wrote it", "a shared team account"],
+        "correctIndex": 0
+      },
+      { "text": ", and the workspace should reach Azure storage using " },
+      {
+        "blankId": "b2",
+        "options": ["a managed identity", "an access key in a notebook", "a SAS token in a widget"],
+        "correctIndex": 0
+      },
+      { "text": "." }
+    ],
+    "explanation": "Both answers remove a human and a stored credential from the path. A job tied to a person breaks when they leave, and a key in a notebook is visible to every repository reader.",
+    "teaches": "securing-uc-objects"
+  },
+  {
+    "id": "pw-01",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "In a Spark stage, one task runs for fifty minutes while 199 finish in under a minute, and doubling the cluster changed nothing. What is the cause?",
+    "options": [
+      "Data skew — one partition holds far more data than the others",
+      "Spill to disk caused by insufficient executor memory",
+      "Excessive shuffle across the network",
+      "The small file problem on the source table"
+    ],
+    "correctIndex": 0,
+    "explanation": "One task far slower than its peers in the same stage is the signature of skew, and adding compute does not help because the work cannot be divided further. Salting the key or relying on adaptive query execution is the remedy.",
+    "teaches": "monitoring-and-troubleshooting"
+  },
+  {
+    "id": "pw-02",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "A join between a very large table and a small lookup table is slow due to network traffic. What should you apply?",
+    "options": [
+      "A broadcast join, sending the small table to every executor",
+      "A larger shuffle partition count",
+      "Z-ordering on the join key of the large table",
+      "Caching the large table in memory"
+    ],
+    "correctIndex": 0,
+    "explanation": "Broadcasting the small side removes the shuffle entirely, which is the standard remedy when one side is small enough to fit in executor memory. Increasing shuffle partitions changes how the shuffle is divided rather than avoiding it.",
+    "teaches": "monitoring-and-troubleshooting"
+  },
+  {
+    "id": "pw-03",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "A Delta table accumulates many small files from frequent streaming writes. Which command addresses it?",
+    "options": [
+      "OPTIMIZE",
+      "VACUUM",
+      "ANALYZE TABLE",
+      "REFRESH TABLE"
+    ],
+    "correctIndex": 0,
+    "explanation": "OPTIMIZE compacts small files and applies clustering. VACUUM removes files no longer referenced by the transaction log, which is a different maintenance job entirely.",
+    "teaches": "delta-optimisation"
+  },
+  {
+    "id": "pw-04",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "A team proposes lowering the VACUUM retention threshold to reclaim storage sooner. What is the risk?",
+    "options": [
+      "Time travel and in-flight readers can break",
+      "The transaction log is deleted entirely",
+      "Schema enforcement is disabled on the table",
+      "Liquid clustering keys are reset"
+    ],
+    "correctIndex": 0,
+    "explanation": "The default threshold exists to protect readers still using older files and the ability to time travel. Shortening it reclaims space at the cost of both, which is why the operation warns before allowing it.",
+    "teaches": "delta-optimisation"
+  },
+  {
+    "id": "pw-05",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "A set of dependent tables must be refreshed together, with dependencies and incremental processing handled by the platform. What should you use?",
+    "options": [
+      "A Lakeflow Spark Declarative Pipeline",
+      "A Lakeflow Job with notebook tasks in sequence",
+      "A single notebook run on a schedule",
+      "A SQL warehouse query scheduled hourly"
+    ],
+    "correctIndex": 0,
+    "explanation": "Declarative pipelines describe the tables and infer the execution order, manage incremental processing, and apply expectations. Notebook tasks in a job give explicit control, which is what procedural work needs and this does not.",
+    "teaches": "pipeline-design"
+  },
+  {
+    "id": "pw-06",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "A nightly job succeeds but has begun taking four hours instead of one, and nobody noticed for a fortnight. What should you configure?",
+    "options": [
+      "A duration threshold alert on the job",
+      "A failure alert on the job",
+      "Automatic retries with backoff",
+      "A shorter schedule interval"
+    ],
+    "correctIndex": 0,
+    "explanation": "A failure alert never fires for a job that succeeds slowly, which is exactly the situation described. Duration alerts are what catch degradation before it becomes an outage.",
+    "teaches": "lakeflow-jobs"
+  },
+  {
+    "id": "pw-07",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "A scheduled job occasionally overlaps with its own previous run, corrupting output. What should you configure?",
+    "options": [
+      "A maximum of one concurrent run",
+      "A longer schedule interval",
+      "Automatic retries on failure",
+      "A file arrival trigger instead of a schedule"
+    ],
+    "correctIndex": 0,
+    "explanation": "Limiting concurrent runs prevents the overlap regardless of how long a run takes. Lengthening the interval only makes the collision less frequent, which leaves the fault in place.",
+    "teaches": "lakeflow-jobs"
+  },
+  {
+    "id": "pw-08",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "Jobs and pipelines must be deployed identically to development, staging, and production from source control. What should you use?",
+    "options": [
+      "Databricks Asset Bundles deployed with the CLI",
+      "Exporting notebooks and importing them per workspace",
+      "Cloning the production workspace for each environment",
+      "A notebook that creates the jobs through the API"
+    ],
+    "correctIndex": 0,
+    "explanation": "Bundles define jobs and pipelines as parameterised YAML per target, so environments are identical by construction. Manual export and import is the practice that produces environments nobody can prove match.",
+    "teaches": "dev-lifecycle-bundles"
+  },
+  {
+    "id": "pw-09",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "A stage shows large spill metrics in the Spark UI. What does this indicate?",
+    "options": [
+      "Data did not fit in memory and was written to disk",
+      "One partition holds disproportionately more data",
+      "The table has too many small files",
+      "The cluster has too few worker nodes to start"
+    ],
+    "correctIndex": 0,
+    "explanation": "Spill is the specific symptom of memory pressure within a task. Skew shows as one slow task rather than as spill metrics, which is how the two are told apart.",
+    "teaches": "monitoring-and-troubleshooting"
+  },
+  {
+    "id": "pw-10",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "Cluster metrics show a job's cluster is idle most of the time while the job runs slowly. What does this suggest?",
+    "options": [
+      "The query is inefficient rather than the cluster being under-provisioned",
+      "The cluster needs more worker nodes",
+      "Photon should be disabled",
+      "The job should run on a SQL warehouse"
+    ],
+    "correctIndex": 0,
+    "explanation": "An idle cluster during a slow job means the work is not parallelisable or is waiting on something, so adding compute changes nothing. Distinguishing this from saturation is exactly what cluster metrics are for.",
+    "teaches": "monitoring-and-troubleshooting"
+  },
+  {
+    "id": "pw-11",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "A job must run when files arrive rather than on a fixed schedule. What should you configure?",
+    "options": [
+      "A file arrival trigger",
+      "A cron schedule of one minute",
+      "Continuous mode on the job",
+      "A webhook from the storage account to the workspace"
+    ],
+    "correctIndex": 0,
+    "explanation": "File arrival triggers start a run when new files appear, replacing a polling schedule that either wastes runs or adds latency. Continuous mode keeps the job running rather than reacting to arrivals.",
+    "teaches": "lakeflow-jobs"
+  },
+  {
+    "id": "pw-12",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "Where should billing and usage data be queried to build chargeback reporting?",
+    "options": [
+      "System tables in Unity Catalog",
+      "The cluster event log",
+      "The Spark UI history server",
+      "Delta table transaction logs"
+    ],
+    "correctIndex": 0,
+    "explanation": "System tables expose billing, audit, and lineage as queryable tables, so chargeback is built from data rather than estimated. The other sources describe individual clusters or tables rather than the account.",
+    "teaches": "delta-optimisation"
+  },
+  {
+    "id": "pw-13",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "Cluster and job telemetry must be queryable with KQL alongside the rest of the Azure estate. What should you configure?",
+    "options": [
+      "Log delivery to a Log Analytics workspace in Azure Monitor",
+      "The Spark UI event log retention setting",
+      "Audit logging in Unity Catalog only",
+      "Databricks SQL query history"
+    ],
+    "correctIndex": 0,
+    "explanation": "Sending logs to Log Analytics is what makes them queryable with KQL and alertable centrally. The other options keep the data inside Databricks where it cannot be correlated with the wider estate.",
+    "teaches": "delta-optimisation"
+  },
+  {
+    "id": "pw-14",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "Which testing level should cover a transformation function in isolation, without requiring a cluster?",
+    "options": [
+      "Unit tests",
+      "Integration tests",
+      "End-to-end tests",
+      "User acceptance tests"
+    ],
+    "correctIndex": 0,
+    "explanation": "Unit tests exercise a function on its own and should run without cluster infrastructure where possible, which is what makes them fast enough to run on every commit.",
+    "teaches": "dev-lifecycle-bundles"
+  },
+  {
+    "id": "pw-15",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "kind": "multi",
+    "question": "Which two are true of Lakeflow Job task dependencies? Choose two.",
+    "options": [
+      "Independent tasks run in parallel",
+      "A failure stops only the branch that depended on the failed task",
+      "All tasks run sequentially in the order they were created",
+      "A failed task always terminates the entire job immediately"
+    ],
+    "correctIndexes": [0, 1],
+    "explanation": "Tasks form a dependency graph rather than a list, so parallelism is the default and failures are contained to their branch. Assuming sequential execution is what produces jobs far slower than they need to be.",
+    "teaches": "lakeflow-jobs"
+  },
+  {
+    "id": "pw-16",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "kind": "order",
+    "question": "Put the steps of diagnosing a slow Spark stage in order.",
+    "items": [
+      "Apply the remedy — salting, broadcasting, or more memory",
+      "Open the Spark UI and find the slowest stage",
+      "Compare task durations within the stage to identify skew",
+      "Check spill and shuffle metrics for that stage"
+    ],
+    "correctOrder": [1, 2, 3, 0],
+    "explanation": "Locate the stage, then distinguish skew from spill from shuffle, and only then choose a remedy. Each has a different fix, so acting before diagnosing usually means changing the wrong thing.",
+    "teaches": "monitoring-and-troubleshooting"
+  },
+  {
+    "id": "pw-17",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "kind": "order",
+    "question": "Put the steps of promoting a pipeline change to production in order.",
+    "items": [
+      "Deploy the bundle to the production target",
+      "Commit the change on a feature branch in a Git folder",
+      "Deploy the bundle to a staging target and run integration tests",
+      "Raise a pull request and have the change reviewed"
+    ],
+    "correctOrder": [1, 3, 2, 0],
+    "explanation": "Commit, review, verify in staging, then promote. Deploying to production from an unreviewed branch is the practice that makes a regression untraceable afterwards.",
+    "teaches": "dev-lifecycle-bundles"
+  },
+  {
+    "id": "pw-18",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "kind": "match",
+    "question": "Match each Spark symptom to its cause.",
+    "pairs": [
+      { "term": "One task far slower than its peers", "definition": "Data skew" },
+      { "term": "Large spill metrics on a stage", "definition": "Insufficient memory for the task's data" },
+      { "term": "Heavy network transfer during a join", "definition": "Shuffle that could be avoided by broadcasting" },
+      { "term": "Slow reads over a large table directory", "definition": "The small file problem" }
+    ],
+    "explanation": "Four symptoms with four different remedies, which is why the diagnosis has to come first. Adding compute helps only one of them, and skew is the one it never helps.",
+    "teaches": "monitoring-and-troubleshooting"
+  },
+  {
+    "id": "pw-19",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "kind": "yesno",
+    "question": "A Databricks Asset Bundle has been created for a set of jobs and pipelines. Judge each statement.",
+    "statements": [
+      { "text": "It can be parameterised per target environment.", "correct": true },
+      { "text": "It can be deployed with the Databricks CLI.", "correct": true },
+      { "text": "It can be deployed through the REST API.", "correct": true },
+      { "text": "It replaces the need for version control of notebooks.", "correct": false }
+    ],
+    "explanation": "Bundles define what is deployed; Git folders version what the bundle deploys. Treating a bundle as a substitute for source control leaves the code itself unversioned.",
+    "teaches": "dev-lifecycle-bundles"
+  },
+  {
+    "id": "pw-20",
+    "examCode": "dp-750",
+    "domain": "pipelines-workloads",
+    "question": "A notebook edited directly in the production workspace has diverged from the repository. What is the underlying problem?",
+    "options": [
+      "The change was never reviewed and will be lost on the next deployment",
+      "The notebook can no longer be attached to a cluster",
+      "Unity Catalog lineage stops being recorded for it",
+      "The notebook's schema enforcement is disabled"
+    ],
+    "correctIndex": 0,
+    "explanation": "A direct production edit is invisible in the repository and is overwritten by the next deployment. That is why promotion is by branch and production workspaces are not edited in place.",
+    "teaches": "dev-lifecycle-bundles"
+  }
+]

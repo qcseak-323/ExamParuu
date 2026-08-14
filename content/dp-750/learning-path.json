@@ -1,0 +1,110 @@
+{
+  "examCode": "dp-750",
+  "note": "Four paths, one per exam domain, following Microsoft's Azure Databricks learning paths. Module titles follow Microsoft Learn; the sections and cards behind each are this site's own.",
+  "paths": [
+    {
+      "id": "databricks-environment",
+      "title": "Set up and configure an Azure Databricks environment",
+      "domainId": "databricks-environment",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/data-engineer-azure-databricks/",
+      "modules": [
+        {
+          "id": "databricks-environment-m1",
+          "title": "Select and configure compute",
+          "sectionIds": ["compute-selection"],
+          "cardIds": ["fc-dp750-de-01", "fc-dp750-de-02", "fc-dp750-de-03", "fc-dp750-de-04", "fc-dp750-de-09"]
+        },
+        {
+          "id": "databricks-environment-m2",
+          "title": "Create and organise objects in Unity Catalog",
+          "sectionIds": ["unity-catalog-objects", "foreign-catalogs-and-genie"],
+          "cardIds": ["fc-dp750-de-05", "fc-dp750-de-06", "fc-dp750-de-07", "fc-dp750-de-08"]
+        }
+      ]
+    },
+    {
+      "id": "unity-catalog-governance",
+      "title": "Secure and govern data with Unity Catalog",
+      "domainId": "unity-catalog-governance",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/manage-data-governance-azure-databricks/",
+      "modules": [
+        {
+          "id": "unity-catalog-governance-m1",
+          "title": "Secure Unity Catalog objects",
+          "sectionIds": ["securing-uc-objects"],
+          "cardIds": ["fc-dp750-ug-01", "fc-dp750-ug-02", "fc-dp750-ug-03", "fc-dp750-ug-04", "fc-dp750-ug-09"]
+        },
+        {
+          "id": "unity-catalog-governance-m2",
+          "title": "Govern data with filters, masks, and lineage",
+          "sectionIds": ["governance-and-abac", "lineage-and-delta-sharing"],
+          "cardIds": ["fc-dp750-ug-05", "fc-dp750-ug-06", "fc-dp750-ug-07", "fc-dp750-ug-08"]
+        }
+      ]
+    },
+    {
+      "id": "prepare-process-data",
+      "title": "Prepare and process data with Azure Databricks",
+      "domainId": "prepare-process-data",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/data-engineering-azure-databricks/",
+      "modules": [
+        {
+          "id": "prepare-process-data-m1",
+          "title": "Design data ingestion",
+          "sectionIds": ["ingestion-design"],
+          "cardIds": ["fc-dp750-pp-01", "fc-dp750-pp-02", "fc-dp750-pp-03", "fc-dp750-pp-04"]
+        },
+        {
+          "id": "prepare-process-data-m2",
+          "title": "Model tables, layout, and history",
+          "sectionIds": ["data-modelling-and-clustering"],
+          "cardIds": ["fc-dp750-pp-05", "fc-dp750-pp-06", "fc-dp750-pp-07", "fc-dp750-pp-08"]
+        },
+        {
+          "id": "prepare-process-data-m3",
+          "title": "Ingest streaming and incremental data",
+          "sectionIds": ["ingestion-methods"],
+          "cardIds": ["fc-dp750-pp-09", "fc-dp750-pp-10", "fc-dp750-pp-11", "fc-dp750-pp-12"]
+        },
+        {
+          "id": "prepare-process-data-m4",
+          "title": "Transform, load, and enforce quality",
+          "sectionIds": ["transform-and-load", "data-quality"],
+          "cardIds": ["fc-dp750-pp-13", "fc-dp750-pp-14", "fc-dp750-pp-15", "fc-dp750-pp-16"]
+        }
+      ]
+    },
+    {
+      "id": "pipelines-workloads",
+      "title": "Deploy and maintain pipelines and workloads",
+      "domainId": "pipelines-workloads",
+      "msLearnUrl": "https://learn.microsoft.com/en-us/training/paths/build-data-engineering-pipelines-azure-databricks/",
+      "modules": [
+        {
+          "id": "pipelines-workloads-m1",
+          "title": "Design data pipelines",
+          "sectionIds": ["pipeline-design"],
+          "cardIds": ["fc-dp750-pw-01", "fc-dp750-pw-02", "fc-dp750-pw-03", "fc-dp750-pw-04"]
+        },
+        {
+          "id": "pipelines-workloads-m2",
+          "title": "Implement and operate Lakeflow Jobs",
+          "sectionIds": ["lakeflow-jobs"],
+          "cardIds": ["fc-dp750-pw-05", "fc-dp750-pw-06", "fc-dp750-pw-15", "fc-dp750-pw-16"]
+        },
+        {
+          "id": "pipelines-workloads-m3",
+          "title": "Implement development lifecycle processes",
+          "sectionIds": ["dev-lifecycle-bundles"],
+          "cardIds": ["fc-dp750-pw-07", "fc-dp750-pw-13", "fc-dp750-pw-14"]
+        },
+        {
+          "id": "pipelines-workloads-m4",
+          "title": "Monitor, troubleshoot, and optimise workloads",
+          "sectionIds": ["monitoring-and-troubleshooting", "delta-optimisation"],
+          "cardIds": ["fc-dp750-pw-08", "fc-dp750-pw-09", "fc-dp750-pw-10", "fc-dp750-pw-11", "fc-dp750-pw-12"]
+        }
+      ]
+    }
+  ]
+}

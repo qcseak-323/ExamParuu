@@ -1,0 +1,39 @@
+[
+  {
+    "id": "cs-holbeck-lakehouse",
+    "examCode": "dp-750",
+    "domain": "prepare-process-data",
+    "title": "Holbeck Foods — a lakehouse that costs too much and trusts too little",
+    "tabs": [
+      {
+        "heading": "Overview",
+        "paragraphs": [
+          "Holbeck Foods supplies supermarkets from eleven distribution centres. An Azure Databricks lakehouse feeds demand forecasting and a nightly replenishment run, built over two years by a team that has since changed entirely.",
+          "Finance has queried the platform bill and the forecasting team has stopped trusting the silver layer. The findings below came out of a review of both complaints."
+        ]
+      },
+      {
+        "heading": "Existing environment",
+        "paragraphs": [
+          "Every scheduled job runs on an all-purpose cluster that a previous engineer created and left running with no auto-termination. It has been up continuously for seven months.",
+          "Order files land in an ADLS Gen2 container throughout the day, roughly forty thousand small JSON files a week. The current notebook lists the whole directory on each run and reprocesses anything whose modified date is recent, which has begun to miss files and occasionally duplicate them.",
+          "The silver orders table is partitioned by order_id. There are 14 million distinct values. Queries filtering on distribution centre and date are slow, and the table directory contains an enormous number of very small files.",
+          "A supplier dimension is maintained with an overwrite on every run. The forecasting team needs to know what a supplier's category and lead time were at the time of a historical order, and that information no longer exists anywhere.",
+          "Rows with null quantities reach the gold aggregates and produce understated forecasts. There is no validation anywhere in the pipeline; the problem is found by a planner noticing a number looks wrong.",
+          "One nightly Spark job has a stage where a single task runs for fifty minutes while its 199 peers finish in under a minute. The cluster was doubled in size last month and the stage took the same fifty minutes."
+        ]
+      },
+      {
+        "heading": "Requirements",
+        "paragraphs": [
+          "Scheduled work must stop running on a permanently live interactive cluster.",
+          "File ingestion must process each new file exactly once without listing the whole directory each run.",
+          "The silver orders table must be laid out so that filters on distribution centre and date are fast, without committing to a partitioning scheme that cannot later be changed.",
+          "The supplier dimension must record what each attribute was at any past point in time.",
+          "Rows with null quantities must be prevented from reaching the gold layer, and the pipeline must report how many were rejected.",
+          "The fifty-minute stage must be diagnosed correctly, given that adding compute changed nothing."
+        ]
+      }
+    ]
+  }
+]
